@@ -63,8 +63,8 @@ class HomepageController extends AbstractController
                 $currentDuration = 0;
 
                 foreach ($episodes as $episode) {
-                    $globalDuration += $episode['duration'];
-                    $currentDuration += $episode['duration'];
+                    $globalDuration += $episode->getDuration();
+                    $currentDuration += $episode->getDuration();
                 }
 
                 $countDay++;
