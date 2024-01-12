@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -15,12 +16,14 @@ class HomepageController extends AbstractController
 {
     /**
      * @Route("/", name="home")
+     * @throws \Exception
      */
     public function index(SerieRepository $serieRepository, EpisodeShowRepository $episodeShowRepository): Response
     {
         
         $series = $serieRepository->findAll();
         $episodes = $episodeShowRepository->findAll();
+        $showSerie = [];
         
         foreach($series as $serie){
             if(count($serie->getEpisodeShows()->getValues()) > 0){
@@ -43,11 +46,46 @@ class HomepageController extends AbstractController
             }
         }
 
+
+        $globalDuration = 0;
+        $countDay = 0;
+
+        asort($dateKeys);
+        $sortedDateKeys = array_keys($dateKeys);
+        $duration = [];
+
+        foreach ($sortedDateKeys as $dateKey) {
+            $date = (new DateTime($dateKey))->format('d/m/Y');
+            $dateShow = (new DateTime($dateKey))->format('Y/m/d');
+            $duration = [];
+
+            foreach ($episodesByDate as $key => $episodes) {
+                $currentDuration = 0;
+
+                foreach ($episodes as $episode) {
+                    $globalDuration += $episode['duration'];
+                    $currentDuration += $episode['duration'];
+                }
+
+                $countDay++;
+
+                $duration[$key] = $currentDuration;
+            }
+        }
+
+        $averageDuration = 0;
+
+        if ($countDay !== 0){
+            $averageDuration = ($globalDuration / $countDay);
+        }
+
         return $this->render('homepage/index.html.twig', [
             'series' => $showSerie,
             'episodes' => $episodes,
             'episodesByDate' => $episodesByDate,
             'dateKeys' => $dateKeys,
+            'duration' => $duration,
+            'averageDuration' => $averageDuration
         ]);
     }
 }
