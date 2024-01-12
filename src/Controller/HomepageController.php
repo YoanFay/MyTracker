@@ -27,11 +27,27 @@ class HomepageController extends AbstractController
                 $showSerie[$serie->getName()] = $serie->getEpisodeShows()->getValues();
             }
         }
-        
-        
+
+        $episodesByDate = [];
+        $timeByDate = [];
+        $dateKeys = [];
+
+        foreach ($episodes as $episode) {
+            $dateKey = date("Y-m-d", strtotime($episode['showDate']));
+
+            if (!isset($episodesByDate[$dateKey])) {
+                $episodesByDate[$dateKey] = [$episode];
+                $dateKeys[] = $dateKey;
+            } else {
+                $episodesByDate[$dateKey][] = $episode;
+            }
+        }
+
         return $this->render('homepage/index.html.twig', [
             'series' => $showSerie,
             'episodes' => $episodes,
+            'episodesByDate' => $episodesByDate,
+            'dateKeys' => $dateKeys,
         ]);
     }
 }
