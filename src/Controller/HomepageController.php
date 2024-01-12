@@ -33,7 +33,7 @@ class HomepageController extends AbstractController
         $dateKeys = [];
 
         foreach ($episodes as $episode) {
-            $dateKey = date("Y-m-d", strtotime($episode['showDate']));
+            $dateKey = date("Y-m-d", $episode->getShowDate());
 
             if (!isset($episodesByDate[$dateKey])) {
                 $episodesByDate[$dateKey] = [$episode];
