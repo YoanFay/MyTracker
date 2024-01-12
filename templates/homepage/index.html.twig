@@ -12,6 +12,8 @@
         </tr>
         </thead>
         <tbody>
+
+        {% set sortedDateKeys = dateKeys|sort %}
         {% set globalDuration = 0 %}
         {% set countDay = 0 %}
         {% for dateKey in sortedDateKeys %}
