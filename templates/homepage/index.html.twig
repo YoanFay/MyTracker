@@ -12,6 +12,26 @@
         </tr>
         </thead>
         <tbody>
+        {% set globalDuration = 0 %}
+        {% set countDay = 0 %}
+        {% for dateKey in sortedDateKeys %}
+            {% set date = dateKey|date("d/m/Y") %}
+            {% set dateShow = dateKey|date("Y/m/d") %}
+            {% set duration = [] %}
+
+            {% for key, episodes in episodesByDate %}
+                {% set currentDuration = 0 %}
+
+                {% for episode in episodes %}
+                    {% set globalDuration = globalDuration + episode.duration %}
+                    {% set currentDuration = currentDuration + episode.duration %}
+                {% endfor %}
+
+                {% set countDay = countDay + 1 %}
+
+                {% set duration = duration|merge({(key): currentDuration}) %}
+
+            {% endfor %}
             <tr class="table-secondary">
                 <th colspan="4">{{ dateShow|dateF }} - {{ duration[dateKey]|MsToHM }} de visionnage</th>
             </tr>
@@ -23,9 +43,10 @@
                     <td>{{ episode.showDate|date("H\\hi") }}</td>
                 </tr>
             {% endfor %}
+        {% endfor %}
         </tbody>
     </table>
 
-    <p>{{ averageDuration|MsToHM }} de visionnage en moyenne par jour</p>
+    <p>{{ (globalDuration / countDay)|MsToHM }} de visionnage en moyenne par jour</p>
 
 {% endblock %}
