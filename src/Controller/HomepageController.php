@@ -55,8 +55,8 @@ class HomepageController extends AbstractController
         $duration = [];
 
         foreach ($sortedDateKeys as $dateKey) {
-            $date = (new DateTime($dateKey))->format('d/m/Y');
-            $dateShow = (new DateTime($dateKey))->format('Y/m/d');
+            //$date = (new DateTime($dateKey))->format('d/m/Y');
+            //$dateShow = (new DateTime($dateKey))->format('Y/m/d');
             $duration = [];
 
             foreach ($episodesByDate as $key => $episodes) {
