@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Movie;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -45,64 +46,102 @@ class WebHook extends AbstractController
             $em->flush();
         }
 
-        $serieId = str_replace(["plex://show/"], [""], $jsonData['Metadata']['grandparentGuid']);
+        $type = str_replace(['Quasinas ', ' A Deux', ' Chat', ' Doudou'], ['', '', '', ''], $jsonData['Metadata']['librarySectionTitle']);
 
-        $serie = $serieRepository->findOneBy(['plexId' => $serieId]);
+        if ($type === "Films" && $jsonData['event'] === "media.scrobble") {
 
-        if (!$serie) {
-            $serie = new Serie;
+            $movieId = str_replace(["plex://movie/"], [""], $jsonData['Metadata']['guid']);
 
-            $type = str_replace(['Quasinas ', ' A Deux', ' Chat', ' Doudou'], ['', '', '', ''], $jsonData['Metadata']['librarySectionTitle']);
+            $movie = $serieRepository->findOneBy(['plexId' => $movieId, 'user' => $user]);
 
-            $serie->setPlexId($serieId);
-            $serie->setName($jsonData['Metadata']['grandparentTitle']);
-            $serie->setType($type);
+            if (!$movie) {
 
-            $em->persist($serie);
-            $em->flush();
-        }
-
-        if ($jsonData['event'] === "media.scrobble") {
-
-            $episodeId = null;
-            $episode = null;
-
-            if (isset($jsonData['Metadata']['guid'])) {
-                $episodeId = str_replace(["plex://episode/", "local://"], ["", ""], $jsonData['Metadata']['guid']);
-
-                $episode = $episodeShowRepository->findOneBy(['plexId' => $episodeId]);
-            }
-
-            if (!$episode) {
-
-                $tvdbId = null;
+                $tvdbMovieId = null;
 
                 if (isset($jsonData['Metadata']['Guid'])) {
                     foreach ($jsonData['Metadata']['Guid'] as $guid) {
                         if (isset($guid['id']) && strpos($guid['id'], 'tvdb://') === 0) {
-                            $tvdbId = str_replace(["tvdb://"], [""], $guid['id']);
+                            $tvdbMovieId = str_replace(["tvdb://"], [""], $guid['id']);
                             break;
                         }
                     }
                 }
 
-                $episode = new EpisodeShow;
+                $movie = new Movie();
 
-                $episode->setPlexId($episodeId);
-                $episode->setName($jsonData['Metadata']['title']);
-                $episode->setShowDate(new \DateTime());
-                $episode->setSerie($serie);
-                $episode->setUser($user);
-                $episode->setTvdbId($tvdbId);
-                $episode->setSaison($jsonData['Metadata']['parentTitle']);
-                $episode->setSaisonNumber($jsonData['Metadata']['parentIndex']);
-                $episode->setEpisodeNumber($jsonData['Metadata']['index']);
-                $episode->setDuration(isset($jsonData['Metadata']['duration']) ?
+                $movie->setPlexId($movieId);
+                $movie->setUser($user);
+                $movie->setName($jsonData['Metadata']['title']);
+                $movie->setShowDate(new \DateTime());
+                $movie->setTvdbId($tvdbMovieId);
+                $movie->setDuration(isset($jsonData['Metadata']['duration']) ?
                     $jsonData['Metadata']['duration'] :
                     null);
 
-                $em->persist($episode);
+                $em->persist($movie);
                 $em->flush();
+            }
+
+        } else {
+
+            $serieId = str_replace(["plex://show/"], [""], $jsonData['Metadata']['grandparentGuid']);
+
+            $serie = $serieRepository->findOneBy(['plexId' => $serieId]);
+
+            if (!$serie) {
+                $serie = new Serie;
+
+                $serie->setPlexId($serieId);
+                $serie->setName($jsonData['Metadata']['grandparentTitle']);
+                $serie->setType($type);
+
+                $em->persist($serie);
+                $em->flush();
+            }
+
+            if ($jsonData['event'] === "media.scrobble") {
+
+                $episodeId = null;
+                $episode = null;
+
+                if (isset($jsonData['Metadata']['guid'])) {
+                    $episodeId = str_replace(["plex://episode/", "local://"], ["", ""], $jsonData['Metadata']['guid']);
+
+                    $episode = $episodeShowRepository->findOneBy(['plexId' => $episodeId, 'user' => $user]);
+                }
+
+                if (!$episode) {
+
+                    $tvdbId = null;
+
+                    if (isset($jsonData['Metadata']['Guid'])) {
+                        foreach ($jsonData['Metadata']['Guid'] as $guid) {
+                            if (isset($guid['id']) && strpos($guid['id'], 'tvdb://') === 0) {
+                                $tvdbId = str_replace(["tvdb://"], [""], $guid['id']);
+                                break;
+                            }
+                        }
+                    }
+
+                    $episode = new EpisodeShow;
+
+                    $episode->setPlexId($episodeId);
+                    $episode->setName($jsonData['Metadata']['title']);
+                    $episode->setShowDate(new \DateTime());
+                    $episode->setSerie($serie);
+                    $episode->setUser($user);
+                    $episode->setTvdbId($tvdbId);
+                    $episode->setSaison($jsonData['Metadata']['parentTitle']);
+                    $episode->setSaisonNumber($jsonData['Metadata']['parentIndex']);
+                    $episode->setEpisodeNumber($jsonData['Metadata']['index']);
+                    $episode->setDuration(isset($jsonData['Metadata']['duration']) ?
+                        $jsonData['Metadata']['duration'] :
+                        null);
+
+                    $em->persist($episode);
+                    $em->flush();
+                }
+
             }
 
         }

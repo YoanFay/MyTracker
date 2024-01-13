@@ -29,9 +29,15 @@ class Users
      */
     private $episodeShows;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Movie::class, mappedBy="userId")
+     */
+    private $movies;
+
     public function __construct()
     {
         $this->episodeShows = new ArrayCollection();
+        $this->movies = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -75,6 +81,36 @@ class Users
             // set the owning side to null (unless already changed)
             if ($episodeShow->getUser() === $this) {
                 $episodeShow->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Movie>
+     */
+    public function getMovies(): Collection
+    {
+        return $this->movies;
+    }
+
+    public function addMovie(Movie $movie): self
+    {
+        if (!$this->movies->contains($movie)) {
+            $this->movies[] = $movie;
+            $movie->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMovie(Movie $movie): self
+    {
+        if ($this->movies->removeElement($movie)) {
+            // set the owning side to null (unless already changed)
+            if ($movie->getUser() === $this) {
+                $movie->setUser(null);
             }
         }
 
