@@ -18,7 +18,7 @@ class WebHook extends AbstractController
 {
 
     /**
-     * @Route("/webhook", name="webhook")
+     * @Route("/webhooks", name="webhook")
      */
     public function webhook(
         Request               $request,
