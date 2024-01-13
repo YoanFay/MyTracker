@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Movie;
+use App\Repository\MovieRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,7 +26,8 @@ class WebHook extends AbstractController
         Request               $request,
         UsersRepository       $usersRepository,
         SerieRepository       $serieRepository,
-        EpisodeShowRepository $episodeShowRepository
+        EpisodeShowRepository $episodeShowRepository,
+        MovieRepository       $movieRepository
     ): Response
     {
 
@@ -48,38 +50,40 @@ class WebHook extends AbstractController
 
         $type = str_replace(['Quasinas ', ' A Deux', ' Chat', ' Doudou'], ['', '', '', ''], $jsonData['Metadata']['librarySectionTitle']);
 
-        if ($type === "Films" && $jsonData['event'] === "media.scrobble") {
+        if ($type === "Films") {
+            if ($jsonData['event'] === "media.scrobble") {
 
-            $movieId = str_replace(["plex://movie/"], [""], $jsonData['Metadata']['guid']);
+                $movieId = str_replace(["plex://movie/"], [""], $jsonData['Metadata']['guid']);
 
-            $movie = $serieRepository->findOneBy(['plexId' => $movieId, 'user' => $user]);
+                $movie = $movieRepository->findOneBy(['plexId' => $movieId, 'user' => $user]);
 
-            if (!$movie) {
+                if (!$movie) {
 
-                $tvdbMovieId = null;
+                    $tvdbMovieId = null;
 
-                if (isset($jsonData['Metadata']['Guid'])) {
-                    foreach ($jsonData['Metadata']['Guid'] as $guid) {
-                        if (isset($guid['id']) && strpos($guid['id'], 'tvdb://') === 0) {
-                            $tvdbMovieId = str_replace(["tvdb://"], [""], $guid['id']);
-                            break;
+                    if (isset($jsonData['Metadata']['Guid'])) {
+                        foreach ($jsonData['Metadata']['Guid'] as $guid) {
+                            if (isset($guid['id']) && strpos($guid['id'], 'tvdb://') === 0) {
+                                $tvdbMovieId = str_replace(["tvdb://"], [""], $guid['id']);
+                                break;
+                            }
                         }
                     }
+
+                    $movie = new Movie();
+
+                    $movie->setPlexId($movieId);
+                    $movie->setUser($user);
+                    $movie->setName($jsonData['Metadata']['title']);
+                    $movie->setShowDate(new \DateTime());
+                    $movie->setTvdbId($tvdbMovieId);
+                    $movie->setDuration(isset($jsonData['Metadata']['duration']) ?
+                        $jsonData['Metadata']['duration'] :
+                        null);
+
+                    $em->persist($movie);
+                    $em->flush();
                 }
-
-                $movie = new Movie();
-
-                $movie->setPlexId($movieId);
-                $movie->setUser($user);
-                $movie->setName($jsonData['Metadata']['title']);
-                $movie->setShowDate(new \DateTime());
-                $movie->setTvdbId($tvdbMovieId);
-                $movie->setDuration(isset($jsonData['Metadata']['duration']) ?
-                    $jsonData['Metadata']['duration'] :
-                    null);
-
-                $em->persist($movie);
-                $em->flush();
             }
 
         } else {
