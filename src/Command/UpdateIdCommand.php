@@ -70,6 +70,9 @@ class UpdateIdCommand extends Command
             /** @var EpisodeShow $episode */
             $episode = $this->episodeShowRepository->findBySerie($serie);
 
+            dump($serie);
+            dump($episode);
+
             if ($episode) {
                 $response = $client->get($apiUrl."/episodes/".$episode->getId(), [
                     'headers' => [
