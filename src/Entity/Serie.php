@@ -44,6 +44,11 @@ class Serie
      */
     private $type;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $vfName = false;
+
     public function __construct()
     {
         $this->episodeShows = new ArrayCollection();
@@ -129,6 +134,18 @@ class Serie
     public function setType(?string $type): self
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    public function isVfName(): ?bool
+    {
+        return $this->vfName;
+    }
+
+    public function setVfName(bool $vfName): self
+    {
+        $this->vfName = $vfName;
 
         return $this;
     }

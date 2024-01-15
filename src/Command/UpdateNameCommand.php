@@ -86,6 +86,7 @@ class UpdateNameCommand extends Command
 
             if ($data['status'] === "success"){
                 $serie->setName($data['data']['name']);
+                $serie->setVfName(true);
 
                 $this->manager->persist($serie);
                 $this->manager->flush();
@@ -108,6 +109,7 @@ class UpdateNameCommand extends Command
 
             if ($data['status'] === "success"){
                 $episode->setName($data['data']['name']);
+                $episode->setVfName(true);
 
                 $this->manager->persist($episode);
                 $this->manager->flush();

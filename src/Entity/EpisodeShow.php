@@ -69,6 +69,11 @@ class EpisodeShow
      */
     private $duration;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $vfName = false;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -190,6 +195,18 @@ class EpisodeShow
     public function setDuration(?int $duration): self
     {
         $this->duration = $duration;
+
+        return $this;
+    }
+
+    public function isVfName(): ?bool
+    {
+        return $this->vfName;
+    }
+
+    public function setVfName(bool $vfName): self
+    {
+        $this->vfName = $vfName;
 
         return $this;
     }
