@@ -97,25 +97,27 @@ class UpdateIdCommand extends Command
 
             $episodes = $this->episodeShowRepository->findBySerieWitoutTVDB($serie);
 
-            foreach ($episodes as $oneEpisode) {
+            if ($episodes) {
+                foreach ($episodes as $oneEpisode) {
 
-                if ($oneEpisode->getSerie()->getTvdbId()) {
-                    $response = $client->get($apiUrl."/series/".$oneEpisode->getSerie()->getTvdbId()."/episodes/default?page=1&season=".$oneEpisode->getSaisonNumber()."&episodeNumber=".$oneEpisode->getEpisodeNumber(), [
-                        'headers' => [
-                            'Authorization' => 'Bearer '.$token,
-                            'Content-Type' => 'application/json',
-                            'Accept' => 'application/json',
-                        ],
-                    ]);
+                    if ($oneEpisode->getSerie()->getTvdbId()) {
+                        $response = $client->get($apiUrl."/series/".$oneEpisode->getSerie()->getTvdbId()."/episodes/default?page=1&season=".$oneEpisode->getSaisonNumber()."&episodeNumber=".$oneEpisode->getEpisodeNumber(), [
+                            'headers' => [
+                                'Authorization' => 'Bearer '.$token,
+                                'Content-Type' => 'application/json',
+                                'Accept' => 'application/json',
+                            ],
+                        ]);
 
-                    $data2 = json_decode($response->getBody(), true);
+                        $data2 = json_decode($response->getBody(), true);
 
-                    $oneEpisode->setTvdbId($data2['data']['episode'][0]['id']);
+                        $oneEpisode->setTvdbId($data2['data']['episode'][0]['id']);
 
-                    $this->manager->persist($oneEpisode);
-                    $this->manager->flush();
+                        $this->manager->persist($oneEpisode);
+                        $this->manager->flush();
+                    }
+
                 }
-
             }
         }
 
