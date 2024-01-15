@@ -5,6 +5,7 @@ namespace App\Command;
 use App\Entity\EpisodeShow;
 use App\Repository\EpisodeShowRepository;
 use App\Repository\SerieRepository;
+use Doctrine\Persistence\ManagerRegistry;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -21,12 +22,14 @@ class UpdateIdCommand extends Command
 
     private $serieRepository;
     private $episodeShowRepository;
+    private $manager;
 
-    public function __construct(SerieRepository $serieRepository, EpisodeShowRepository $episodeShowRepository)
+    public function __construct(SerieRepository $serieRepository, EpisodeShowRepository $episodeShowRepository, ManagerRegistry $managerRegistry)
     {
         parent::__construct();
         $this->serieRepository = $serieRepository;
         $this->episodeShowRepository = $episodeShowRepository;
+        $this->manager = $managerRegistry->getManager();
     }
 
     protected function configure(): void
@@ -64,15 +67,22 @@ class UpdateIdCommand extends Command
             /** @var EpisodeShow $episode */
             $episode = $this->episodeShowRepository->findBySerie($serie);
 
-            $response = $client->get($apiUrl."/episodes/".$episode->getId(), [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . $token,
-                    'Content-Type' => 'application/json',
-                    'Accept' => 'application/json',
-                ],
-            ]);
+            if ($episode) {
+                $response = $client->get($apiUrl."/episodes/".$episode->getId(), [
+                    'headers' => [
+                        'Authorization' => 'Bearer '.$token,
+                        'Content-Type' => 'application/json',
+                        'Accept' => 'application/json',
+                    ],
+                ]);
 
-            dump(json_decode($response->getBody(), true));
+                $data = json_decode($response->getBody(), true);
+
+                $serie->setTvdbId($data['data']['series_id']);
+
+                $this->manager->persist($serie);
+                $this->manager->flush();
+            }
         }
 
         return Command::SUCCESS;
