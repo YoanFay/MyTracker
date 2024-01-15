@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\EpisodeShow;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -49,8 +50,10 @@ class EpisodeShowRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+
     /**
      * @return EpisodeShow[] Returns an array of EpisodeShow objects
+     * @throws NonUniqueResultException
      */
     public function findBySerie($serie): array
     {
@@ -58,8 +61,9 @@ class EpisodeShowRepository extends ServiceEntityRepository
             ->andWhere('e.serie = :serie')
             ->setParameter('serie', $serie)
             ->andWhere('e.tvdbId IS NOT NULL')
+            ->setMaxResults(1)
             ->getQuery()
-            ->getResult()
+            ->getOneOrNullResult()
         ;
     }
 
