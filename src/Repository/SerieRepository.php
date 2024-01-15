@@ -58,7 +58,7 @@ class SerieRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('s')
             ->andWhere('s.tvdbId IS NOT NULL')
-            ->andWhere('s.vfName IS false')
+            ->andWhere('s.vfName = false')
             ->getQuery()
             ->getResult()
             ;

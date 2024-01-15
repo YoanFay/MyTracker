@@ -99,7 +99,7 @@ class EpisodeShowRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('e')
             ->andWhere('e.tvdbId IS NOT NULL')
-            ->andWhere('e.vfName IS false')
+            ->andWhere('e.vfName = false')
             ->getQuery()
             ->getResult()
             ;
