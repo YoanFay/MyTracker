@@ -49,20 +49,19 @@ class EpisodeShowRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-//    /**
-//     * @return EpisodeShow[] Returns an array of EpisodeShow objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('e')
-//            ->andWhere('e.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('e.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+     * @return EpisodeShow[] Returns an array of EpisodeShow objects
+     */
+    public function findBySerie($serie): array
+    {
+        return $this->createQueryBuilder('e')
+            ->andWhere('e.serie = :serie')
+            ->setParameter('serie', $serie)
+            ->andWhere('e.tvdbId IS NOT NULL')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 
 //    public function findOneBySomeField($value): ?EpisodeShow
 //    {

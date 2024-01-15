@@ -2,6 +2,8 @@
 
 namespace App\Command;
 
+use App\Entity\EpisodeShow;
+use App\Repository\EpisodeShowRepository;
 use App\Repository\SerieRepository;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
@@ -18,11 +20,13 @@ class UpdateIdCommand extends Command
 {
 
     private $serieRepository;
+    private $episodeShowRepository;
 
-    public function __construct(SerieRepository $serieRepository)
+    public function __construct(SerieRepository $serieRepository, EpisodeShowRepository $episodeShowRepository)
     {
         parent::__construct();
         $this->serieRepository = $serieRepository;
+        $this->episodeShowRepository = $episodeShowRepository;
     }
 
     protected function configure(): void
@@ -56,17 +60,20 @@ class UpdateIdCommand extends Command
 
         $series = $this->serieRepository->findNotTvdbId();
 
-        dump($series);
+        foreach ($series as $serie){
+            /** @var EpisodeShow $episode */
+            $episode = $this->episodeShowRepository->findBySerie($serie);
 
-        $response = $client->get($apiUrl."/episodes", [
-            'headers' => [
-                'Authorization' => 'Bearer ' . $token,
-                'Content-Type' => 'application/json',
-                'Accept' => 'application/json',
-            ],
-        ]);
+            $response = $client->get($apiUrl."/episodes/".$episode->getId(), [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $token,
+                    'Content-Type' => 'application/json',
+                    'Accept' => 'application/json',
+                ],
+            ]);
 
-        //dump(json_decode($response->getBody(), true));
+            dump(json_decode($response->getBody(), true));
+        }
 
         return Command::SUCCESS;
     }
