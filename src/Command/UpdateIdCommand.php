@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Repository\SerieRepository;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -15,11 +16,19 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class UpdateIdCommand extends Command
 {
+
+    private $serieRepository;
+
+    private function __construct(SerieRepository $serieRepository)
+    {
+        parent::__construct();
+        $this->serieRepository = $serieRepository;
+    }
+
     protected function configure(): void
     {
         $this->setName('app:update-id');
     }
-
 
     /**
      * @throws GuzzleException
@@ -44,6 +53,10 @@ class UpdateIdCommand extends Command
 
         // Récupérez le token
         $token = $data['data']['token'];
+
+        $series = $this->serieRepository->findBy(['tvdbId' => !null]);
+
+        dump($series);
 
         $response = $client->get($apiUrl."/episodes", [
             'headers' => [
