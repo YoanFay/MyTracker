@@ -19,7 +19,7 @@ class UpdateIdCommand extends Command
 
     private $serieRepository;
 
-    private function __construct(SerieRepository $serieRepository)
+    public function __construct(SerieRepository $serieRepository)
     {
         parent::__construct();
         $this->serieRepository = $serieRepository;
