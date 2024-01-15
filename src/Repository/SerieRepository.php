@@ -45,7 +45,7 @@ class SerieRepository extends ServiceEntityRepository
     public function findNotTvdbId(): array
     {
         return $this->createQueryBuilder('s')
-            ->andWhere('s.tvdbid IS NULL')
+            ->andWhere('s.tvdbId IS NULL')
             ->getQuery()
             ->getResult()
         ;
