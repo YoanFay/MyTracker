@@ -66,7 +66,26 @@ class EpisodeShowRepository extends ServiceEntityRepository
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult()
-        ;
+            ;
+    }
+
+
+    /**
+     * @param $serie
+     *
+     * @return float|int|mixed|string|null
+     * @throws NonUniqueResultException
+     */
+    public function findBySerieWitoutTVDB($serie)
+    {
+        return $this->createQueryBuilder('e')
+            ->andWhere('e.serie = :serie')
+            ->setParameter('serie', $serie)
+            ->andWhere('e.tvdbId IS NULL')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
     }
 
 //    public function findOneBySomeField($value): ?EpisodeShow
