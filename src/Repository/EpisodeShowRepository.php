@@ -52,10 +52,12 @@ class EpisodeShowRepository extends ServiceEntityRepository
 
 
     /**
-     * @return EpisodeShow[] Returns an array of EpisodeShow objects
+     * @param $serie
+     *
+     * @return float|int|mixed|string|null
      * @throws NonUniqueResultException
      */
-    public function findBySerie($serie): array
+    public function findBySerie($serie)
     {
         return $this->createQueryBuilder('e')
             ->andWhere('e.serie = :serie')
