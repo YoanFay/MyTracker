@@ -53,7 +53,7 @@ class UpdateIdCommand extends Command
             ],
         ]);
 
-        dump($response);
+        dump(json_decode($response->getBody(), true));
 
         return Command::SUCCESS;
     }
