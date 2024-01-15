@@ -5,6 +5,7 @@ namespace App\Command;
 use App\Entity\EpisodeShow;
 use App\Repository\EpisodeShowRepository;
 use App\Repository\SerieRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
@@ -38,7 +39,7 @@ class UpdateIdCommand extends Command
     }
 
     /**
-     * @throws GuzzleException
+     * @throws GuzzleException|NonUniqueResultException
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
