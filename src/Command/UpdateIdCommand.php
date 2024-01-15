@@ -54,7 +54,7 @@ class UpdateIdCommand extends Command
         // Récupérez le token
         $token = $data['data']['token'];
 
-        $series = $this->serieRepository->findBy(['tvdbId' => !null]);
+        $series = $this->serieRepository->findNotTvdbId();
 
         dump($series);
 
