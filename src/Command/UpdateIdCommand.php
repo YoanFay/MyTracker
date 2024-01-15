@@ -79,7 +79,7 @@ class UpdateIdCommand extends Command
 
                 $data = json_decode($response->getBody(), true);
 
-                $serie->setTvdbId($data['data']['series_id']);
+                $serie->setTvdbId($data['data']['seriesId']);
 
                 $this->manager->persist($serie);
                 $this->manager->flush();
