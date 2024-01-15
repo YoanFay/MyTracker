@@ -66,7 +66,7 @@ class UpdateIdCommand extends Command
             ],
         ]);
 
-        dump(json_decode($response->getBody(), true));
+        //dump(json_decode($response->getBody(), true));
 
         return Command::SUCCESS;
     }
