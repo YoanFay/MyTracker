@@ -48,7 +48,19 @@ class SerieRepository extends ServiceEntityRepository
             ->andWhere('s.tvdbId IS NULL')
             ->getQuery()
             ->getResult()
-        ;
+            ;
+    }
+
+    /**
+     * @return Serie[] Returns an array of Serie objects
+     */
+    public function findTvdbId(): array
+    {
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.tvdbId IS NOT NULL')
+            ->getQuery()
+            ->getResult()
+            ;
     }
 
 //    public function findOneBySomeField($value): ?Serie
