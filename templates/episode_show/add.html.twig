@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ controller_name }}{% endblock %}
+
+{% block body %}
+    <div class="card">
+        {{ form_start(form) }}
+        {{ form_end(form) }}
+    </div>
+{% endblock %}
