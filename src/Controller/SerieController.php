@@ -30,6 +30,7 @@ class SerieController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()){
 
             $managerRegistry->getManager()->persist($serie);
+            $managerRegistry->getManager()->flush();
 
             $this->redirectToRoute('home');
         }
