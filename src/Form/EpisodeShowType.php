@@ -3,6 +3,8 @@
 namespace App\Form;
 
 use App\Entity\EpisodeShow;
+use App\Entity\Serie;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -34,6 +36,11 @@ class EpisodeShowType extends AbstractType
                 'attr' => ['class' => 'form-control'],
             ])
             ->add('duration', IntegerType::class, [
+                'attr' => ['class' => 'form-control'],
+            ])
+            ->add('serie', EntityType::class, [
+                'class' => Serie::class,
+                'choice_label' => 'name',
                 'attr' => ['class' => 'form-control'],
             ])
         ;
