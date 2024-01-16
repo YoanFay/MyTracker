@@ -15,22 +15,22 @@ class SerieType extends AbstractType
     {
         $builder
             ->add('plexId', TextType::class, [
-                'nullable' => true,
+                'required' => true,
                 'attr' => ['class' => 'form-control'],
             ])
             ->add('name', TextType::class, [
                 'attr' => ['class' => 'form-control'],
             ])
             ->add('tvdbId', TextType::class, [
-                'nullable' => true,
+                'required' => true,
                 'attr' => ['class' => 'form-control'],
             ])
             ->add('type', TextType::class, [
-                'nullable' => true,
+                'required' => true,
                 'attr' => ['class' => 'form-control'],
             ])
             ->add('vfName', CheckboxType::class, [
-                'nullable' => true,
+                'required' => true,
                 'attr' => ['class' => 'form-control'],
             ])
         ;
