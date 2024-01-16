@@ -7,6 +7,7 @@ use App\Form\EpisodeShowType;
 use App\Repository\UsersRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -21,16 +22,17 @@ class EpisodeShowController extends AbstractController
     }
 
     #[Route('/episode/add', name: 'app_episode_add')]
-    public function addEpisode(ManagerRegistry $managerRegistry, UsersRepository $usersRepository): Response
+    public function addEpisode(ManagerRegistry $managerRegistry, UsersRepository $usersRepository, Request $request): Response
     {
 
         $episode = new EpisodeShow();
 
         $form = $this->createForm(EpisodeShowType::class, $episode);
-
-        $user = $usersRepository->findOneBy(['plexName' => 'yoan.f8']);
+        $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()){
+
+            $user = $usersRepository->findOneBy(['plexName' => 'yoan.f8']);
 
             $episode->setUser($user);
 
@@ -39,7 +41,7 @@ class EpisodeShowController extends AbstractController
             $managerRegistry->getManager()->persist($episode);
             $managerRegistry->getManager()->flush();
 
-            $this->redirectToRoute('home');
+            return $this->redirectToRoute('home');
         }
 
         return $this->render('episode_show/add.html.twig', [

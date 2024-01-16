@@ -44,7 +44,7 @@ class EpisodeShowType extends AbstractType
                 'choice_label' => 'name',
                 'attr' => ['class' => 'form-control'],
             ])
-            ->add('valide', SubmitType::class, [
+            ->add('submit', SubmitType::class, [
                 'attr' => ['class' => 'btn btn-primary'],
             ]);
         ;
