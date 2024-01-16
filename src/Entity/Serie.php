@@ -20,7 +20,7 @@ class Serie
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $plexId;
 
@@ -65,7 +65,7 @@ class Serie
         return $this->plexId;
     }
 
-    public function setPlexId(string $plexId): self
+    public function setPlexId(?string $plexId): self
     {
         $this->plexId = $plexId;
 
