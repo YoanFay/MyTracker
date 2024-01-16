@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\SerieRepository;
 use App\Repository\EpisodeShowRepository;
+use App\Repository\MovieRepository;
 use Bugsnag\BugsnagBundle\DependencyInjection\ClientFactory;
 use Bugsnag\Client;
 
@@ -19,7 +20,7 @@ class HomepageController extends AbstractController
      * @Route("/", name="home")
      * @throws Exception
      */
-    public function index(SerieRepository $serieRepository, EpisodeShowRepository $episodeShowRepository): Response
+    public function index(SerieRepository $serieRepository, EpisodeShowRepository $episodeShowRepository, MovieRepository $MovieRepository): Response
     {
         
         $series = $serieRepository->findAll();
