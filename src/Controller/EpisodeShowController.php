@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Entity\EpisodeShow;
 use App\Form\EpisodeShowType;
 use App\Repository\UsersRepository;
-use Symfony\Bridge\Doctrine\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
