@@ -21,7 +21,7 @@ class EpisodeShowController extends AbstractController
     }
 
     #[Route('/episode/add', name: 'app_episode_add')]
-    public function addSerie(ManagerRegistry $managerRegistry, UsersRepository $usersRepository): Response
+    public function addEpisode(ManagerRegistry $managerRegistry, UsersRepository $usersRepository): Response
     {
 
         $episode = new EpisodeShow();
