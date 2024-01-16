@@ -34,7 +34,7 @@ class SerieController extends AbstractController
             $this->redirectToRoute('home');
         }
 
-        return $this->render('serie/index.html.twig', [
+        return $this->render('serie/add.html.twig', [
             'controller_name' => 'SerieController',
             'form' => $form->createView(),
         ]);
