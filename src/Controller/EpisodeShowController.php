@@ -34,6 +34,8 @@ class EpisodeShowController extends AbstractController
 
             $episode->setUser($user);
 
+            $episode->setDuration($episode->getDuration() * 60000);
+
             $managerRegistry->getManager()->persist($episode);
             $managerRegistry->getManager()->flush();
 
