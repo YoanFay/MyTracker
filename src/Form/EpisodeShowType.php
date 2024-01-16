@@ -26,6 +26,7 @@ class EpisodeShowType extends AbstractType
             ])
             ->add('tvdbId', IntegerType::class, [
                 'attr' => ['class' => 'form-control'],
+                'required' => false,
             ])
             ->add('saison', TextType::class, [
                 'attr' => ['class' => 'form-control'],
