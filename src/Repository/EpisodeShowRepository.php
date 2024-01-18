@@ -90,6 +90,20 @@ class EpisodeShowRepository extends ServiceEntityRepository
 
 
     /**
+     * @return float|int|mixed|string|null
+     * @throws NonUniqueResultException
+     */
+    public function findWitoutTVDB()
+    {
+        return $this->createQueryBuilder('e')
+            ->andWhere('e.tvdbId IS NULL')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+
+    /**
      * @param $serie
      *
      * @return float|int|mixed|string|null

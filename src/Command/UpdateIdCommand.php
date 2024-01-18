@@ -111,9 +111,36 @@ class UpdateIdCommand extends Command
 
                         $data2 = json_decode($response->getBody(), true);
 
-                        $oneEpisode->setTvdbId($data2['data']['episode'][0]['id']);
+                        $oneEpisode->setTvdbId($data2['data']['episodes'][0]['id']);
 
                         $this->manager->persist($oneEpisode);
+                        $this->manager->flush();
+                    }
+
+                }
+            }
+
+            $episodesWithoutTVDB = $this->episodeShowRepository->findWitoutTVDB();
+
+            if ($episodesWithoutTVDB) {
+                foreach ($episodesWithoutTVDB as $episodeWithoutTVDB) {
+                    
+                    dump($episodeWithoutTVDB);
+
+                    if ($episodeWithoutTVDB->getSerie()->getTvdbId()) {
+                        $response = $client->get($apiUrl."/series/".$episodeWithoutTVDB->getSerie()->getTvdbId()."/episodes/default?page=1&season=".$episodeWithoutTVDB->getSaisonNumber()."&episodeNumber=".$episodeWithoutTVDB->getEpisodeNumber(), [
+                            'headers' => [
+                                'Authorization' => 'Bearer '.$token,
+                                'Content-Type' => 'application/json',
+                                'Accept' => 'application/json',
+                            ],
+                        ]);
+
+                        $data2 = json_decode($response->getBody(), true);
+
+                        $episodeWithoutTVDB->setTvdbId($data2['data']['episodes'][0]['id']);
+
+                        $this->manager->persist($episodeWithoutTVDB);
                         $this->manager->flush();
                     }
 
