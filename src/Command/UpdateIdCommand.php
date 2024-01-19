@@ -120,34 +120,30 @@ class UpdateIdCommand extends Command
 
                 }
             }
+        }
 
-            $episodesWithoutTVDB = $this->episodeShowRepository->findWitoutTVDB();
+        $episodesWithoutTVDB = $this->episodeShowRepository->findWitoutTVDB();
 
-            dump($episodesWithoutTVDB);
+        if ($episodesWithoutTVDB !== []) {
+            foreach ($episodesWithoutTVDB as $episodeWithoutTVDB) {
 
-            if ($episodesWithoutTVDB) {
-                foreach ($episodesWithoutTVDB as $episodeWithoutTVDB) {
+                if ($episodeWithoutTVDB->getSerie()->getTvdbId()) {
+                    $response = $client->get($apiUrl."/series/".$episodeWithoutTVDB->getSerie()->getTvdbId()."/episodes/default?page=1&season=".$episodeWithoutTVDB->getSaisonNumber()."&episodeNumber=".$episodeWithoutTVDB->getEpisodeNumber(), [
+                        'headers' => [
+                            'Authorization' => 'Bearer '.$token,
+                            'Content-Type' => 'application/json',
+                            'Accept' => 'application/json',
+                        ],
+                    ]);
 
-                    if ($episodeWithoutTVDB->getSerie()->getTvdbId()) {
-                        $response = $client->get($apiUrl."/series/".$episodeWithoutTVDB->getSerie()->getTvdbId()."/episodes/default?page=1&season=".$episodeWithoutTVDB->getSaisonNumber()."&episodeNumber=".$episodeWithoutTVDB->getEpisodeNumber(), [
-                            'headers' => [
-                                'Authorization' => 'Bearer '.$token,
-                                'Content-Type' => 'application/json',
-                                'Accept' => 'application/json',
-                            ],
-                        ]);
+                    $data2 = json_decode($response->getBody(), true);
 
-                        $data2 = json_decode($response->getBody(), true);
+                    $episodeWithoutTVDB->setTvdbId($data2['data']['episodes'][0]['id']);
 
-                        dump($data2);
-
-                        $episodeWithoutTVDB->setTvdbId($data2['data']['episodes'][0]['id']);
-
-                        $this->manager->persist($episodeWithoutTVDB);
-                        $this->manager->flush();
-                    }
-
+                    $this->manager->persist($episodeWithoutTVDB);
+                    $this->manager->flush();
                 }
+
             }
         }
 
