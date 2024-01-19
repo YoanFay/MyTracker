@@ -123,10 +123,10 @@ class UpdateIdCommand extends Command
 
             $episodesWithoutTVDB = $this->episodeShowRepository->findWitoutTVDB();
 
+            dump($episodesWithoutTVDB);
+
             if ($episodesWithoutTVDB) {
                 foreach ($episodesWithoutTVDB as $episodeWithoutTVDB) {
-                    
-                    dump($episodeWithoutTVDB);
 
                     if ($episodeWithoutTVDB->getSerie()->getTvdbId()) {
                         $response = $client->get($apiUrl."/series/".$episodeWithoutTVDB->getSerie()->getTvdbId()."/episodes/default?page=1&season=".$episodeWithoutTVDB->getSaisonNumber()."&episodeNumber=".$episodeWithoutTVDB->getEpisodeNumber(), [
