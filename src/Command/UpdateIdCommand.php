@@ -7,6 +7,7 @@ use App\Repository\EpisodeShowRepository;
 use App\Repository\SerieRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ObjectManager;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -21,11 +22,11 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class UpdateIdCommand extends Command
 {
 
-    private $serieRepository;
+    private SerieRepository $serieRepository;
 
-    private $episodeShowRepository;
+    private EpisodeShowRepository $episodeShowRepository;
 
-    private $manager;
+    private ObjectManager $manager;
 
 
     public function __construct(SerieRepository $serieRepository, EpisodeShowRepository $episodeShowRepository, ManagerRegistry $managerRegistry)
@@ -71,6 +72,8 @@ class UpdateIdCommand extends Command
         $token = $data['data']['token'];
 
         $series = $this->serieRepository->findNotTvdbId();
+
+        dump($series);
 
         foreach ($series as $serie) {
             $data = null;
