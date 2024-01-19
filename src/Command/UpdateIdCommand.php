@@ -73,8 +73,6 @@ class UpdateIdCommand extends Command
 
         $series = $this->serieRepository->findNotTvdbId();
 
-        dump($series);
-
         foreach ($series as $serie) {
             $data = null;
             $episode = null;
@@ -140,6 +138,8 @@ class UpdateIdCommand extends Command
                         ]);
 
                         $data2 = json_decode($response->getBody(), true);
+
+                        dump($data2);
 
                         $episodeWithoutTVDB->setTvdbId($data2['data']['episodes'][0]['id']);
 
