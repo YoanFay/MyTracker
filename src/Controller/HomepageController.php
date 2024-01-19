@@ -22,19 +22,19 @@ class HomepageController extends AbstractController
      */
     public function index(SerieRepository $serieRepository, EpisodeShowRepository $episodeShowRepository, MovieRepository $MovieRepository): Response
     {
-        
+
         $series = $serieRepository->findAll();
         $episodes = $episodeShowRepository->findAll();
         $showSerie = [];
-        
-        foreach($series as $serie){
-            if(count($serie->getEpisodeShows()->getValues()) > 0){
+
+        foreach ($series as $serie) {
+            if (count($serie->getEpisodeShows()->getValues()) > 0) {
                 $showSerie[$serie->getName()] = $serie->getEpisodeShows()->getValues();
             }
         }
 
         $episodesByDate = [];
-        $timeByDate = [];
+        $timeByDateType = [];
         $dateKeys = [];
 
         foreach ($episodes as $episode) {
@@ -46,6 +46,16 @@ class HomepageController extends AbstractController
             } else {
                 $episodesByDate[$dateKey][] = $episode;
             }
+
+            if (!isset($timeByDateType[$dateKey])) {
+                $timeByDateType[$dateKey] = [
+                    'Anime' => 0,
+                    'Séries' => 0,
+                    'Replay' => 0
+                ];
+            }
+
+            $timeByDateType[$dateKey][$episode->getSerie()->getType()] += $episode->getDuration();
         }
 
         return $this->render('homepage/index.html.twig', [
@@ -53,6 +63,7 @@ class HomepageController extends AbstractController
             'episodes' => $episodes,
             'episodesByDate' => $episodesByDate,
             'dateKeys' => $dateKeys,
+            'timeByDateType' => $timeByDateType
         ]);
     }
 }
