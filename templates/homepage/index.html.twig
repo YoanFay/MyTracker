@@ -11,13 +11,16 @@
             <th scope="col">Heure de visionnage</th>
         </tr>
         </thead>
-        <tbody>
 
         {% set sortedDateKeys = dateKeys|sort %}
         {% set globalDuration = 0 %}
+        {% set globalDurationAnime = 0 %}
+        {% set globalDurationSerie = 0 %}
+        {% set globalDurationReplay = 0 %}
         {% set countDay = 0 %}
         {% set prev = 0 %}
         {% for dateKey in sortedDateKeys %}
+        <tbody>
             {% set date = dateKey|date("d/m/Y") %}
             {% set dateShow = dateKey|date("Y/m/d") %}
             {% set duration = [] %}
@@ -28,6 +31,15 @@
                 {% for episode in episodes %}
                     {% set globalDuration = globalDuration + episode.duration %}
                     {% set currentDuration = currentDuration + episode.duration %}
+                    
+                    {% if episode.serie.type == "Anime" %}
+                    {% set globalDurationAnime = globalDurationAnime + episode.duration %}
+                    {% elseif episode.serie.type == "Séries" %}
+                    {% set globalDurationSerie = globalDurationSerie + episode.duration %}
+                    {% elseif episode.serie.type == "Replay" %}
+                    {% set globalDurationReplay = globalDurationReplay + episode.duration %}
+                    {% endif %}
+                    
                 {% endfor %}
 
                 {% set countDay = countDay + 1 %}
@@ -36,7 +48,7 @@
 
             {% endfor %}
             <tr class="table-secondary">
-                <th colspan="4">
+                <th colspan="4" {# OnClick="displayRow({{dateKey|date('U')}})" #}>
                     {{ dateShow|dateF }}
                     - {{ duration[dateKey]|MsToHM }} de visionnage
                     -
@@ -51,7 +63,10 @@
                     {% endfor %}
                 </th>
             </tr>
+        </tbody>
+        <tbody id="row{{dateKey|date('U')}}" {# class="d-none" #}>
             {% set prev = 0 %}
+            <div>
             {% for episode in episodesByDate[dateKey]|sort((a, b) => a.showDate <=> b.showDate) %}
                 <tr>
                     <td>{{ episode.serie.name }}</td>
@@ -60,10 +75,26 @@
                     <td>{{ episode.showDate|date("H\\hi") }}</td>
                 </tr>
             {% endfor %}
-        {% endfor %}
+            </div>
         </tbody>
+        {% endfor %}
     </table>
 
-    <p>{{ (globalDuration / countDay)|MsToHM }} de visionnage en moyenne par jour</p>
+<div class="ms-3">
+    <p>{{ (globalDuration / countDay)|MsToHM }} de visionnage en moyenne par jour / {{ (globalDurationAnime / countDay)|MsToHM }} d'animes / {{ (globalDurationSerie / countDay)|MsToHM }} de séries / {{ (globalDurationReplay / countDay)|MsToHM }} de replay</p>
+</div>
 
+{% endblock %}
+
+{% block javascript %}
+<script>
+    
+    function displayRow(id){
+        console.log(id);
+        var row = $('#row' + id);
+        
+        row.toggleClass('d-none');
+    }
+    
+</script>
 {% endblock %}
