@@ -79,7 +79,7 @@ class UpdateIdCommand extends Command
             /** @var EpisodeShow $episode */
             $episode = $this->episodeShowRepository->findBySerie($serie);
 
-            if ($episode) {
+            if ($episode && $episode->getTvdbId()) {
                 $response = $client->get($apiUrl."/episodes/".$episode->getTvdbId(), [
                     'headers' => [
                         'Authorization' => 'Bearer '.$token,
