@@ -14,7 +14,10 @@
 
         {% set sortedDateKeys = dateKeys|sort %}
         {% set globalDuration = 0 %}
-        {% set countDay = 0 %}
+        {% set currentDate = "now"|date("Y-m-d") %}
+        {% set startOfYear = currentDate|date("Y-01-01") %}
+        {% set daysSinceStartOfYear = currentDate|date_modify('-' ~ startOfYear|date("U") ~ ' seconds')|date("z") + 1 %}
+        
         {% for dateKey in sortedDateKeys %}
         <tbody>
             {% set date = dateKey|date("d/m/Y") %}
@@ -29,8 +32,6 @@
                     {% set currentDuration = currentDuration + movie.duration %}
                     
                 {% endfor %}
-
-                {% set countDay = countDay + 1 %}
 
                 {% set duration = duration|merge({(key): currentDuration}) %}
 
@@ -58,6 +59,6 @@
     </table>
 
 <div class="ms-3">
-    <p>{{ (globalDuration / countDay)|MsToHM }} de visionnage en moyenne par jour
+    <p>{{ (globalDuration / daysSinceStartOfYear)|MsToHM }} de visionnage en moyenne par jour
 </div>
 {% endblock %}

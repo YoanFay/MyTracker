@@ -100,6 +100,7 @@ class UpdateIdCommand extends Command
 
             if ($episodes) {
                 foreach ($episodes as $oneEpisode) {
+                    $data2 = null;
 
                     if ($oneEpisode->getSerie()->getTvdbId()) {
                         $response = $client->get($apiUrl."/series/".$oneEpisode->getSerie()->getTvdbId()."/episodes/default?page=1&season=".$oneEpisode->getSaisonNumber()."&episodeNumber=".$oneEpisode->getEpisodeNumber(), [
@@ -126,6 +127,7 @@ class UpdateIdCommand extends Command
 
         if ($episodesWithoutTVDB !== []) {
             foreach ($episodesWithoutTVDB as $episodeWithoutTVDB) {
+                $data3 = null;
 
                 if ($episodeWithoutTVDB->getSerie()->getTvdbId()) {
                     $response = $client->get($apiUrl."/series/".$episodeWithoutTVDB->getSerie()->getTvdbId()."/episodes/default?page=1&season=".$episodeWithoutTVDB->getSaisonNumber()."&episodeNumber=".$episodeWithoutTVDB->getEpisodeNumber(), [
@@ -136,9 +138,9 @@ class UpdateIdCommand extends Command
                         ],
                     ]);
 
-                    $data2 = json_decode($response->getBody(), true);
+                    $data3 = json_decode($response->getBody(), true);
 
-                    $episodeWithoutTVDB->setTvdbId($data2['data']['episodes'][0]['id']);
+                    $episodeWithoutTVDB->setTvdbId($data3['data']['episodes'][0]['id']);
 
                     $this->manager->persist($episodeWithoutTVDB);
                     $this->manager->flush();
