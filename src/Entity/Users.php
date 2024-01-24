@@ -30,7 +30,7 @@ class Users
     private $episodeShows;
 
     /**
-     * @ORM\OneToMany(targetEntity=Movie::class, mappedBy="userId")
+     * @ORM\OneToMany(targetEntity=Movie::class, mappedBy="user")
      */
     private $movies;
 

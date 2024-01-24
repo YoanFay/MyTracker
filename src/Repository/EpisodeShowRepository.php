@@ -50,6 +50,18 @@ class EpisodeShowRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function getDurationByType($type)
+    {
+        return $this->createQueryBuilder('e')
+            ->select('SUM(e.duration) AS COUNT')
+            ->leftJoin('e.serie', 's')
+            ->andWhere('s.type = :type')
+            ->setParameter('type', $type)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+
 
     /**
      * @param $serie

@@ -39,6 +39,15 @@ class MovieRepository extends ServiceEntityRepository
         }
     }
 
+    public function getDuration()
+    {
+        return $this->createQueryBuilder('m')
+            ->select('SUM(m.duration) AS COUNT')
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+
 //    /**
 //     * @return Movie[] Returns an array of Movie objects
 //     */

@@ -38,7 +38,7 @@ class Movie
     private $duration;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Users::class, inversedBy="episodeShows")
+     * @ORM\ManyToOne(targetEntity=Users::class, inversedBy="movies")
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;

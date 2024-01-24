@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<div class="chart-container" style="position: relative; height:20vh; width:30vw">
+    <div>
+        <canvas id="myChart"></canvas>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block javascript %}
+
+<script>
+  const ctx = document.getElementById('myChart');
+
+  // Fonction pour convertir les secondes en format "hh:mm"
+  function toHHMM(milliseconds) {
+    const seconds = Math.floor(milliseconds / 1000);
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    return `${hours}h${minutes}min`;
+  }
+
+  new Chart(ctx, {
+    type: 'pie',
+    data: {
+      labels: ['Film', 'Anime', 'Série', 'Replay'],
+      datasets: [{
+        label: 'Temps de visionnage',
+        data: {{ timeChart }},
+        borderWidth: 1
+      }]
+    },
+    options: {
+      plugins: {
+        tooltip: {
+          callbacks: {
+            label: function (context) {
+              const value = context.parsed;
+              return `Temps de visionnage : ${toHHMM(value)}`;
+            }
+          }
+        }
+      }
+    }
+  });
+</script>
+
+{% endblock %}
