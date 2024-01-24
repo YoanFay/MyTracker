@@ -109,7 +109,7 @@ class EpisodeShowController extends AbstractController
             $managerRegistry->getManager()->persist($episode);
             $managerRegistry->getManager()->flush();
 
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('app_episode');
         }
 
         return $this->render('episode_show/add.html.twig', [

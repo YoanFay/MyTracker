@@ -29,14 +29,58 @@ class HomepageController extends AbstractController
         $serieDuration = $episodeShowRepository->getDurationByType('Séries');
         $replayDuration = $episodeShowRepository->getDurationByType('Replay');
         
+        $allEpisodes = $episodeShowRepository->findAll();
+        
+        $timeByDay = [
+            'Monday' => 0,
+            'Tuesday' => 0,
+            'Wednesday' => 0,
+            'Thursday' => 0,
+            'Friday' => 0,
+            'Saturday' => 0,
+            'Sunday' => 0
+        ];
+
+        
+        foreach($allEpisodes as $episode){
+            $timeByDay[$episode->getShowDate()->format('l')] += $episode->getDuration();
+        }
+        
+        
+        $aujourdHui = new DateTime();
+
+        $debutAnnee = new DateTime($aujourdHui->format('Y-01-01'));
+
+        $joursCount = [
+            'Monday' => 0,
+            'Tuesday' => 0,
+            'Wednesday' => 0,
+            'Thursday' => 0,
+            'Friday' => 0,
+            'Saturday' => 0,
+            'Sunday' => 0
+        ];
+
+        // Boucler à travers chaque jour depuis le début de l'année
+        while ($debutAnnee <= $aujourdHui) {
+            $jourSemaine = $debutAnnee->format('l');
+            $joursCount[$jourSemaine]++;
+            $debutAnnee->modify('+1 day');
+        }
+        
+        foreach($timeByDay as $key => $time){
+            $timeByDay[$key] = $time / $joursCount[$key];
+        }
+        
         $animeType = $timeService->convertirMillisecondes($animeDuration['COUNT']);
         
         $timeChart = "[".$movieDuration['COUNT'].", ".$animeDuration['COUNT'].", ".$serieDuration['COUNT'].", ".$replayDuration['COUNT']."]";
         
-        dump($timeChart);
+        $timeByDayChart = "[".$timeByDay['Monday'].", ".$timeByDay['Tuesday'].", ".$timeByDay['Wednesday'].", ".$timeByDay['Thursday'].", ".$timeByDay['Friday'].", ".$timeByDay['Saturday'].", ".$timeByDay['Sunday']."]";
         
         return $this->render('homepage/index.html.twig', [
             'timeChart' => $timeChart,
+            'timeByDayChart' => $timeByDayChart,
         ]);
     }
 }

@@ -2,10 +2,18 @@
 
 {% block body %}
 
+<div class="d-flex flex-row">
 <div class="chart-container" style="position: relative; height:20vh; width:30vw">
     <div>
         <canvas id="myChart"></canvas>
     </div>
+</div>
+
+<div class="chart-container" style="position: relative; height:20vh; width:30vw">
+    <div>
+        <canvas id="myChart2"></canvas>
+    </div>
+</div>
 </div>
 
 {% endblock %}
@@ -39,6 +47,43 @@
           callbacks: {
             label: function (context) {
               const value = context.parsed;
+              return `Temps de visionnage : ${toHHMM(value)}`;
+            }
+          }
+        }
+      }
+    }
+  });
+  
+  const ctx2 = document.getElementById('myChart2');
+
+  new Chart(ctx2, {
+    type: 'bar',
+    data: {
+      labels: ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'],
+      datasets: [{
+        label: 'Temps de visionnage',
+        data: {{ timeByDayChart }},
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+              stepSize: 1800000,
+              callback: function(value, index, values) {
+              return toHHMM(value);
+            }
+          }
+        }
+      },
+      plugins: {
+        tooltip: {
+          callbacks: {
+            label: function (context) {
+              const value = context.parsed.y;
               return `Temps de visionnage : ${toHHMM(value)}`;
             }
           }
