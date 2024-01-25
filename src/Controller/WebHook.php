@@ -40,12 +40,15 @@ class WebHook extends AbstractController
         $user = $usersRepository->findOneBy(['plexName' => $jsonData['Account']['title']]);
 
         if (!$user) {
-            $user = new Users;
+            /*$user = new Users;
 
             $user->setPlexName($jsonData['Account']['title']);
 
             $em->persist($user);
-            $em->flush();
+            $em->flush();*/
+
+            return new Response('FALSE');
+
         }
 
         $type = str_replace(['Quasinas ', ' A Deux', ' Chat', ' Doudou'], ['', '', '', ''], $jsonData['Metadata']['librarySectionTitle']);
@@ -232,7 +235,7 @@ class WebHook extends AbstractController
         return new Response('ok');
     } else {*/
         //file_put_contents('/home/vfmqnrmc/www/public/log/'.strtotime('now').'.txt', $content);
-        return new Response('Pas de tags');
+        return new Response('OK');
         //}
     }
 
