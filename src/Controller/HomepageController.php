@@ -131,7 +131,7 @@ class HomepageController extends AbstractController
             $movieByDay[$key] = $time / $joursCount[$key];
         }
 
-        $timeChart = "[".$movieDuration['COUNT'].", ".$animeDuration['COUNT'].", ".$serieDuration['COUNT'].", ".$replayDuration['COUNT']."]";
+        $timeChart = "[".$animeDuration['COUNT'].", ".$serieDuration['COUNT'].", ".$replayDuration['COUNT'].", ".$movieDuration['COUNT']."]";
 
         $animeByDayChart = "[".$animeByDay['Monday'].", ".$animeByDay['Tuesday'].", ".$animeByDay['Wednesday'].", ".$animeByDay['Thursday'].", ".$animeByDay['Friday'].", ".$animeByDay['Saturday'].", ".$animeByDay['Sunday']."]";
 
