@@ -2,42 +2,42 @@
 
 {% block body %}
 
-<div class="d-flex flex-row">
-<div class="chart-container" style="position: relative; height:20vh; width:30vw">
-    <div>
-        <canvas id="myChart"></canvas>
-    </div>
-</div>
+    <div class="d-flex flex-row">
+        <div class="chart-container" style="position: relative; height:20vh; width:30vw">
+            <div>
+                <canvas id="myChart"></canvas>
+            </div>
+        </div>
 
-<div class="chart-container" style="position: relative; height:20vh; width:30vw">
-    <div>
-        <canvas id="myChart2"></canvas>
+        <div class="chart-container" style="position: relative; height:20vh; width:30vw">
+            <div>
+                <canvas id="myChart2"></canvas>
+            </div>
+        </div>
     </div>
-</div>
-</div>
 
 {% endblock %}
 
 {% block javascript %}
 
 <script>
-  const ctx = document.getElementById('myChart');
+    const ctx = document.getElementById('myChart');
 
-  // Fonction pour convertir les secondes en format "hh:mm"
-  function toHHMM(milliseconds) {
+    // Fonction pour convertir les secondes en format "hh:mm"
+    function toHHMM(milliseconds) {
     const seconds = Math.floor(milliseconds / 1000);
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     return `${hours}h${minutes}min`;
-  }
+}
 
-  new Chart(ctx, {
+    new Chart(ctx, {
     type: 'pie',
     data: {
-      labels: ['Film', 'Anime', 'Série', 'Replay'],
-      datasets: [{
-        label: 'Temps de visionnage',
-        data: {{ timeChart }},
+    labels: ['Film', 'Anime', 'Série', 'Replay'],
+    datasets: [{
+    label: 'Temps de visionnage',
+    data: {{ timeChart }},
         borderWidth: 1
       }]
     },
@@ -62,8 +62,28 @@
     data: {
       labels: ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'],
       datasets: [{
-        label: 'Temps de visionnage',
-        data: {{ timeByDayChart }},
+        label: 'Anime',
+        data: {{ animeByDayChart }},
+        backgroundColor: 'rgb(255, 99, 132)',
+        borderColor: 'rgb(255, 99, 132)',
+        borderWidth: 1
+      },{
+        label: 'Série',
+        data: {{ serieByDayChart }},
+        backgroundColor: 'rgb(255, 159, 64)',
+        borderColor: 'rgb(255, 159, 64)',
+        borderWidth: 1
+      },{
+        label: 'Replay',
+        data: {{ replayByDayChart }},
+        backgroundColor: 'rgb(255, 205, 86)',
+        borderColor: 'rgb(255, 205, 86)',
+        borderWidth: 1
+      },{
+        label: 'Film',
+        data: {{ movieByDayChart }},
+        backgroundColor: 'rgb(54, 162, 235)',
+        borderColor: 'rgb(54, 162, 235)',
         borderWidth: 1
       }]
     },
@@ -71,12 +91,16 @@
       scales: {
         y: {
           beginAtZero: true,
+          stacked: true,
           ticks: {
               stepSize: 1800000,
               callback: function(value, index, values) {
               return toHHMM(value);
             }
           }
+        },
+        x: {
+          stacked: true,
         }
       },
       plugins: {

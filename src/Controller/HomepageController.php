@@ -23,15 +23,16 @@ class HomepageController extends AbstractController
      */
     public function index(MovieRepository $movieRepository, EpisodeShowRepository $episodeShowRepository, TimeService $timeService): Response
     {
-        
+
         $movieDuration = $movieRepository->getDuration();
         $animeDuration = $episodeShowRepository->getDurationByType('Anime');
         $serieDuration = $episodeShowRepository->getDurationByType('Séries');
         $replayDuration = $episodeShowRepository->getDurationByType('Replay');
-        
+
         $allEpisodes = $episodeShowRepository->findAll();
-        
-        $timeByDay = [
+        $allMovies = $movieRepository->findAll();
+
+        $animeByDay = [
             'Monday' => 0,
             'Tuesday' => 0,
             'Wednesday' => 0,
@@ -41,12 +42,58 @@ class HomepageController extends AbstractController
             'Sunday' => 0
         ];
 
-        
-        foreach($allEpisodes as $episode){
-            $timeByDay[$episode->getShowDate()->format('l')] += $episode->getDuration();
+        $serieByDay = [
+            'Monday' => 0,
+            'Tuesday' => 0,
+            'Wednesday' => 0,
+            'Thursday' => 0,
+            'Friday' => 0,
+            'Saturday' => 0,
+            'Sunday' => 0
+        ];
+
+        $replayByDay = [
+            'Monday' => 0,
+            'Tuesday' => 0,
+            'Wednesday' => 0,
+            'Thursday' => 0,
+            'Friday' => 0,
+            'Saturday' => 0,
+            'Sunday' => 0
+        ];
+
+        $movieByDay = [
+            'Monday' => 0,
+            'Tuesday' => 0,
+            'Wednesday' => 0,
+            'Thursday' => 0,
+            'Friday' => 0,
+            'Saturday' => 0,
+            'Sunday' => 0
+        ];
+
+        foreach ($allEpisodes as $episode) {
+
+            switch ($episode->getSerie()->getType()) {
+            case "Anime":
+                $animeByDay[$episode->getShowDate()->format('l')] += $episode->getDuration();
+                break;
+            case "Séries":
+                $serieByDay[$episode->getShowDate()->format('l')] += $episode->getDuration();
+                break;
+            case "Replay":
+                $replayByDay[$episode->getShowDate()->format('l')] += $episode->getDuration();
+                break;
+            }
+
         }
-        
-        
+
+        foreach ($allMovies as $movie) {
+
+            $movieByDay[$movie->getShowDate()->format('l')] += $movie->getDuration();
+
+        }
+
         $aujourdHui = new DateTime();
 
         $debutAnnee = new DateTime($aujourdHui->format('Y-01-01'));
@@ -67,20 +114,39 @@ class HomepageController extends AbstractController
             $joursCount[$jourSemaine]++;
             $debutAnnee->modify('+1 day');
         }
-        
-        foreach($timeByDay as $key => $time){
-            $timeByDay[$key] = $time / $joursCount[$key];
+
+        foreach ($animeByDay as $key => $time) {
+            $animeByDay[$key] = $time / $joursCount[$key];
         }
-        
-        $animeType = $timeService->convertirMillisecondes($animeDuration['COUNT']);
-        
+
+        foreach ($serieByDay as $key => $time) {
+            $serieByDay[$key] = $time / $joursCount[$key];
+        }
+
+        foreach ($replayByDay as $key => $time) {
+            $replayByDay[$key] = $time / $joursCount[$key];
+        }
+
+        foreach ($movieByDay as $key => $time) {
+            $movieByDay[$key] = $time / $joursCount[$key];
+        }
+
         $timeChart = "[".$movieDuration['COUNT'].", ".$animeDuration['COUNT'].", ".$serieDuration['COUNT'].", ".$replayDuration['COUNT']."]";
-        
-        $timeByDayChart = "[".$timeByDay['Monday'].", ".$timeByDay['Tuesday'].", ".$timeByDay['Wednesday'].", ".$timeByDay['Thursday'].", ".$timeByDay['Friday'].", ".$timeByDay['Saturday'].", ".$timeByDay['Sunday']."]";
-        
+
+        $animeByDayChart = "[".$animeByDay['Monday'].", ".$animeByDay['Tuesday'].", ".$animeByDay['Wednesday'].", ".$animeByDay['Thursday'].", ".$animeByDay['Friday'].", ".$animeByDay['Saturday'].", ".$animeByDay['Sunday']."]";
+
+        $serieByDayChart = "[".$serieByDay['Monday'].", ".$serieByDay['Tuesday'].", ".$serieByDay['Wednesday'].", ".$serieByDay['Thursday'].", ".$serieByDay['Friday'].", ".$serieByDay['Saturday'].", ".$serieByDay['Sunday']."]";
+
+        $replayByDayChart = "[".$replayByDay['Monday'].", ".$replayByDay['Tuesday'].", ".$replayByDay['Wednesday'].", ".$replayByDay['Thursday'].", ".$replayByDay['Friday'].", ".$replayByDay['Saturday'].", ".$replayByDay['Sunday']."]";
+
+        $movieByDayChart = "[".$movieByDay['Monday'].", ".$movieByDay['Tuesday'].", ".$movieByDay['Wednesday'].", ".$movieByDay['Thursday'].", ".$movieByDay['Friday'].", ".$movieByDay['Saturday'].", ".$movieByDay['Sunday']."]";
+
         return $this->render('homepage/index.html.twig', [
             'timeChart' => $timeChart,
-            'timeByDayChart' => $timeByDayChart,
+            'animeByDayChart' => $animeByDayChart,
+            'serieByDayChart' => $serieByDayChart,
+            'replayByDayChart' => $replayByDayChart,
+            'movieByDayChart' => $movieByDayChart,
         ]);
     }
 }
