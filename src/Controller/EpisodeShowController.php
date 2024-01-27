@@ -18,7 +18,7 @@ use Bugsnag\Client;
 
 class EpisodeShowController extends AbstractController
 {
-    #[Route('/episode', name: 'app_episode')]
+    #[Route('/episode', name: 'episode')]
     public function index(SerieRepository $serieRepository, EpisodeShowRepository $episodeShowRepository, MovieRepository $MovieRepository): Response
     {
 
@@ -89,7 +89,7 @@ class EpisodeShowController extends AbstractController
         ]);
     }
 
-    #[Route('/episode/add', name: 'app_episode_add')]
+    #[Route('/episode/add', name: 'episode_add')]
     public function addEpisode(ManagerRegistry $managerRegistry, UsersRepository $usersRepository, Request $request): Response
     {
 
@@ -105,7 +105,7 @@ class EpisodeShowController extends AbstractController
             if (!password_verify($passwordTest, $_ENV['PASSWORD_USER'])){
                 $this->addFlash('error', 'Mot de passe incorrect');
 
-                return $this->redirectToRoute('app_episode_add');
+                return $this->redirectToRoute('episode_add');
             }
 
             $user = $usersRepository->findOneBy(['plexName' => 'yoan.f8']);
@@ -117,7 +117,7 @@ class EpisodeShowController extends AbstractController
             $managerRegistry->getManager()->persist($episode);
             $managerRegistry->getManager()->flush();
 
-            return $this->redirectToRoute('app_episode');
+            return $this->redirectToRoute('episode');
         }
 
         return $this->render('episode_show/add.html.twig', [

@@ -9,7 +9,7 @@ use App\Repository\MovieRepository;
 
 class MovieController extends AbstractController
 {
-    #[Route('/movie', name: 'app_movie')]
+    #[Route('/movie', name: 'movie')]
     public function index(MovieRepository $movieRepository): Response
     {
 
