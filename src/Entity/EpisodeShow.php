@@ -50,7 +50,7 @@ class EpisodeShow
     private $tvdbId;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $saison;
 
@@ -73,6 +73,10 @@ class EpisodeShow
      * @ORM\Column(type="boolean")
      */
     private $vfName = false;
+
+    public function __construct(){
+        $this->setShowDate(new \DateTime());
+    }
 
     public function getId(): ?int
     {
@@ -156,7 +160,7 @@ class EpisodeShow
         return $this->saison;
     }
 
-    public function setSaison(string $saison): self
+    public function setSaison(?string $saison): self
     {
         $this->saison = $saison;
 
