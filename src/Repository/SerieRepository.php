@@ -71,6 +71,7 @@ class SerieRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('s')
             ->andWhere('s.artwork IS NULL')
+            ->andWhere('s.tvdbId IS NOT NULL')
             ->getQuery()
             ->getResult()
             ;
