@@ -85,7 +85,7 @@ class UpdateArtworkCommand extends Command
 
             $data = json_decode($response->getBody(), true);
 
-            if ($data['artworks'] === []) {
+            if ($data['artworks'] == []) {
 
                 $response = $client->get($apiUrl."/series/".$serie->getTvdbId()."/artworks?lang=eng&type=2", [
                     'headers' => [
@@ -98,7 +98,7 @@ class UpdateArtworkCommand extends Command
                 $data = json_decode($response->getBody(), true);
             }
 
-            if ($data['artworks'] === []) {
+            if ($data['artworks'] == []) {
                 continue;
             }
 
