@@ -49,10 +49,14 @@ class Serie
      */
     private $vfName = false;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $artwork = null;
+
     public function __construct()
     {
         $this->episodeShows = new ArrayCollection();
-        $this->setTvdbId(null);
     }
 
     public function getId(): ?int
@@ -65,7 +69,7 @@ class Serie
         return $this->plexId;
     }
 
-    public function setPlexId(?string $plexId): self
+    public function setPlexId(?string $plexId): static
     {
         $this->plexId = $plexId;
 
@@ -77,9 +81,45 @@ class Serie
         return $this->name;
     }
 
-    public function setName(string $name): self
+    public function setName(string $name): static
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getTvdbId(): ?int
+    {
+        return $this->tvdbId;
+    }
+
+    public function setTvdbId(?int $tvdbId): static
+    {
+        $this->tvdbId = $tvdbId;
+
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(?string $type): static
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    public function isVfName(): ?bool
+    {
+        return $this->vfName;
+    }
+
+    public function setVfName(bool $vfName): static
+    {
+        $this->vfName = $vfName;
 
         return $this;
     }
@@ -92,17 +132,17 @@ class Serie
         return $this->episodeShows;
     }
 
-    public function addEpisodeShow(EpisodeShow $episodeShow): self
+    public function addEpisodeShow(EpisodeShow $episodeShow): static
     {
         if (!$this->episodeShows->contains($episodeShow)) {
-            $this->episodeShows[] = $episodeShow;
+            $this->episodeShows->add($episodeShow);
             $episodeShow->setSerie($this);
         }
 
         return $this;
     }
 
-    public function removeEpisodeShow(EpisodeShow $episodeShow): self
+    public function removeEpisodeShow(EpisodeShow $episodeShow): static
     {
         if ($this->episodeShows->removeElement($episodeShow)) {
             // set the owning side to null (unless already changed)
@@ -114,38 +154,14 @@ class Serie
         return $this;
     }
 
-    public function getTvdbId(): ?int
+    public function getArtwork(): ?string
     {
-        return $this->tvdbId;
+        return $this->artwork;
     }
 
-    public function setTvdbId(?int $tvdbId): self
+    public function setArtwork(?string $artwork): static
     {
-        $this->tvdbId = $tvdbId;
-
-        return $this;
-    }
-
-    public function getType(): ?string
-    {
-        return $this->type;
-    }
-
-    public function setType(?string $type): self
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    public function isVfName(): ?bool
-    {
-        return $this->vfName;
-    }
-
-    public function setVfName(bool $vfName): self
-    {
-        $this->vfName = $vfName;
+        $this->artwork = $artwork;
 
         return $this;
     }

@@ -64,6 +64,18 @@ class SerieRepository extends ServiceEntityRepository
             ;
     }
 
+    /**
+     * @return Serie[] Returns an array of Serie objects
+     */
+    public function findArtworkId(): array
+    {
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.artwork IS NULL')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
 //    public function findOneBySomeField($value): ?Serie
 //    {
 //        return $this->createQueryBuilder('s')
