@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Serie;
 use App\Form\SerieType;
+use App\Repository\SerieRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,11 +13,27 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class SerieController extends AbstractController
 {
+
     #[Route('/serie', name: 'serie')]
-    public function index(): Response
+    public function index(SerieRepository $serieRepository): Response
     {
+        $series = $serieRepository->findAll();
+
         return $this->render('serie/index.html.twig', [
             'controller_name' => 'SerieController',
+            'series' => $series,
+        ]);
+    }
+
+    #[Route('/serie/detail/{id}', name: 'serie_detail')]
+    public function detail(SerieRepository $serieRepository, $id): Response
+    {
+
+        $serie = $serieRepository->findOneBy(['id' => $id]);
+
+        return $this->render('serie/details.html.twig', [
+            'controller_name' => 'SerieController',
+            'serie' => $serie,
         ]);
     }
 

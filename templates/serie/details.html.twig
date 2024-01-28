@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <table class="table table-hover table-striped table-bordered">
+        <thead>
+        <tr>
+            <th scope="col">Série</th>
+            <th scope="col">Épisode</th>
+            <th scope="col">Nom de l'épisode</th>
+            <th scope="col">Heure de visionnage</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for episode in serie.episodeShows.values|sort((a, b) => a.showDate <=> b.showDate)  %}
+            <tr>
+                <td>{{ episode.serie.name }}</td>
+                <td>Saison {{ episode.saisonNumber }}, Épisode {{ episode.episodeNumber }}</td>
+                <td>{{ episode.name }}</td>
+                <td>{{ episode.showDate|date("H\\hi") }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}
