@@ -85,7 +85,7 @@ class UpdateArtworkCommand extends Command
 
             $data = json_decode($response->getBody(), true);
 
-            if ($data['artwork'] === []){
+            if ($data['artworks'] === []) {
 
                 $response = $client->get($apiUrl."/series/".$serie->getTvdbId()."/artworks?lang=eng&type=2", [
                     'headers' => [
@@ -98,17 +98,14 @@ class UpdateArtworkCommand extends Command
                 $data = json_decode($response->getBody(), true);
             }
 
-            if ($data['artwork'] === []){
+            if ($data['artworks'] === []) {
                 continue;
             }
 
-            if ($data['status'] === "success"){
-                $serie->setName($data['data']['name']);
-                $serie->setVfName(true);
+            $serie->setArtwork($data['artworks'][0]['image']);
 
-                $this->manager->persist($serie);
-                $this->manager->flush();
-            }
+            $this->manager->persist($serie);
+            $this->manager->flush();
         }
 
         return Command::SUCCESS;
