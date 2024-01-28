@@ -11,7 +11,7 @@
         </thead>
         <tbody>
         {% for serie in series %}
-            <tr class="clickable-row" data-href="{{ path('serie_detail', {'id': serie.id}) }}">
+            <tr class="clickable-row cursor-click" data-href="{{ path('serie_detail', {'id': serie.id}) }}">
                 <td>{{ serie.name }}</td>
                 <td>{{ serie.type }}</td>
             </tr>

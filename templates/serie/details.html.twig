@@ -17,7 +17,7 @@
                 <td>{{ episode.serie.name }}</td>
                 <td>Saison {{ episode.saisonNumber }}, Épisode {{ episode.episodeNumber }}</td>
                 <td>{{ episode.name }}</td>
-                <td>{{ episode.showDate|date("H\\hi") }}</td>
+                <td>{{ episode.showDate|dateF }} à {{ episode.showDate|date("H\\hi") }}</td>
             </tr>
         {% endfor %}
         </tbody>
