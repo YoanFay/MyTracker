@@ -62,6 +62,30 @@ class EpisodeShowRepository extends ServiceEntityRepository
         ;
     }
 
+    public function getDurationBySerie($id)
+    {
+        return $this->createQueryBuilder('e')
+            ->select('SUM(e.duration) AS COUNT')
+            ->leftJoin('e.serie', 's')
+            ->andWhere('s.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+
+    public function getCountBySerie($id)
+    {
+        return $this->createQueryBuilder('e')
+            ->select('count(e.name) AS COUNT')
+            ->leftJoin('e.serie', 's')
+            ->andWhere('s.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+
 
     /**
      * @param $serie
@@ -129,6 +153,36 @@ class EpisodeShowRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult()
             ;
+    }
+
+    public function getDurationGenre()
+    {
+        return $this->createQueryBuilder('e')
+            ->select('SUM(e.duration) AS COUNT, g.name AS name')
+            ->leftJoin('e.serie', 's')
+            ->leftJoin('s.animeGenres', 'g')
+            ->andWhere('s.type = :type')
+            ->setParameter('type', 'Anime')
+            ->groupBy('g.name')
+            ->orderBy('COUNT', 'DESC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    public function getDurationTheme()
+    {
+        return $this->createQueryBuilder('e')
+            ->select('SUM(e.duration) AS COUNT, t.name AS name')
+            ->leftJoin('e.serie', 's')
+            ->leftJoin('s.animeThemes', 't')
+            ->andWhere('s.type = :type')
+            ->setParameter('type', 'Anime')
+            ->groupBy('t.name')
+            ->orderBy('COUNT', 'DESC')
+            ->getQuery()
+            ->getResult()
+        ;
     }
 
 //    public function findOneBySomeField($value): ?EpisodeShow

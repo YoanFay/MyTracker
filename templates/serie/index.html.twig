@@ -1,5 +1,7 @@
 {% extends 'base.html.twig' %}
 
+{% block title %} - Séries{% endblock %}
+
 {% block body %}
 
     <table class="table table-hover table-striped table-bordered">
@@ -7,6 +9,7 @@
         <tr>
             <th scope="col">Nom</th>
             <th scope="col">Type</th>
+            <th scope="col">Image</th>
         </tr>
         </thead>
         <tbody>
@@ -14,6 +17,13 @@
             <tr class="clickable-row cursor-click" data-href="{{ path('serie_detail', {'id': serie.id}) }}">
                 <td>{{ serie.name }}</td>
                 <td>{{ serie.type }}</td>
+                <td>
+    {% if serie.artwork %}
+    <img src="{{serie.artwork}}" width="150px" alt="{{serie.name}} poster">
+    {% else %}
+    <img src="/image/visuel-a-venir.jpg" width="150px" alt="Visuel à venir">
+    {% endif %}
+    </td>
             </tr>
         {% endfor %}
         </tbody>

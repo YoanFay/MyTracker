@@ -7,31 +7,21 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass=UsersRepository::class)
- */
+#[ORM\Entity(repositoryClass: UsersRepository::class)]
 class Users
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: "integer")]
     private $id;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
+    #[ORM\Column(type: "string", length: 255)]
     private $plexName;
 
-    /**
-     * @ORM\OneToMany(targetEntity=EpisodeShow::class, mappedBy="user")
-     */
+    #[ORM\OneToMany(targetEntity: EpisodeShow::class, mappedBy: "user")]
     private $episodeShows;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Movie::class, mappedBy="user")
-     */
+    #[ORM\OneToMany(targetEntity: Movie::class, mappedBy: "user")]
     private $movies;
 
     public function __construct()
@@ -57,14 +47,19 @@ class Users
         return $this;
     }
 
-    /**
-     * @return Collection<int, EpisodeShow>
-     */
+    #[ORM\OneToMany(targetEntity: EpisodeShow::class, mappedBy: "user")]
     public function getEpisodeShows(): Collection
     {
         return $this->episodeShows;
     }
 
+    #[ORM\OneToMany(targetEntity: Movie::class, mappedBy: "user")]
+    public function getMovies(): Collection
+    {
+        return $this->movies;
+    }
+
+    #[ORM\OneToMany(targetEntity: EpisodeShow::class, mappedBy: "user")]
     public function addEpisodeShow(EpisodeShow $episodeShow): self
     {
         if (!$this->episodeShows->contains($episodeShow)) {
@@ -75,6 +70,7 @@ class Users
         return $this;
     }
 
+    #[ORM\OneToMany(targetEntity: EpisodeShow::class, mappedBy: "user")]
     public function removeEpisodeShow(EpisodeShow $episodeShow): self
     {
         if ($this->episodeShows->removeElement($episodeShow)) {
@@ -87,14 +83,7 @@ class Users
         return $this;
     }
 
-    /**
-     * @return Collection<int, Movie>
-     */
-    public function getMovies(): Collection
-    {
-        return $this->movies;
-    }
-
+    #[ORM\OneToMany(targetEntity: Movie::class, mappedBy: "user")]
     public function addMovie(Movie $movie): self
     {
         if (!$this->movies->contains($movie)) {
@@ -105,6 +94,7 @@ class Users
         return $this;
     }
 
+    #[ORM\OneToMany(targetEntity: Movie::class, mappedBy: "user")]
     public function removeMovie(Movie $movie): self
     {
         if ($this->movies->removeElement($movie)) {

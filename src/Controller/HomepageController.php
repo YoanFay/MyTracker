@@ -28,6 +28,9 @@ class HomepageController extends AbstractController
         $animeDuration = $episodeShowRepository->getDurationByType('Anime');
         $serieDuration = $episodeShowRepository->getDurationByType('Séries');
         $replayDuration = $episodeShowRepository->getDurationByType('Replay');
+        
+        $durationByGenre = $episodeShowRepository->getDurationGenre();
+        $durationByTheme = $episodeShowRepository->getDurationTheme();
 
         $allEpisodes = $episodeShowRepository->findAll();
         $allMovies = $movieRepository->findAll();
@@ -140,6 +143,32 @@ class HomepageController extends AbstractController
         $replayByDayChart = "[".$replayByDay['Monday'].", ".$replayByDay['Tuesday'].", ".$replayByDay['Wednesday'].", ".$replayByDay['Thursday'].", ".$replayByDay['Friday'].", ".$replayByDay['Saturday'].", ".$replayByDay['Sunday']."]";
 
         $movieByDayChart = "[".$movieByDay['Monday'].", ".$movieByDay['Tuesday'].", ".$movieByDay['Wednesday'].", ".$movieByDay['Thursday'].", ".$movieByDay['Friday'].", ".$movieByDay['Saturday'].", ".$movieByDay['Sunday']."]";
+        
+        $labelGenreChart = "[";
+        $genreChart = "[";
+
+foreach ($durationByGenre as $duration) {
+    
+    $labelGenreChart .= '"'.$duration['name'] . '", ';
+    $genreChart .= $duration['COUNT'] . ", ";
+}
+
+
+$labelGenreChart = rtrim($labelGenreChart, ", ") . "]";
+$genreChart = rtrim($genreChart, ", ") . "]";
+        
+        $labelThemeChart = "[";
+        $themeChart = "[";
+
+foreach ($durationByTheme as $duration) {
+    
+    $labelThemeChart .= '"'.$duration['name'] . '", ';
+    $themeChart .= $duration['COUNT'] . ", ";
+}
+
+
+$labelThemeChart = rtrim($labelThemeChart, ", ") . "]";
+$themeChart = rtrim($themeChart, ", ") . "]";
 
         return $this->render('homepage/index.html.twig', [
             'timeChart' => $timeChart,
@@ -147,6 +176,10 @@ class HomepageController extends AbstractController
             'serieByDayChart' => $serieByDayChart,
             'replayByDayChart' => $replayByDayChart,
             'movieByDayChart' => $movieByDayChart,
+            'labelGenreChart' => $labelGenreChart,
+            'genreChart' => $genreChart,
+            'labelThemeChart' => $labelThemeChart,
+            'themeChart' => $themeChart,
         ]);
     }
 }

@@ -1,26 +1,95 @@
 {% extends 'base.html.twig' %}
 
+{% block title %} - {{ serie.name }}{% endblock %}
+
 {% block body %}
+
+<div class="d-flex flex-row justify-content-between p-3">
+    <div>
+    <h1>{{ serie.name }}</h1>
+    <h2>{{ countEpisode }} épisodes vus - {{ totalDuration|MsToHM }} de visionnage total</h2>
+    {% if serie.type != 'Anime' %}
+    <br>
+    <div class="d-flex flex-row flex-wrap">
+        <div class="m-2">
+            <strong>Genre : </strong>
+            <ul>
+                {% for genre in genres %}
+                    <li>{{ genre.nameFra }}</li>
+                {% endfor %} 
+            </ul>
+        </div>
+        {% for key, tagType in tagTypes %}
+            <div class="m-2">
+                <strong>{{ key }} : </strong><br>
+                <ul>
+                    {% for tag in tagType %}
+                        <li>{% if tag.nameFra%}{{ tag.nameFra }}{% else %}{{ tag.nameEng }}{% endif %}</li>
+                    {% endfor %} 
+                </ul>
+            </div>
+        {% endfor %} 
+        </div>
+    {% else %}
+    <br>
+    <div class="d-flex flex-row flex-wrap">
+        <div class="m-2">
+            <strong>Genres : </strong>
+            <ul>
+                {% for genre in animeGenres %}
+                    <li>{{ genre.name }}</li>
+                {% endfor %} 
+            </ul>
+        </div>
+        <div class="m-2">
+            <strong>Thèmes : </strong>
+            <ul>
+                {% for theme in animeThemes %}
+                    <li>{{ theme.name }}</li>
+                {% endfor %} 
+            </ul>
+        </div>
+        </div>
+    {% endif %}
+    </div>
+    <img {% if serie.artwork %} src="{{serie.artwork}}" alt="{{serie.name}} poster" {% else %} src="/image/visuel-a-venir.jpg" alt="Visuel à venir" {% endif %} width="300px" data-bs-toggle="modal" data-bs-target="#imageModal" class="cursor-click">
+</div>
+    
 
     <table class="table table-hover table-striped table-bordered">
         <thead>
         <tr>
-            <th scope="col">Série</th>
+            <th scope="col">Saison</th>
             <th scope="col">Épisode</th>
             <th scope="col">Nom de l'épisode</th>
             <th scope="col">Heure de visionnage</th>
         </tr>
         </thead>
         <tbody>
-        {% for episode in serie.episodeShows.values|sort((a, b) => a.showDate <=> b.showDate)  %}
+        {% for episode in serie.episodeShows.values|sort((a, b) => a.saisonNumber != b.saisonNumber ? a.saisonNumber - b.saisonNumber : a.episodeNumber - b.episodeNumber) %}
             <tr>
-                <td>{{ episode.serie.name }}</td>
-                <td>Saison {{ episode.saisonNumber }}, Épisode {{ episode.episodeNumber }}</td>
+                <td>Saison {{ episode.saisonNumber }}</td>
+                <td>Épisode {{ episode.episodeNumber }}</td>
                 <td>{{ episode.name }}</td>
                 <td>{{ episode.showDate|dateF }} à {{ episode.showDate|date("H\\hi") }}</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
+
+<!-- Modal -->
+<div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="imageModalLabel">Image en Plein Écran</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center" style="overflow: hidden;">
+          <img {% if serie.artwork %} src="{{serie.artwork}}" alt="{{serie.name}} poster" {% else %} src="/image/visuel-a-venir.jpg" alt="Visuel à venir" {% endif %} style="max-height: calc(100vh - 50px); width: auto; max-width: 100%;">
+      </div>
+    </div>
+  </div>
+</div>
 
 {% endblock %}

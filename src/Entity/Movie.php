@@ -6,47 +6,31 @@ use App\Repository\MovieRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass=MovieRepository::class)
- */
+#[ORM\Entity(repositoryClass: MovieRepository::class)]
 class Movie
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: "integer")]
     private $id;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
+    #[ORM\Column(type: "string", length: 255)]
     private $name;
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
+    #[ORM\Column(type: "datetime")]
     private $showDate;
 
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
+    #[ORM\Column(type: "integer", nullable: true)]
     private $tvdbId;
 
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
+    #[ORM\Column(type: "integer", nullable: true)]
     private $duration;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Users::class, inversedBy="movies")
-     * @ORM\JoinColumn(nullable=false)
-     */
+    #[ORM\ManyToOne(targetEntity: Users::class, inversedBy: "movies")]
+    #[ORM\JoinColumn(nullable: false)]
     private $user;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: "string", length: 255, nullable: true)]
     private $plexId;
 
     public function getId(): ?int

@@ -6,76 +6,51 @@ use App\Repository\EpisodeShowRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass=EpisodeShowRepository::class)
- */
+#[ORM\Entity(repositoryClass: EpisodeShowRepository::class)]
 class EpisodeShow
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: "integer")]
     private $id;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: "string", length: 255, nullable: true)]
     private $plexId;
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
+    #[ORM\Column(type: "datetime")]
     private $showDate;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Serie::class, inversedBy="episodeShows")
-     * @ORM\JoinColumn(nullable=false)
-     */
+    #[ORM\ManyToOne(targetEntity: Serie::class, inversedBy: "episodeShows")]
+    #[ORM\JoinColumn(nullable: false)]
     private $serie;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Users::class, inversedBy="episodeShows")
-     * @ORM\JoinColumn(nullable=false)
-     */
+    #[ORM\ManyToOne(targetEntity: Users::class, inversedBy: "episodeShows")]
+    #[ORM\JoinColumn(nullable: false)]
     private $user;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
+    #[ORM\Column(type: "string", length: 255)]
     private $name;
 
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
+    #[ORM\Column(type: "integer", nullable: true)]
     private $tvdbId;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: "string", length: 255, nullable: true)]
     private $saison;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Column(type: "integer")]
     private $saisonNumber;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Column(type: "integer")]
     private $episodeNumber;
 
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
+    #[ORM\Column(type: "integer", nullable: true)]
     private $duration;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: "boolean")]
     private $vfName = false;
 
-    public function __construct(){
+    public function __construct()
+    {
         $this->setShowDate(new \DateTime());
     }
 
