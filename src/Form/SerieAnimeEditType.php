@@ -56,10 +56,6 @@ class SerieAnimeEditType extends AbstractType
                 'expanded' => true, // Affiche les options sous forme de cases à cocher
                 'required' => false
             ])
-            ->add('password', PasswordType::class, [
-                'attr' => ['class' => 'form-control'],
-                'mapped' => false
-            ])
             ->add('valide', SubmitType::class, [
                 'attr' => ['class' => 'btn btn-primary'],
             ]);

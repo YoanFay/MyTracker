@@ -74,15 +74,7 @@ class SerieController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()){
 
-            $passwordTest = $form->get('password')->getData();
-
             $serie->setType($form->get('type')->getData());
-
-            if (!password_verify($passwordTest, $_ENV['PASSWORD_USER'])){
-                $this->addFlash('error', 'Mot de passe incorrect');
-
-                return $this->redirectToRoute('episode_add');
-            }
 
             $managerRegistry->getManager()->persist($serie);
             $managerRegistry->getManager()->flush();

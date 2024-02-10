@@ -37,10 +37,6 @@ class SerieType extends AbstractType
                 'mapped' => false,
                 'attr' => ['class' => 'form-control'],
             ])
-            ->add('password', PasswordType::class, [
-                'attr' => ['class' => 'form-control'],
-                'mapped' => false
-            ])
             ->add('valide', SubmitType::class, [
                 'attr' => ['class' => 'btn btn-primary'],
             ]);

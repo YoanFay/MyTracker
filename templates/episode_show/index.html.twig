@@ -58,7 +58,7 @@
             <div>
             {% for episode in episodesByDate[dateKey]|sort((a, b) => a.showDate <=> b.showDate) %}
                 <tr>
-                    <td>{{ episode.serie.name }}</td>
+                    <td><a class="text-decoration-none text-black" href="{{ path('serie_detail', {'id': episode.serie.id }) }}">{{ episode.serie.name }}</a></td>
                     <td>Saison {{ episode.saisonNumber }}, Épisode {{ episode.episodeNumber }}</td>
                     <td>{{ episode.name }}</td>
                     <td>{{ episode.showDate|date("H\\hi") }}</td>

@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello MangaController!{% endblock %}
+
+{% block body %}
+            <table class="table table-hover table-striped table-bordered">
+        <thead>
+        <tr>
+            <th scope="col">Nom</th>
+            <th scope="col">Tome lu</th>
+            <th scope="col">Auteur</th>
+            <th scope="col">Éditeur</th>
+            <th scope="col">Date de publication</th>
+        </tr>
+        </thead>
+        <tbody>
+    {% for manga in mangas %}
+            <tr class="clickable-row cursor-click" data-href="{{ path('manga_details', {'id': manga.info.id}) }}">
+                <td>{{ manga.info.name }}</td>
+                <td>{{ manga.tomeCount }} / {{ manga.info.nbTomes }}</td>
+                <td>{{ manga.info.author.name }}</td>
+                <td>{{ manga.info.editor.name }}</td>
+                <td>{{ manga.info.releaseDate|dateF }} - {% if manga.info.endDate %} {{ manga.info.endDate|dateF }} {% else %} En cours {% endif %}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
+{% block javascript %}
+<script>
+
+    jQuery(document).ready(function($) {
+    $(".clickable-row").click(function () {
+        window.location = $(this).data("href");
+    });
+});
+
+</script>
+{% endblock %}

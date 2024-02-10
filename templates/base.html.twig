@@ -24,10 +24,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/jquery-ui-timepicker-addon.min.js"></script>
 </head>
 
     <body>
         <div class="col-12 d-flex flex-row">
+                {% if app.user != null %}
             <div class="col-2 border-end p-2">
                 <ul>
                                                     <li>
@@ -97,9 +99,46 @@
                                             </ul>
                                         </div>
                     </li>
+                    <li>
+                                        <a data-bs-toggle="collapse" href="#activateMangas" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                            <i class="metismenu-icon material-icons">chat_bubble</i>
+                                            Mangas
+                                            <i class="metismenu-state-icon material-icons">expand_more</i>
+                                        </a>
+                                        <div class="collapse" id="activateMangas">
+                                            <ul id="manga">
+                                                    <li>
+                                                        <i class="metismenu-icon material-icons">list</i>
+                                                        <a id="episodes-liste" class="nav-links-child"
+                                                           href="{{ path('manga') }}">Liste</a>
+                                                    </li>
+                                                    <li>
+                                                        <i class="metismenu-icon material-icons">add</i>
+                                                        <a id="episodes-liste" class="nav-links-child"
+                                                           href="{{ path('manga_tome_add') }}">Ajouter tome</a>
+                                                    </li>
+                                                    <li>
+                                                        <i class="metismenu-icon material-icons">add</i>
+                                                        <a id="episodes-liste" class="nav-links-child"
+                                                           href="{{ path('manga_author_add') }}">Ajouter auteur</a>
+                                                    </li>
+                                                    <li>
+                                                        <i class="metismenu-icon material-icons">add</i>
+                                                        <a id="episodes-liste" class="nav-links-child"
+                                                           href="{{ path('manga_editor_add') }}">Ajouter éditeur</a>
+                                                    </li>
+                                            </ul>
+                                        </div>
+                    </li>
+                                                    <li>
+                                                        <i class="metismenu-icon material-icons">logout</i>
+                                                        <a id="episodes-liste" class="nav-links-child"
+                                                           href="{{ path('logout') }}">Déconnexion</a>
+                                                    </li>
                 </ul>
             </div>
-            <div class="col-10">
+                {% endif %}
+            <div class="col-{% if app.user == null %}12{% else %}10{% endif %}">
                 {% block body %}{% endblock %}
             </div>
         </div>
@@ -128,5 +167,45 @@
         }, 3000);
     </script>
 {% endfor %}
+
+<script>
+
+        $(function () {
+            $(".datepicker").datepicker({
+                closeText: 'Fermer',
+                prevText: 'Précédent',
+                nextText: 'Suivant',
+                currentText: 'Aujourd\'hui',
+                monthNames: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
+                monthNamesShort: ['Janv.', 'Févr.', 'Mars', 'Avril', 'Mai', 'Juin', 'Juil.', 'Août', 'Sept.', 'Oct.', 'Nov.', 'Déc.'],
+                dayNames: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
+                dayNamesShort: ['Dim.', 'Lun.', 'Mar.', 'Mer.', 'Jeu.', 'Ven.', 'Sam.'],
+                dayNamesMin: ['D', 'L', 'M', 'M', 'J', 'V', 'S'],
+                weekHeader: 'Sem.',
+                dateFormat: 'dd/mm/yy',
+                firstDay: 1
+            });
+
+            $(".datetimepicker").datetimepicker({
+                closeText: 'Fermer',
+                prevText: 'Précédent',
+                nextText: 'Suivant',
+                currentText: 'Aujourd\'hui',
+                monthNames: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
+                monthNamesShort: ['Janv.', 'Févr.', 'Mars', 'Avril', 'Mai', 'Juin', 'Juil.', 'Août', 'Sept.', 'Oct.', 'Nov.', 'Déc.'],
+                dayNames: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
+                dayNamesShort: ['Dim.', 'Lun.', 'Mar.', 'Mer.', 'Jeu.', 'Ven.', 'Sam.'],
+                dayNamesMin: ['D', 'L', 'M', 'M', 'J', 'V', 'S'],
+                timeText: 'Heure complète',
+                hourText: 'Heure',
+                weekHeader: 'Sem.',
+                dateFormat: 'dd/mm/yy',
+                firstDay: 1,
+                changeMonth: true,
+                changeYear: true,
+                maxDate: 0
+            });
+            
+</script>
 
         {% block javascript %}{% endblock %}

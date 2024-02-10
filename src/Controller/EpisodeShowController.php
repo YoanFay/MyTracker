@@ -100,14 +100,6 @@ class EpisodeShowController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()){
 
-            $passwordTest = $form->get('password')->getData();
-
-            if (!password_verify($passwordTest, $_ENV['PASSWORD_USER'])){
-                $this->addFlash('error', 'Mot de passe incorrect');
-
-                return $this->redirectToRoute('episode_add');
-            }
-
             $user = $usersRepository->findOneBy(['plexName' => 'yoan.f8']);
 
             $episode->setUser($user);

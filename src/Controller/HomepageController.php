@@ -149,10 +149,11 @@ class HomepageController extends AbstractController
 
 foreach ($durationByGenre as $duration) {
     
+    //if($duration['name'] !== "Hentai"){
     $labelGenreChart .= '"'.$duration['name'] . '", ';
     $genreChart .= $duration['COUNT'] . ", ";
+//}
 }
-
 
 $labelGenreChart = rtrim($labelGenreChart, ", ") . "]";
 $genreChart = rtrim($genreChart, ", ") . "]";
@@ -162,8 +163,10 @@ $genreChart = rtrim($genreChart, ", ") . "]";
 
 foreach ($durationByTheme as $duration) {
     
+    //if($duration['name'] !== "Sexe"){
     $labelThemeChart .= '"'.$duration['name'] . '", ';
     $themeChart .= $duration['COUNT'] . ", ";
+//}
 }
 
 
