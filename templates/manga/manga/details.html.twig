@@ -49,7 +49,14 @@
                 <td>{{ tome.page }} pages</td>
                 <td>{{ tome.releaseDate|dateFNoDay }}</td>
                 <td>{% if tome.readingStartDate %} {{ tome.readingStartDate|dateF }} {% endif %}</td>
-                <td>{% if tome.readingEndDate %} {{ tome.readingEndDate|dateF }} {% else %} En cours {% endif %}</td>
+                <td class="position-relative">
+                    {% if tome.readingEndDate %}
+                        {{ tome.readingEndDate|dateF }}
+                    {% else %}
+                        <p>En cours</p>
+                        <a href="{{ path('manga_tome_read', {'id': tome.id}) }}" class="position-absolute bottom-0 mb-2 btn btn-primary">Terminé</a>
+                    {% endif %}
+                </td>
                 <td>
     {% if tome.cover %}
     <img {% if tome.cover %} src="{{ tome.cover|replace({'../public': ''})}}" alt="{{tome.tomeNumber}} poster" {% else %} src="/image/visuel-a-venir.jpg" alt="Visuel à venir" {% endif %} width="150px" data-bs-toggle="modal" data-bs-target="#imageModal" class="cursor-click img-modal-trigger" data-img-url="{{ tome.cover|replace({'../public': ''})}}">

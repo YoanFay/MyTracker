@@ -4,6 +4,7 @@ namespace App\Controller\Manga;
 
 use App\Entity\MangaTome;
 use App\Form\MangaTomeType;
+use App\Repository\MangaTomeRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
@@ -69,6 +70,32 @@ class MangaTomeController extends AbstractController
         return $this->render('manga/manga_tome/add.html.twig', [
             'form' => $form->createView(),
             'controller_name' => 'MangaController',
+        ]);
+    }
+
+    #[Route('manga/tome/read/{id}', name: 'manga_tome_read')]
+    public function read(ManagerRegistry $managerRegistry, MangaTomeRepository $mangaTomeRepository, $id): Response
+    {
+        $tome = $mangaTomeRepository->findOneBy(['id' => $id]);
+
+        if ($tome->getReadingEndDate()){
+
+            $this->addFlash('error', 'Manga déjà terminé');
+
+            return $this->redirectToRoute('manga_details', [
+                'id' => $tome->getManga()->getId(),
+            ]);
+        }
+
+        $tome->setReadingEndDate(new \DateTime());
+
+        $managerRegistry->getManager()->persist($tome);
+        $managerRegistry->getManager()->flush();
+
+        $this->addFlash('success', 'Manga terminé');
+
+        return $this->redirectToRoute('manga_details', [
+            'id' => $tome->getManga()->getId(),
         ]);
     }
 }
