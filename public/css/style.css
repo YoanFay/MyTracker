@@ -26,3 +26,21 @@
 .cursor-click {
   cursor: pointer;
 }
+
+.body-menu{
+  width: 88%;
+}
+
+.menu{
+  width: 12%;
+}
+
+li a{
+  text-decoration: none;
+  color: black;
+  margin: 5% 0 5% 0;
+}
+
+li a[role=button]{
+  display: flex;
+}

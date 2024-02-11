@@ -1,10 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Log in!{% endblock %}
+{% block title %} - Connexion{% endblock %}
 
 {% block body %}
 
-    <div class="background fullpage d-flex flex-column justify-content-center align-items-center">
+    <div class="h-100 w-100 d-flex flex-column justify-content-center align-items-center">
         {% if error %}
             <div class="alert alert-danger">
                 {{ error.messageKey|trans(error.messageData, 'security') }}
@@ -23,10 +23,10 @@
             </div>
         {% endif %}
 
-        <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-        <label for="username">Plex Name</label>
+        <h1 class="h3 mb-3 font-weight-normal">Connexion</h1>
+        <label for="username">Login</label>
         <input type="text" value="{{ last_username }}" name="_username" id="username" class="form-control" autocomplete="username" required autofocus>
-        <label for="password">Password</label>
+        <label class="mt-3" for="password">Mot de passe</label>
         <input type="password" name="_password" id="password" class="form-control" autocomplete="current-password" required>
 
         <input type="hidden" name="_csrf_token"
@@ -44,8 +44,8 @@
             </div>
         #}
 
-        <button class="btn btn-lg btn-primary" type="submit">
-            Sign in
+        <button class="btn btn-lg btn-primary mt-3" type="submit">
+            Valider
         </button>
     </form>
     </div>

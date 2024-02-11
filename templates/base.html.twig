@@ -1,13 +1,17 @@
 <!DOCTYPE html>
-<html>
+<html class="h-100" lang="fr">
 <head>
     <meta charset="UTF-8">
     <title>MyTracker{% block title %}{% endblock %}</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="icon"
+          href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="/css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+          integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
@@ -22,128 +26,136 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+            integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+            crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/jquery-ui-timepicker-addon.min.js"></script>
 </head>
 
-    <body>
-        <div class="col-12 d-flex flex-row">
-                {% if app.user != null %}
-            <div class="col-2 border-end p-2">
-                <ul>
-                                                    <li>
-                                                        <i class="metismenu-icon material-icons">home</i>
-                                                        <a id="episodes-liste" class="nav-links-child"
-                                                           href="{{ path('home') }}">Accueil</a>
-                                                    </li>
-                    <li>
-                                        <a data-bs-toggle="collapse" href="#activateEpisodes" role="button" aria-expanded="false" aria-controls="collapseExample">
-                                            <i class="metismenu-icon material-icons">live_tv</i>
-                                            Épisodes
-                                            <i class="metismenu-state-icon material-icons">expand_more</i>
-                                        </a>
-                                        <div class="collapse" id="activateEpisodes">
-                                            <ul id="episode">
-                                                    <li>
-                                                        <i class="metismenu-icon material-icons">list</i>
-                                                        <a id="episodes-liste" class="nav-links-child"
-                                                           href="{{ path('episode') }}">Liste</a>
-                                                    </li>
-                                            </ul>
-                                            <ul id="episode">
-                                                    <li>
-                                                        <i class="metismenu-icon material-icons">add</i>
-                                                        <a id="episodes-liste" class="nav-links-child"
-                                                           href="{{ path('episode_add') }}">Ajouter</a>
-                                                    </li>
-                                            </ul>
-                                        </div>
-                    </li>
-                    <li>
-                                        <a data-bs-toggle="collapse" href="#activateSeries" role="button" aria-expanded="false" aria-controls="collapseExample">
-                                            <i class="metismenu-icon material-icons">subtitles</i>
-                                            Séries
-                                            <i class="metismenu-state-icon material-icons">expand_more</i>
-                                        </a>
-                                        <div class="collapse" id="activateSeries">
-                                            <ul id="serie">
-                                                    <li>
-                                                        <i class="metismenu-icon material-icons">list</i>
-                                                        <a id="episodes-liste" class="nav-links-child"
-                                                           href="{{ path('serie') }}">Liste</a>
-                                                    </li>
-                                            </ul>
-                                            <ul id="episode">
-                                                    <li>
-                                                        <i class="metismenu-icon material-icons">add</i>
-                                                        <a id="episodes-liste" class="nav-links-child"
-                                                           href="{{ path('serie_add') }}">Ajouter</a>
-                                                    </li>
-                                            </ul>
-                                        </div>
-                    </li>
-                    <li>
-                                        <a data-bs-toggle="collapse" href="#activateFilms" role="button" aria-expanded="false" aria-controls="collapseExample">
-                                            <i class="metismenu-icon material-icons">movie</i>
-                                            Films
-                                            <i class="metismenu-state-icon material-icons">expand_more</i>
-                                        </a>
-                                        <div class="collapse" id="activateFilms">
-                                            <ul id="film">
-                                                    <li>
-                                                        <i class="metismenu-icon material-icons">list</i>
-                                                        <a id="episodes-liste" class="nav-links-child"
-                                                           href="{{ path('movie') }}">Liste</a>
-                                                    </li>
-                                            </ul>
-                                        </div>
-                    </li>
-                    <li>
-                                        <a data-bs-toggle="collapse" href="#activateMangas" role="button" aria-expanded="false" aria-controls="collapseExample">
-                                            <i class="metismenu-icon material-icons">chat_bubble</i>
-                                            Mangas
-                                            <i class="metismenu-state-icon material-icons">expand_more</i>
-                                        </a>
-                                        <div class="collapse" id="activateMangas">
-                                            <ul id="manga">
-                                                    <li>
-                                                        <i class="metismenu-icon material-icons">list</i>
-                                                        <a id="episodes-liste" class="nav-links-child"
-                                                           href="{{ path('manga') }}">Liste</a>
-                                                    </li>
-                                                    <li>
-                                                        <i class="metismenu-icon material-icons">add</i>
-                                                        <a id="episodes-liste" class="nav-links-child"
-                                                           href="{{ path('manga_tome_add') }}">Ajouter tome</a>
-                                                    </li>
-                                                    <li>
-                                                        <i class="metismenu-icon material-icons">add</i>
-                                                        <a id="episodes-liste" class="nav-links-child"
-                                                           href="{{ path('manga_author_add') }}">Ajouter auteur</a>
-                                                    </li>
-                                                    <li>
-                                                        <i class="metismenu-icon material-icons">add</i>
-                                                        <a id="episodes-liste" class="nav-links-child"
-                                                           href="{{ path('manga_editor_add') }}">Ajouter éditeur</a>
-                                                    </li>
-                                            </ul>
-                                        </div>
-                    </li>
-                                                    <li>
-                                                        <i class="metismenu-icon material-icons">logout</i>
-                                                        <a id="episodes-liste" class="nav-links-child"
-                                                           href="{{ path('logout') }}">Déconnexion</a>
-                                                    </li>
-                </ul>
-            </div>
-                {% endif %}
-            <div class="col-{% if app.user == null %}12{% else %}10{% endif %}">
-                {% block body %}{% endblock %}
-            </div>
+<body class="h-100">
+<div class="h-100 col-12 d-flex flex-row">
+    {% if app.user != null %}
+        <div class="h-100 col-2 border-end p-2 menu">
+            <ul>
+                <li>
+                    <i class="metismenu-icon material-icons">home</i>
+                    <a id="episodes-liste" class="nav-links-child"
+                       href="{{ path('home') }}">Accueil</a>
+                </li>
+                <li>
+                    <a data-bs-toggle="collapse" href="#activateEpisodes" role="button" aria-expanded="false"
+                       aria-controls="collapseExample">
+                        <i class="metismenu-icon material-icons">live_tv</i>
+                        Épisodes
+                        <i class="metismenu-state-icon material-icons">expand_more</i>
+                    </a>
+                    <div class="collapse" id="activateEpisodes">
+                        <ul id="episode">
+                            <li>
+                                <i class="metismenu-icon material-icons">list</i>
+                                <a id="episodes-liste" class="nav-links-child"
+                                   href="{{ path('episode') }}">Liste</a>
+                            </li>
+                        </ul>
+                        <ul id="episode">
+                            <li>
+                                <i class="metismenu-icon material-icons">add</i>
+                                <a id="episodes-liste" class="nav-links-child"
+                                   href="{{ path('episode_add') }}">Ajouter</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <a data-bs-toggle="collapse" href="#activateSeries" role="button" aria-expanded="false"
+                       aria-controls="collapseExample">
+                        <i class="metismenu-icon material-icons">subtitles</i>
+                        Séries
+                        <i class="metismenu-state-icon material-icons">expand_more</i>
+                    </a>
+                    <div class="collapse" id="activateSeries">
+                        <ul id="serie">
+                            <li>
+                                <i class="metismenu-icon material-icons">list</i>
+                                <a id="episodes-liste" class="nav-links-child"
+                                   href="{{ path('serie') }}">Liste</a>
+                            </li>
+                        </ul>
+                        <ul id="episode">
+                            <li>
+                                <i class="metismenu-icon material-icons">add</i>
+                                <a id="episodes-liste" class="nav-links-child"
+                                   href="{{ path('serie_add') }}">Ajouter</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <a data-bs-toggle="collapse" href="#activateFilms" role="button" aria-expanded="false"
+                       aria-controls="collapseExample">
+                        <i class="metismenu-icon material-icons">movie</i>
+                        Films
+                        <i class="metismenu-state-icon material-icons">expand_more</i>
+                    </a>
+                    <div class="collapse" id="activateFilms">
+                        <ul id="film">
+                            <li>
+                                <i class="metismenu-icon material-icons">list</i>
+                                <a id="episodes-liste" class="nav-links-child"
+                                   href="{{ path('movie') }}">Liste</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <a data-bs-toggle="collapse" href="#activateMangas" role="button" aria-expanded="false"
+                       aria-controls="collapseExample">
+                        <i class="metismenu-icon material-icons">chat_bubble</i>
+                        Mangas
+                        <i class="metismenu-state-icon material-icons">expand_more</i>
+                    </a>
+                    <div class="collapse" id="activateMangas">
+                        <ul id="manga">
+                            <li>
+                                <i class="metismenu-icon material-icons">list</i>
+                                <a id="episodes-liste" class="nav-links-child"
+                                   href="{{ path('manga') }}">Liste</a>
+                            </li>
+                            <li>
+                                <i class="metismenu-icon material-icons">add</i>
+                                <a id="episodes-liste" class="nav-links-child"
+                                   href="{{ path('manga_tome_add') }}">Ajouter tome</a>
+                            </li>
+                            <li>
+                                <i class="metismenu-icon material-icons">add</i>
+                                <a id="episodes-liste" class="nav-links-child"
+                                   href="{{ path('manga_author_add') }}">Ajouter auteur</a>
+                            </li>
+                            <li>
+                                <i class="metismenu-icon material-icons">add</i>
+                                <a id="episodes-liste" class="nav-links-child"
+                                   href="{{ path('manga_editor_add') }}">Ajouter éditeur</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <i class="metismenu-icon material-icons">logout</i>
+                    <a id="episodes-liste" class="nav-links-child"
+                       href="{{ path('logout') }}">Déconnexion</a>
+                </li>
+            </ul>
         </div>
-        <div id="snackbar"></div>
-    </body>
+    {% endif %}
+    <div class="{% if app.user == null %}col-12{% else %}body-menu{% endif %}">
+        {% block body %}{% endblock %}
+    </div>
+</div>
+<div id="snackbar"></div>
+</body>
 </html>
 
 {% for message in app.flashes('success') %}
@@ -170,42 +182,43 @@
 
 <script>
 
-        $(function () {
-            $(".datepicker").datepicker({
-                closeText: 'Fermer',
-                prevText: 'Précédent',
-                nextText: 'Suivant',
-                currentText: 'Aujourd\'hui',
-                monthNames: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
-                monthNamesShort: ['Janv.', 'Févr.', 'Mars', 'Avril', 'Mai', 'Juin', 'Juil.', 'Août', 'Sept.', 'Oct.', 'Nov.', 'Déc.'],
-                dayNames: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
-                dayNamesShort: ['Dim.', 'Lun.', 'Mar.', 'Mer.', 'Jeu.', 'Ven.', 'Sam.'],
-                dayNamesMin: ['D', 'L', 'M', 'M', 'J', 'V', 'S'],
-                weekHeader: 'Sem.',
-                dateFormat: 'dd/mm/yy',
-                firstDay: 1
-            });
+    $(function () {
+        $(".datepicker").datepicker({
+            closeText: 'Fermer',
+            prevText: 'Précédent',
+            nextText: 'Suivant',
+            currentText: 'Aujourd\'hui',
+            monthNames: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
+            monthNamesShort: ['Janv.', 'Févr.', 'Mars', 'Avril', 'Mai', 'Juin', 'Juil.', 'Août', 'Sept.', 'Oct.', 'Nov.', 'Déc.'],
+            dayNames: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
+            dayNamesShort: ['Dim.', 'Lun.', 'Mar.', 'Mer.', 'Jeu.', 'Ven.', 'Sam.'],
+            dayNamesMin: ['D', 'L', 'M', 'M', 'J', 'V', 'S'],
+            weekHeader: 'Sem.',
+            dateFormat: 'dd/mm/yy',
+            firstDay: 1
+        });
 
-            $(".datetimepicker").datetimepicker({
-                closeText: 'Fermer',
-                prevText: 'Précédent',
-                nextText: 'Suivant',
-                currentText: 'Aujourd\'hui',
-                monthNames: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
-                monthNamesShort: ['Janv.', 'Févr.', 'Mars', 'Avril', 'Mai', 'Juin', 'Juil.', 'Août', 'Sept.', 'Oct.', 'Nov.', 'Déc.'],
-                dayNames: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
-                dayNamesShort: ['Dim.', 'Lun.', 'Mar.', 'Mer.', 'Jeu.', 'Ven.', 'Sam.'],
-                dayNamesMin: ['D', 'L', 'M', 'M', 'J', 'V', 'S'],
-                timeText: 'Heure complète',
-                hourText: 'Heure',
-                weekHeader: 'Sem.',
-                dateFormat: 'dd/mm/yy',
-                firstDay: 1,
-                changeMonth: true,
-                changeYear: true,
-                maxDate: 0
-            });
-            
+        $(".datetimepicker").datetimepicker({
+            closeText: 'Fermer',
+            prevText: 'Précédent',
+            nextText: 'Suivant',
+            currentText: 'Aujourd\'hui',
+            monthNames: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
+            monthNamesShort: ['Janv.', 'Févr.', 'Mars', 'Avril', 'Mai', 'Juin', 'Juil.', 'Août', 'Sept.', 'Oct.', 'Nov.', 'Déc.'],
+            dayNames: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
+            dayNamesShort: ['Dim.', 'Lun.', 'Mar.', 'Mer.', 'Jeu.', 'Ven.', 'Sam.'],
+            dayNamesMin: ['D', 'L', 'M', 'M', 'J', 'V', 'S'],
+            timeText: 'Heure complète',
+            hourText: 'Heure',
+            weekHeader: 'Sem.',
+            dateFormat: 'dd/mm/yy',
+            firstDay: 1,
+            changeMonth: true,
+            changeYear: true,
+            maxDate: 0
+        });
+    });
+
 </script>
 
-        {% block javascript %}{% endblock %}
+{% block javascript %}{% endblock %}
