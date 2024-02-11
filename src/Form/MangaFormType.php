@@ -27,11 +27,11 @@ class MangaFormType extends AbstractType
             ])
             ->add('releaseDate', DateType::class, [
                 'widget' => 'single_text',
-                'attr' => ['class' => 'form-control datepicker'],
+                'attr' => ['class' => 'form-control'],
             ])
             ->add('endDate', DateType::class, [
                 'widget' => 'single_text',
-                'attr' => ['class' => 'form-control datepicker'],
+                'attr' => ['class' => 'form-control'],
                 'required' => false
             ])
             ->add('nbTomes', IntegerType::class, [

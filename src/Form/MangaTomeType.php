@@ -26,16 +26,16 @@ class MangaTomeType extends AbstractType
             ])
             ->add('releaseDate', DateType::class, [
                 'widget' => 'single_text',
-                'attr' => ['class' => 'form-control datepicker']
+                'attr' => ['class' => 'form-control']
             ])
             ->add('readingStartDate', DateType::class, [
                 'widget' => 'single_text',
-                'attr' => ['class' => 'form-control datepicker'],
+                'attr' => ['class' => 'form-control'],
                 'required' => false
             ])
             ->add('readingEndDate', DateType::class, [
                 'widget' => 'single_text',
-                'attr' => ['class' => 'form-control datepicker'],
+                'attr' => ['class' => 'form-control'],
                 'required' => false
             ])
             ->add('cover', TextType::class, [
