@@ -94,7 +94,7 @@ class MangaTome
         return $this->readingStartDate;
     }
 
-    public function setReadingStartDate(\DateTimeInterface $readingStartDate): static
+    public function setReadingStartDate(?\DateTimeInterface $readingStartDate): static
     {
         $this->readingStartDate = $readingStartDate;
 
