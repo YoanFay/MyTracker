@@ -27,7 +27,7 @@ class MangaTome
     #[ORM\JoinColumn(nullable: false)]
     private ?Manga $manga = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $readingStartDate = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
