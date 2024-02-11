@@ -61,10 +61,12 @@
                     </td>
                 {% else %}
                     <td>
-                        <a href="{{ path('manga_tome_start', {'id': tome.id}) }}"
-                           class="btn btn-primary">
-                            Commencer
-                        </a>
+                        {% if "now"|date('U') > tome.releaseDate|date('U') %}
+                            <a href="{{ path('manga_tome_start', {'id': tome.id}) }}"
+                               class="btn btn-primary">
+                                Commencer
+                            </a>
+                        {% endif %}
                     </td>
                     <td>
                     </td>
