@@ -20,7 +20,7 @@
                 <td>{{ manga.tomeCount }} / {{ manga.info.nbTomes }}</td>
                 <td>{{ manga.info.author.name }}</td>
                 <td>{{ manga.info.editor.name }}</td>
-                <td>{{ manga.info.releaseDate|dateF }} - {% if manga.info.endDate %} {{ manga.info.endDate|dateF }} {% else %} En cours {% endif %}</td>
+                <td>{{ manga.info.releaseDate|dateFNoDay }} - {% if manga.info.endDate %} {{ manga.info.endDate|dateFNoDay }} {% else %} En cours {% endif %}</td>
             </tr>
         {% endfor %}
         </tbody>

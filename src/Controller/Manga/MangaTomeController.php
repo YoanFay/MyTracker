@@ -73,6 +73,32 @@ class MangaTomeController extends AbstractController
         ]);
     }
 
+    #[Route('manga/tome/start/{id}', name: 'manga_tome_start')]
+    public function start(ManagerRegistry $managerRegistry, MangaTomeRepository $mangaTomeRepository, $id): Response
+    {
+        $tome = $mangaTomeRepository->findOneBy(['id' => $id]);
+
+        if ($tome->getReadingStartDate()){
+
+            $this->addFlash('error', 'Manga déjà commencé');
+
+            return $this->redirectToRoute('manga_details', [
+                'id' => $tome->getManga()->getId(),
+            ]);
+        }
+
+        $tome->setReadingStartDate(new \DateTime());
+
+        $managerRegistry->getManager()->persist($tome);
+        $managerRegistry->getManager()->flush();
+
+        $this->addFlash('success', 'Manga commencé');
+
+        return $this->redirectToRoute('manga_details', [
+            'id' => $tome->getManga()->getId(),
+        ]);
+    }
+
     #[Route('manga/tome/read/{id}', name: 'manga_tome_read')]
     public function read(ManagerRegistry $managerRegistry, MangaTomeRepository $mangaTomeRepository, $id): Response
     {

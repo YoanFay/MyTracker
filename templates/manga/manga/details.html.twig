@@ -3,22 +3,22 @@
 {% block title %}{{ manga.name }}{% endblock %}
 
 {% block body %}
-<h1>{{ manga.name }}</h1>
+    <h1>{{ manga.name }}</h1>
 
-<ul>
-    <li><strong>Date de sortie</strong> : {{ manga.releaseDate|dateFNoDay }}</li>
-    <li><strong>Auteur</strong> : {{ manga.author.name }}</li>
-    <li><strong>Editeur</strong> : {{ manga.editor.name }}</li>
-    <li><strong>Type</strong> : {{ manga.type.name }}</li>
-</ul>
-<br>
+    <ul>
+        <li><strong>Date de sortie</strong> : {{ manga.releaseDate|dateFNoDay }}</li>
+        <li><strong>Auteur</strong> : {{ manga.author.name }}</li>
+        <li><strong>Editeur</strong> : {{ manga.editor.name }}</li>
+        <li><strong>Type</strong> : {{ manga.type.name }}</li>
+    </ul>
+    <br>
     <div class="d-flex flex-row flex-wrap">
         <div class="m-2">
             <strong>Genres : </strong>
             <ul>
                 {% for genre in manga.genres %}
                     <li>{{ genre.name }}</li>
-                {% endfor %} 
+                {% endfor %}
             </ul>
         </div>
         <div class="m-2">
@@ -26,19 +26,19 @@
             <ul>
                 {% for theme in manga.themes %}
                     <li>{{ theme.name }}</li>
-                {% endfor %} 
+                {% endfor %}
             </ul>
         </div>
-        </div>
-        
-        <table class="table table-hover table-striped table-bordered">
+    </div>
+
+    <table class="table table-hover table-striped table-bordered">
         <thead>
         <tr>
             <th scope="col">Nom</th>
             <th scope="col">Nombre de page</th>
-            <th scope="col">Sortie le </th>
-            <th scope="col">Commencer le </th>
-            <th scope="col">Finit le </th>
+            <th scope="col">Sortie le</th>
+            <th scope="col">Commencer le</th>
+            <th scope="col">Finit le</th>
             <th scope="col">Image</th>
         </tr>
         </thead>
@@ -48,49 +48,65 @@
                 <td>Tome {{ tome.tomeNumber }}</td>
                 <td>{{ tome.page }} pages</td>
                 <td>{{ tome.releaseDate|dateFNoDay }}</td>
-                <td>{% if tome.readingStartDate %} {{ tome.readingStartDate|dateF }} {% endif %}</td>
-                <td class="position-relative">
-                    {% if tome.readingEndDate %}
-                        {{ tome.readingEndDate|dateF }}
-                    {% else %}
-                        <p>En cours</p>
-                        <a href="{{ path('manga_tome_read', {'id': tome.id}) }}" class="position-absolute bottom-0 mb-2 btn btn-primary">Terminé</a>
+                {% if tome.readingStartDate %}
+                    <td>{{ tome.readingStartDate|dateF }}</td>
+                    <td class="position-relative">
+                        {% if tome.readingEndDate %}
+                            {{ tome.readingEndDate|dateF }}
+                        {% else %}
+                            <p>En cours</p>
+                            <a href="{{ path('manga_tome_read', {'id': tome.id}) }}"
+                               class="position-absolute bottom-0 mb-2 btn btn-primary">Terminer</a>
+                        {% endif %}
+                    </td>
+                {% else %}
+                    <td>
+                        <a href="{{ path('manga_tome_start', {'id': tome.id}) }}"
+                           class="btn btn-primary">
+                            Commencer
+                        </a>
+                    </td>
+                    <td>
+                    </td>
+                {% endif %}
+                <td>
+                    {% if tome.cover %}
+                        <img {% if tome.cover %} src="{{ tome.cover|replace({'../public': ''}) }}" alt="{{ tome.tomeNumber }} poster" {% else %} src="/image/visuel-a-venir.jpg" alt="Visuel à venir" {% endif %}
+                                width="150px" data-bs-toggle="modal" data-bs-target="#imageModal"
+                                class="cursor-click img-modal-trigger"
+                                data-img-url="{{ tome.cover|replace({'../public': ''}) }}">
                     {% endif %}
                 </td>
-                <td>
-    {% if tome.cover %}
-    <img {% if tome.cover %} src="{{ tome.cover|replace({'../public': ''})}}" alt="{{tome.tomeNumber}} poster" {% else %} src="/image/visuel-a-venir.jpg" alt="Visuel à venir" {% endif %} width="150px" data-bs-toggle="modal" data-bs-target="#imageModal" class="cursor-click img-modal-trigger" data-img-url="{{ tome.cover|replace({'../public': ''})}}">
-    {% endif %}
-    </td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
-<!-- Modal -->
-<div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="imageModalLabel">Image en Plein Écran</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div id="imageModal" class="modal-body text-center" style="overflow: hidden;">
-          <img src="" style="max-height: calc(100vh - 50px); width: auto; max-width: 100%;">
-      </div>
+    <!-- Modal -->
+    <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="imageModalLabel">Image en Plein Écran</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div id="imageModal" class="modal-body text-center" style="overflow: hidden;">
+                    <img src="" style="max-height: calc(100vh - 50px); width: auto; max-width: 100%;">
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
-        
+
 {% endblock %}
 
 {% block javascript %}
     <script>
-$(document).ready(function() {
-    $('.img-modal-trigger').click(function() {
-        var imgUrl = $(this).data('img-url');
-        $('#imageModal img').attr('src', imgUrl);
-    });
-});
-</script>
+        $(document).ready(function () {
+            $('.img-modal-trigger').click(function () {
+                var imgUrl = $(this).data('img-url');
+                $('#imageModal img').attr('src', imgUrl);
+            });
+        });
+    </script>
 {% endblock %}
