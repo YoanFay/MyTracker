@@ -13,6 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Service\StrSpecialCharsLower;
 
 class SerieController extends AbstractController
 {
@@ -64,7 +65,7 @@ class SerieController extends AbstractController
     }
 
     #[Route('/serie/add', name: 'serie_add')]
-    public function addSerie(ManagerRegistry $managerRegistry, Request $request): Response
+    public function addSerie(ManagerRegistry $managerRegistry, Request $request, StrSpecialCharsLower $strSpecialCharsLower): Response
     {
 
         $serie = new Serie();
@@ -75,6 +76,8 @@ class SerieController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()){
 
             $serie->setType($form->get('type')->getData());
+            
+            $serie->setSlug($strSpecialCharsLower->serie($serie->getName()));
 
             $managerRegistry->getManager()->persist($serie);
             $managerRegistry->getManager()->flush();
@@ -103,15 +106,7 @@ class SerieController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()){
 
-            $passwordTest = $form->get('password')->getData();
-
             $serie->setType($form->get('type')->getData());
-
-            if (!password_verify($passwordTest, $_ENV['PASSWORD_USER'])){
-                $this->addFlash('error', 'Mot de passe incorrect');
-
-                return $this->redirectToRoute('episode_add');
-            }
 
             $managerRegistry->getManager()->persist($serie);
             $managerRegistry->getManager()->flush();
@@ -143,15 +138,7 @@ class SerieController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()){
 
-            $passwordTest = $form->get('password')->getData();
-
             $serie->setType($form->get('type')->getData());
-
-            if (!password_verify($passwordTest, $_ENV['PASSWORD_USER'])){
-                $this->addFlash('error', 'Mot de passe incorrect');
-
-                return $this->redirectToRoute('episode_add');
-            }
             
             $animeGenres = $serie->getAnimeGenres()->getValues();
             

@@ -17,6 +17,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 
 class UpdateArtworkCommand extends Command
@@ -27,15 +28,18 @@ class UpdateArtworkCommand extends Command
     private EpisodeShowRepository $episodeShowRepository;
 
     private ObjectManager $manager;
+    
+    private KernelInterface $kernel;
 
 
-    public function __construct(SerieRepository $serieRepository, EpisodeShowRepository $episodeShowRepository, ManagerRegistry $managerRegistry)
+    public function __construct(SerieRepository $serieRepository, EpisodeShowRepository $episodeShowRepository, ManagerRegistry $managerRegistry, KernelInterface $kernel)
     {
 
         parent::__construct();
         $this->serieRepository = $serieRepository;
         $this->episodeShowRepository = $episodeShowRepository;
         $this->manager = $managerRegistry->getManager();
+        $this->kernel = $kernel;
     }
 
 
@@ -104,8 +108,23 @@ class UpdateArtworkCommand extends Command
             if ($status === "success" && $data['artworks'] == []) {
                 continue;
             }
+            
+            // Lien de l'image à télécharger
+            $lienImage = $data['artworks'][0]['image'];
+                
+            $cover = imagecreatefromstring(file_get_contents($lienImage));
+            
+            $projectDir = $this->kernel->getProjectDir();
 
-            $serie->setArtwork($data['artworks'][0]['image']);
+            // Chemin où enregistrer l'image
+            $cheminImageDestination = "/public/image/serie/poster/" . $serie->getSlug().'.jpeg';
+
+            // Téléchargement et enregistrement de l'image
+            if (imagejpeg($cover, $projectDir . $cheminImageDestination, 100)) {
+                $serie->setArtwork($cheminImageDestination);
+            } else {
+                $serie->setArtwork(null);
+            }
 
             $this->manager->persist($serie);
             $this->manager->flush();

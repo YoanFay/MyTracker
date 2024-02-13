@@ -8,10 +8,18 @@
                 <canvas id="myChart"></canvas>
             </div>
         </div>
+    </div>
+
+    <div class="d-flex flex-row col-12">
+        <div class="chart-container col-5">
+            <div>
+                <canvas id="myChart2"></canvas>
+            </div>
+        </div>
 
         <div class="chart-container col-7">
             <div>
-                <canvas id="myChart2"></canvas>
+                <canvas id="myChart3"></canvas>
             </div>
         </div>
     </div>
@@ -19,13 +27,13 @@
     <div class="d-flex flex-row col-12">
         <div class="chart-container col-5">
             <div>
-                <canvas id="myChart3"></canvas>
+                <canvas id="myChart4"></canvas>
             </div>
         </div>
 
         <div class="chart-container col-7">
             <div>
-                <canvas id="myChart4"></canvas>
+                <canvas id="myChart5"></canvas>
             </div>
         </div>
     </div>
@@ -42,6 +50,13 @@
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     return `${hours}h${minutes}min`;
+}
+
+    // Fonction pour convertir les secondes en format "hh:mm"
+    function toHH(milliseconds) {
+    const seconds = Math.floor(milliseconds / 1000);
+    const hours = Math.floor(seconds / 3600);
+    return `${hours}h`;
 }
     const ctx = document.getElementById('myChart');
 
@@ -137,9 +152,71 @@
     }
   });
   
-    const ctx3 = document.getElementById('myChart3');
+  const ctx3 = document.getElementById('myChart3');
 
-    new Chart(ctx3, {
+  new Chart(ctx3, {
+    type: 'line',
+    data: {
+      labels: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Aout', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
+      datasets: [{
+        label: 'Anime',
+        data: {{ animeByMonthChart }},
+        backgroundColor: 'rgb(255, 99, 132)',
+        borderColor: 'rgb(255, 99, 132)',
+        borderWidth: 1
+      },{
+        label: 'Série',
+        data: {{ serieByMonthChart }},
+        backgroundColor: 'rgb(255, 159, 64)',
+        borderColor: 'rgb(255, 159, 64)',
+        borderWidth: 1
+      },{
+        label: 'Replay',
+        data: {{ replayByMonthChart }},
+        backgroundColor: 'rgb(255, 205, 86)',
+        borderColor: 'rgb(255, 205, 86)',
+        borderWidth: 1
+      },{
+        label: 'Film',
+        data: {{ movieByMonthChart }},
+        backgroundColor: 'rgb(54, 162, 235)',
+        borderColor: 'rgb(54, 162, 235)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true,
+          stacked: false,
+          ticks: {
+              stepSize: 18000000,
+              callback: function(value) {
+              return toHH(value);
+            }
+          }
+        },
+        x: {
+          stacked: true,
+        }
+      },
+      plugins: {
+        tooltip: {
+          callbacks: {
+            label: function (context) {
+                const value = context.parsed.y;
+                const datasetLabel = context.dataset.label || '';
+                return `${datasetLabel}: ${toHHMM(value)}`;
+            }
+          }
+        }
+      }
+    }
+  });
+  
+    const ctx4 = document.getElementById('myChart4');
+
+    new Chart(ctx4, {
     type: 'pie',
     data: {
     labels: {{ labelGenreChart | raw }},
@@ -163,9 +240,9 @@
     }
   });
   
-    const ctx4 = document.getElementById('myChart4');
+    const ctx5 = document.getElementById('myChart5');
 
-    new Chart(ctx4, {
+    new Chart(ctx5, {
     type: 'pie',
     data: {
     labels: {{ labelThemeChart | raw }},

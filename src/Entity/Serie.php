@@ -48,6 +48,9 @@ class Serie
     #[ORM\ManyToMany(targetEntity: AnimeTheme::class, mappedBy: 'serie', cascade: ["persist"])]
     private Collection $animeThemes;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $slug = null;
+
     public function __construct()
     {
         $this->episodeShows = new ArrayCollection();
@@ -265,6 +268,18 @@ class Serie
         if ($this->animeThemes->removeElement($animeTheme)) {
             $animeTheme->removeSerie($this);
         }
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(?string $slug): static
+    {
+        $this->slug = $slug;
 
         return $this;
     }

@@ -43,6 +43,7 @@
         </tr>
         </thead>
         <tbody>
+        {% set checkRead = "ok" %}
         {% for tome in manga.mangaTomes %}
             <tr>
                 <td>Tome {{ tome.tomeNumber }}</td>
@@ -54,6 +55,7 @@
                         {% if tome.readingEndDate %}
                             {{ tome.readingEndDate|dateF }}
                         {% else %}
+                        {% set checkRead = null %}
                             <p>En cours</p>
                             <a href="{{ path('manga_tome_read', {'id': tome.id}) }}"
                                class="position-absolute bottom-0 mb-2 btn btn-primary">Terminer</a>
@@ -61,7 +63,7 @@
                     </td>
                 {% else %}
                     <td>
-                        {% if "now"|date('U') > tome.releaseDate|date('U') %}
+                        {% if checkRead != null and "now"|date('U') > tome.releaseDate|date('U') %}
                             <a href="{{ path('manga_tome_start', {'id': tome.id}) }}"
                                class="btn btn-primary">
                                 Commencer
@@ -80,6 +82,9 @@
                     {% endif %}
                 </td>
             </tr>
+            {% if tome.readingEndDate is null %}
+                {% set checkRead = null %}
+            {% endif %}
         {% endfor %}
         </tbody>
     </table>

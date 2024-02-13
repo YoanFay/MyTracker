@@ -13,6 +13,20 @@ class StrSpecialCharsLower
 
         return $str;
     }
+    
+    public function serie(string $str): string
+    {
+        $chars = ['@', '#', ',', ';', ':', '/', '!', '?', '$', '*', '<', '>', '{', '}', '[', ']', '+', '=', '^', '~'];
+        $str = str_replace($chars, "", $str);
+        $str = str_replace(') ', " ", $str);
+        $str = str_replace(')', "", $str);
+        $str = str_replace(['-', ' (', '(',], ' ', $str);
+        $str = str_replace(" ", "_", $str);
+        $str = strtolower($str);
+        $str = $this->removeAccents($str);
+
+        return $str;
+    }
 
     /**
      * @param string $string

@@ -73,6 +73,8 @@ class UpdateNameCommand extends Command
         $series = $this->serieRepository->findTvdbId();
 
         foreach ($series as $serie) {
+            
+            try{
 
             $response = $client->get($apiUrl."/series/".$serie->getTvdbId()."/translations/fra", [
                 'headers' => [
@@ -83,8 +85,12 @@ class UpdateNameCommand extends Command
             ]);
 
             $data = json_decode($response->getBody(), true);
+            
+            }catch(\Exception $e){
+                $data = null;
+            }
 
-            if ($data['status'] === "success"){
+            if ($data !== null && $data['status'] === "success"){
                 $serie->setName($data['data']['name']);
                 $serie->setVfName(true);
 
@@ -96,6 +102,8 @@ class UpdateNameCommand extends Command
         $episodes = $this->episodeShowRepository->findBySerieWithTVDB();
 
         foreach ($episodes as $episode) {
+            
+            try{
 
             $response = $client->get($apiUrl."/episodes/".$episode->getTvdbId()."/translations/fra", [
                 'headers' => [
@@ -106,8 +114,12 @@ class UpdateNameCommand extends Command
             ]);
 
             $data = json_decode($response->getBody(), true);
+            
+            }catch(\Exception $e){
+                $data = null;
+            }
 
-            if ($data['status'] === "success"){
+            if ($data !== null && $data['status'] === "success"){
                 $episode->setName($data['data']['name']);
                 $episode->setVfName(true);
 

@@ -38,9 +38,9 @@ class MangaTomeController extends AbstractController
             $cover = imagecreatefromstring(file_get_contents($lienImage));
 
             // Chemin où enregistrer l'image
-            $cheminDossierBase = "../public/image/manga/cover/";
+            $cheminDossierBase = "/public/image/manga/cover/";
             $nomManga = $mangaTome->getManga()->getSlug();
-            $cheminDossierManga = $cheminDossierBase . $nomManga;
+            $cheminDossierManga = $this->getParameter('kernel.project_dir') . $cheminDossierBase . $nomManga;
 
             // Création du dossier s'il n'existe pas
             if (!file_exists($cheminDossierManga)) {
@@ -48,14 +48,14 @@ class MangaTomeController extends AbstractController
             }
 
             // Nom de fichier pour l'image (peut être personnalisé si nécessaire)
-            $nomFichierImage = $nomManga.$mangaTome->getTomeNumber();
+            $nomFichierImage = $nomManga.$mangaTome->getTomeNumber().'.jpeg';
 
             // Chemin complet de destination pour enregistrer l'image
-            $cheminImageDestination = $cheminDossierManga . "/" . $nomFichierImage.'.jpeg';
+            $cheminImageDestination = $cheminDossierManga . "/" . $nomFichierImage;
 
             // Téléchargement et enregistrement de l'image
             if (imagejpeg($cover, $cheminImageDestination, 100)) {
-                $mangaTome->setCover($cheminImageDestination);
+                $mangaTome->setCover($cheminDossierBase . $nomManga . "/" . $nomFichierImage);
             } else {
                 $mangaTome->setCover(null);
             }
