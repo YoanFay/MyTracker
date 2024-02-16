@@ -11,13 +11,13 @@
     </div>
 
     <div class="d-flex flex-row col-12">
-        <div class="chart-container col-5">
+        <div class="chart-container col-6">
             <div>
                 <canvas id="myChart2"></canvas>
             </div>
         </div>
 
-        <div class="chart-container col-7">
+        <div class="chart-container col-6">
             <div>
                 <canvas id="myChart3"></canvas>
             </div>
@@ -93,7 +93,7 @@
   const ctx2 = document.getElementById('myChart2');
 
   new Chart(ctx2, {
-    type: 'bar',
+    type: 'line',
     data: {
       labels: ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'],
       datasets: [{
@@ -126,7 +126,7 @@
       scales: {
         y: {
           beginAtZero: true,
-          stacked: true,
+          stacked: false,
           ticks: {
               stepSize: 1800000,
               callback: function(value) {
