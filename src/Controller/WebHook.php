@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Movie;
 use App\Repository\MovieRepository;
+use App\Service\StrSpecialCharsLower;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,7 +28,8 @@ class WebHook extends AbstractController
         UsersRepository       $usersRepository,
         SerieRepository       $serieRepository,
         EpisodeShowRepository $episodeShowRepository,
-        MovieRepository       $movieRepository
+        MovieRepository       $movieRepository,
+        StrSpecialCharsLower  $strSpecialCharsLower
     ): Response
     {
 
@@ -101,6 +103,8 @@ class WebHook extends AbstractController
                 $serie->setPlexId($serieId);
                 $serie->setName($jsonData['Metadata']['grandparentTitle']);
                 $serie->setType($type);
+
+                $serie->setSlug($strSpecialCharsLower->serie($serie->getName()));
 
                 $em->persist($serie);
                 $em->flush();
