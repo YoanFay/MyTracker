@@ -46,7 +46,7 @@
         {% set checkRead = "ok" %}
         {% for tome in manga.mangaTomes %}
             <tr>
-                <td>Tome {{ tome.tomeNumber }}</td>
+                <td><a class="text-decoration-none text-black" href="{{ path('manga_tome_edit', {'id': tome.id}) }}">Tome {{ tome.tomeNumber }}</a></td>
                 <td>{{ tome.page }} pages</td>
                 <td>{{ tome.releaseDate|dateFNoDay }}</td>
                 {% if tome.readingStartDate %}
