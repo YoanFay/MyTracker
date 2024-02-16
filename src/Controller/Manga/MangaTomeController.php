@@ -95,7 +95,7 @@ class MangaTomeController extends AbstractController
             // Lien de l'image à télécharger
             $lienImage = $mangaTome->getCover();
 
-            if (!str_starts_with($lienImage, "http://") && !str_starts_with($lienImage, "https://")) {
+            if (!str_starts_with($lienImage, "http://") || !str_starts_with($lienImage, "https://")) {
 
                 $cover = imagecreatefromstring(file_get_contents($lienImage));
 

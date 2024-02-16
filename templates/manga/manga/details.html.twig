@@ -75,7 +75,7 @@
                 {% endif %}
                 <td>
                     {% if tome.cover %}
-                        <img {% if tome.cover %} src="{{ tome.cover|replace({'../public': ''}) }}" alt="{{ tome.tomeNumber }} poster" {% else %} src="/image/visuel-a-venir.jpg" alt="Visuel à venir" {% endif %}
+                        <img {% if tome.cover %} src="{{ tome.cover }}" alt="{{ tome.tomeNumber }} poster" {% else %} src="/image/visuel-a-venir.jpg" alt="Visuel à venir" {% endif %}
                                 width="150px" data-bs-toggle="modal" data-bs-target="#imageModal"
                                 class="cursor-click img-modal-trigger"
                                 data-img-url="{{ tome.cover|replace({'../public': ''}) }}">
