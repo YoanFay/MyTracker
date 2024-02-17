@@ -1,0 +1,8 @@
+bugsnag:
+    api_key: 849811581acb76d0f0132ea27995fc9f
+    release_stage: production
+    discard_classes:
+        - Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+        - Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException
+        - Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+        - Symfony\Component\Security\Core\Exception\AccessDeniedException
