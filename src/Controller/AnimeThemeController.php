@@ -8,7 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class AnimeThemeController extends AbstractController
 {
-    #[Route('/anime/theme', name: 'app_anime_theme')]
+    #[Route('/anime/theme', name: 'anime_theme')]
     public function index(): Response
     {
         return $this->render('anime_theme/index.html.twig', [

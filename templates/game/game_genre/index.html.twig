@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}GameGenre index{% endblock %}
+
+{% block body %}
+    <h1>GameGenre index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for game_genre in game_genres %}
+            <tr>
+                <td>{{ game_genre.id }}</td>
+                <td>{{ game_genre.name }}</td>
+                <td>
+                    <a href="{{ path('game_genre_show', {'id': game_genre.id}) }}">show</a>
+                    <a href="{{ path('game_genre_edit', {'id': game_genre.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('game_genre_new') }}">Create new</a>
+{% endblock %}

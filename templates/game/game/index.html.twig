@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Game index{% endblock %}
+
+{% block body %}
+    <h1>Game index</h1>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Sortie le :</th>
+            <th>Commencer le :</th>
+            <th>Fini le :</th>
+            <th>Fini en :</th>
+            <th>Fini à 100% le :</th>
+            <th>Fini à 100% en :</th>
+            <th>actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for game in games %}
+            <tr>
+                <td>{{ game.name }}</td>
+                <td>{{ game.releaseDate ? game.releaseDate|dateFNoDay: '' }}</td>
+                {% if game.gameTrackers.getValues != [] %}
+                {% set gameTracker = game.gameTrackers[0] %}
+                <td>{{ gameTracker.startDate ? gameTracker.startDate|dateF : '' }}</td>
+                <td>{{ gameTracker.endDate ? gameTracker.endDate|dateF : '' }}</td>
+                <td>{{ gameTracker.endTime ? gameTracker.endTime|SToHM : '' }}</td>
+                <td>{{ gameTracker.completeDate ? gameTracker.completeDate|dateF : '' }}</td>
+                <td>{{ gameTracker.completeTime ? gameTracker.completeTime|SToHM : '' }}</td>
+                {% else %}
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                {% endif %}
+                <td>
+                    <a href="{{ path('game_tracker_edit', {'id': game.id}) }}">track</a>
+                    <a href="{{ path('game_show', {'id': game.id}) }}">show</a>
+                    <a href="{{ path('game_edit', {'id': game.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('game_new') }}">Create new</a>
+{% endblock %}

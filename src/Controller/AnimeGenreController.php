@@ -8,7 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class AnimeGenreController extends AbstractController
 {
-    #[Route('/anime/genre', name: 'app_anime_genre')]
+    #[Route('/anime/genre', name: 'anime_genre')]
     public function index(): Response
     {
         return $this->render('anime_genre/index.html.twig', [

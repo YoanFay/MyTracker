@@ -2,7 +2,7 @@
 <html class="h-100" lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>MyTracker{% block title %}{% endblock %}</title>
+    <title>MyTracker - {% block title %}{% endblock %}</title>
     <link rel="icon"
           href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -41,28 +41,24 @@
         <div class="h-100 col-2 border-end p-2 menu">
             <ul>
                 <li>
-                    <i class="metismenu-icon material-icons">home</i>
                     <a id="episodes-liste" class="nav-links-child"
                        href="{{ path('home') }}">Accueil</a>
                 </li>
                 <li>
                     <a data-bs-toggle="collapse" href="#activateEpisodes" role="button" aria-expanded="false"
                        aria-controls="collapseExample">
-                        <i class="metismenu-icon material-icons">live_tv</i>
                         Épisodes
                         <i class="metismenu-state-icon material-icons">expand_more</i>
                     </a>
                     <div class="collapse" id="activateEpisodes">
                         <ul id="episode">
                             <li>
-                                <i class="metismenu-icon material-icons">list</i>
                                 <a id="episodes-liste" class="nav-links-child"
                                    href="{{ path('episode') }}">Liste</a>
                             </li>
                         </ul>
                         <ul id="episode">
                             <li>
-                                <i class="metismenu-icon material-icons">add</i>
                                 <a id="episodes-liste" class="nav-links-child"
                                    href="{{ path('episode_add') }}">Ajouter</a>
                             </li>
@@ -72,21 +68,18 @@
                 <li>
                     <a data-bs-toggle="collapse" href="#activateSeries" role="button" aria-expanded="false"
                        aria-controls="collapseExample">
-                        <i class="metismenu-icon material-icons">subtitles</i>
                         Séries
                         <i class="metismenu-state-icon material-icons">expand_more</i>
                     </a>
                     <div class="collapse" id="activateSeries">
                         <ul id="serie">
                             <li>
-                                <i class="metismenu-icon material-icons">list</i>
                                 <a id="episodes-liste" class="nav-links-child"
                                    href="{{ path('serie') }}">Liste</a>
                             </li>
                         </ul>
                         <ul id="episode">
                             <li>
-                                <i class="metismenu-icon material-icons">add</i>
                                 <a id="episodes-liste" class="nav-links-child"
                                    href="{{ path('serie_add') }}">Ajouter</a>
                             </li>
@@ -96,14 +89,12 @@
                 <li>
                     <a data-bs-toggle="collapse" href="#activateFilms" role="button" aria-expanded="false"
                        aria-controls="collapseExample">
-                        <i class="metismenu-icon material-icons">movie</i>
                         Films
                         <i class="metismenu-state-icon material-icons">expand_more</i>
                     </a>
                     <div class="collapse" id="activateFilms">
                         <ul id="film">
                             <li>
-                                <i class="metismenu-icon material-icons">list</i>
                                 <a id="episodes-liste" class="nav-links-child"
                                    href="{{ path('movie') }}">Liste</a>
                             </li>
@@ -113,29 +104,24 @@
                 <li>
                     <a data-bs-toggle="collapse" href="#activateMangas" role="button" aria-expanded="false"
                        aria-controls="collapseExample">
-                        <i class="metismenu-icon material-icons">chat_bubble</i>
                         Mangas
                         <i class="metismenu-state-icon material-icons">expand_more</i>
                     </a>
                     <div class="collapse" id="activateMangas">
                         <ul id="manga">
                             <li>
-                                <i class="metismenu-icon material-icons">list</i>
                                 <a id="episodes-liste" class="nav-links-child"
                                    href="{{ path('manga') }}">Liste</a>
                             </li>
                             <li>
-                                <i class="metismenu-icon material-icons">add</i>
                                 <a id="episodes-liste" class="nav-links-child"
                                    href="{{ path('manga_tome_add') }}">Ajouter tome</a>
                             </li>
                             <li>
-                                <i class="metismenu-icon material-icons">add</i>
                                 <a id="episodes-liste" class="nav-links-child"
                                    href="{{ path('manga_author_add') }}">Ajouter auteur</a>
                             </li>
                             <li>
-                                <i class="metismenu-icon material-icons">add</i>
                                 <a id="episodes-liste" class="nav-links-child"
                                    href="{{ path('manga_editor_add') }}">Ajouter éditeur</a>
                             </li>
@@ -143,7 +129,49 @@
                     </div>
                 </li>
                 <li>
-                    <i class="metismenu-icon material-icons">logout</i>
+                    <a data-bs-toggle="collapse" href="#activateGames" role="button" aria-expanded="false"
+                       aria-controls="collapseExample">
+                        Jeux
+                        <i class="metismenu-state-icon material-icons">expand_more</i>
+                    </a>
+                    <div class="collapse" id="activateGames">
+                        <ul id="manga">
+                            <li>
+                                <a id="episodes-liste" class="nav-links-child"
+                                   href="{{ path('game_index') }}">Liste</a>
+                            </li>
+                            <li>
+                                <a id="episodes-liste" class="nav-links-child"
+                                   href="{{ path('game_developer_index') }}">Développeur</a>
+                            </li>
+                            <li>
+                                <a id="episodes-liste" class="nav-links-child"
+                                   href="{{ path('game_publishers_index') }}">Éditeurs</a>
+                            </li>
+                            <li>
+                                <a id="episodes-liste" class="nav-links-child"
+                                   href="{{ path('game_platform_index') }}">Plateforme</a>
+                            </li>
+                            <li>
+                                <a id="episodes-liste" class="nav-links-child"
+                                   href="{{ path('game_mode_index') }}">Mode</a>
+                            </li>
+                            <li>
+                                <a id="episodes-liste" class="nav-links-child"
+                                   href="{{ path('game_genre_index') }}">Genre</a>
+                            </li>
+                            <li>
+                                <a id="episodes-liste" class="nav-links-child"
+                                   href="{{ path('game_theme_index') }}">Thème</a>
+                            </li>
+                            <li>
+                                <a id="episodes-liste" class="nav-links-child"
+                                   href="{{ path('game_serie_index') }}">Série</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
                     <a id="episodes-liste" class="nav-links-child"
                        href="{{ path('logout') }}">Déconnexion</a>
                 </li>
