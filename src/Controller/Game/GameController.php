@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/game')]
+#[Route('/game/game')]
 class GameController extends AbstractController
 {
     #[Route('/', name: 'game_index', methods: ['GET'])]
@@ -45,6 +45,8 @@ class GameController extends AbstractController
     #[Route('/{id}', name: 'game_show', methods: ['GET'])]
     public function show(Game $game): Response
     {
+
+
         return $this->render('game/game/show.html.twig', [
             'game' => $game,
         ]);
