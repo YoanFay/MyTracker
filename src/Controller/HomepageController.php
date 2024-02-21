@@ -261,6 +261,7 @@ $themeChart = rtrim($themeChart, ", ") . "]";
             'genreChart' => $genreChart,
             'labelThemeChart' => $labelThemeChart,
             'themeChart' => $themeChart,
+            'navLinkId' => 'homepage',
         ]);
     }
 }

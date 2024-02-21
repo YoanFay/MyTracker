@@ -86,6 +86,7 @@ class EpisodeShowController extends AbstractController
             'globalDurationAnime' => $globalDurationAnime,
             'globalDurationSerie' => $globalDurationSerie,
             'globalDurationReplay' => $globalDurationReplay,
+            'navLinkId' => 'episode',
         ]);
     }
 
@@ -115,6 +116,7 @@ class EpisodeShowController extends AbstractController
         return $this->render('episode_show/add.html.twig', [
             'controller_name' => 'EpisodeShowController',
             'form' => $form->createView(),
+            'navLinkId' => 'episode-add',
         ]);
     }
 }

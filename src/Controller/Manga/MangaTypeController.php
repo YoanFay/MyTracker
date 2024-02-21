@@ -13,6 +13,7 @@ class MangaTypeController extends AbstractController
     {
         return $this->render('manga/manga_type/index.html.twig', [
             'controller_name' => 'MangaTypeController',
+            'navLinkId' => 'manga-type',
         ]);
     }
 }

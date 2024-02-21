@@ -13,6 +13,7 @@ class AnimeThemeController extends AbstractController
     {
         return $this->render('anime_theme/index.html.twig', [
             'controller_name' => 'AnimeThemeController',
+            'navLinkId' => 'anime-theme',
         ]);
     }
 }

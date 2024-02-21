@@ -33,6 +33,7 @@ class MovieController extends AbstractController
             'moviesByDate' => $moviesByDate,
             'dateKeys' => $dateKeys,
             'controller_name' => 'MovieController',
+            'navLinkId' => 'movie',
         ]);
     }
 }

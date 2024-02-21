@@ -26,6 +26,7 @@ class SerieController extends AbstractController
         return $this->render('serie/index.html.twig', [
             'controller_name' => 'SerieController',
             'series' => $series,
+            'navLinkId' => 'serie',
         ]);
     }
 
@@ -61,6 +62,7 @@ class SerieController extends AbstractController
             'tagTypes' => $tagTypes,
             'animeGenres' => $animeGenres,
             'animeThemes' => $animeThemes,
+            'navLinkId' => 'serie',
         ]);
     }
 
@@ -88,6 +90,7 @@ class SerieController extends AbstractController
         return $this->render('serie/add.html.twig', [
             'controller_name' => 'SerieController',
             'form' => $form->createView(),
+            'navLinkId' => 'serie-add',
         ]);
     }
 
@@ -117,6 +120,7 @@ class SerieController extends AbstractController
         return $this->render('serie/add.html.twig', [
             'controller_name' => 'SerieController',
             'form' => $form->createView(),
+            'navLinkId' => 'serie',
         ]);
     }
 
@@ -179,6 +183,7 @@ class SerieController extends AbstractController
         return $this->render('serie/add.html.twig', [
             'controller_name' => 'SerieController',
             'form' => $form->createView(),
+            'navLinkId' => 'serie',
         ]);
     }
 }

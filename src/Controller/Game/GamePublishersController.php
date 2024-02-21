@@ -19,6 +19,7 @@ class GamePublishersController extends AbstractController
     {
         return $this->render('game/game_publishers/index.html.twig', [
             'game_publishers' => $gamePublishersRepository->findAll(),
+            'navLinkId' => 'game-publisher',
         ]);
     }
 
@@ -39,6 +40,7 @@ class GamePublishersController extends AbstractController
         return $this->renderForm('game/game_publishers/new.html.twig', [
             'game_publisher' => $gamePublisher,
             'form' => $form,
+            'navLinkId' => 'game-publisher',
         ]);
     }
 
@@ -49,6 +51,7 @@ class GamePublishersController extends AbstractController
 
         return $this->render('game/game_publishers/show.html.twig', [
             'game_publisher' => $gamePublisher,
+            'navLinkId' => 'game-publisher',
         ]);
     }
 
@@ -69,6 +72,7 @@ class GamePublishersController extends AbstractController
         return $this->renderForm('game/game_publishers/edit.html.twig', [
             'game_publisher' => $gamePublisher,
             'form' => $form,
+            'navLinkId' => 'game-publisher',
         ]);
     }
 

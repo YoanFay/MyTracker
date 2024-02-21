@@ -19,6 +19,7 @@ class GameSerieController extends AbstractController
     {
         return $this->render('game/game_serie/index.html.twig', [
             'game_series' => $gameSerieRepository->findAll(),
+            'navLinkId' => 'game-serie'
         ]);
     }
 
@@ -39,6 +40,7 @@ class GameSerieController extends AbstractController
         return $this->renderForm('game/game_serie/new.html.twig', [
             'game_serie' => $gameSerie,
             'form' => $form,
+            'navLinkId' => 'game-serie'
         ]);
     }
 
@@ -49,6 +51,7 @@ class GameSerieController extends AbstractController
 
         return $this->render('game/game_serie/show.html.twig', [
             'game_serie' => $gameSerie,
+            'navLinkId' => 'game-serie'
         ]);
     }
 
@@ -69,6 +72,7 @@ class GameSerieController extends AbstractController
         return $this->renderForm('game/game_serie/edit.html.twig', [
             'game_serie' => $gameSerie,
             'form' => $form,
+            'navLinkId' => 'game-serie'
         ]);
     }
 

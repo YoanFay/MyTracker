@@ -19,6 +19,7 @@ class GameThemeController extends AbstractController
     {
         return $this->render('game/game_theme/index.html.twig', [
             'game_themes' => $gameThemeRepository->findAll(),
+            'navLinkId' => 'game-serie',
         ]);
     }
 
@@ -39,6 +40,7 @@ class GameThemeController extends AbstractController
         return $this->renderForm('game/game_theme/new.html.twig', [
             'game_theme' => $gameTheme,
             'form' => $form,
+            'navLinkId' => 'game-serie',
         ]);
     }
 
@@ -49,6 +51,7 @@ class GameThemeController extends AbstractController
 
         return $this->render('game/game_theme/show.html.twig', [
             'game_theme' => $gameTheme,
+            'navLinkId' => 'game-serie',
         ]);
     }
 
@@ -69,6 +72,7 @@ class GameThemeController extends AbstractController
         return $this->renderForm('game/game_theme/edit.html.twig', [
             'game_theme' => $gameTheme,
             'form' => $form,
+            'navLinkId' => 'game-serie',
         ]);
     }
 

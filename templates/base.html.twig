@@ -41,7 +41,7 @@
         <div class="h-100 col-2 border-end p-2 menu">
             <ul>
                 <li>
-                    <a id="episodes-liste" class="nav-links-child"
+                    <a id="homepage" class="nav-links-child"
                        href="{{ path('home') }}">Accueil</a>
                 </li>
                 <li>
@@ -53,13 +53,13 @@
                     <div class="collapse" id="activateEpisodes">
                         <ul id="episode">
                             <li>
-                                <a id="episodes-liste" class="nav-links-child"
+                                <a id="episode" class="nav-links-child"
                                    href="{{ path('episode') }}">Liste</a>
                             </li>
                         </ul>
                         <ul id="episode">
                             <li>
-                                <a id="episodes-liste" class="nav-links-child"
+                                <a id="episode-add" class="nav-links-child"
                                    href="{{ path('episode_add') }}">Ajouter</a>
                             </li>
                         </ul>
@@ -74,13 +74,13 @@
                     <div class="collapse" id="activateSeries">
                         <ul id="serie">
                             <li>
-                                <a id="episodes-liste" class="nav-links-child"
+                                <a id="serie" class="nav-links-child"
                                    href="{{ path('serie') }}">Liste</a>
                             </li>
                         </ul>
                         <ul id="episode">
                             <li>
-                                <a id="episodes-liste" class="nav-links-child"
+                                <a id="serie-add" class="nav-links-child"
                                    href="{{ path('serie_add') }}">Ajouter</a>
                             </li>
                         </ul>
@@ -95,7 +95,7 @@
                     <div class="collapse" id="activateFilms">
                         <ul id="film">
                             <li>
-                                <a id="episodes-liste" class="nav-links-child"
+                                <a id="movie" class="nav-links-child"
                                    href="{{ path('movie') }}">Liste</a>
                             </li>
                         </ul>
@@ -110,19 +110,19 @@
                     <div class="collapse" id="activateMangas">
                         <ul id="manga">
                             <li>
-                                <a id="episodes-liste" class="nav-links-child"
+                                <a id="manga" class="nav-links-child"
                                    href="{{ path('manga') }}">Liste</a>
                             </li>
                             <li>
-                                <a id="episodes-liste" class="nav-links-child"
+                                <a id="manga-tome" class="nav-links-child"
                                    href="{{ path('manga_tome_add') }}">Ajouter tome</a>
                             </li>
                             <li>
-                                <a id="episodes-liste" class="nav-links-child"
+                                <a id="manga-author" class="nav-links-child"
                                    href="{{ path('manga_author_add') }}">Ajouter auteur</a>
                             </li>
                             <li>
-                                <a id="episodes-liste" class="nav-links-child"
+                                <a id="manga-editor" class="nav-links-child"
                                    href="{{ path('manga_editor_add') }}">Ajouter éditeur</a>
                             </li>
                         </ul>
@@ -135,44 +135,44 @@
                         <i class="metismenu-state-icon material-icons">expand_more</i>
                     </a>
                     <div class="collapse" id="activateGames">
-                        <ul id="manga">
+                        <ul id="game">
                             <li>
-                                <a id="episodes-liste" class="nav-links-child"
+                                <a id="game" class="nav-links-child"
                                    href="{{ path('game_index') }}">Liste</a>
                             </li>
                             <li>
-                                <a id="episodes-liste" class="nav-links-child"
+                                <a id="game-developer" class="nav-links-child"
                                    href="{{ path('game_developer_index') }}">Développeur</a>
                             </li>
                             <li>
-                                <a id="episodes-liste" class="nav-links-child"
+                                <a id="game-publisher" class="nav-links-child"
                                    href="{{ path('game_publishers_index') }}">Éditeurs</a>
                             </li>
                             <li>
-                                <a id="episodes-liste" class="nav-links-child"
+                                <a id="game-platform" class="nav-links-child"
                                    href="{{ path('game_platform_index') }}">Plateforme</a>
                             </li>
                             <li>
-                                <a id="episodes-liste" class="nav-links-child"
+                                <a id="game-mode" class="nav-links-child"
                                    href="{{ path('game_mode_index') }}">Mode</a>
                             </li>
                             <li>
-                                <a id="episodes-liste" class="nav-links-child"
+                                <a id="game-genre" class="nav-links-child"
                                    href="{{ path('game_genre_index') }}">Genre</a>
                             </li>
                             <li>
-                                <a id="episodes-liste" class="nav-links-child"
+                                <a id="game-theme" class="nav-links-child"
                                    href="{{ path('game_theme_index') }}">Thème</a>
                             </li>
                             <li>
-                                <a id="episodes-liste" class="nav-links-child"
+                                <a id="game-serie" class="nav-links-child"
                                    href="{{ path('game_serie_index') }}">Série</a>
                             </li>
                         </ul>
                     </div>
                 </li>
                 <li>
-                    <a id="episodes-liste" class="nav-links-child"
+                    <a id="logout" class="nav-links-child"
                        href="{{ path('logout') }}">Déconnexion</a>
                 </li>
             </ul>
@@ -209,6 +209,22 @@
 {% endfor %}
 
 <script>
+
+    // Pour laisser les menus de la sidebar ouvert lorsqu'on recharge la page
+    $(document).ready(function () {
+        {% if navLinkId is defined %}
+        var nav_link_id = "{{ navLinkId }}";
+        if (nav_link_id !== "null") {
+            $('#' + nav_link_id).closest('li').addClass('mm-active');
+            $('#' + nav_link_id + '-a').attr('aria-expanded', true);
+            $('#' + nav_link_id).addClass('mm-show');
+            $('#' + nav_link_id).closest('.collapse').addClass('show');
+
+            //$('#' + nav_link_id).css('background', '#e0f3ff').css('text-decoration', 'none');
+        }
+        {% endif %}
+    });
+
 
     $(function () {
         $(".datepicker").datepicker({

@@ -19,6 +19,7 @@ class GameModeController extends AbstractController
     {
         return $this->render('game/game_mode/index.html.twig', [
             'game_modes' => $gameModeRepository->findAll(),
+            'navLinkId' => 'game-mode',
         ]);
     }
 
@@ -39,6 +40,7 @@ class GameModeController extends AbstractController
         return $this->renderForm('game/game_mode/new.html.twig', [
             'game_mode' => $gameMode,
             'form' => $form,
+            'navLinkId' => 'game-mode',
         ]);
     }
 
@@ -49,6 +51,7 @@ class GameModeController extends AbstractController
 ;
         return $this->render('game/game_mode/show.html.twig', [
             'game_mode' => $gameMode,
+            'navLinkId' => 'game-mode',
         ]);
     }
 
@@ -69,6 +72,7 @@ class GameModeController extends AbstractController
         return $this->renderForm('game/game_mode/edit.html.twig', [
             'game_mode' => $gameMode,
             'form' => $form,
+            'navLinkId' => 'game-mode',
         ]);
     }
 

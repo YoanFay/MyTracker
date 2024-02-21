@@ -13,6 +13,7 @@ class MangaThemeController extends AbstractController
     {
         return $this->render('manga/manga_theme/index.html.twig', [
             'controller_name' => 'MangaThemeController',
+            'navLinkId' => 'manga-theme',
         ]);
     }
 }

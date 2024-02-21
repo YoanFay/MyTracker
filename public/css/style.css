@@ -29,10 +29,13 @@
 
 .body-menu{
   width: 88%;
+  margin-left: 12%;
 }
 
 .menu{
   width: 12%;
+  position: fixed !important;
+  left: 0;
 }
 
 li a{

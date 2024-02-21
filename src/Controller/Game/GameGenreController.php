@@ -19,6 +19,7 @@ class GameGenreController extends AbstractController
     {
         return $this->render('game/game_genre/index.html.twig', [
             'game_genres' => $gameGenreRepository->findAll(),
+            'navLinkId' => 'game-genre',
         ]);
     }
 
@@ -39,6 +40,7 @@ class GameGenreController extends AbstractController
         return $this->renderForm('game/game_genre/new.html.twig', [
             'game_genre' => $gameGenre,
             'form' => $form,
+            'navLinkId' => 'game-genre',
         ]);
     }
 
@@ -49,6 +51,7 @@ class GameGenreController extends AbstractController
 
         return $this->render('game/game_genre/show.html.twig', [
             'game_genre' => $gameGenre,
+            'navLinkId' => 'game-genre',
         ]);
     }
 
@@ -69,6 +72,7 @@ class GameGenreController extends AbstractController
         return $this->renderForm('game/game_genre/edit.html.twig', [
             'game_genre' => $gameGenre,
             'form' => $form,
+            'navLinkId' => 'game-genre',
         ]);
     }
 
