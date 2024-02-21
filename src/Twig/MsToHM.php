@@ -56,7 +56,11 @@ class MsToHM extends AbstractExtension
         }
 
         // Formater le résultat
-        $formatHeureMinute = $heures."h".$minutes;
+        $formatHeureMinute = $heures."h";
+
+        if ($minutes > 0){
+            $formatHeureMinute .= $minutes;
+        }
 
         return $formatHeureMinute;
     }
