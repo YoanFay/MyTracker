@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/game/publishers')]
+#[Route('/game/game/publishers')]
 class GamePublishersController extends AbstractController
 {
     #[Route('/', name: 'game_publishers_index', methods: ['GET'])]
@@ -42,17 +42,21 @@ class GamePublishersController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'game_publishers_show', methods: ['GET'])]
-    public function show(GamePublishers $gamePublisher): Response
+    #[Route('/{id}/details', name: 'game_publishers_show', methods: ['GET'])]
+    public function show(GamePublishersRepository $gamePublishersRepository, $id): Response
     {
+        $gamePublisher = $gamePublishersRepository->find($id);
+
         return $this->render('game/game_publishers/show.html.twig', [
             'game_publisher' => $gamePublisher,
         ]);
     }
 
     #[Route('/{id}/edit', name: 'game_publishers_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, GamePublishers $gamePublisher, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, EntityManagerInterface $entityManager, GamePublishersRepository $gamePublishersRepository, $id): Response
     {
+        $gamePublisher = $gamePublishersRepository->find($id);
+
         $form = $this->createForm(GamePublishersType::class, $gamePublisher);
         $form->handleRequest($request);
 
@@ -68,9 +72,11 @@ class GamePublishersController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'game_publishers_delete', methods: ['POST'])]
-    public function delete(Request $request, GamePublishers $gamePublisher, EntityManagerInterface $entityManager): Response
+    #[Route('/{id}/delete', name: 'game_publishers_delete', methods: ['POST'])]
+    public function delete(Request $request, EntityManagerInterface $entityManager, GamePublishersRepository $gamePublishersRepository, $id): Response
     {
+        $gamePublisher = $gamePublishersRepository->find($id);
+
         if ($this->isCsrfTokenValid('delete'.$gamePublisher->getId(), $request->request->get('_token'))) {
             $entityManager->remove($gamePublisher);
             $entityManager->flush();

@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/game/developer')]
+#[Route('/game/game/developer')]
 class GameDeveloperController extends AbstractController
 {
     #[Route('/', name: 'game_developer_index', methods: ['GET'])]
@@ -42,17 +42,21 @@ class GameDeveloperController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'game_developer_show', methods: ['GET'])]
-    public function show(GameDeveloper $gameDeveloper): Response
+    #[Route('/{id}/details', name: 'game_developer_show', methods: ['GET'])]
+    public function show(GameDeveloperRepository $gameDeveloperRepository, $id): Response
     {
+        $gameDeveloper = $gameDeveloperRepository->find($id);
+
         return $this->render('game/game_developer/show.html.twig', [
             'game_developer' => $gameDeveloper,
         ]);
     }
 
     #[Route('/{id}/edit', name: 'game_developer_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, GameDeveloper $gameDeveloper, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, EntityManagerInterface $entityManager, GameDeveloperRepository $gameDeveloperRepository, $id): Response
     {
+        $gameDeveloper = $gameDeveloperRepository->find($id);
+
         $form = $this->createForm(GameDeveloperType::class, $gameDeveloper);
         $form->handleRequest($request);
 
@@ -68,9 +72,11 @@ class GameDeveloperController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'game_developer_delete', methods: ['POST'])]
-    public function delete(Request $request, GameDeveloper $gameDeveloper, EntityManagerInterface $entityManager): Response
+    #[Route('/{id}/delete', name: 'game_developer_delete', methods: ['POST'])]
+    public function delete(Request $request, EntityManagerInterface $entityManager, GameDeveloperRepository $gameDeveloperRepository, $id): Response
     {
+        $gameDeveloper = $gameDeveloperRepository->find($id);
+
         if ($this->isCsrfTokenValid('delete'.$gameDeveloper->getId(), $request->request->get('_token'))) {
             $entityManager->remove($gameDeveloper);
             $entityManager->flush();

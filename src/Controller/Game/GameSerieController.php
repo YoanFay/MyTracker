@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/game/serie')]
+#[Route('/game/game/serie')]
 class GameSerieController extends AbstractController
 {
     #[Route('/', name: 'game_serie_index', methods: ['GET'])]
@@ -42,17 +42,21 @@ class GameSerieController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'game_serie_show', methods: ['GET'])]
-    public function show(GameSerie $gameSerie): Response
+    #[Route('/{id}/details', name: 'game_serie_show', methods: ['GET'])]
+    public function show(GameSerieRepository $gameSerieRepository, $id): Response
     {
+        $gameSerie = $gameSerieRepository->find($id);
+
         return $this->render('game/game_serie/show.html.twig', [
             'game_serie' => $gameSerie,
         ]);
     }
 
     #[Route('/{id}/edit', name: 'game_serie_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, GameSerie $gameSerie, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, EntityManagerInterface $entityManager, GameSerieRepository $gameSerieRepository, $id): Response
     {
+        $gameSerie = $gameSerieRepository->find($id);
+
         $form = $this->createForm(GameSerieType::class, $gameSerie);
         $form->handleRequest($request);
 
@@ -68,9 +72,11 @@ class GameSerieController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'game_serie_delete', methods: ['POST'])]
-    public function delete(Request $request, GameSerie $gameSerie, EntityManagerInterface $entityManager): Response
+    #[Route('/{id}/delete', name: 'game_serie_delete', methods: ['POST'])]
+    public function delete(Request $request, EntityManagerInterface $entityManager, GameSerieRepository $gameSerieRepository, $id): Response
     {
+        $gameSerie = $gameSerieRepository->find($id);
+
         if ($this->isCsrfTokenValid('delete'.$gameSerie->getId(), $request->request->get('_token'))) {
             $entityManager->remove($gameSerie);
             $entityManager->flush();

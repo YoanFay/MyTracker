@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/game/platform')]
+#[Route('/game/game/platform')]
 class GamePlatformController extends AbstractController
 {
     #[Route('/', name: 'game_platform_index', methods: ['GET'])]
@@ -42,17 +42,21 @@ class GamePlatformController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'game_platform_show', methods: ['GET'])]
-    public function show(GamePlatform $gamePlatform): Response
+    #[Route('/{id}/details', name: 'game_platform_show', methods: ['GET'])]
+    public function show(GamePlatformRepository $gamePlatformRepository, $id): Response
     {
+        $gamePlatform = $gamePlatformRepository->find($id);
+
         return $this->render('game/game_platform/show.html.twig', [
             'game_platform' => $gamePlatform,
         ]);
     }
 
     #[Route('/{id}/edit', name: 'game_platform_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, GamePlatform $gamePlatform, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, EntityManagerInterface $entityManager, GamePlatformRepository $gamePlatformRepository, $id): Response
     {
+        $gamePlatform = $gamePlatformRepository->find($id);
+
         $form = $this->createForm(GamePlatformType::class, $gamePlatform);
         $form->handleRequest($request);
 
@@ -68,9 +72,11 @@ class GamePlatformController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'game_platform_delete', methods: ['POST'])]
-    public function delete(Request $request, GamePlatform $gamePlatform, EntityManagerInterface $entityManager): Response
+    #[Route('/{id}/delete', name: 'game_platform_delete', methods: ['POST'])]
+    public function delete(Request $request, EntityManagerInterface $entityManager, GamePlatformRepository $gamePlatformRepository, $id): Response
     {
+        $gamePlatform = $gamePlatformRepository->find($id);
+
         if ($this->isCsrfTokenValid('delete'.$gamePlatform->getId(), $request->request->get('_token'))) {
             $entityManager->remove($gamePlatform);
             $entityManager->flush();

@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/game/mode')]
+#[Route('/game/game/mode')]
 class GameModeController extends AbstractController
 {
     #[Route('/', name: 'game_mode_index', methods: ['GET'])]
@@ -42,17 +42,21 @@ class GameModeController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'game_mode_show', methods: ['GET'])]
-    public function show(GameMode $gameMode): Response
+    #[Route('/{id}/details', name: 'game_mode_show', methods: ['GET'])]
+    public function show(GameModeRepository $gameModeRepository, $id): Response
     {
+        $gameMode = $gameModeRepository->find($id)
+;
         return $this->render('game/game_mode/show.html.twig', [
             'game_mode' => $gameMode,
         ]);
     }
 
     #[Route('/{id}/edit', name: 'game_mode_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, GameMode $gameMode, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, EntityManagerInterface $entityManager, GameModeRepository $gameModeRepository, $id): Response
     {
+        $gameMode = $gameModeRepository->find($id);
+
         $form = $this->createForm(GameModeType::class, $gameMode);
         $form->handleRequest($request);
 
@@ -68,9 +72,11 @@ class GameModeController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'game_mode_delete', methods: ['POST'])]
-    public function delete(Request $request, GameMode $gameMode, EntityManagerInterface $entityManager): Response
+    #[Route('/{id}/delete', name: 'game_mode_delete', methods: ['POST'])]
+    public function delete(Request $request, EntityManagerInterface $entityManager, GameModeRepository $gameModeRepository, $id): Response
     {
+        $gameMode = $gameModeRepository->find($id);
+
         if ($this->isCsrfTokenValid('delete'.$gameMode->getId(), $request->request->get('_token'))) {
             $entityManager->remove($gameMode);
             $entityManager->flush();

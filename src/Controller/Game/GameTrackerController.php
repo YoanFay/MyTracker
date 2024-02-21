@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/game/tracker')]
+#[Route('/game/game/tracker')]
 class GameTrackerController extends AbstractController
 {
     #[Route('/{id}', name: 'game_tracker')]

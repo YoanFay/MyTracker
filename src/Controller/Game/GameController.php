@@ -42,10 +42,11 @@ class GameController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'game_show', methods: ['GET'])]
-    public function show(Game $game): Response
+    #[Route('/{id}/details', name: 'game_show', methods: ['GET'])]
+    public function show(GameRepository $gameRepository, $id): Response
     {
 
+        $game = $gameRepository->find($id);
 
         return $this->render('game/game/show.html.twig', [
             'game' => $game,
@@ -53,8 +54,11 @@ class GameController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'game_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Game $game, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, EntityManagerInterface $entityManager, GameRepository $gameRepository, $id): Response
     {
+
+        $game = $gameRepository->find($id);
+
         $form = $this->createForm(GameType::class, $game);
         $form->handleRequest($request);
 
@@ -70,9 +74,12 @@ class GameController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'game_delete', methods: ['POST'])]
-    public function delete(Request $request, Game $game, EntityManagerInterface $entityManager): Response
+    #[Route('/{id}/delete', name: 'game_delete', methods: ['POST'])]
+    public function delete(Request $request, EntityManagerInterface $entityManager, GameRepository $gameRepository, $id): Response
     {
+
+        $game = $gameRepository->find($id);
+
         if ($this->isCsrfTokenValid('delete'.$game->getId(), $request->request->get('_token'))) {
             $entityManager->remove($game);
             $entityManager->flush();
