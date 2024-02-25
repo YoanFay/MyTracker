@@ -50,7 +50,7 @@ class MovieController extends AbstractController
     public function test(MovieRepository $movieRepository, MovieGenreRepository $movieGenreRepository, StrSpecialCharsLower  $strSpecialCharsLower, KernelInterface $kernel, ManagerRegistry $managerRegistry): Response
     {
 
-        $movies = $movieRepository->findBy(['updated', false]);
+        $movies = $movieRepository->findBy(['updated' => false]);
 
         foreach ($movies as $movie) {
 
