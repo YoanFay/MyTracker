@@ -7,7 +7,7 @@ use App\Repository\MovieRepository;
 use App\Service\StrSpecialCharsLower;
 use Doctrine\Persistence\ObjectManager;
 use GuzzleHttp\Client;
-use Symfony\Bridge\Doctrine\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
