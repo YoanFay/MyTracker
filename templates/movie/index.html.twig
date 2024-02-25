@@ -9,6 +9,7 @@
             <th scope="col">Nom</th>
             {# <th>Heure de début</th> #}
             <th scope="col">Heure de visionnage</th>
+            <th>Poster</th>
         </tr>
         </thead>
 
@@ -49,6 +50,13 @@
                     <td>{{ movie.name }}</td>
                     {# <td>{{ movie.showDate|date_modify('-' ~ (90 / 100) * movie.duration ~ ' milliseconds')|date("H\\hi") }}</td> #}
                     <td>{{ movie.showDate|date("H\\hi") }}</td>
+                    <td class="text-end">
+                    {% if movie.artwork %}
+                        <img src="{{movie.artwork}}" width="150px" alt="{{movie.name}} poster">
+                    {% else %}
+                        <img src="/image/visuel-a-venir.jpg" width="150px" alt="Visuel à venir">
+                    {% endif %}
+                    </td>
                 </tr>
                     {% set globalDuration = globalDuration + movie.duration %}
             {% endfor %}
