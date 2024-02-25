@@ -108,6 +108,8 @@ class MovieController extends AbstractController
                 $movie->setArtwork(null);
             }
 
+            $movie->setUpdated(true);
+
             $managerRegistry->getManager()->persist($movie);
             $managerRegistry->getManager()->flush();
 
