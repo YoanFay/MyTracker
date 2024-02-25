@@ -41,6 +41,12 @@ class Movie
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $artwork = null;
 
+    #[ORM\Column]
+    private ?bool $updated = false;
+
+    #[ORM\Column(length: 255)]
+    private ?string $slug = null;
+
     public function __construct()
     {
         $this->movieGenres = new ArrayCollection();
@@ -158,6 +164,30 @@ class Movie
     public function setArtwork(?string $artwork): static
     {
         $this->artwork = $artwork;
+
+        return $this;
+    }
+
+    public function isUpdated(): ?bool
+    {
+        return $this->updated;
+    }
+
+    public function setUpdated(bool $updated): static
+    {
+        $this->updated = $updated;
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): static
+    {
+        $this->slug = $slug;
 
         return $this;
     }

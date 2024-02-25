@@ -2,9 +2,13 @@
 
 namespace App\Controller;
 
+use App\Repository\MovieGenreRepository;
+use App\Service\StrSpecialCharsLower;
+use Doctrine\Persistence\ManagerRegistry;
 use GuzzleHttp\Client;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\MovieRepository;
 
@@ -43,10 +47,10 @@ class MovieController extends AbstractController
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
     #[Route('/movie/test', name: 'movie_test')]
-    public function test(MovieRepository $movieRepository): Response
+    public function test(MovieRepository $movieRepository, MovieGenreRepository $movieGenreRepository, StrSpecialCharsLower  $strSpecialCharsLower, KernelInterface $kernel, ManagerRegistry $managerRegistry): Response
     {
 
-        $movies = $movieRepository->findAll();
+        $movies = $movieRepository->findBy(['updated', false]);
 
         foreach ($movies as $movie) {
 
@@ -66,17 +70,17 @@ class MovieController extends AbstractController
 
             $data = json_decode($response->getBody(), true);
 
-            dump($data['title']);
+            $movie->setName($data['title']);
 
-            $genres = [];
+            $movie->setSlug($strSpecialCharsLower->serie($movie->getName()));
 
             foreach ($data['genres'] as $genre){
 
-                $genres[] = $genre['name'];
+                $addGenre = $movieGenreRepository->findOneBy(['name' => $genre['name']]);
+
+                $movie->addMovieGenre($addGenre);
 
             }
-
-            dump($genres);
 
             $response = $client->get($apiUrl.'/movie/'.$movie->getTmdbId().'/images?include_image_language=fr', [
                 'headers' => [
@@ -87,9 +91,25 @@ class MovieController extends AbstractController
 
             $data = json_decode($response->getBody(), true);
 
-            $poster = $data['posters'][0]['file_path'];
+            // Lien de l'image à télécharger
+            $lienImage = "https://image.tmdb.org/t/p/w600_and_h900_bestv2".$data['posters'][0]['file_path'];
 
-            dump($poster);
+            $cover = imagecreatefromstring(file_get_contents($lienImage));
+
+            $projectDir = $kernel->getProjectDir();
+
+            // Chemin où enregistrer l'image
+            $cheminImageDestination = "/public/image/movie/poster/" . $movie->getSlug().'.jpeg';
+
+            // Téléchargement et enregistrement de l'image
+            if (imagejpeg($cover, $projectDir . $cheminImageDestination, 100)) {
+                $movie->setArtwork($cheminImageDestination);
+            } else {
+                $movie->setArtwork(null);
+            }
+
+            $managerRegistry->getManager()->persist($movie);
+            $managerRegistry->getManager()->flush();
 
         }
 
