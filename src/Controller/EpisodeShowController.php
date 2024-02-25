@@ -42,20 +42,20 @@ class EpisodeShowController extends AbstractController
 
         foreach ($episodes as $episode) {
             $dateKey = $episode->getShowDate()->format("Y-m-d");
-            
+
             $globalDuration += $episode->getDuration();
-            
-            switch($episode->getSerie()->getType()){
-                case 'Anime':
-                    $globalDurationAnime += $episode->getDuration();
-                    break;
-                case 'Séries':
-                    $globalDurationSerie += $episode->getDuration();
-                    break;
-                case 'Replay':
-                    $globalDurationReplay += $episode->getDuration();
-                    break;
-                
+
+            switch ($episode->getSerie()->getType()) {
+            case 'Anime':
+                $globalDurationAnime += $episode->getDuration();
+                break;
+            case 'Séries':
+                $globalDurationSerie += $episode->getDuration();
+                break;
+            case 'Replay':
+                $globalDurationReplay += $episode->getDuration();
+                break;
+
             }
 
             if (!isset($episodesByDate[$dateKey])) {
@@ -90,6 +90,7 @@ class EpisodeShowController extends AbstractController
         ]);
     }
 
+
     #[Route('/episode/add', name: 'episode_add')]
     public function addEpisode(ManagerRegistry $managerRegistry, UsersRepository $usersRepository, Request $request): Response
     {
@@ -99,7 +100,7 @@ class EpisodeShowController extends AbstractController
         $form = $this->createForm(EpisodeShowType::class, $episode);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid()) {
 
             $user = $usersRepository->findOneBy(['plexName' => 'yoan.f8']);
 
@@ -117,6 +118,65 @@ class EpisodeShowController extends AbstractController
             'controller_name' => 'EpisodeShowController',
             'form' => $form->createView(),
             'navLinkId' => 'episode-add',
+        ]);
+    }
+
+
+    #[Route('/episode/{categorie}', name: 'episode_categories')]
+    public function episodeCategories(EpisodeShowRepository $episodeShowRepository, $categorie): Response
+    {
+
+        switch ($categorie) {
+        case 'anime':
+            $episodes = $episodeShowRepository->findAnime();
+            $title = "Anime";
+            $text = "d'animes";
+            $nav = "anime";
+            break;
+        case 'serie':
+            $episodes = $episodeShowRepository->findSerie();
+            $title = "Série";
+            $text = "de séries";
+            $nav = "serie";
+            break;
+        case 'replay':
+            $episodes = $episodeShowRepository->findReplay();
+            $title = "Replay";
+            $text = "de replay";
+            $nav = "replay";
+            break;
+        default:
+            $episodes = $episodeShowRepository->findAnime();
+            $title = "Anime";
+            $text = "d'animes";
+            $nav = "anime";
+        }
+
+        $episodesByDate = [];
+        $dateKeys = [];
+        $globalDuration = 0;
+
+        foreach ($episodes as $episode) {
+            $dateKey = $episode->getShowDate()->format("Y-m-d");
+
+            $globalDuration += $episode->getDuration();
+
+            if (!isset($episodesByDate[$dateKey])) {
+                $episodesByDate[$dateKey] = [$episode];
+                $dateKeys[] = $dateKey;
+            } else {
+                $episodesByDate[$dateKey][] = $episode;
+            }
+        }
+
+        return $this->render('episode_show/categories.html.twig', [
+            'episodes' => $episodes,
+            'episodesByDate' => $episodesByDate,
+            'dateKeys' => $dateKeys,
+            'globalDuration' => $globalDuration,
+            'title' => $title,
+            'text' => $text,
+            'navLinkId' => $nav,
         ]);
     }
 }

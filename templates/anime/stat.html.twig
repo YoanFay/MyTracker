@@ -1,0 +1,110 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <div class="d-flex flex-column flex-lg-row col-12 h-50">
+        <div class="card col-12 col-lg-6 h-100">
+            <div class="card-header">
+                Temps de visionnage par genre
+            </div>
+            <div class="card-body h-75">
+                <div class="h-100 d-flex justify-content-center">
+                    <canvas id="myChart1"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="card col-12 col-lg-6 h-100">
+            <div class="card-header">
+                Temps de visionnage par thème
+            </div>
+            <div class="card-body h-75">
+                <div class="h-100 d-flex justify-content-center">
+                    <canvas id="myChart2"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascript %}
+
+    <script>
+
+        // Fonction pour convertir les secondes en format "hh:mm"
+        function toHHMM(milliseconds) {
+            const seconds = Math.floor(milliseconds / 1000);
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            return `${hours}h${minutes}min`;
+        }
+
+        // Fonction pour convertir les secondes en format "hh:mm"
+        function toHH(milliseconds) {
+            const seconds = Math.floor(milliseconds / 1000);
+            const hours = Math.floor(seconds / 3600);
+            return `${hours}h`;
+        }
+
+        const ctx1 = document.getElementById('myChart1');
+
+        new Chart(ctx1, {
+            type: 'pie',
+            data: {
+                labels: {{ labelGenreChart | raw }},
+                datasets: [{
+                    label: 'Temps de visionnage',
+                    data: {{ genreChart }},
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                const value = context.parsed;
+                                return `Temps de visionnage : ${toHHMM(value)}`;
+                            }
+                        }
+                    },
+                    legend: {
+                        position: 'bottom',
+                        display: false
+                    }
+                }
+            }
+        });
+
+        const ctx2 = document.getElementById('myChart2');
+
+        new Chart(ctx2, {
+            type: 'pie',
+            data: {
+                labels: {{ labelThemeChart | raw }},
+                datasets: [{
+                    label: 'Temps de visionnage',
+                    data: {{ themeChart }},
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                const value = context.parsed;
+                                return `Temps de visionnage : ${toHHMM(value)}`;
+                            }
+                        }
+                    },
+                    legend: {
+                        position: 'bottom',
+                        display: false
+                    }
+                }
+            }
+        });
+    </script>
+
+{% endblock %}

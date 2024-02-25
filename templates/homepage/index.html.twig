@@ -24,20 +24,6 @@
         </div>
     </div>
 
-    <div class="d-flex flex-row col-12">
-        <div class="chart-container col-5">
-            <div>
-                <canvas id="myChart4"></canvas>
-            </div>
-        </div>
-
-        <div class="chart-container col-7">
-            <div>
-                <canvas id="myChart5"></canvas>
-            </div>
-        </div>
-    </div>
-
 {% endblock %}
 
 {% block javascript %}
@@ -207,58 +193,6 @@
                 const value = context.parsed.y;
                 const datasetLabel = context.dataset.label || '';
                 return `${datasetLabel}: ${toHHMM(value)}`;
-            }
-          }
-        }
-      }
-    }
-  });
-  
-    const ctx4 = document.getElementById('myChart4');
-
-    new Chart(ctx4, {
-    type: 'pie',
-    data: {
-    labels: {{ labelGenreChart | raw }},
-    datasets: [{
-    label: 'Temps de visionnage',
-    data: {{ genreChart }},
-    borderWidth: 1
-      }]
-    },
-    options: {
-      plugins: {
-        tooltip: {
-          callbacks: {
-            label: function (context) {
-              const value = context.parsed;
-              return `Temps de visionnage : ${toHHMM(value)}`;
-            }
-          }
-        }
-      }
-    }
-  });
-  
-    const ctx5 = document.getElementById('myChart5');
-
-    new Chart(ctx5, {
-    type: 'pie',
-    data: {
-    labels: {{ labelThemeChart | raw }},
-    datasets: [{
-    label: 'Temps de visionnage',
-    data: {{ themeChart }},
-    borderWidth: 1
-      }]
-    },
-    options: {
-      plugins: {
-        tooltip: {
-          callbacks: {
-            label: function (context) {
-              const value = context.parsed;
-              return `Temps de visionnage : ${toHHMM(value)}`;
             }
           }
         }

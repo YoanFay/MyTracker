@@ -5,6 +5,7 @@ namespace App\Controller\Manga;
 use App\Entity\Manga;
 use App\Form\MangaFormType;
 use App\Repository\MangaRepository;
+use App\Repository\MangaTomeRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
@@ -60,6 +61,47 @@ class MangaController extends AbstractController
             'form' => $form->createView(),
             'controller_name' => 'MangaController',
             'navLinkId' => 'manga',
+        ]);
+    }
+
+    #[Route('/manga/statistique', name: 'manga_stat')]
+    public function mangaStat(MangaRepository $mangaRepository): Response
+    {
+
+        $mangaTomesByGenre = $mangaRepository->getMangaTomeByGenre();
+        $mangaTomesByTheme = $mangaRepository->getMangaTomeByTheme();
+
+        $labelGenreChart = "[";
+        $genreChart = "[";
+
+        foreach ($mangaTomesByGenre as $count) {
+
+            $labelGenreChart .= '"'.$count['name'] . '", ';
+            $genreChart .= $count['COUNT'] . ", ";
+        }
+
+        $labelGenreChart = rtrim($labelGenreChart, ", ") . "]";
+        $genreChart = rtrim($genreChart, ", ") . "]";
+
+        $labelThemeChart = "[";
+        $themeChart = "[";
+
+        foreach ($mangaTomesByTheme as $count) {
+
+            $labelThemeChart .= '"'.$count['name'] . '", ';
+            $themeChart .= $count['COUNT'] . ", ";
+        }
+
+
+        $labelThemeChart = rtrim($labelThemeChart, ", ") . "]";
+        $themeChart = rtrim($themeChart, ", ") . "]";
+
+        return $this->render('manga/manga/stat.html.twig', [
+            'labelGenreChart' => $labelGenreChart,
+            'genreChart' => $genreChart,
+            'labelThemeChart' => $labelThemeChart,
+            'themeChart' => $themeChart,
+            'navLinkId' => 'manga-stat',
         ]);
     }
 }

@@ -93,6 +93,19 @@ class SerieRepository extends ServiceEntityRepository
             ;
     }
 
+    /**
+     * @return Serie[] Returns an array of Serie objects
+     */
+    public function findAnime(): array
+    {
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.type = :type')
+            ->setParameter('type', 'Anime')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
 //    public function findOneBySomeField($value): ?Serie
 //    {
 //        return $this->createQueryBuilder('s')

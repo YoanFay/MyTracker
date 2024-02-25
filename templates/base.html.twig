@@ -47,20 +47,26 @@
                 <li>
                     <a data-bs-toggle="collapse" href="#activateEpisodes" role="button" aria-expanded="false"
                        aria-controls="collapseExample">
-                        Épisodes
+                        Global
                         <i class="metismenu-state-icon material-icons">expand_more</i>
                     </a>
                     <div class="collapse" id="activateEpisodes">
                         <ul id="episode">
                             <li>
                                 <a id="episode" class="nav-links-child"
-                                   href="{{ path('episode') }}">Liste</a>
+                                   href="{{ path('episode') }}">Épisode vu</a>
                             </li>
-                        </ul>
-                        <ul id="episode">
+                            <li>
+                                <a id="serie_list" class="nav-links-child"
+                                   href="{{ path('serie') }}">Liste des séries</a>
+                            </li>
                             <li>
                                 <a id="episode-add" class="nav-links-child"
-                                   href="{{ path('episode_add') }}">Ajouter</a>
+                                   href="{{ path('episode_add') }}">Ajouter un épisode</a>
+                            </li>
+                            <li>
+                                <a id="serie-add" class="nav-links-child"
+                                   href="{{ path('serie_add') }}">Ajouter une série</a>
                             </li>
                         </ul>
                     </div>
@@ -68,20 +74,48 @@
                 <li>
                     <a data-bs-toggle="collapse" href="#activateSeries" role="button" aria-expanded="false"
                        aria-controls="collapseExample">
-                        Séries
+                        Anime
+                        <i class="metismenu-state-icon material-icons">expand_more</i>
+                    </a>
+                    <div class="collapse" id="activateSeries">
+                        <ul id="anime">
+                            <li>
+                                <a id="anime" class="nav-links-child"
+                                   href="{{ path('episode_categories', {'categorie': 'anime'}) }}">Liste</a>
+                            </li>
+                            <li>
+                                <a id="anime-stat" class="nav-links-child"
+                                   href="{{ path('anime_stat') }}">Statistique</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <a data-bs-toggle="collapse" href="#activateSeries" role="button" aria-expanded="false"
+                       aria-controls="collapseExample">
+                        Série
                         <i class="metismenu-state-icon material-icons">expand_more</i>
                     </a>
                     <div class="collapse" id="activateSeries">
                         <ul id="serie">
                             <li>
-                                <a id="serie" class="nav-links-child"
-                                   href="{{ path('serie') }}">Liste</a>
+                                <a id="anime" class="nav-links-child"
+                                   href="{{ path('episode_categories', {'categorie': 'serie'}) }}">Liste</a>
                             </li>
                         </ul>
-                        <ul id="episode">
+                    </div>
+                </li>
+                <li>
+                    <a data-bs-toggle="collapse" href="#activateSeries" role="button" aria-expanded="false"
+                       aria-controls="collapseExample">
+                        Replay
+                        <i class="metismenu-state-icon material-icons">expand_more</i>
+                    </a>
+                    <div class="collapse" id="activateReplay">
+                        <ul id="replay">
                             <li>
-                                <a id="serie-add" class="nav-links-child"
-                                   href="{{ path('serie_add') }}">Ajouter</a>
+                                <a id="replay" class="nav-links-child"
+                                   href="{{ path('episode_categories', {'categorie': 'replay'}) }}">Liste</a>
                             </li>
                         </ul>
                     </div>
@@ -112,6 +146,10 @@
                             <li>
                                 <a id="manga" class="nav-links-child"
                                    href="{{ path('manga') }}">Liste</a>
+                            </li>
+                            <li>
+                                <a id="manga-stat" class="nav-links-child"
+                                   href="{{ path('manga_stat') }}">Statistique</a>
                             </li>
                             <li>
                                 <a id="manga-tome" class="nav-links-child"

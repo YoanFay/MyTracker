@@ -21,6 +21,34 @@ class MangaTomeRepository extends ServiceEntityRepository
         parent::__construct($registry, MangaTome::class);
     }
 
+    public function getTomeGenre()
+    {
+        return $this->createQueryBuilder('mt')
+            ->select('COUNT(mt.id) AS COUNT, g.name AS name')
+            ->leftJoin('mt.manga', 'm')
+            ->leftJoin('m.mangaGenre', 'g')
+            ->groupBy('g.name')
+            ->orderBy('COUNT', 'DESC')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    /*public function getTomeTheme()
+    {
+        return $this->createQueryBuilder('e')
+            ->select('SUM(e.duration) AS COUNT, t.name AS name')
+            ->leftJoin('e.serie', 's')
+            ->leftJoin('s.animeThemes', 't')
+            ->andWhere('s.type = :type')
+            ->setParameter('type', 'Anime')
+            ->groupBy('t.name')
+            ->orderBy('COUNT', 'DESC')
+            ->getQuery()
+            ->getResult()
+            ;
+    }*/
+
 //    /**
 //     * @return MangaTome[] Returns an array of MangaTome objects
 //     */

@@ -185,6 +185,54 @@ class EpisodeShowRepository extends ServiceEntityRepository
         ;
     }
 
+
+    /**
+     * @param $serie
+     *
+     * @return float|int|mixed|string|null
+     * @throws NonUniqueResultException
+     */
+    public function findAnime()
+    {
+        return $this->createQueryBuilder('e')
+            ->leftJoin('e.serie', 's')
+            ->andWhere('s.type = :type')
+            ->setParameter('type', 'Anime')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+
+    /**
+     * @return float|int|mixed|string|null
+     */
+    public function findSerie()
+    {
+        return $this->createQueryBuilder('e')
+            ->leftJoin('e.serie', 's')
+            ->andWhere('s.type = :type')
+            ->setParameter('type', 'Series')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+
+    /**
+     * @return float|int|mixed|string|null
+     */
+    public function findReplay()
+    {
+        return $this->createQueryBuilder('e')
+            ->leftJoin('e.serie', 's')
+            ->andWhere('s.type = :type')
+            ->setParameter('type', 'Replay')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
 //    public function findOneBySomeField($value): ?EpisodeShow
 //    {
 //        return $this->createQueryBuilder('e')

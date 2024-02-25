@@ -20,7 +20,7 @@ class MangaRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Manga::class);
     }
-    
+
     /**
      * @return Manga[] Returns an array of Manga objects
      */
@@ -30,6 +30,36 @@ class MangaRepository extends ServiceEntityRepository
             ->select('m AS info, COUNT(t.readingEndDate) AS tomeCount')
             ->leftJoin('m.mangaTomes', 't')
             ->groupBy('m.id')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @return Manga[] Returns an array of Manga objects
+     */
+    public function getMangaTomeByGenre()
+    {
+        return $this->createQueryBuilder('m')
+            ->select('COUNT(t.id) as COUNT, g.name as name')
+            ->leftJoin('m.mangaTomes', 't')
+            ->leftJoin('m.genres', 'g')
+            ->groupBy('name')
+            ->orderBy('COUNT', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @return Manga[] Returns an array of Manga objects
+     */
+    public function getMangaTomeByTheme()
+    {
+        return $this->createQueryBuilder('m')
+            ->select('COUNT(t.id) as COUNT, th.name as name')
+            ->leftJoin('m.mangaTomes', 't')
+            ->leftJoin('m.themes', 'th')
+            ->groupBy('name')
+            ->orderBy('COUNT', 'DESC')
             ->getQuery()
             ->getResult();
     }
