@@ -68,8 +68,8 @@ class WebHook extends AbstractController
 
                     if (isset($jsonData['Metadata']['Guid'])) {
                         foreach ($jsonData['Metadata']['Guid'] as $guid) {
-                            if (isset($guid['id']) && strpos($guid['id'], 'tvdb://') === 0) {
-                                $tvdbMovieId = str_replace(["tvdb://"], [""], $guid['id']);
+                            if (isset($guid['id']) && strpos($guid['id'], 'tmdb://') === 0) {
+                                $tvdbMovieId = str_replace(["tmdb://"], [""], $guid['id']);
                                 break;
                             }
                         }
