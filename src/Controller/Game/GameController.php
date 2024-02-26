@@ -3,8 +3,10 @@
 namespace App\Controller\Game;
 
 use App\Entity\Game;
+use App\Entity\GameMode;
 use App\Form\GameType;
 use App\Repository\GameRepository;
+use App\Repository\GameModeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use GuzzleHttp\Client;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -94,8 +96,12 @@ class GameController extends AbstractController
     }
 
     #[Route('/test', name: 'game_test', methods: ['GET'])]
-    public function test(Request $request, EntityManagerInterface $entityManager, GameRepository $gameRepository): Response
+    public function test(Request $request, EntityManagerInterface $entityManager, GameRepository $gameRepository, GameModeRepository $gameModeRepository): Response
     {
+        
+        //$cover = 'https:'.str_replace('/t_thumb/', '/t_cover_big/', $dataGameCover[0]['url']);
+        
+        $games = [136498, 140427, 7386, 119171, 119388];
 
         $client = new Client();
 
@@ -107,7 +113,78 @@ class GameController extends AbstractController
         ]);
 
         $data = json_decode($response->getBody(), true);
+        
+        $token = "Bearer ".$data['access_token'];
 
-        dd($data);
+        foreach($games as $idGame){
+            
+        $game = new Game();
+
+        $response = $client->post("https://api.igdb.com/v4/games", [
+            'headers' => [
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json',
+                'Client-ID' => 'sd5xdt5w2lkjr7ws92fxjdlicvb5u2',
+                'Authorization' => $token
+            ],
+            'body' => 'fields name,game_modes,genres,themes; where id = '.$idGame.';'
+        ]);
+
+        $dataGame = json_decode($response->getBody(), true)[0];
+        
+        dump($dataGame);
+        
+        $game->setName($dataGame['name']);
+
+        $response = $client->post("https://api.igdb.com/v4/alternative_names", [
+            'headers' => [
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json',
+                'Client-ID' => 'sd5xdt5w2lkjr7ws92fxjdlicvb5u2',
+                'Authorization' => $token
+            ],
+            'body' => 'fields *;where game = '.$idGame.' & comment = "French title";'
+        ]);
+
+        $dataName = json_decode($response->getBody(), true);
+        
+        if($dataName !== []){
+            $game->setName($dataName[0]['name']);
+        }
+        
+        foreach($dataGame['game_modes'] as $gameModeId){
+            $gameMode = $gameModeRepository->find($gameModeId);
+            
+            if(!$gameMode){
+                
+
+        $response = $client->post("https://api.igdb.com/v4/game_modes", [
+            'headers' => [
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json',
+                'Client-ID' => 'sd5xdt5w2lkjr7ws92fxjdlicvb5u2',
+                'Authorization' => $token
+            ],
+            'body' => 'fields name;where id = '.$gameModeId.';'
+        ]);
+
+        $dataGameMode = json_decode($response->getBody(), true)[0];
+        
+        $gameMode = new GameMode();
+        
+        $gameMode->setImdbId($gameModeId);
+        $gameMode->setName($dataGameMode['name']);
+        
+        $entityManager->persist($gameMode);
+        $entityManager->flush();
+        
+            }
+        }
+        
+        dump($game);
+        
+        }
+
+        dd('Fin Test');
     }
 }

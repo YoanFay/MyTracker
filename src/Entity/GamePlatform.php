@@ -21,6 +21,9 @@ class GamePlatform
     #[ORM\ManyToMany(targetEntity: Game::class, mappedBy: 'platforms')]
     private Collection $games;
 
+    #[ORM\Column]
+    private ?int $imdbId = null;
+
     public function __construct()
     {
         $this->games = new ArrayCollection();
@@ -66,6 +69,18 @@ class GamePlatform
         if ($this->games->removeElement($game)) {
             $game->removePlatform($this);
         }
+
+        return $this;
+    }
+
+    public function getImdbId(): ?int
+    {
+        return $this->imdbId;
+    }
+
+    public function setImdbId(int $imdbId): static
+    {
+        $this->imdbId = $imdbId;
 
         return $this;
     }

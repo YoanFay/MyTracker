@@ -21,6 +21,9 @@ class GameSerie
     #[ORM\OneToMany(mappedBy: 'series', targetEntity: Game::class)]
     private Collection $games;
 
+    #[ORM\Column]
+    private ?int $imdbId = null;
+
     public function __construct()
     {
         $this->games = new ArrayCollection();
@@ -69,6 +72,18 @@ class GameSerie
                 $game->setSerie(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getImdbId(): ?int
+    {
+        return $this->imdbId;
+    }
+
+    public function setImdbId(int $imdbId): static
+    {
+        $this->imdbId = $imdbId;
 
         return $this;
     }

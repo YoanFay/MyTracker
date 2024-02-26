@@ -50,6 +50,9 @@ class Game
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $cover = null;
 
+    #[ORM\Column]
+    private ?int $imdbId = null;
+
     public function __construct()
     {
         $this->publishers = new ArrayCollection();
@@ -271,6 +274,18 @@ class Game
     public function setCover(?string $cover): static
     {
         $this->cover = $cover;
+
+        return $this;
+    }
+
+    public function getImdbId(): ?int
+    {
+        return $this->imdbId;
+    }
+
+    public function setImdbId(int $imdbId): static
+    {
+        $this->imdbId = $imdbId;
 
         return $this;
     }
