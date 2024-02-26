@@ -6,6 +6,7 @@ use App\Entity\Game;
 use App\Form\GameType;
 use App\Repository\GameRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use GuzzleHttp\Client;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -90,5 +91,23 @@ class GameController extends AbstractController
         }
 
         return $this->redirectToRoute('game_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/test', name: 'game_test', methods: ['GET'])]
+    public function test(Request $request, EntityManagerInterface $entityManager, GameRepository $gameRepository): Response
+    {
+
+        $client = new Client();
+
+        $response = $client->post("https://id.twitch.tv/oauth2/token?client_id=sd5xdt5w2lkjr7ws92fxjdlicvb5u2&client_secret=tymefepntjuva1n9ipa3lkjts2pmdh&grant_type=client_credentials", [
+            'headers' => [
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json',
+            ]
+        ]);
+
+        $data = json_decode($response->getBody(), true);
+
+        dd($data);
     }
 }
