@@ -21,9 +21,8 @@ class Game
     #[ORM\Column(type: "datetime")]
     private $releaseDate = null;
 
-    #[ORM\ManyToOne(inversedBy: 'games')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?GameDeveloper $developer = null;
+    #[ORM\ManyToMany(targetEntity: GameDeveloper::class, inversedBy: 'games')]
+    private Collection $developer;
 
     #[ORM\ManyToMany(targetEntity: GamePublishers::class, inversedBy: 'games')]
     private Collection $publishers;
@@ -53,8 +52,12 @@ class Game
     #[ORM\Column]
     private ?int $imdbId = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $slug = null;
+
     public function __construct()
     {
+        $this->developer = new ArrayCollection();
         $this->publishers = new ArrayCollection();
         $this->modes = new ArrayCollection();
         $this->platforms = new ArrayCollection();
@@ -92,14 +95,26 @@ class Game
         return $this;
     }
 
-    public function getDeveloper(): ?GameDeveloper
+    /**
+     * @return Collection<int, GameDeveloper>
+     */
+    public function getDevelopers(): Collection
     {
         return $this->developer;
     }
 
-    public function setDeveloper(?GameDeveloper $developer): static
+    public function addDeveloper(GameDeveloper $developer): static
     {
-        $this->developer = $developer;
+        if (!$this->developer->contains($developer)) {
+            $this->developer->add($developer);
+        }
+
+        return $this;
+    }
+
+    public function removeDeveloper(GameDeveloper $developer): static
+    {
+        $this->developer->removeElement($developer);
 
         return $this;
     }
@@ -177,14 +192,14 @@ class Game
     }
 
     /**
-     * @return Collection<int, GameGenre>
+     * @return Collection<int, GameTheme>
      */
     public function getThemes(): Collection
     {
         return $this->themes;
     }
 
-    public function addTheme(GameGenre $theme): static
+    public function addTheme(GameTheme $theme): static
     {
         if (!$this->themes->contains($theme)) {
             $this->themes->add($theme);
@@ -193,7 +208,7 @@ class Game
         return $this;
     }
 
-    public function removeTheme(GameGenre $theme): static
+    public function removeTheme(GameTheme $theme): static
     {
         $this->themes->removeElement($theme);
 
@@ -286,6 +301,18 @@ class Game
     public function setImdbId(int $imdbId): static
     {
         $this->imdbId = $imdbId;
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): static
+    {
+        $this->slug = $slug;
 
         return $this;
     }

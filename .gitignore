@@ -12,6 +12,7 @@ public/.htaccess
 /public/image/manga
 /public/image/serie
 /public/image/movie
+/public/image/game
 /var/
 /vendor/
 /.idea/

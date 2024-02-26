@@ -18,7 +18,7 @@ class GameDeveloper
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\OneToMany(mappedBy: 'developer', targetEntity: Game::class)]
+    #[ORM\ManyToMany(targetEntity: Game::class, mappedBy: 'developer')]
     private Collection $games;
 
     #[ORM\Column]
