@@ -40,7 +40,7 @@ class Game
     private Collection $genre;
 
     #[ORM\ManyToOne(inversedBy: 'games')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?GameSerie $serie = null;
 
     #[ORM\OneToMany(mappedBy: 'game', targetEntity: GameTracker::class)]
