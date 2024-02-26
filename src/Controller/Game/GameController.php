@@ -223,9 +223,9 @@ class GameController extends AbstractController
                     $entityManager->persist($gameMode);
                     $entityManager->flush();
 
-                    $game->addMode($gameMode);
-
                 }
+
+                $game->addMode($gameMode);
             }
 
             // GENRE
@@ -495,89 +495,4 @@ class GameController extends AbstractController
         ]);
     }
 
-
-    #[Route('/test', name: 'game_test', methods: ['GET', 'POST'])]
-    public function test(
-        Request                  $request,
-        EntityManagerInterface   $entityManager,
-        GameRepository           $gameRepository,
-        GameModeRepository       $gameModeRepository,
-        GameGenreRepository      $gameGenreRepository,
-        GameThemeRepository      $gameThemeRepository,
-        GamePublishersRepository $gamePublishersRepository,
-        GameDeveloperRepository  $gameDeveloperRepository,
-        GamePlatformRepository   $gamePlatformRepository,
-        GameSerieRepository      $gameSerieRepository,
-        StrSpecialCharsLower     $strSpecialCharsLower,
-        KernelInterface          $kernel
-    ): Response
-    {
-
-        $games = $gameRepository->findAll();
-
-        // AUTHENTIFICATION
-
-        $client = new Client();
-
-        $response = $client->post("https://id.twitch.tv/oauth2/token?client_id=sd5xdt5w2lkjr7ws92fxjdlicvb5u2&client_secret=tymefepntjuva1n9ipa3lkjts2pmdh&grant_type=client_credentials", [
-            'headers' => [
-                'Content-Type' => 'application/json',
-                'Accept' => 'application/json',
-            ]
-        ]);
-
-        $data = json_decode($response->getBody(), true);
-
-        $token = "Bearer ".$data['access_token'];
-
-        foreach ($games as $game) {
-            $response = $client->post("https://api.igdb.com/v4/games", [
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                    'Accept' => 'application/json',
-                    'Client-ID' => 'sd5xdt5w2lkjr7ws92fxjdlicvb5u2',
-                    'Authorization' => $token
-                ],
-                'body' => 'fields game_modes; where id = '.$game->getImdbId().';'
-            ]);
-
-            $dataGame = json_decode($response->getBody(), true)[0];
-
-            foreach ($dataGame['game_modes'] as $gameModeId) {
-
-                    $response = $client->post("https://api.igdb.com/v4/game_modes", [
-                        'headers' => [
-                            'Content-Type' => 'application/json',
-                            'Accept' => 'application/json',
-                            'Client-ID' => 'sd5xdt5w2lkjr7ws92fxjdlicvb5u2',
-                            'Authorization' => $token
-                        ],
-                        'body' => 'fields name;where id = '.$gameModeId.';'
-                    ]);
-
-                    $dataGameMode = json_decode($response->getBody(), true)[0];
-
-                    $gameMode = $gameModeRepository->findOneBy(['imdbId' => $dataGameMode['id']]);
-
-                    if(!$gameMode) {
-                        $gameMode = new GameMode();
-
-                        $gameMode->setImdbId($gameModeId);
-                        $gameMode->setName($dataGameMode['name']);
-
-                        $entityManager->persist($gameMode);
-                        $entityManager->flush();
-                    }
-
-                    $game->addMode($gameMode);
-
-                }
-
-            $entityManager->persist($game);
-            $entityManager->flush();
-        }
-
-        dd('FIN');
-
-    }
 }
