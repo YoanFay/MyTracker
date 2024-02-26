@@ -428,7 +428,7 @@ class GameController extends AbstractController
 
             if (!$platform) {
 
-                $response = $client->post("https://api.igdb.com/v4/companies", [
+                $response = $client->post("https://api.igdb.com/v4/platforms", [
                     'headers' => [
                         'Content-Type' => 'application/json',
                         'Accept' => 'application/json',
