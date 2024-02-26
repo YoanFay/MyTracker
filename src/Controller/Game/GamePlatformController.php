@@ -123,7 +123,7 @@ class GamePlatformController extends AbstractController
                     'Client-ID' => 'sd5xdt5w2lkjr7ws92fxjdlicvb5u2',
                     'Authorization' => $token
                 ],
-                'body' => 'fields *;where game = "'.$formData['name'].'";'
+                'body' => 'fields *;where name = "'.$formData['name'].'";'
             ]);
 
             $dataPlatform = json_decode($response->getBody(), true)[0];
