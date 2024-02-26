@@ -10,6 +10,7 @@ use App\Entity\GamePlatform;
 use App\Entity\GamePublishers;
 use App\Entity\GameTheme;
 use App\Entity\GameSerie;
+use App\Form\GameAddType;
 use App\Form\GameType;
 use App\Repository\GameDeveloperRepository;
 use App\Repository\GameGenreRepository;
@@ -117,11 +118,10 @@ class GameController extends AbstractController
     }
 
 
-    #[Route('/test', name: 'game_test', methods: ['GET'])]
+    #[Route('/add', name: 'game_add', methods: ['GET', 'POST'])]
     public function test(
         Request                  $request,
         EntityManagerInterface   $entityManager,
-        GameRepository           $gameRepository,
         GameModeRepository       $gameModeRepository,
         GameGenreRepository      $gameGenreRepository,
         GameThemeRepository      $gameThemeRepository,
@@ -129,53 +129,35 @@ class GameController extends AbstractController
         GameDeveloperRepository  $gameDeveloperRepository,
         GamePlatformRepository   $gamePlatformRepository,
         GameSerieRepository      $gameSerieRepository,
-        StrSpecialCharsLower $strSpecialCharsLower,
-        KernelInterface $kernel
+        StrSpecialCharsLower     $strSpecialCharsLower,
+        KernelInterface          $kernel
     ): Response
     {
 
-        $games = [
-            [
-                'id' => 136498,
-                'platform' => 130
-            ],
-            [
-                'id' => 140427,
-                'platform' => 6
-            ],
-            [
-                'id' => 7386,
-                'platform' => 6
-            ],
-            [
-                'id' => 119171,
-                'platform' => 6
-            ],
-            [
-                'id' => 119388,
-                'platform' => 130
-            ]
-        ];
+        $form = $this->createForm(GameAddType::class);
+        $form->handleRequest($request);
 
-        // AUTHENTIFICATION
+        if ($form->isSubmitted() && $form->isValid()) {
 
-        $client = new Client();
+            $formData = $form->getData();
 
-        $response = $client->post("https://id.twitch.tv/oauth2/token?client_id=sd5xdt5w2lkjr7ws92fxjdlicvb5u2&client_secret=tymefepntjuva1n9ipa3lkjts2pmdh&grant_type=client_credentials", [
-            'headers' => [
-                'Content-Type' => 'application/json',
-                'Accept' => 'application/json',
-            ]
-        ]);
+            $platformId = $formData['platforms']->getImdbID();
+            $idGame = $formData['igdbId'];
 
-        $data = json_decode($response->getBody(), true);
+            // AUTHENTIFICATION
 
-        $token = "Bearer ".$data['access_token'];
+            $client = new Client();
 
-        foreach ($games as $idGame) {
+            $response = $client->post("https://id.twitch.tv/oauth2/token?client_id=sd5xdt5w2lkjr7ws92fxjdlicvb5u2&client_secret=tymefepntjuva1n9ipa3lkjts2pmdh&grant_type=client_credentials", [
+                'headers' => [
+                    'Content-Type' => 'application/json',
+                    'Accept' => 'application/json',
+                ]
+            ]);
 
-            $platformId = $idGame['platform'];
-            $idGame = $idGame['id'];
+            $data = json_decode($response->getBody(), true);
+
+            $token = "Bearer ".$data['access_token'];
 
             $game = new Game();
 
@@ -422,23 +404,23 @@ class GameController extends AbstractController
 
             }
 
-if($saveSeries){
-            $serie = $gameSerieRepository->findOneBy(['imdbId' => $saveSeries['id']]);
+            if ($saveSeries) {
+                $serie = $gameSerieRepository->findOneBy(['imdbId' => $saveSeries['id']]);
 
-            if (!$serie) {
+                if (!$serie) {
 
-                $serie = new GameSerie();
+                    $serie = new GameSerie();
 
-                $serie->setName($saveSeries['name']);
-                $serie->setImdbId($saveSeries['id']);
+                    $serie->setName($saveSeries['name']);
+                    $serie->setImdbId($saveSeries['id']);
 
-                $entityManager->persist($serie);
-                $entityManager->flush();
+                    $entityManager->persist($serie);
+                    $entityManager->flush();
 
+                }
+
+                $game->setSerie($serie);
             }
-
-            $game->setSerie($serie);
-}
 
             //PLATFORM
 
@@ -487,9 +469,9 @@ if($saveSeries){
 
             $projectDir = $kernel->getProjectDir();
 
-            $cheminImageDestination = "/public/image/game/cover/" . $game->getSlug().'.jpeg';
+            $cheminImageDestination = "/public/image/game/cover/".$game->getSlug().'.jpeg';
 
-            if (imagejpeg($cover, $projectDir . $cheminImageDestination, 100)) {
+            if (imagejpeg($cover, $projectDir.$cheminImageDestination, 100)) {
                 $game->setCover($cheminImageDestination);
             } else {
                 $game->setCover(null);
@@ -501,8 +483,13 @@ if($saveSeries){
             $entityManager->persist($game);
             $entityManager->flush();
 
+            return $this->redirectToRoute('game_index', [], Response::HTTP_SEE_OTHER);
+
         }
 
-        dd('Fin Test');
+        return $this->renderForm('game/game/new.html.twig', [
+            'form' => $form,
+            'navLinkId' => 'game'
+        ]);
     }
 }
