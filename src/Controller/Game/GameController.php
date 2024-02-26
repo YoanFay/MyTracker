@@ -544,10 +544,6 @@ class GameController extends AbstractController
             $dataGame = json_decode($response->getBody(), true)[0];
 
             foreach ($dataGame['game_modes'] as $gameModeId) {
-                $gameMode = $gameModeRepository->findOneBy(['imdbId' => $gameModeId]);
-
-                if (!$gameMode) {
-
 
                     $response = $client->post("https://api.igdb.com/v4/game_modes", [
                         'headers' => [
@@ -576,7 +572,6 @@ class GameController extends AbstractController
                     $game->addMode($gameMode);
 
                 }
-            }
 
             $entityManager->persist($game);
             $entityManager->flush();
