@@ -9,6 +9,7 @@ use App\Entity\GameMode;
 use App\Entity\GamePlatform;
 use App\Entity\GamePublishers;
 use App\Entity\GameTheme;
+use App\Entity\GameSerie;
 use App\Form\GameType;
 use App\Repository\GameDeveloperRepository;
 use App\Repository\GameGenreRepository;
@@ -246,7 +247,7 @@ class GameController extends AbstractController
             // GENRE
 
             foreach ($dataGame['genres'] as $genreId) {
-                $genre = $gameGenreRepository->find(['imdbId' => $genreId]);
+                $genre = $gameGenreRepository->findOneBy(['imdbId' => $genreId]);
 
                 if (!$genre) {
 
@@ -280,7 +281,7 @@ class GameController extends AbstractController
             // THEME
 
             foreach ($dataGame['themes'] as $themeId) {
-                $theme = $gameThemeRepository->find(['imdbId' => $themeId]);
+                $theme = $gameThemeRepository->findOneBy(['imdbId' => $themeId]);
 
                 if (!$theme) {
 
@@ -319,7 +320,7 @@ class GameController extends AbstractController
                     'Client-ID' => 'sd5xdt5w2lkjr7ws92fxjdlicvb5u2',
                     'Authorization' => $token
                 ],
-                'body' => 'fields name;where id = '.$idGame.' & platform = '.$platformId.' & status=6;'
+                'body' => 'fields *;where game = '.$idGame.' & platform = '.$platformId.' & (status=6 | region=1 | region=8);'
             ]);
 
             $dataReleaseDate = json_decode($response->getBody(), true)[0];
@@ -396,7 +397,7 @@ class GameController extends AbstractController
 
             }
 
-            //SERIES
+            // SERIES
 
             $response = $client->post("https://api.igdb.com/v4/collections", [
                 'headers' => [
@@ -421,11 +422,12 @@ class GameController extends AbstractController
 
             }
 
+if($saveSeries){
             $serie = $gameSerieRepository->findOneBy(['imdbId' => $saveSeries['id']]);
 
             if (!$serie) {
 
-                $serie = new GameDeveloper();
+                $serie = new GameSerie();
 
                 $serie->setName($saveSeries['name']);
                 $serie->setImdbId($saveSeries['id']);
@@ -436,6 +438,7 @@ class GameController extends AbstractController
             }
 
             $game->setSerie($serie);
+}
 
             //PLATFORM
 
@@ -473,7 +476,7 @@ class GameController extends AbstractController
                     'Client-ID' => 'sd5xdt5w2lkjr7ws92fxjdlicvb5u2',
                     'Authorization' => $token
                 ],
-                'body' => 'fields name;where game = '.$platformId.';'
+                'body' => 'fields *;where game = '.$idGame.';'
             ]);
 
             $dataGameCover = json_decode($response->getBody(), true)[0];
@@ -495,7 +498,7 @@ class GameController extends AbstractController
             $game->addPlatform($platform);
             $game->setImdbId($idGame);
 
-            $entityManager->persist($platform);
+            $entityManager->persist($game);
             $entityManager->flush();
 
         }
