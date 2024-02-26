@@ -3,28 +3,55 @@
 {% block title %}Game{% endblock %}
 
 {% block body %}
-    <h1>Game</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ game.id }}</td>
-            </tr>
-            <tr>
-                <th>Name</th>
-                <td>{{ game.name }}</td>
-            </tr>
-            <tr>
-                <th>ReleaseDate</th>
-                <td>{{ game.releaseDate ? game.releaseDate|date('Y-m-d') : '' }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <a href="{{ path('game_index') }}">back to list</a>
-
-    <a href="{{ path('game_edit', {'id': game.id}) }}">edit</a>
-
-    {{ include('game/game/_delete_form.html.twig') }}
+    <div class="d-flex flex-row justify-content-between p-3">
+        <div>
+            <h1>{{ game.name }} - {{ game.platforms[0].name }}</h1>
+            <br>
+            <div class="d-flex flex-column flex-wrap">
+                <div class="m-2">
+                    <strong>Développer par : </strong>
+                    <ul>
+                        {% for developer in game.developers %}
+                            <li>{{ developer.name }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="m-2">
+                    <strong>Éditer par : </strong>
+                    <ul>
+                        {% for publisher in game.publishers %}
+                            <li>{{ publisher.name }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="m-2">
+                    <strong>Mode de jeux : </strong>
+                    <ul>
+                        {% for mode in game.modes %}
+                            <li>{{ mode.name }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="m-2">
+                    <strong>Genres : </strong>
+                    <ul>
+                        {% for genre in game.genre %}
+                            <li>{{ genre.name }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="m-2">
+                    <strong>Thèmes : </strong>
+                    <ul>
+                        {% for theme in game.themes %}
+                            <li>{{ theme.name }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <img {% if game.cover %} src="{{ game.cover }}" alt="{{ game.name }} poster" {% else %} src="/image/visuel-a-venir.jpg" alt="Visuel à venir" {% endif %}
+                width="400px" height="auto" data-bs-toggle="modal" data-bs-target="#imageModal" class="cursor-click">
+    </div>
 {% endblock %}
