@@ -21,7 +21,7 @@
         <tbody>
         {% for game in games %}
             <tr>
-                <td>{{ game.name }}</td>
+                <td><a class="text-decoration-none text-black" href="{{ path('game_show', {'id': game.id}) }}">{{ game.name }}</a></td>
                 <td>{{ game.releaseDate ? game.releaseDate|dateFNoDay: '' }}</td>
                 {% if game.gameTrackers.getValues != [] %}
                 {% set gameTracker = game.gameTrackers[0] %}
@@ -39,7 +39,6 @@
                 {% endif %}
                 <td>
                     <a href="{{ path('game_tracker_edit', {'id': game.id}) }}">track</a>
-                    <a href="{{ path('game_show', {'id': game.id}) }}">show</a>
                     <a href="{{ path('game_edit', {'id': game.id}) }}">edit</a>
                 </td>
             </tr>
