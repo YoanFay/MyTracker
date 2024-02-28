@@ -304,7 +304,7 @@ class GameController extends AbstractController
                     'Client-ID' => 'sd5xdt5w2lkjr7ws92fxjdlicvb5u2',
                     'Authorization' => $token
                 ],
-                'body' => 'fields *;where game = '.$idGame.' & platform = '.$platformId.' & (status=6 | region=1 | region=8);'
+                'body' => 'fields *;where game = '.$idGame.' & platform = '.$platformId.' & (status=6 | status = null) & (region=1 | region=8);'
             ]);
 
             $dataReleaseDate = json_decode($response->getBody(), true)[0];
