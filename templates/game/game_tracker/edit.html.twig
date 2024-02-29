@@ -1,13 +1,20 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit GameTheme{% endblock %}
+{% block title %}{{ game.name }}{% endblock %}
 
 {% block body %}
 
-    <div class="card">
-        {{ form_start(form) }}
-        {{ form_end(form) }}
+    <div class="h-100 w-100 d-flex flex-column justify-content-center align-items-center">
+        <div class="card w-25">
+            <div class="card-header">
+                Suivit de {{ game.name }}
+            </div>
+                <div class="card-body">
+                {{ form_start(form) }}
+                {{ form_end(form) }}
+                <a class="btn btn-secondary mt-1" href="{{ path('game_index') }}">Retour</a>
+            </div>
+        </div>
     </div>
 
-    <a href="{{ path('game_theme_index') }}">back to list</a>
 {% endblock %}

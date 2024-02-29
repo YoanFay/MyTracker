@@ -22,7 +22,7 @@ class GameDeveloper
     private Collection $games;
 
     #[ORM\Column]
-    private ?int $imdbId = null;
+    private ?int $igdbId = null;
 
     public function __construct()
     {
@@ -76,14 +76,14 @@ class GameDeveloper
         return $this;
     }
 
-    public function getImdbId(): ?int
+    public function getIgdbId(): ?int
     {
-        return $this->imdbId;
+        return $this->igdbId;
     }
 
-    public function setImdbId(int $imdbId): static
+    public function setIgdbId(int $igdbId): static
     {
-        $this->imdbId = $imdbId;
+        $this->igdbId = $igdbId;
 
         return $this;
     }

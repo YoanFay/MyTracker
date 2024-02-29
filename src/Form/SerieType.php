@@ -20,10 +20,12 @@ class SerieType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, [
+                'label' => 'Nom de la série',
                 'required' => true,
                 'attr' => ['class' => 'form-control'],
             ])
             ->add('tvdbId', TextType::class, [
+                'label' => 'ID TVDB',
                 'required' => false,
                 'attr' => ['class' => 'form-control'],
             ])
@@ -38,7 +40,8 @@ class SerieType extends AbstractType
                 'attr' => ['class' => 'form-control'],
             ])
             ->add('valide', SubmitType::class, [
-                'attr' => ['class' => 'btn btn-primary'],
+                'label' => 'Valider',
+                'attr' => ['class' => 'btn btn-primary mt-1'],
             ]);
         ;
     }

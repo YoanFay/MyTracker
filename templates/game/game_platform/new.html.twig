@@ -1,13 +1,20 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New GamePlatform{% endblock %}
+{% block title %}Ajouter une plateforme{% endblock %}
 
 {% block body %}
 
-    <div class="card">
-        {{ form_start(form) }}
-        {{ form_end(form) }}
+    <div class="h-100 w-100 d-flex flex-column justify-content-center align-items-center">
+        <div class="card">
+            <div class="card-header">
+                Ajouter une plateforme
+            </div>
+            <div class="card-body">
+                {{ form_start(form) }}
+                {{ form_end(form) }}
+                <a class="btn btn-secondary mt-1" href="{{ path('game_platform_index') }}">Retour</a>
+            </div>
+        </div>
     </div>
 
-    <a href="{{ path('game_platform_index') }}">back to list</a>
 {% endblock %}

@@ -131,7 +131,7 @@ class GamePlatformController extends AbstractController
             $gamePlatform = new GamePlatform();
 
             $gamePlatform->setName($formData['name']);
-            $gamePlatform->setImdbId($dataPlatform['id']);
+            $gamePlatform->setIgdbId($dataPlatform['id']);
 
             $entityManager->persist($gamePlatform);
             $entityManager->flush();

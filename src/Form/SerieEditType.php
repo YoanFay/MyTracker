@@ -35,7 +35,7 @@ class SerieEditType extends AbstractType
                 ],
                 'required' => true,
                 'mapped' => false,
-                'attr' => ['class' => 'form-control'],
+                'attr' => ['class' => 'form-control mt-1'],
             ])
             ->add('valide', SubmitType::class, [
                 'attr' => ['class' => 'btn btn-primary'],

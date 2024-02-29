@@ -1,27 +1,22 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}GamePlatform index{% endblock %}
+{% block title %}Plateforme{% endblock %}
 
 {% block body %}
-    <h1>GamePlatform index</h1>
+    <h1>Liste des plateformes</h1>
 
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>actions</th>
+                <th>Nom de la plateforme</th>
+                <th>ID IGDB</th>
             </tr>
         </thead>
         <tbody>
         {% for game_platform in game_platforms %}
             <tr>
-                <td>{{ game_platform.id }}</td>
                 <td>{{ game_platform.name }}</td>
-                <td>
-                    <a href="{{ path('game_platform_show', {'id': game_platform.id}) }}">show</a>
-                    <a href="{{ path('game_platform_edit', {'id': game_platform.id}) }}">edit</a>
-                </td>
+                <td>{{ game_platform.IgdbID }}</td>
             </tr>
         {% else %}
             <tr>
@@ -31,5 +26,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('game_platform_add') }}">Create new</a>
+    <a class="btn btn-primary" href="{{ path('game_platform_add') }}">Ajouter une plateforme</a>
 {% endblock %}

@@ -19,35 +19,43 @@ class MangaTomeType extends AbstractType
     {
         $builder
             ->add('tomeNumber', IntegerType::class, [
+                'label' => "Numéro du tome",
                 'attr' => ['class' => 'form-control'],
             ])
             ->add('page', IntegerType::class, [
+                'label' => "Nombre de page",
                 'attr' => ['class' => 'form-control'],
             ])
             ->add('releaseDate', DateType::class, [
+                'label' => "Date de sortie",
                 'widget' => 'single_text',
                 'attr' => ['class' => 'form-control']
             ])
             ->add('readingStartDate', DateType::class, [
+                'label' => "Date de début de lecture",
                 'widget' => 'single_text',
                 'attr' => ['class' => 'form-control'],
                 'required' => false
             ])
             ->add('readingEndDate', DateType::class, [
+                'label' => "Date de fin de lecture",
                 'widget' => 'single_text',
                 'attr' => ['class' => 'form-control'],
                 'required' => false
             ])
             ->add('cover', TextType::class, [
+                'label' => "URL de la couverture",
                 'attr' => ['class' => 'form-control'],
             ])
             ->add('manga', EntityType::class, [
+                'label' => "Manga",
                 'class' => Manga::class,
                 'choice_label' => 'name',
                 'attr' => ['class' => 'form-control'],
             ])
             ->add('submit', SubmitType::class, [
-                'attr' => ['class' => 'btn btn-primary'],
+                'label' => "Valider",
+                'attr' => ['class' => 'btn btn-primary mt-1'],
             ]);
     }
 

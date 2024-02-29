@@ -18,30 +18,35 @@ class GameTrackerType extends AbstractType
     {
         $builder
             ->add('startDate', DateType::class, [
+                'label' => 'Date de début',
                 'widget' => 'single_text',
                 'attr' => ['class' => 'form-control'],
                 'required' => false
             ])
             ->add('endDate', DateType::class, [
+                'label' => 'Date de fin',
                 'widget' => 'single_text',
                 'attr' => ['class' => 'form-control'],
                 'required' => false
             ])
             ->add('completeDate', DateType::class, [
+                'label' => 'Date de 100%',
                 'widget' => 'single_text',
                 'attr' => ['class' => 'form-control'],
                 'required' => false
             ])
             ->add('endTime', IntegerType::class, [
+                'label' => 'Temps pour finir',
                 'attr' => ['class' => 'form-control'],
                 'required' => false
             ])
             ->add('completeTime', IntegerType::class, [
+                'label' => 'Temps pour finir à 100%',
                 'attr' => ['class' => 'form-control'],
                 'required' => false
             ])
             ->add('valide', SubmitType::class, [
-                'attr' => ['class' => 'btn btn-primary'],
+                'attr' => ['class' => 'btn btn-primary mt-1'],
             ]);
     }
 

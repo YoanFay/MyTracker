@@ -87,7 +87,7 @@ class GameType extends AbstractType
                 'attr' => ['class' => 'form-control'],
             ])
             ->add('valide', SubmitType::class, [
-                'attr' => ['class' => 'btn btn-primary'],
+                'attr' => ['class' => 'btn btn-primary mt-1'],
             ]);
     }
 

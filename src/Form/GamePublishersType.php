@@ -19,7 +19,7 @@ class GamePublishersType extends AbstractType
                 'attr' => ['class' => 'form-control'],
             ])
             ->add('submit', SubmitType::class, [
-                'attr' => ['class' => 'btn btn-primary'],
+                'attr' => ['class' => 'btn btn-primary mt-1'],
             ]);
     }
 

@@ -3,9 +3,18 @@
 {% block title %}Ajouter une série{% endblock %}
 
 {% block body %}
-    <div class="card">
-        {{ form_start(form) }}
-            {{ form_row(form.name) }}
-        {{ form_end(form) }}
+
+    <div class="h-100 w-100 d-flex flex-column justify-content-center align-items-center">
+        <div class="card">
+            <div class="card-header">
+                Ajouter une série
+            </div>
+            <div class="card-body">
+                {{ form_start(form) }}
+                {{ form_end(form) }}
+                <a class="btn btn-secondary mt-1" href="{{ path('serie') }}">Retour</a>
+            </div>
+        </div>
     </div>
+
 {% endblock %}

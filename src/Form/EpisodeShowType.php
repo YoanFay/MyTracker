@@ -19,34 +19,43 @@ class EpisodeShowType extends AbstractType
     {
         $builder
             ->add('showDate', DateTimeType::class, [
+                'label' => 'Date de visionnage',
+                'widget' => 'single_text',
                 'attr' => ['class' => 'form-control'],
             ])
             ->add('name', TextType::class, [
+                'label' => "Nom de l'épisode",
                 'attr' => ['class' => 'form-control'],
             ])
             /*->add('saison', TextType::class, [
                 'attr' => ['class' => 'form-control'],
             ])*/
             ->add('saisonNumber', IntegerType::class, [
+                'label' => 'Numéro de la saison',
                 'attr' => ['class' => 'form-control'],
             ])
             ->add('episodeNumber', IntegerType::class, [
+                'label' => "Numéro de l'épisode",
                 'attr' => ['class' => 'form-control'],
             ])
             ->add('duration', IntegerType::class, [
+                'label' => "Durée de l'épisode",
                 'attr' => ['class' => 'form-control'],
             ])
             ->add('serie', EntityType::class, [
+                'label' => "Série",
                 'class' => Serie::class,
                 'choice_label' => 'name',
                 'attr' => ['class' => 'form-control'],
             ])
             ->add('tvdbId', IntegerType::class, [
+                'label' => "ID TVDB",
                 'attr' => ['class' => 'form-control'],
                 'required' => false,
             ])
             ->add('submit', SubmitType::class, [
-                'attr' => ['class' => 'btn btn-primary'],
+                'label' => 'Valider',
+                'attr' => ['class' => 'btn btn-primary mt-1'],
             ]);
     }
 

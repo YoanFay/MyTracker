@@ -52,6 +52,7 @@ class GameTrackerController extends AbstractController
 
         return $this->render('game/game_tracker/edit.html.twig', [
             'controller_name' => 'GameTrackerController',
+            'game' => $gameTracker->getGame(),
             'form' => $form->createView(),
             'navLinkId' => 'game',
         ]);

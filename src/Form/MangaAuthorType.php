@@ -15,10 +15,12 @@ class MangaAuthorType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, [
+                'label' => "Nom de l'auteur",
                 'attr' => ['class' => 'form-control'],
             ])
             ->add('submit', SubmitType::class, [
-                'attr' => ['class' => 'btn btn-primary'],
+                'label' => "Valider",
+                'attr' => ['class' => 'btn btn-primary mt-1'],
             ]);
     }
 

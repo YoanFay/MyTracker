@@ -50,7 +50,7 @@ class Game
     private ?string $cover = null;
 
     #[ORM\Column]
-    private ?int $imdbId = null;
+    private ?int $igdbId = null;
 
     #[ORM\Column(length: 255)]
     private ?string $slug = null;
@@ -293,14 +293,14 @@ class Game
         return $this;
     }
 
-    public function getImdbId(): ?int
+    public function getIgdbId(): ?int
     {
-        return $this->imdbId;
+        return $this->igdbId;
     }
 
-    public function setImdbId(int $imdbId): static
+    public function setIgdbId(int $igdbId): static
     {
-        $this->imdbId = $imdbId;
+        $this->igdbId = $igdbId;
 
         return $this;
     }

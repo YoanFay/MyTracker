@@ -79,7 +79,7 @@ class GameController extends AbstractController
         ]);
     }
 
-
+/*
     #[Route('/{id}/edit', name: 'game_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, EntityManagerInterface $entityManager, GameRepository $gameRepository, $id): Response
     {
@@ -101,6 +101,7 @@ class GameController extends AbstractController
             'navLinkId' => 'game'
         ]);
     }
+*/
 
 
     #[Route('/{id}/delete', name: 'game_delete', methods: ['POST'])]
@@ -141,7 +142,7 @@ class GameController extends AbstractController
 
             $formData = $form->getData();
 
-            $platformId = $formData['platforms']->getImdbID();
+            $platformId = $formData['platforms']->getIgdbID();
             $idGame = $formData['igdbId'];
 
             // AUTHENTIFICATION
@@ -198,7 +199,7 @@ class GameController extends AbstractController
             // GAME MODE
 
             foreach ($dataGame['game_modes'] as $gameModeId) {
-                $gameMode = $gameModeRepository->findOneBy(['imdbId' => $gameModeId]);
+                $gameMode = $gameModeRepository->findOneBy(['igdbId' => $gameModeId]);
 
                 if (!$gameMode) {
 
@@ -217,7 +218,7 @@ class GameController extends AbstractController
 
                     $gameMode = new GameMode();
 
-                    $gameMode->setImdbId($gameModeId);
+                    $gameMode->setIgdbId($gameModeId);
                     $gameMode->setName($dataGameMode['name']);
 
                     $entityManager->persist($gameMode);
@@ -231,7 +232,7 @@ class GameController extends AbstractController
             // GENRE
 
             foreach ($dataGame['genres'] as $genreId) {
-                $genre = $gameGenreRepository->findOneBy(['imdbId' => $genreId]);
+                $genre = $gameGenreRepository->findOneBy(['igdbId' => $genreId]);
 
                 if (!$genre) {
 
@@ -250,7 +251,7 @@ class GameController extends AbstractController
 
                     $genre = new GameGenre();
 
-                    $genre->setImdbId($genreId);
+                    $genre->setIgdbId($genreId);
                     $genre->setName($dataGenre['name']);
 
                     $entityManager->persist($genre);
@@ -265,7 +266,7 @@ class GameController extends AbstractController
             // THEME
 
             foreach ($dataGame['themes'] as $themeId) {
-                $theme = $gameThemeRepository->findOneBy(['imdbId' => $themeId]);
+                $theme = $gameThemeRepository->findOneBy(['igdbId' => $themeId]);
 
                 if (!$theme) {
 
@@ -283,7 +284,7 @@ class GameController extends AbstractController
 
                     $theme = new GameTheme();
 
-                    $theme->setImdbId($themeId);
+                    $theme->setIgdbId($themeId);
                     $theme->setName($dataTheme['name']);
 
                     $entityManager->persist($theme);
@@ -329,14 +330,14 @@ class GameController extends AbstractController
 
             foreach ($dataPublisher as $onePublisher) {
 
-                $publisher = $gamePublishersRepository->findOneBy(['imdbId' => $onePublisher['id']]);
+                $publisher = $gamePublishersRepository->findOneBy(['igdbId' => $onePublisher['id']]);
 
                 if (!$publisher) {
 
                     $publisher = new GamePublishers();
 
                     $publisher->setName($onePublisher['name']);
-                    $publisher->setImdbId($onePublisher['id']);
+                    $publisher->setIgdbId($onePublisher['id']);
 
                     $entityManager->persist($publisher);
                     $entityManager->flush();
@@ -363,14 +364,14 @@ class GameController extends AbstractController
 
             foreach ($dataDeveloper as $oneDeveloper) {
 
-                $developer = $gameDeveloperRepository->findOneBy(['imdbId' => $oneDeveloper['id']]);
+                $developer = $gameDeveloperRepository->findOneBy(['igdbId' => $oneDeveloper['id']]);
 
                 if (!$developer) {
 
                     $developer = new GameDeveloper();
 
                     $developer->setName($oneDeveloper['name']);
-                    $developer->setImdbId($oneDeveloper['id']);
+                    $developer->setIgdbId($oneDeveloper['id']);
 
                     $entityManager->persist($developer);
                     $entityManager->flush();
@@ -407,14 +408,14 @@ class GameController extends AbstractController
             }
 
             if ($saveSeries) {
-                $serie = $gameSerieRepository->findOneBy(['imdbId' => $saveSeries['id']]);
+                $serie = $gameSerieRepository->findOneBy(['igdbId' => $saveSeries['id']]);
 
                 if (!$serie) {
 
                     $serie = new GameSerie();
 
                     $serie->setName($saveSeries['name']);
-                    $serie->setImdbId($saveSeries['id']);
+                    $serie->setIgdbId($saveSeries['id']);
 
                     $entityManager->persist($serie);
                     $entityManager->flush();
@@ -426,7 +427,7 @@ class GameController extends AbstractController
 
             //PLATFORM
 
-            $platform = $gamePlatformRepository->findOneBy(['imdbId' => $platformId]);
+            $platform = $gamePlatformRepository->findOneBy(['igdbId' => $platformId]);
 
             if (!$platform) {
 
@@ -445,7 +446,7 @@ class GameController extends AbstractController
                 $platform = new GamePlatform();
 
                 $platform->setName($dataPlatform['name']);
-                $platform->setImdbId($platformId);
+                $platform->setIgdbId($platformId);
 
                 $entityManager->persist($platform);
                 $entityManager->flush();
@@ -480,7 +481,7 @@ class GameController extends AbstractController
             }
 
             $game->addPlatform($platform);
-            $game->setImdbId($idGame);
+            $game->setIgdbId($idGame);
 
             $entityManager->persist($game);
             $entityManager->flush();
