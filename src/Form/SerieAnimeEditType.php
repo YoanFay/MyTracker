@@ -57,6 +57,7 @@ class SerieAnimeEditType extends AbstractType
                 'required' => false
             ])
             ->add('valide', SubmitType::class, [
+                'label' => 'Valider',
                 'attr' => ['class' => 'btn btn-primary mt-1'],
             ]);
         ;
