@@ -136,7 +136,8 @@ class MangaTomeController extends AbstractController
             ]);
         }
 
-        return $this->render('manga/manga_tome/add.html.twig', [
+        return $this->render('manga/manga_tome/edit.html.twig', [
+            'mangaTome' => $mangaTome,
             'form' => $form->createView(),
             'controller_name' => 'MangaController',
             'navLinkId' => 'manga-tome',
