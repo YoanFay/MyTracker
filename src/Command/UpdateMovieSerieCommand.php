@@ -73,7 +73,11 @@ class UpdateMovieSerieCommand extends Command
             $data = json_decode($response->getBody(), true)[0];
 
             $id = $data['id'];
-            $idParent = $data['version_parent'];
+            $idParent = null;
+
+            if (isset($data['version_parent'])){
+                $idParent = $data['version_parent'];
+            }
 
             $response = $client->post("https://api.igdb.com/v4/collections", [
                 'headers' => [
@@ -87,7 +91,7 @@ class UpdateMovieSerieCommand extends Command
 
             $data = json_decode($response->getBody(), true);
 
-            if (empty($data)){
+            if (empty($data) && $idParent){
 
                 $response = $client->post("https://api.igdb.com/v4/collections", [
                     'headers' => [
