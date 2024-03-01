@@ -67,7 +67,7 @@ class UpdateMovieSerieCommand extends Command
                     'Client-ID' => 'sd5xdt5w2lkjr7ws92fxjdlicvb5u2',
                     'Authorization' => $token
                 ],
-                'body' => 'fields name,game_modes,genres,themes; where id = '.$game->getId().';'
+                'body' => 'fields name,game_modes,genres,themes; where id = '.$game->getIgdbId().';'
             ]);
 
             $data = json_decode($response->getBody(), true)[0];
@@ -90,9 +90,6 @@ class UpdateMovieSerieCommand extends Command
             ]);
 
             $dataSerie = json_decode($response->getBody(), true);
-
-            dump($dataSerie);
-            dd(empty($dataSerie));
 
             if (empty($dataSerie) && $idParent){
 
