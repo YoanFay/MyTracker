@@ -91,7 +91,7 @@ class GameRepository extends ServiceEntityRepository
     {
 
         return $this->createQueryBuilder('g')
-            ->andWhere('g.series IS NULL')
+            ->andWhere('g.serie IS NULL')
             ->getQuery()
             ->getResult()
             ;

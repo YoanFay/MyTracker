@@ -17,7 +17,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
-    name: 'app:update-movie-serie',
+    name: 'app:update-game-serie',
     description: 'Add a short description for your command',
 )]
 class UpdateMovieSerieCommand extends Command
