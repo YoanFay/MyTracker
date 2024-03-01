@@ -91,6 +91,7 @@ class UpdateMovieSerieCommand extends Command
 
             $dataSerie = json_decode($response->getBody(), true);
 
+            dump($game->getName());
             dump($dataSerie);
             dump($idParent);
             dump(empty($dataSerie));
@@ -123,6 +124,7 @@ class UpdateMovieSerieCommand extends Command
             }
 
             dump($saveSeries);
+            dump('------------------------------------------------------------------');
 
             if ($saveSeries) {
                 $serie = $this->gameSerieRepository->findOneBy(['igdbId' => $saveSeries['id']]);
