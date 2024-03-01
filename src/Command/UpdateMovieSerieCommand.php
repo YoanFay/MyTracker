@@ -67,7 +67,7 @@ class UpdateMovieSerieCommand extends Command
                     'Client-ID' => 'sd5xdt5w2lkjr7ws92fxjdlicvb5u2',
                     'Authorization' => $token
                 ],
-                'body' => 'fields name,game_modes,genres,themes; where id = '.$game->getIgdbId().';'
+                'body' => 'fields name,game_modes,genres,themes,version_parent; where id = '.$game->getIgdbId().';'
             ]);
 
             $data = json_decode($response->getBody(), true)[0];
@@ -90,12 +90,6 @@ class UpdateMovieSerieCommand extends Command
             ]);
 
             $dataSerie = json_decode($response->getBody(), true);
-
-            dump($game->getName());
-            dump($dataSerie);
-            dump($idParent);
-            dump(empty($dataSerie));
-            dump(empty($dataSerie) && $idParent);
 
             if (empty($dataSerie) && $idParent){
 
@@ -122,9 +116,6 @@ class UpdateMovieSerieCommand extends Command
                 }
 
             }
-
-            dump($saveSeries);
-            dump('------------------------------------------------------------------');
 
             if ($saveSeries) {
                 $serie = $this->gameSerieRepository->findOneBy(['igdbId' => $saveSeries['id']]);
