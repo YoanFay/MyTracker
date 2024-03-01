@@ -84,6 +84,20 @@ class GameRepository extends ServiceEntityRepository
 
     }
 
+    /**
+     * @return Game[] Returns an array of Game
+     */
+    public function findGameNotSerie(): array
+    {
+
+        return $this->createQueryBuilder('g')
+            ->andWhere('g.series IS NULL')
+            ->getQuery()
+            ->getResult()
+            ;
+
+    }
+
 //    /**
 //     * @return Game[] Returns an array of Game objects
 //     */
