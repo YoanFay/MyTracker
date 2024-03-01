@@ -133,6 +133,9 @@ class UpdateMovieSerieCommand extends Command
                 }
 
                 $game->setSerie($serie);
+
+                $this->manager->persist($game);
+                $this->manager->flush();
             }
         }
 
