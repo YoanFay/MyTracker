@@ -24,11 +24,11 @@ class GameRepository extends ServiceEntityRepository
     /**
      * @return Game[] Returns an array of Game
      */
-    public function findAllByName(): array
+    public function findAllFilter($sort, $order): array
     {
 
         return $this->createQueryBuilder('g')
-            ->orderBy('g.name')
+            ->orderBy('g.'.$sort, $order)
             ->getQuery()
             ->getResult()
             ;

@@ -5,15 +5,16 @@
 {% block body %}
     <h1>Liste des jeux</h1>
 
-    <button class="btn btn-primary" onclick="gameList(1)">Tout</button>
-    <button class="btn btn-primary" onclick="gameList(2)">Jeux pas commencé</button>
-    <button class="btn btn-primary" onclick="gameList(3)">Jeux en cours</button>
-    <button class="btn btn-primary" onclick="gameList(4)">Jeux terminé</button>
+    <button class="btn btn-primary" onclick="gameList('name', 'ASC', 1)">Tout</button>
+    <button class="btn btn-primary" onclick="gameList('name', 'ASC', 2)">Jeux pas commencé</button>
+    <button class="btn btn-primary" onclick="gameList('name', 'ASC', 3)">Jeux en cours</button>
+    <button class="btn btn-primary" onclick="gameList('name', 'ASC', 4)">Jeux terminé</button>
 
-    <table class="table">
+    <table id="tableGame" class="table tablesorter">
         <thead>
         <tr>
             <th>Nom</th>
+            <th>Série</th>
             <th>Sortie le :</th>
             <th>Commencer le :</th>
             <th>Fini le :</th>
@@ -23,7 +24,7 @@
             <th>Suivit :</th>
         </tr>
         </thead>
-        <tbody id="gameList">
+        <tbody id="gameList" data-list="1">
         </tbody>
     </table>
     <div id="loadSpin" class="card-body py-1 py-lg-0">
@@ -40,20 +41,32 @@
 {% block javascript %}
     <script>
 
-        gameList(1);
+        $(document).ready(function (){
 
-        function gameList(choice) {
+            gameList('name', 'ASC');
+        })
+
+        function gameList(sort = 'name', order = 'ASC', choice = null) {
+
+            if(choice == null){
+                $('#gameList').attr('data-list');
+            }
+
             $('#loadSpin').removeClass('d-none');
-            $("#gameList").html('');
+            $("#gameList").html('').attr('data-list', choice);
             $.ajax({
                 url: "{{ path('game_list') }}",
                 method: "POST",
                 data: {
-                  'choice': choice
+                    'choice': choice,
+                    'sort': sort,
+                    'order': order
                 },
                 success: function (data) {
                     $("#gameList").html(data);
                     $('#loadSpin').addClass('d-none');
+
+                    $("#tableGame").trigger('update').tablesorter({'resort': true});
                 }
             })
         }

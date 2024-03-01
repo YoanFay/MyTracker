@@ -2,6 +2,7 @@
     <tr>
         <td><a class="text-decoration-none text-black"
                href="{{ path('game_show', {'id': game.id}) }}">{{ game.name }}</a></td>
+        <td>{{ game.serie ? game.serie.name : '' }}</td>
         <td>{{ game.releaseDate ? game.releaseDate|dateFNoDay: '' }}</td>
         {% if game.gameTrackers.getValues != [] %}
             {% set gameTracker = game.gameTrackers[0] %}

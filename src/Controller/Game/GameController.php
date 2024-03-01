@@ -38,7 +38,6 @@ class GameController extends AbstractController
     {
 
         return $this->render('game/game/index.html.twig', [
-            'games' => $gameRepository->findAllByName(),
             'navLinkId' => 'game'
         ]);
     }
@@ -504,10 +503,12 @@ class GameController extends AbstractController
     ):Response{
 
         $choice = $request->request->get('choice', 1);
+        $sort = $request->request->get('sort', 'name');
+        $order = $request->request->get('order', 'DESC');
 
         switch ($choice){
         case 1:
-            $games = $gameRepository->findAllByName();
+            $games = $gameRepository->findAllFilter($sort, $order);
             break;
         case 2:
             $games = $gameRepository->findGameNotStart();
@@ -519,7 +520,7 @@ class GameController extends AbstractController
             $games = $gameRepository->findGameEnd();
             break;
         default:
-            $games = $gameRepository->findAllByName();
+            $games = $gameRepository->findAllFilter($sort, $order);
         }
 
         return $this->render(
