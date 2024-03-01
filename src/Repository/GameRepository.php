@@ -35,6 +35,55 @@ class GameRepository extends ServiceEntityRepository
 
     }
 
+    /**
+     * @return Game[] Returns an array of Game
+     */
+    public function findGameProgress(): array
+    {
+
+        return $this->createQueryBuilder('g')
+            ->leftJoin('g.gameTrackers', 't')
+            ->andWhere('t.startDate IS NOT NULL')
+            ->andWhere('t.endDate IS NULL')
+            ->orderBy('g.name')
+            ->getQuery()
+            ->getResult()
+            ;
+
+    }
+
+    /**
+     * @return Game[] Returns an array of Game
+     */
+    public function findGameEnd(): array
+    {
+
+        return $this->createQueryBuilder('g')
+            ->leftJoin('g.gameTrackers', 't')
+            ->andWhere('t.endDate IS NOT NULL')
+            ->orderBy('g.name')
+            ->getQuery()
+            ->getResult()
+            ;
+
+    }
+
+    /**
+     * @return Game[] Returns an array of Game
+     */
+    public function findGameNotStart(): array
+    {
+
+        return $this->createQueryBuilder('g')
+            ->leftJoin('g.gameTrackers', 't')
+            ->andWhere('t.startDate IS NULL')
+            ->orderBy('g.name')
+            ->getQuery()
+            ->getResult()
+            ;
+
+    }
+
 //    /**
 //     * @return Game[] Returns an array of Game objects
 //     */

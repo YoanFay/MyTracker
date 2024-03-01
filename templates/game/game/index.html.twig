@@ -5,6 +5,11 @@
 {% block body %}
     <h1>Liste des jeux</h1>
 
+    <button class="btn btn-primary" onclick="gameList(1)">Tout</button>
+    <button class="btn btn-primary" onclick="gameList(2)">Jeux pas commencé</button>
+    <button class="btn btn-primary" onclick="gameList(3)">Jeux en cours</button>
+    <button class="btn btn-primary" onclick="gameList(4)">Jeux terminé</button>
+
     <table class="table">
         <thead>
         <tr>
@@ -18,38 +23,40 @@
             <th>Suivit :</th>
         </tr>
         </thead>
-        <tbody>
-        {% for game in games %}
-            <tr>
-                <td><a class="text-decoration-none text-black"
-                       href="{{ path('game_show', {'id': game.id}) }}">{{ game.name }}</a></td>
-                <td>{{ game.releaseDate ? game.releaseDate|dateFNoDay: '' }}</td>
-                {% if game.gameTrackers.getValues != [] %}
-                    {% set gameTracker = game.gameTrackers[0] %}
-                    <td>{{ gameTracker.startDate ? gameTracker.startDate|dateF : '' }}</td>
-                    <td>{{ gameTracker.endDate ? gameTracker.endDate|dateF : '' }}</td>
-                    <td>{{ gameTracker.endTime ? gameTracker.endTime|SToHM : '' }}</td>
-                    <td>{{ gameTracker.completeDate ? gameTracker.completeDate|dateF : '' }}</td>
-                    <td>{{ gameTracker.completeTime ? gameTracker.completeTime|SToHM : '' }}</td>
-                {% else %}
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                {% endif %}
-                <td class="text-center">
-                    <a href="{{ path('game_tracker_edit', {'id': game.id}) }}"><i class="metismenu-icon material-icons">visibility</i></a>
-                    {# <a href="{{ path('game_edit', {'id': game.id}) }}"><i class="metismenu-icon material-icons">edit</i></a> #}
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="4">Il n'y as pas encore de jeux</td>
-            </tr>
-        {% endfor %}
+        <tbody id="gameList">
         </tbody>
     </table>
+    <div id="loadSpin" class="card-body py-1 py-lg-0">
+        <div class="d-flex justify-content-center align-items-center">
+            <div class="spinner-border" role="status">
+                <span class="sr-only"></span>
+            </div>
+        </div>
+    </div>
 
     <a class="btn btn-primary" href="{{ path('game_add') }}">Ajouter un jeu</a>
+{% endblock %}
+
+{% block javascript %}
+    <script>
+
+        gameList(1);
+
+        function gameList(choice) {
+            $('#loadSpin').removeClass('d-none');
+            $("#gameList").html('');
+            $.ajax({
+                url: "{{ path('game_list') }}",
+                method: "POST",
+                data: {
+                  'choice': choice
+                },
+                success: function (data) {
+                    $("#gameList").html(data);
+                    $('#loadSpin').addClass('d-none');
+                }
+            })
+        }
+
+    </script>
 {% endblock %}

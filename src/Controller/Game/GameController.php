@@ -496,4 +496,38 @@ class GameController extends AbstractController
         ]);
     }
 
+
+    #[Route('/list', name: 'game_list', methods: ['POST'])]
+    public function list(
+        Request $request,
+        GameRepository $gameRepository
+    ):Response{
+
+        $choice = $request->request->get('choice', 1);
+
+        switch ($choice){
+        case 1:
+            $games = $gameRepository->findAllByName();
+            break;
+        case 2:
+            $games = $gameRepository->findGameNotStart();
+            break;
+        case 3:
+            $games = $gameRepository->findGameProgress();
+            break;
+        case 4:
+            $games = $gameRepository->findGameEnd();
+            break;
+        default:
+            $games = $gameRepository->findAllByName();
+        }
+
+        return $this->render(
+            'game/game/list.html.twig',
+            [
+                'games' => $games
+            ]
+        );
+    }
+
 }
