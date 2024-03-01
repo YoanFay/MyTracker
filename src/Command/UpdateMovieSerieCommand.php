@@ -91,6 +91,9 @@ class UpdateMovieSerieCommand extends Command
 
             $dataSerie = json_decode($response->getBody(), true);
 
+            dump($dataSerie);
+            dd(empty($dataSerie));
+
             if (empty($dataSerie) && $idParent){
 
                 $response = $client->post("https://api.igdb.com/v4/collections", [
