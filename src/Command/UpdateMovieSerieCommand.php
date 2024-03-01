@@ -89,9 +89,9 @@ class UpdateMovieSerieCommand extends Command
                 'body' => 'fields id,name,games;where games = ['.$id.'];'
             ]);
 
-            $data = json_decode($response->getBody(), true);
+            $dataSerie = json_decode($response->getBody(), true);
 
-            if (empty($data) && $idParent){
+            if (empty($dataSerie) && $idParent){
 
                 $response = $client->post("https://api.igdb.com/v4/collections", [
                     'headers' => [
@@ -103,13 +103,13 @@ class UpdateMovieSerieCommand extends Command
                     'body' => 'fields id,name,games;where games = ['.$idParent.'];'
                 ]);
 
-                $data = json_decode($response->getBody(), true);
+                $dataSerie = json_decode($response->getBody(), true);
             }
 
             $saveSeries = null;
             $countGamesSeries = 0;
 
-            foreach ($data as $series) {
+            foreach ($dataSerie as $series) {
 
                 if (count($series['games']) > $countGamesSeries) {
                     $saveSeries = $series;
