@@ -177,6 +177,12 @@ class GameController extends AbstractController
 
             $game->setName($dataGame['name']);
 
+            $idParent = null;
+
+            if (isset($data['version_parent'])){
+                $idParent = $data['version_parent'];
+            }
+
             $response = $client->post("https://api.igdb.com/v4/alternative_names", [
                 'headers' => [
                     'Content-Type' => 'application/json',
@@ -394,6 +400,21 @@ class GameController extends AbstractController
             ]);
 
             $dataSeries = json_decode($response->getBody(), true);
+
+            if (empty($dataSerie) && $idParent){
+
+                $response = $client->post("https://api.igdb.com/v4/collections", [
+                    'headers' => [
+                        'Content-Type' => 'application/json',
+                        'Accept' => 'application/json',
+                        'Client-ID' => 'sd5xdt5w2lkjr7ws92fxjdlicvb5u2',
+                        'Authorization' => $token
+                    ],
+                    'body' => 'fields id,name,games;where games = ['.$idParent.'];'
+                ]);
+
+                $dataSeries = json_decode($response->getBody(), true);
+            }
 
             $saveSeries = null;
             $countGamesSeries = 0;
