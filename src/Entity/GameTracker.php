@@ -10,7 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
 class GameTracker
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
