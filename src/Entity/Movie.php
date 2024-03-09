@@ -86,7 +86,7 @@ class Movie
         return $this->tmdbId;
     }
 
-    public function setTvdbId(?int $tmdbId): self
+    public function setTmdbId(?int $tmdbId): self
     {
         $this->tmdbId = $tmdbId;
 
