@@ -150,7 +150,7 @@ class UpdateNameCommand extends Command
 
             if ($data !== null && $data['status'] === "success"){
 
-                $duration = $data['data']['duration'] * 60000;
+                $duration = $data['data']['runtime'] * 60000;
 
                 $episode->setDuration($duration);
 
