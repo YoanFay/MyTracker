@@ -128,6 +128,37 @@ class UpdateNameCommand extends Command
             }
         }
 
+        $episodes = $this->episodeShowRepository->findByDurationNull();
+
+        foreach ($episodes as $episode) {
+
+            try{
+
+                $response = $client->get($apiUrl."/episodes/".$episode->getTvdbId(), [
+                    'headers' => [
+                        'Authorization' => 'Bearer '.$token,
+                        'Content-Type' => 'application/json',
+                        'Accept' => 'application/json',
+                    ],
+                ]);
+
+                $data = json_decode($response->getBody(), true);
+
+            }catch(\Exception $e){
+                $data = null;
+            }
+
+            if ($data !== null && $data['status'] === "success"){
+
+                $duration = $data['data']['duration'] * 60000;
+
+                $episode->setDuration($duration);
+
+                $this->manager->persist($episode);
+                $this->manager->flush();
+            }
+        }
+
         return Command::SUCCESS;
     }
 }

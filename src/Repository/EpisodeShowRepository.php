@@ -145,6 +145,22 @@ class EpisodeShowRepository extends ServiceEntityRepository
      * @return float|int|mixed|string|null
      * @throws NonUniqueResultException
      */
+    public function findByDurationNull()
+    {
+        return $this->createQueryBuilder('e')
+            ->andWhere('e.duration IS NULL')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+
+    /**
+     * @param $serie
+     *
+     * @return float|int|mixed|string|null
+     * @throws NonUniqueResultException
+     */
     public function findBySerieWithTVDB()
     {
         return $this->createQueryBuilder('e')
