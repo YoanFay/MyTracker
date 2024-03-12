@@ -86,6 +86,7 @@ class EpisodeShowController extends AbstractController
         
         return $this->render('episode_show\index.html.twig', [
             'list' => $listDate,
+            'navLinkId' => 'episode',
         ]);
         
     }
