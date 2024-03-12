@@ -7,83 +7,38 @@
     <table class="table table-hover">
         <thead class="thead-light">
         <tr>
+            <th scope="col">Mois</th>
+            <th scope="col">Anime</th>
             <th scope="col">Série</th>
-            <th scope="col">Épisode</th>
-            <th scope="col">Nom de l'épisode</th>
-            <th scope="col">Heure de visionnage</th>
+            <th scope="col">Replay</th>
+            <th scope="col">Total</th>
         </tr>
         </thead>
 
-        {% set sortedDateKeys = dateKeys|sort %}
-        {% set currentDate = "now"|date("Y-m-d") %}
-        {% set startOfYear = currentDate|date("Y-01-01") %}
-        {% set daysSinceStartOfYear = currentDate|date_modify('-' ~ startOfYear|date("U") ~ ' seconds')|date("z") + 1 %}
-        {% set prev = 0 %}
-        {% for dateKey in sortedDateKeys %}
         <tbody>
-            {% set date = dateKey|date("d/m/Y") %}
-            {% set dateShow = dateKey|date("Y/m/d") %}
-            {% set duration = [] %}
-
-            {% for key, episodes in episodesByDate %}
-                {% set currentDuration = 0 %}
-
-                {% for episode in episodes %}
-                    {% set currentDuration = currentDuration + episode.duration %}
-                {% endfor %}
-
-                {% set duration = duration|merge({(key): currentDuration}) %}
-
-            {% endfor %}
-                
+                {% for yearName, year in list %}
             <tr class="table-secondary">
-                <th colspan="4" {# OnClick="displayRow({{dateKey|date('U')}})" #}>
-                    {{ dateShow|dateF }}
-                    - {{ duration[dateKey]|MsToHM }} de visionnage
-                    -
-                    {% for key, timeByType in timeByDateType[dateKey] %}
-                        {% if timeByType > 0 %}
-                            {% if prev > 0 %}
-                                /
-                            {% endif %}
-                            {{ timeByType|MsToHM }} {{ key }}
-                        {% endif %}
-                        {% set prev = prev + timeByType %}
-                    {% endfor %}
+                <th colspan="5">
+                    <a class="text-decoration-none text-black" href='{{path("episode_date", {"year": yearName})}}'>{{ yearName }} - {{ year.Total|MsToHM }}</a>
                 </th>
             </tr>
         </tbody>
-        <tbody id="row{{dateKey|date('U')}}" {# class="d-none" #}>
-            {% set prev = 0 %}
+        <tbody>
             <div>
-            {% for episode in episodesByDate[dateKey]|sort((a, b) => a.showDate <=> b.showDate) %}
-                <tr>
-                    <td><a class="text-decoration-none text-black" href="{{ path('serie_detail', {'id': episode.serie.id }) }}">{{ episode.serie.name }}</a></td>
-                    <td>Saison {{ episode.saisonNumber }}, Épisode {{ episode.episodeNumber }}</td>
-                    <td>{{ episode.name }}</td>
-                    <td>{{ episode.showDate|date("H\\hi") }}</td>
-                </tr>
-            {% endfor %}
+            {% for monthName, month in year %}
+            {% if monthName != 'Total' %}
+            <tr>
+                <td><a class="text-decoration-none text-black" href='{{path("episode_date", {"year": yearName, "month": month.ID})}}'>{{ monthName }}</a></td>
+                <td>{{ month.Anime|MsToHM }}</td>
+                <td>{{ month.Séries|MsToHM }}</td>
+                <td>{{ month.Replay|MsToHM }}</td>
+                <td>{{ month.Total|MsToHM }}</td>
+            <tr>
+        {% endif %}
+        {% endfor %}
             </div>
         </tbody>
         {% endfor %}
     </table>
 
-<div class="ms-3">
-    <p>{{ (globalDuration / daysSinceStartOfYear)|MsToHM }} de visionnage en moyenne par jour en {{ currentDate|date('Y') }} / {{ (globalDurationAnime / daysSinceStartOfYear)|MsToHM }} d'animes / {{ (globalDurationSerie / daysSinceStartOfYear)|MsToHM }} de séries / {{ (globalDurationReplay / daysSinceStartOfYear)|MsToHM }} de replay</p>
-</div>
-
-{% endblock %}
-
-{% block javascript %}
-<script>
-    
-    function displayRow(id){
-        console.log(id);
-        var row = $('#row' + id);
-        
-        row.toggleClass('d-none');
-    }
-    
-</script>
 {% endblock %}

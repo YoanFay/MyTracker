@@ -2,6 +2,7 @@
 <html class="h-100" lang="fr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MyTracker - {% block title %}{% endblock %}</title>
     <link rel="icon"
           href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
@@ -37,9 +38,10 @@
 </head>
 
 <body class="h-100">
+<div class="openbtn"><div class="openbtn-area"><span></span><span></span><span></span></div></div>
 <div class="h-100 col-12 d-flex flex-row">
     {% if app.user != null %}
-        <div class="h-100 col-2 border-end p-2 menu">
+        <div class="h-100 col-lg-2 border-end p-2 menu">
             <ul>
                 <li>
                     <a id="homepage" class="nav-links-child"
@@ -305,6 +307,11 @@
             maxDate: 0
         });
     });
+
+$(".openbtn").click(function () {
+    $(this).toggleClass('active');
+    $('.menu').toggleClass('menu-active');
+});
 
 </script>
 
