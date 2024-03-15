@@ -34,6 +34,19 @@ class MangaTomeRepository extends ServiceEntityRepository
             ;
     }
 
+    public function getTomeCountInfo($manga)
+    {
+        return $this->createQueryBuilder('mt')
+            ->select('COUNT(mt.id) AS tomeRelease, COUNT(mt.readingEndDate) AS tomeRead')
+            ->andWhere('mt.manga = :manga')
+            ->setParameter('manga', $manga)
+            ->andWhere('mt.releaseDate <= :now')
+            ->setParameter('now', new \DateTime())
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
+    }
+
     /*public function getTomeTheme()
     {
         return $this->createQueryBuilder('e')

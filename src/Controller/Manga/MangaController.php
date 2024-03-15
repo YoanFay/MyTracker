@@ -16,13 +16,25 @@ use App\Service\StrSpecialCharsLower;
 class MangaController extends AbstractController
 {
     #[Route('/manga', name: 'manga')]
-    public function index(MangaRepository $mangaRepository): Response
+    public function index(MangaRepository $mangaRepository, MangaTomeRepository $mangaTomeRepository): Response
     {
-        $mangas = $mangaRepository->getCountOfReadingTomesPerManga();
+        $mangas = $mangaRepository->findAll();
+
+        $mangasInfo = [];
+
+        foreach ($mangas as $manga) {
+            $tomeInfo = $mangaTomeRepository->getTomeCountInfo($manga);
+
+            $mangasInfo[] = [
+                'info' => $manga,
+                'tomeRead' => $tomeInfo['tomeRead'],
+                'tomeRelease' => $tomeInfo['tomeRelease'],
+            ];
+        }
         
         return $this->render('manga/manga/index.html.twig', [
             'controller_name' => 'MangaController',
-            'mangas' => $mangas,
+            'mangas' => $mangasInfo,
             'navLinkId' => 'manga',
         ]);
     }

@@ -17,7 +17,7 @@
     {% for manga in mangas %}
             <tr class="clickable-row cursor-click" data-href="{{ path('manga_details', {'id': manga.info.id}) }}">
                 <td>{{ manga.info.name }}</td>
-                <td>{{ manga.tomeCount }} / {{ manga.info.nbTomes }}</td>
+                <td>{{ manga.tomeRead }} / {{ manga.tomeRelease }}</td>
                 <td>{{ manga.info.author.name }}</td>
                 <td>{{ manga.info.editor.name }}</td>
                 <td>{{ manga.info.releaseDate|dateFNoDay }} - {% if manga.info.endDate %} {{ manga.info.endDate|dateFNoDay }} {% else %} En cours {% endif %}</td>
