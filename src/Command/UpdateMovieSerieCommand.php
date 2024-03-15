@@ -18,7 +18,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
     name: 'app:update-game-serie',
-    description: 'Add a short description for your command',
+    description: 'Pour mettre à jour la série des jeux',
 )]
 class UpdateMovieSerieCommand extends Command
 {

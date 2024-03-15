@@ -43,6 +43,7 @@ class UpdateIdCommand extends Command
     {
 
         $this->setName('app:update-id');
+        $this->setDescription('Pour les ID des épisodes et des séries');
     }
 
 

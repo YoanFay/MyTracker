@@ -42,6 +42,7 @@ class UpdateNameCommand extends Command
     {
 
         $this->setName('app:update-name');
+        $this->setDescription('Pour les noms français des séries');
     }
 
 

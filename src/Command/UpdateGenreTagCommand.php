@@ -34,6 +34,7 @@ class UpdateGenreTagCommand extends Command
     {
 
         $this->setName('app:update-genre-tag');
+        $this->setDescription('Pour les  tags des séries');
     }
 
 

@@ -19,7 +19,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 #[AsCommand(
     name: 'app:update-movies',
-    description: 'Add a short description for your command',
+    description: 'Pour mettres les films à jour',
 )]
 class UpdateMoviesCommand extends Command
 {

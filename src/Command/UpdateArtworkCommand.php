@@ -47,6 +47,7 @@ class UpdateArtworkCommand extends Command
     {
 
         $this->setName('app:update-artwork');
+        $this->setDescription('Pour les images des séries');
     }
 
 
