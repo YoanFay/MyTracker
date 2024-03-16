@@ -4,6 +4,7 @@ namespace App\Controller\Manga;
 
 use App\Entity\MangaTome;
 use App\Form\MangaTomeType;
+use App\Repository\MangaRepository;
 use App\Repository\MangaTomeRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Doctrine\Persistence\ManagerRegistry;
@@ -22,11 +23,16 @@ class MangaTomeController extends AbstractController
         ]);
     }
 
-    #[Route('manga/tome/add', name: 'manga_tome_add')]
-    public function add(ManagerRegistry $managerRegistry, Request $request): Response
+    #[Route('manga/tome/add/{id}', name: 'manga_tome_add')]
+    public function add(ManagerRegistry $managerRegistry, Request $request, MangaRepository $mangaRepository, $id = null): Response
     {
 
         $mangaTome = new MangaTome();
+
+        if($id !== null) {
+            $manga = $mangaRepository->find($id);
+            $mangaTome->setManga($manga);
+        }
 
         $form = $this->createForm(MangaTomeType::class, $mangaTome);
         $form->handleRequest($request);
@@ -66,7 +72,9 @@ class MangaTomeController extends AbstractController
 
             $this->addFlash('success', 'Tome ajouté');
 
-            return $this->redirectToRoute('manga_tome');
+            return $this->redirectToRoute('manga_tome_add', [
+                'id' => $mangaTome->getManga()->getId(),
+            ]);
         }
         return $this->render('manga/manga_tome/add.html.twig', [
             'form' => $form->createView(),

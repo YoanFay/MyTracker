@@ -82,6 +82,7 @@ class WebHook extends AbstractController
                     $movie->setName($jsonData['Metadata']['title']);
                     $movie->setShowDate(new \DateTime());
                     $movie->setTmdbId($tvdbMovieId);
+                    $movie->setSlug($strSpecialCharsLower->serie($movie->getName()));
                     $movie->setDuration(isset($jsonData['Metadata']['duration']) ?
                         $jsonData['Metadata']['duration'] :
                         null);
