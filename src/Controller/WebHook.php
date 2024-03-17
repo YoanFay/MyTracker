@@ -98,7 +98,7 @@ class WebHook extends AbstractController
 
             $serie = $serieRepository->findOneBy(['plexId' => $serieId]);
 
-            if (!$serie) {
+            if (!$serie && stripos($jsonData['event'], 'media')) {
                 $serie = new Serie;
 
                 $serie->setPlexId($serieId);
