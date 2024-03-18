@@ -17,7 +17,6 @@
         {% set sortedDateKeys = dateKeys|sort %}
         {% set currentDate = "now"|date("Y-m-d") %}
         {% set startOfYear = currentDate|date("Y-01-01") %}
-        {% set daysSinceStartOfYear = currentDate|date_modify('-' ~ startOfYear|date("U") ~ ' seconds')|date("z") + 1 %}
         {% set prev = 0 %}
         {% for dateKey in sortedDateKeys %}
         <tbody>

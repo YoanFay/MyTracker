@@ -15,6 +15,7 @@ use App\Repository\EpisodeShowRepository;
 use App\Repository\MovieRepository;
 use Bugsnag\BugsnagBundle\DependencyInjection\ClientFactory;
 use Bugsnag\Client;
+use DateTime;
 
 class EpisodeShowController extends AbstractController
 {
@@ -257,6 +258,8 @@ class EpisodeShowController extends AbstractController
                             #[Route('/episode/{year}/{month}', name: 'episode_date')]
                             public function episodeDate(EpisodeShowRepository $episodeShowRepository, SerieRepository $serieRepository, $year = 0, $month = 0): Response
                             {
+                                $currentDate = new DateTime();
+                                $testCurrent = false;
                                 
                                 if($year === 0){
                                     $year = '%';
@@ -264,7 +267,19 @@ class EpisodeShowController extends AbstractController
                                 
                                 if($month === 0){
                                     $month = '%';
+                                    $startDate = new DateTime($year.'-01-01');
+                                    $endDate = new DateTime($year.'-12-31');
+                                    $testCurrent = true;
+                                }else{
+                                    $startDate = new DateTime($year.'-'.$month.'-01');
+                                    $endDate = new DateTime($startDate->format($year.'-'.$month.'-t'));
                                 }
+
+                                if($endDate > $currentDate && ($endDate->format('m') === $currentDate->format('m') || $testCurrent)) {
+                                    $endDate = $currentDate;
+                                }
+
+                                $daysSinceStartOfYear = $startDate->diff($endDate)->days + 1;
                                 
                                 $series = $serieRepository->findAll();
                                 $episodes = $episodeShowRepository->findByDate($year, $month);
@@ -285,9 +300,9 @@ class EpisodeShowController extends AbstractController
                                     '11' => 'Novembre',
                                     '12' => 'Décembre'
                                 ];
-
+                                
                                 $month = $listMonth[$month];
-
+                                
                                 foreach ($series as $serie) {
                                     if (count($serie->getEpisodeShows()->getValues()) > 0) {
                                         $showSerie[$serie->getName()] = $serie->getEpisodeShows()->getValues();
@@ -350,6 +365,7 @@ class EpisodeShowController extends AbstractController
                                                 'globalDurationAnime' => $globalDurationAnime,
                                                 'globalDurationSerie' => $globalDurationSerie,
                                                 'globalDurationReplay' => $globalDurationReplay,
+                                                'daysSinceStartOfYear' => $daysSinceStartOfYear,
                                                 'navLinkId' => 'episode',
                                             ]);
                                         }
