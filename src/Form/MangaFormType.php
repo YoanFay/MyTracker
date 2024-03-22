@@ -45,8 +45,7 @@ class MangaFormType extends AbstractType
             ->add('genres', EntityType::class, [
                 'class' => MangaGenre::class, // Entité source
                 'choice_label' => 'name', // Propriété de l'entité à afficher dans la liste déroulante
-                'choice_attr' => ['class' => 'mx-2'],
-                'attr' => ['class' => 'mx-2'],
+                'attr' => ['class' => 'mx-2 text-red'],
                 'multiple' => true, // Permet la sélection multiple
                 'expanded' => true, // Affiche les options sous forme de cases à cocher
                 'required' => false

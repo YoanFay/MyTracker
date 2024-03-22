@@ -1,18 +1,22 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Ajouter un manga{% endblock %}
+{% block title %}Ajouter une série{% endblock %}
 
 {% block body %}
-    <div class="card">
-        {{ form_start(form) }}
+
+    <div class="d-flex flex-column justify-content-center align-items-center">
+        <div class="card">
+            <div class="card-header">
+                Ajouter une série
+            </div>
+            <div class="card-body">
+                {{ form_start(form) }}
                 {{form_row(form.name)}}
-                {{form_row(form.releaseDate)}}
-                {{form_row(form.endDate)}}
-                {{form_row(form.nbTomes)}}
+                {{form_row(form.tvdbId)}}
                 {{form_row(form.type)}}
         <label class="my-2">Genres</label>
         <div class="col-12 d-flex flex-row flex-wrap">
-            {% for key, genre in form.genres %}
+            {% for key, genre in form.animeGenres %}
             <div class="col-3">
                 {{form_widget(genre)}}
                 {{form_label(genre)}}
@@ -21,15 +25,17 @@
         </div>
         <label class="my-2">Thèmes</label>
         <div class="col-12 d-flex flex-row flex-wrap">
-            {% for key, theme in form.themes %}
+            {% for key, theme in form.animeThemes %}
             <div class="col-3">
                 {{form_widget(theme)}}
                 {{form_label(theme)}}
             </div>
             {% endfor %}
         </div>
-        {{form_row(form.author)}}
-        {{form_row(form.editor)}}
-        {{ form_end(form) }}
+                {{ form_end(form) }}
+                <a class="btn btn-secondary mt-1" href="{{ path('serie') }}">Retour</a>
+            </div>
+        </div>
     </div>
+
 {% endblock %}

@@ -117,7 +117,7 @@ class SerieController extends AbstractController
             return $this->redirectToRoute('serie_detail', ['id' => $id]);
         }
 
-        return $this->render('serie/add.html.twig', [
+        return $this->render('serie/edit.html.twig', [
             'controller_name' => 'SerieController',
             'form' => $form->createView(),
             'navLinkId' => 'serie_list',
@@ -180,7 +180,7 @@ class SerieController extends AbstractController
             return $this->redirectToRoute('serie_detail', ['id' => $id]);
         }
 
-        return $this->render('serie/add.html.twig', [
+        return $this->render('serie/editAnime.html.twig', [
             'controller_name' => 'SerieController',
             'form' => $form->createView(),
             'navLinkId' => 'serie_list',
