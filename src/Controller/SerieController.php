@@ -105,6 +105,7 @@ class SerieController extends AbstractController
         }
 
         $form = $this->createForm(SerieEditType::class, $serie);
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()){
@@ -120,6 +121,7 @@ class SerieController extends AbstractController
         return $this->render('serie/edit.html.twig', [
             'controller_name' => 'SerieController',
             'form' => $form->createView(),
+            'serie' => $serie,
             'navLinkId' => 'serie_add',
         ]);
     }
@@ -183,6 +185,7 @@ class SerieController extends AbstractController
         return $this->render('serie/editAnime.html.twig', [
             'controller_name' => 'SerieController',
             'form' => $form->createView(),
+            'serie' => $serie,
             'navLinkId' => 'serie_add',
         ]);
     }

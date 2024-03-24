@@ -34,7 +34,6 @@ class SerieEditType extends AbstractType
                     'Replay' => 'Replay'
                 ],
                 'required' => true,
-                'mapped' => false,
                 'attr' => ['class' => 'form-control mt-1'],
             ])
             ->add('valide', SubmitType::class, [

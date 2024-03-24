@@ -9,6 +9,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -35,15 +36,17 @@ class GameTrackerType extends AbstractType
                 'attr' => ['class' => 'form-control'],
                 'required' => false
             ])
-            ->add('endTime', IntegerType::class, [
+            ->add('endTime', TextType::class, [
                 'label' => 'Temps pour finir',
                 'attr' => ['class' => 'form-control'],
-                'required' => false
+                'required' => false,
+                'mapped' => false
             ])
-            ->add('completeTime', IntegerType::class, [
+            ->add('completeTime', TextType::class, [
                 'label' => 'Temps pour finir à 100%',
                 'attr' => ['class' => 'form-control'],
-                'required' => false
+                'required' => false,
+                'mapped' => false
             ])
             ->add('valide', SubmitType::class, [
                 'label' => 'Valider',
