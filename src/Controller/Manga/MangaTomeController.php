@@ -19,7 +19,7 @@ class MangaTomeController extends AbstractController
     {
         return $this->render('manga/manga_tome/index.html.twig', [
             'controller_name' => 'MangaTomeController',
-            'navLinkId' => 'manga-tome',
+            'navLinkId' => 'manga_tome',
         ]);
     }
 
@@ -79,7 +79,7 @@ class MangaTomeController extends AbstractController
         return $this->render('manga/manga_tome/add.html.twig', [
             'form' => $form->createView(),
             'controller_name' => 'MangaController',
-            'navLinkId' => 'manga-tome',
+            'navLinkId' => 'manga_tome',
         ]);
     }
 
@@ -148,7 +148,7 @@ class MangaTomeController extends AbstractController
             'mangaTome' => $mangaTome,
             'form' => $form->createView(),
             'controller_name' => 'MangaController',
-            'navLinkId' => 'manga-tome',
+            'navLinkId' => 'manga_tome',
         ]);
     }
 

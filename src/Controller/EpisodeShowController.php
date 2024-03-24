@@ -192,7 +192,7 @@ class EpisodeShowController extends AbstractController
                     return $this->render('episode_show/add.html.twig', [
                         'controller_name' => 'EpisodeShowController',
                         'form' => $form->createView(),
-                        'navLinkId' => 'episode-add',
+                        'navLinkId' => 'episode_add',
                     ]);
                 }
                 
@@ -251,7 +251,7 @@ class EpisodeShowController extends AbstractController
                                     'globalDuration' => $globalDuration,
                                     'title' => $title,
                                     'text' => $text,
-                                    'navLinkId' => $nav,
+                                    'navLinkId' => 'episode_'.$nav.'_list',
                                 ]);
                             }
                             

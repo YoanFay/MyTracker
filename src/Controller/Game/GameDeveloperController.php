@@ -19,7 +19,7 @@ class GameDeveloperController extends AbstractController
     {
         return $this->render('game/game_developer/index.html.twig', [
             'game_developers' => $gameDeveloperRepository->findAll(),
-            'navLinkId' => 'game-developer'
+            'navLinkId' => 'game_developer'
         ]);
     }
 
@@ -40,7 +40,7 @@ class GameDeveloperController extends AbstractController
         return $this->renderForm('game/game_developer/new.html.twig', [
             'game_developer' => $gameDeveloper,
             'form' => $form,
-            'navLinkId' => 'game-developer'
+            'navLinkId' => 'game_developer'
         ]);
     }
 
@@ -51,7 +51,7 @@ class GameDeveloperController extends AbstractController
 
         return $this->render('game/game_developer/show.html.twig', [
             'game_developer' => $gameDeveloper,
-            'navLinkId' => 'game-developer'
+            'navLinkId' => 'game_developer'
         ]);
     }
 
@@ -72,7 +72,7 @@ class GameDeveloperController extends AbstractController
         return $this->renderForm('game/game_developer/edit.html.twig', [
             'game_developer' => $gameDeveloper,
             'form' => $form,
-            'navLinkId' => 'game-developer'
+            'navLinkId' => 'game_developer'
         ]);
     }
 

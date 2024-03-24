@@ -113,7 +113,7 @@ class MangaController extends AbstractController
             'genreChart' => $genreChart,
             'labelThemeChart' => $labelThemeChart,
             'themeChart' => $themeChart,
-            'navLinkId' => 'manga-stat',
+            'navLinkId' => 'manga_stat',
         ]);
     }
 }

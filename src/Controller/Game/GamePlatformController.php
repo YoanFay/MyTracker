@@ -21,7 +21,7 @@ class GamePlatformController extends AbstractController
     {
         return $this->render('game/game_platform/index.html.twig', [
             'game_platforms' => $gamePlatformRepository->findAll(),
-            'navLinkId' => 'game-platform',
+            'navLinkId' => 'game_platform',
         ]);
     }
 
@@ -42,7 +42,7 @@ class GamePlatformController extends AbstractController
         return $this->renderForm('game/game_platform/new.html.twig', [
             'game_platform' => $gamePlatform,
             'form' => $form,
-            'navLinkId' => 'game-platform',
+            'navLinkId' => 'game_platform',
         ]);
     }
 
@@ -53,7 +53,7 @@ class GamePlatformController extends AbstractController
 
         return $this->render('game/game_platform/show.html.twig', [
             'game_platform' => $gamePlatform,
-            'navLinkId' => 'game-platform',
+            'navLinkId' => 'game_platform',
         ]);
     }
 
@@ -74,7 +74,7 @@ class GamePlatformController extends AbstractController
         return $this->renderForm('game/game_platform/edit.html.twig', [
             'game_platform' => $gamePlatform,
             'form' => $form,
-            'navLinkId' => 'game-platform',
+            'navLinkId' => 'game_platform',
         ]);
     }
 
@@ -141,7 +141,7 @@ class GamePlatformController extends AbstractController
 
         return $this->renderForm('game/game_platform/new.html.twig', [
             'form' => $form,
-            'navLinkId' => 'game-platform',
+            'navLinkId' => 'game_platform',
         ]);
     }
 }

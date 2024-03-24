@@ -50,7 +50,7 @@ class AnimeController extends AbstractController
             'genreChart' => $genreChart,
             'labelThemeChart' => $labelThemeChart,
             'themeChart' => $themeChart,
-            'navLinkId' => 'anime-stat',
+            'navLinkId' => 'anime_stat',
         ]);
     }
 }

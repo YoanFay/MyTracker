@@ -16,6 +16,7 @@ public/.htaccess
 /var/
 /vendor/
 /.idea/
+/templates/base.html copy.twig
 ###< symfony/framework-bundle ###
 
 ###> phpunit/phpunit ###

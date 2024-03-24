@@ -13,7 +13,7 @@ class MangaGenreController extends AbstractController
     {
         return $this->render('manga/manga_genre/index.html.twig', [
             'controller_name' => 'MangaGenreController',
-            'navLinkId' => 'manga-genre',
+            'navLinkId' => 'manga_genre',
         ]);
     }
 }

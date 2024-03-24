@@ -17,7 +17,7 @@ class MangaEditorController extends AbstractController
     {
         return $this->render('manga/manga_editor/index.html.twig', [
             'controller_name' => 'MangaEditorController',
-            'navLinkId' => 'manga-editor',
+            'navLinkId' => 'manga_editor',
         ]);
     }
     
@@ -40,7 +40,7 @@ class MangaEditorController extends AbstractController
         return $this->render('manga/manga_editor/add.html.twig', [
             'form' => $form->createView(),
             'controller_name' => 'MangaAuthorController',
-            'navLinkId' => 'manga-editor',
+            'navLinkId' => 'manga_editor',
         ]);
     }
 }

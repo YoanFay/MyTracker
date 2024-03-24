@@ -13,7 +13,7 @@ class AnimeGenreController extends AbstractController
     {
         return $this->render('anime_genre/index.html.twig', [
             'controller_name' => 'AnimeGenreController',
-            'navLinkId' => 'anime-genre',
+            'navLinkId' => 'anime_genre',
         ]);
     }
 }
