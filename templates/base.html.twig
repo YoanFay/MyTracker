@@ -96,7 +96,8 @@
                             </li>
                         </ul>
                     </div>
-                </li><li>
+                </li>
+                <li>
                     <a data-bs-toggle="collapse" href="#activateFilms" role="button" aria-expanded="false"
                        aria-controls="collapseExample">
                         Films
@@ -126,10 +127,6 @@
                             <li>
                                 <a id="manga" class="nav-links-child"
                                    href="{{ path('manga') }}">Liste</a>
-                            </li>
-                            <li>
-                                <a id="manga_stat" class="nav-links-child"
-                                   href="{{ path('manga_stat') }}">Statistique</a>
                             </li>
                             <li>
                                 <a id="manga_tome" class="nav-links-child"
@@ -186,6 +183,25 @@
                                 <a id="game-serie" class="nav-links-child"
                                    href="{{ path('game_serie_index') }}">Série</a>
                             </li>#}
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <a data-bs-toggle="collapse" href="#activateStats" role="button" aria-expanded="false"
+                       aria-controls="collapseExample">
+                        Statistique
+                        <i class="metismenu-state-icon material-icons">expand_more</i>
+                    </a>
+                    <div class="collapse" id="activateStats">
+                        <ul id="stat">
+                            <li>
+                                <a id="anime_stat" class="nav-links-child"
+                                   href="{{ path('anime_stat') }}">Anime</a>
+                            </li>
+                            <li>
+                                <a id="manga_stat" class="nav-links-child"
+                                   href="{{ path('manga_stat') }}">Manga</a>
+                            </li>
                         </ul>
                     </div>
                 </li>
