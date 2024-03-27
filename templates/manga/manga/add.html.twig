@@ -11,8 +11,13 @@
                 {{form_row(form.nbTomes)}}
                 {{form_row(form.type)}}
         <label class="my-2">Genres</label>
+        {% set firstLetter = null %}
         <div class="col-12 d-flex flex-row flex-wrap">
             {% for key, genre in form.genres %}
+            {% if genre.vars.label|first != firstLetter %}
+                <p class="col-12"><strong>{{ genre.vars.label|first}}</strong></p>
+                {% set firstLetter = genre.vars.label|first %}
+            {% endif %}
             <div class="col-3">
                 {{form_widget(genre)}}
                 {{form_label(genre)}}
@@ -20,8 +25,13 @@
             {% endfor %}
         </div>
         <label class="my-2">Thèmes</label>
+        {% set firstLetter = null %}
         <div class="col-12 d-flex flex-row flex-wrap">
             {% for key, theme in form.themes %}
+            {% if theme.vars.label|first != firstLetter %}
+                <p class="col-12"><strong>{{ theme.vars.label|first}}</strong></p>
+                {% set firstLetter = theme.vars.label|first %}
+            {% endif %}
             <div class="col-3">
                 {{form_widget(theme)}}
                 {{form_label(theme)}}
