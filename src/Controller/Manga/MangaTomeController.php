@@ -98,6 +98,9 @@ class MangaTomeController extends AbstractController
         }
 
         $form = $this->createForm(MangaTomeType::class, $mangaTome);
+
+        $form->get('cover')->setData("http" . ($_SERVER['HTTPS'] ? 's' : ''). "://" .$_SERVER['SERVER_NAME'] . $mangaTome->getCover());
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()){
