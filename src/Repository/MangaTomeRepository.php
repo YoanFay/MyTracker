@@ -47,6 +47,50 @@ class MangaTomeRepository extends ServiceEntityRepository
             ;
     }
 
+    public function getTomeRead()
+    {
+        return $this->createQueryBuilder('mt')
+            ->select('COUNT(mt.readingEndDate) AS COUNT')
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
+    }
+
+    public function getTomeReadByYear($year)
+    {
+        return $this->createQueryBuilder('mt')
+            ->select('COUNT(mt.readingEndDate) AS COUNT')
+            ->andWhere('mt.readingEndDate >= :start')
+            ->setParameter('start', $year.'-01-01')
+            ->andWhere('mt.readingEndDate <= :end')
+            ->setParameter('end', $year.'-12-31')
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
+    }
+
+    public function getTomeStart()
+    {
+        return $this->createQueryBuilder('mt')
+            ->select('COUNT(mt.readingStartDate) AS COUNT')
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
+    }
+
+    public function getTomeStartByYear($year)
+    {
+        return $this->createQueryBuilder('mt')
+            ->select('COUNT(mt.readingStartDate) AS COUNT')
+            ->andWhere('mt.readingStartDate >= :start')
+            ->setParameter('start', $year.'-01-01')
+            ->andWhere('mt.readingStartDate <= :end')
+            ->setParameter('end', $year.'-12-31')
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
+    }
+
     /*public function getTomeTheme()
     {
         return $this->createQueryBuilder('e')

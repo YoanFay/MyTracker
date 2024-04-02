@@ -98,6 +98,74 @@ class GameRepository extends ServiceEntityRepository
 
     }
 
+    /**
+     * @return Game[] Returns an array of Game
+     */
+    public function countGameEnd(): array
+    {
+
+        return $this->createQueryBuilder('g')
+            ->select('COUNT(t.endDate) AS COUNT')
+            ->leftJoin('g.gameTrackers', 't')
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
+
+    }
+
+    /**
+     * @return Game[] Returns an array of Game
+     */
+    public function countGameEndByYear($year): array
+    {
+
+        return $this->createQueryBuilder('g')
+            ->select('COUNT(t.endDate) AS COUNT')
+            ->leftJoin('g.gameTrackers', 't')
+            ->andWhere('t.endDate >= :start')
+            ->setParameter('start', $year.'-01-01')
+            ->andWhere('t.endDate <= :end')
+            ->setParameter('end', $year.'-12-31')
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
+
+    }
+
+    /**
+     * @return Game[] Returns an array of Game
+     */
+    public function countGameFullEnd(): array
+    {
+
+        return $this->createQueryBuilder('g')
+            ->select('COUNT(t.completeDate) AS COUNT')
+            ->leftJoin('g.gameTrackers', 't')
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
+
+    }
+
+    /**
+     * @return Game[] Returns an array of Game
+     */
+    public function countGameFullEndByYear($year): array
+    {
+
+        return $this->createQueryBuilder('g')
+            ->select('COUNT(t.completeDate) AS COUNT')
+            ->leftJoin('g.gameTrackers', 't')
+            ->andWhere('t.completeDate >= :start')
+            ->setParameter('start', $year.'-01-01')
+            ->andWhere('t.completeDate <= :end')
+            ->setParameter('end', $year.'-12-31')
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
+
+    }
+
 //    /**
 //     * @return Game[] Returns an array of Game objects
 //     */

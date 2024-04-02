@@ -75,45 +75,4 @@ class MangaController extends AbstractController
             'navLinkId' => 'manga',
         ]);
     }
-
-    #[Route('/manga/statistique', name: 'manga_stat')]
-    public function mangaStat(MangaRepository $mangaRepository): Response
-    {
-
-        $mangaTomesByGenre = $mangaRepository->getMangaTomeByGenre();
-        $mangaTomesByTheme = $mangaRepository->getMangaTomeByTheme();
-
-        $labelGenreChart = "[";
-        $genreChart = "[";
-
-        foreach ($mangaTomesByGenre as $count) {
-
-            $labelGenreChart .= '"'.$count['name'] . '", ';
-            $genreChart .= $count['COUNT'] . ", ";
-        }
-
-        $labelGenreChart = rtrim($labelGenreChart, ", ") . "]";
-        $genreChart = rtrim($genreChart, ", ") . "]";
-
-        $labelThemeChart = "[";
-        $themeChart = "[";
-
-        foreach ($mangaTomesByTheme as $count) {
-
-            $labelThemeChart .= '"'.$count['name'] . '", ';
-            $themeChart .= $count['COUNT'] . ", ";
-        }
-
-
-        $labelThemeChart = rtrim($labelThemeChart, ", ") . "]";
-        $themeChart = rtrim($themeChart, ", ") . "]";
-
-        return $this->render('manga/manga/stat.html.twig', [
-            'labelGenreChart' => $labelGenreChart,
-            'genreChart' => $genreChart,
-            'labelThemeChart' => $labelThemeChart,
-            'themeChart' => $themeChart,
-            'navLinkId' => 'manga_stat',
-        ]);
-    }
 }
