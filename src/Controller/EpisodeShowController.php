@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\EpisodeShow;
 use App\Form\EpisodeShowType;
+use App\Repository\SerieTypeRepository;
 use App\Repository\UsersRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -120,7 +121,7 @@ class EpisodeShowController extends AbstractController
 
             $globalDuration += $episode->getDuration();
 
-            switch ($episode->getSerie()->getType()) {
+            switch ($episode->getSerie()->getSerieType()->getName()) {
             case 'Anime':
                 $globalDurationAnime += $episode->getDuration();
                 break;
@@ -148,7 +149,7 @@ class EpisodeShowController extends AbstractController
                 ];
             }
 
-            $timeByDateType[$dateKey][$episode->getSerie()->getType()] += $episode->getDuration();
+            $timeByDateType[$dateKey][$episode->getSerie()->getSerieType()->getName()] += $episode->getDuration();
         }
 
         return $this->render('episode_show/allEpisode.html.twig', [
@@ -198,34 +199,23 @@ class EpisodeShowController extends AbstractController
 
 
     #[Route('/episode/categorie/{categorie}', name: 'episode_categories')]
-    public function episodeCategories(EpisodeShowRepository $episodeShowRepository, $categorie): Response
+    public function episodeCategories(EpisodeShowRepository $episodeShowRepository, SerieTypeRepository $serieTypeRepository, $categorie): Response
     {
 
-        switch ($categorie) {
-        case 'anime':
-            $episodes = $episodeShowRepository->findAnime();
-            $title = "Anime";
-            $text = "d'animes";
-            $nav = "anime";
-            break;
-        case 'serie':
-            $episodes = $episodeShowRepository->findSerie();
-            $title = "Série";
-            $text = "de séries";
-            $nav = "serie";
-            break;
-        case 'replay':
-            $episodes = $episodeShowRepository->findReplay();
-            $title = "Replay";
-            $text = "de replay";
-            $nav = "replay";
-            break;
-        default:
-            $episodes = $episodeShowRepository->findAnime();
-            $title = "Anime";
-            $text = "d'animes";
-            $nav = "anime";
+        $voyelle = array('a','e','i','o','u');
+
+        $serieType = $serieTypeRepository->find($categorie);
+
+        $title = $serieType->getName();
+        $nav = strtolower($title);
+
+        if(in_array($title[0], $voyelle)){
+            $text = "d'".$nav;
+        }else{
+            $text = "de ".$nav;
         }
+
+        $episodes = $episodeShowRepository->findByType($serieType);
 
         $episodesByDate = [];
         $dateKeys = [];
@@ -324,7 +314,7 @@ class EpisodeShowController extends AbstractController
 
             $globalDuration += $episode->getDuration();
 
-            switch ($episode->getSerie()->getType()) {
+            switch ($episode->getSerie()->getSerieType()->getName()) {
             case 'Anime':
                 $globalDurationAnime += $episode->getDuration();
                 break;
@@ -352,7 +342,7 @@ class EpisodeShowController extends AbstractController
                 ];
             }
 
-            $timeByDateType[$dateKey][$episode->getSerie()->getType()] += $episode->getDuration();
+            $timeByDateType[$dateKey][$episode->getSerie()->getSerieType()->getName()] += $episode->getDuration();
         }
 
         return $this->render('episode_show/episodeDate.html.twig', [

@@ -58,16 +58,16 @@ class EpisodeShowRepository extends ServiceEntityRepository
     }
 
 
-    public function getDurationByType($type)
+    public function getDurationByType()
     {
 
         return $this->createQueryBuilder('e')
-            ->select('SUM(e.duration) AS COUNT')
+            ->select('SUM(e.duration) AS COUNT, t.name AS TYPE')
             ->leftJoin('e.serie', 's')
-            ->andWhere('s.type = :type')
-            ->setParameter('type', $type)
+            ->leftJoin('s.serieType', 't')
+            ->groupBy('TYPE')
             ->getQuery()
-            ->getOneOrNullResult();
+            ->getResult();
     }
 
 
@@ -213,7 +213,8 @@ class EpisodeShowRepository extends ServiceEntityRepository
             ->select('SUM(e.duration) AS COUNT, g.name AS name')
             ->leftJoin('e.serie', 's')
             ->leftJoin('s.animeGenres', 'g')
-            ->andWhere('s.type = :type')
+            ->leftJoin('s.serieType', 't')
+            ->andWhere('t.name = :type')
             ->setParameter('type', 'Anime')
             ->groupBy('g.name')
             ->orderBy('COUNT', 'DESC')
@@ -229,7 +230,8 @@ class EpisodeShowRepository extends ServiceEntityRepository
             ->select('SUM(e.duration) AS COUNT, t.name AS name')
             ->leftJoin('e.serie', 's')
             ->leftJoin('s.animeThemes', 't')
-            ->andWhere('s.type = :type')
+            ->leftJoin('s.serieType', 'ty')
+            ->andWhere('ty.name = :type')
             ->setParameter('type', 'Anime')
             ->groupBy('t.name')
             ->orderBy('COUNT', 'DESC')
@@ -289,12 +291,28 @@ class EpisodeShowRepository extends ServiceEntityRepository
     /**
      * @return float|int|mixed|string|null
      */
+    public function findByType($type)
+    {
+
+        return $this->createQueryBuilder('e')
+            ->leftJoin('e.serie', 's')
+            ->andWhere('s.serieType = :type')
+            ->setParameter('type', $type)
+            ->getQuery()
+            ->getResult();
+    }
+
+
+    /**
+     * @return float|int|mixed|string|null
+     */
     public function findMonth()
     {
 
         return $this->createQueryBuilder('e')
-            ->select("DATE_FORMAT(e.showDate, '%Y-%m') AS DATE, SUM(e.duration) AS DURATION, s.type AS TYPE")
+            ->select("DATE_FORMAT(e.showDate, '%Y-%m') AS DATE, SUM(e.duration) AS DURATION, t.name AS TYPE")
             ->leftJoin('e.serie', 's')
+            ->leftJoin('s.serieType', 't')
             ->addGroupBy("DATE")
             ->addGroupBy("TYPE")
             ->getQuery()

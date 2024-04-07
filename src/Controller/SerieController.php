@@ -76,8 +76,6 @@ class SerieController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()){
-
-            $serie->setType($form->get('type')->getData());
             
             $serie->setSlug($strSpecialCharsLower->serie($serie->getName()));
 

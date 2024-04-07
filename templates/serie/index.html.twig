@@ -16,7 +16,7 @@
         {% for serie in series %}
             <tr class="clickable-row cursor-click" data-href="{{ path('serie_detail', {'id': serie.id}) }}">
                 <td>{{ serie.name }}</td>
-                <td>{{ serie.type }}</td>
+                <td>{{ serie.serieType.name }}</td>
                 <td>
     {% if serie.artwork %}
     <img src="{{serie.artwork}}" width="150px" alt="{{serie.name}} poster">

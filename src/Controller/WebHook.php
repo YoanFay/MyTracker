@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Movie;
+use App\Entity\SerieType;
 use App\Repository\MovieRepository;
+use App\Repository\SerieTypeRepository;
 use App\Service\StrSpecialCharsLower;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,7 +31,8 @@ class WebHook extends AbstractController
 		SerieRepository       $serieRepository,
 		EpisodeShowRepository $episodeShowRepository,
 		MovieRepository       $movieRepository,
-		StrSpecialCharsLower  $strSpecialCharsLower
+		StrSpecialCharsLower  $strSpecialCharsLower,
+        SerieTypeRepository $serieTypeRepository
 		): Response
 		{
 			
@@ -55,7 +58,7 @@ class WebHook extends AbstractController
 					return new Response('FALSE');
 					
 				}
-				
+
 				$type = str_replace(['Quasinas ', ' A Deux', ' Chat', ' Doudou'], ['', '', '', ''], $jsonData['Metadata']['librarySectionTitle']);
 				
 				if ($type === "Films") {
@@ -100,13 +103,24 @@ class WebHook extends AbstractController
 					$serieId = str_replace(["plex://show/"], [""], $jsonData['Metadata']['grandparentGuid']);
 					
 					$serie = $serieRepository->findOneBy(['plexId' => $serieId]);
+
+                    $serieType = $serieTypeRepository->findOneBy(['name' => $type]);
+
+                    if(!$serieType){
+                        $serieType = new SerieType();
+
+                        $serieType->setName($type);
+
+                        $em->persist($serieType);
+                        $em->flush();
+                    }
 					
 					if (!$serie) {
 						$serie = new Serie;
 						
 						$serie->setPlexId($serieId);
 						$serie->setName($jsonData['Metadata']['grandparentTitle']);
-						$serie->setType($type);
+						$serie->setSerieType($serieType);
 						
 						$serie->setSlug($strSpecialCharsLower->serie($serie->getName()));
 						

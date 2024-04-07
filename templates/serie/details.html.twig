@@ -8,7 +8,7 @@
     <div>
     <h1 class="d-inline">{{ serie.name }}</h1> <a class="d-inline" href="{{ path('serie_edit', {'id': serie.id}) }}"><i class="material-icons">edit</i></a>
     <h2>{{ countEpisode }} épisodes vus - {{ totalDuration|MsToHM }} de visionnage total</h2>
-    {% if serie.type != 'Anime' %}
+    {% if serie.serieType.name != 'Anime' %}
     <br>
     <div class="d-flex flex-row flex-wrap">
         <div class="m-2">

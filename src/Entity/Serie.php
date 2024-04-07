@@ -27,9 +27,6 @@ class Serie
     #[ORM\Column(type: "integer", nullable: true)]
     private $tvdbId;
 
-    #[ORM\Column(type: "string", length: 255, nullable: true)]
-    private $type;
-
     #[ORM\Column(type: "boolean")]
     private $vfName = false;
 

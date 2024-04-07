@@ -25,6 +25,22 @@ class StatsController extends AbstractController
         $animeDuration = $episodeShowRepository->getDurationByType('Anime');
         $serieDuration = $episodeShowRepository->getDurationByType('Séries');
         $replayDuration = $episodeShowRepository->getDurationByType('Replay');
+
+        $durations = $episodeShowRepository->getDurationByType();
+
+        foreach ($durations as $duration){
+            switch ($duration['TYPE']){
+            case 'Anime':
+                $animeDuration = $duration['COUNT'];
+                break;
+            case 'Séries':
+                $serieDuration = $duration['COUNT'];
+                break;
+            case 'Replay':
+                $replayDuration = $duration['COUNT'];
+                break;
+            }
+        }
         
         $durationByGenre = $episodeShowRepository->getDurationGenre();
         $durationByTheme = $episodeShowRepository->getDurationTheme();
@@ -135,7 +151,7 @@ class StatsController extends AbstractController
         
         foreach ($allEpisodes as $episode) {
             
-            switch ($episode->getSerie()->getType()) {
+            switch ($episode->getSerie()->getSerieType()->getName()) {
                 case "Anime":
                     $animeByDay[$episode->getShowDate()->format('l')] += $episode->getDuration();
                     $animeByMonth[$episode->getShowDate()->format('F')] += $episode->getDuration();
@@ -196,7 +212,7 @@ class StatsController extends AbstractController
                         $movieByDay[$key] = $time / $joursCount[$key];
                     }
                     
-                    $timeChart = "[".$animeDuration['COUNT'].", ".$serieDuration['COUNT'].", ".$replayDuration['COUNT'].", ".$movieDuration['SUM']."]";
+                    $timeChart = "[".$animeDuration.", ".$serieDuration.", ".$replayDuration.", ".$movieDuration['SUM']."]";
                     
                     $animeByDayChart = "[".$animeByDay['Monday'].", ".$animeByDay['Tuesday'].", ".$animeByDay['Wednesday'].", ".$animeByDay['Thursday'].", ".$animeByDay['Friday'].", ".$animeByDay['Saturday'].", ".$animeByDay['Sunday']."]";
                     
