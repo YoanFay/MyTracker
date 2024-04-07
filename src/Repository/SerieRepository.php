@@ -106,6 +106,19 @@ class SerieRepository extends ServiceEntityRepository
             ;
     }
 
+    /**
+     * @return Serie[] Returns an array of Serie objects
+     */
+    public function getType(): array
+    {
+        return $this->createQueryBuilder('s')
+            ->select('s.type AS TYPE')
+            ->groupBy('s.type')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
 //    public function findOneBySomeField($value): ?Serie
 //    {
 //        return $this->createQueryBuilder('s')

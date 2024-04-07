@@ -51,6 +51,9 @@ class Serie
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $slug = null;
 
+    #[ORM\ManyToOne(inversedBy: 'series')]
+    private ?SerieType $serieType = null;
+
     public function __construct()
     {
         $this->episodeShows = new ArrayCollection();
@@ -280,6 +283,18 @@ class Serie
     public function setSlug(?string $slug): static
     {
         $this->slug = $slug;
+
+        return $this;
+    }
+
+    public function getSerieType(): ?SerieType
+    {
+        return $this->serieType;
+    }
+
+    public function setSerieType(?SerieType $serieType): static
+    {
+        $this->serieType = $serieType;
 
         return $this;
     }
