@@ -84,9 +84,10 @@ class SerieRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('s')
             ->leftJoin('s.genres', 'g')
+            ->leftJoin('s.serieType', 't')
             ->andWhere('g.id IS NULL')
             ->andWhere('s.tvdbId IS NOT NULL')
-            ->andWhere('s.type <> :type')
+            ->andWhere('t.name <> :type')
             ->setParameter('type', 'Anime')
             ->getQuery()
             ->getResult()
@@ -99,7 +100,8 @@ class SerieRepository extends ServiceEntityRepository
     public function findAnime(): array
     {
         return $this->createQueryBuilder('s')
-            ->andWhere('s.type = :type')
+            ->leftJoin('s.serieType', 't')
+            ->andWhere('t.name = :type')
             ->setParameter('type', 'Anime')
             ->getQuery()
             ->getResult()

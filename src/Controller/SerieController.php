@@ -98,7 +98,7 @@ class SerieController extends AbstractController
 
         $serie = $serieRepository->findOneBy(['id' => $id]);
         
-        if($serie->getType() === "Anime"){
+        if($serie->getSerieType()->getName() === "Anime"){
             return $this->redirectToRoute('serie_edit_anime', ['id' => $id]);
         }
 
@@ -130,7 +130,7 @@ class SerieController extends AbstractController
 
         $serie = $serieRepository->findOneBy(['id' => $id]);
         
-        if($serie->getType() !== "Anime"){
+        if($serie->getSerieType()->getName() !== "Anime"){
             return $this->redirectToRoute('serie_edit', ['id' => $id]);
         }
         
