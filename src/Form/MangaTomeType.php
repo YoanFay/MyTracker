@@ -46,6 +46,7 @@ class MangaTomeType extends AbstractType
             ->add('cover', TextType::class, [
                 'label' => "URL de la couverture",
                 'attr' => ['class' => 'form-control'],
+                'required' => false,
             ])
             ->add('manga', EntityType::class, [
                 'label' => "Manga",

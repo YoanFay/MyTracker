@@ -39,32 +39,34 @@ class MangaTomeController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()){
 
-            // Lien de l'image à télécharger
-            $lienImage = $mangaTome->getCover();
+            if($mangaTome->getCover()) {
+                // Lien de l'image à télécharger
+                $lienImage = $mangaTome->getCover();
 
-            $cover = imagecreatefromstring(file_get_contents($lienImage));
+                $cover = imagecreatefromstring(file_get_contents($lienImage));
 
-            // Chemin où enregistrer l'image
-            $cheminDossierBase = "/public/image/manga/cover/";
-            $nomManga = $mangaTome->getManga()->getSlug();
-            $cheminDossierManga = $this->getParameter('kernel.project_dir') . $cheminDossierBase . $nomManga;
+                // Chemin où enregistrer l'image
+                $cheminDossierBase = "/public/image/manga/cover/";
+                $nomManga = $mangaTome->getManga()->getSlug();
+                $cheminDossierManga = $this->getParameter('kernel.project_dir').$cheminDossierBase.$nomManga;
 
-            // Création du dossier s'il n'existe pas
-            if (!file_exists($cheminDossierManga)) {
-                mkdir($cheminDossierManga, 0777, true);
-            }
+                // Création du dossier s'il n'existe pas
+                if (!file_exists($cheminDossierManga)) {
+                    mkdir($cheminDossierManga, 0777, true);
+                }
 
-            // Nom de fichier pour l'image (peut être personnalisé si nécessaire)
-            $nomFichierImage = $nomManga.$mangaTome->getTomeNumber().'.jpeg';
+                // Nom de fichier pour l'image (peut être personnalisé si nécessaire)
+                $nomFichierImage = $nomManga.$mangaTome->getTomeNumber().'.jpeg';
 
-            // Chemin complet de destination pour enregistrer l'image
-            $cheminImageDestination = $cheminDossierManga . "/" . $nomFichierImage;
+                // Chemin complet de destination pour enregistrer l'image
+                $cheminImageDestination = $cheminDossierManga."/".$nomFichierImage;
 
-            // Téléchargement et enregistrement de l'image
-            if (imagejpeg($cover, $cheminImageDestination, 100)) {
-                $mangaTome->setCover($cheminDossierBase . $nomManga . "/" . $nomFichierImage);
-            } else {
-                $mangaTome->setCover(null);
+                // Téléchargement et enregistrement de l'image
+                if (imagejpeg($cover, $cheminImageDestination, 100)) {
+                    $mangaTome->setCover($cheminDossierBase.$nomManga."/".$nomFichierImage);
+                } else {
+                    $mangaTome->setCover(null);
+                }
             }
 
             $managerRegistry->getManager()->persist($mangaTome);
