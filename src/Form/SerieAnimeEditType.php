@@ -28,14 +28,10 @@ class SerieAnimeEditType extends AbstractType
                 'required' => false,
                 'attr' => ['class' => 'form-control'],
             ])
-            ->add('type', ChoiceType::class, [
-                'choices' => [
-                    'Anime' => 'Anime',
-                    'Séries' => 'Séries',
-                    'Replay' => 'Replay'
-                ],
-                'required' => true,
-                'mapped' => false,
+            ->add('serieType', EntityType::class, [
+                'label' => 'Catégorie',
+                'class' => \App\Entity\SerieType::class,
+                'choice_label' => 'name',
                 'attr' => ['class' => 'form-control'],
             ])
             ->add('animeGenres', EntityType::class, [

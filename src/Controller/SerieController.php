@@ -108,8 +108,6 @@ class SerieController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()){
 
-            $serie->setType($form->get('type')->getData());
-
             $managerRegistry->getManager()->persist($serie);
             $managerRegistry->getManager()->flush();
 
@@ -141,8 +139,6 @@ class SerieController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()){
-
-            $serie->setType($form->get('type')->getData());
             
             $animeGenres = $serie->getAnimeGenres()->getValues();
             

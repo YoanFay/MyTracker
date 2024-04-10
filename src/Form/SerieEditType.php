@@ -27,14 +27,11 @@ class SerieEditType extends AbstractType
                 'required' => false,
                 'attr' => ['class' => 'form-control'],
             ])
-            ->add('type', ChoiceType::class, [
-                'choices' => [
-                    'Anime' => 'Anime',
-                    'Séries' => 'Séries',
-                    'Replay' => 'Replay'
-                ],
-                'required' => true,
-                'attr' => ['class' => 'form-control mt-1'],
+            ->add('serieType', EntityType::class, [
+                'label' => 'Catégorie',
+                'class' => \App\Entity\SerieType::class,
+                'choice_label' => 'name',
+                'attr' => ['class' => 'form-control'],
             ])
             ->add('valide', SubmitType::class, [
                 'label' => 'Valider',
