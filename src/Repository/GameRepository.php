@@ -61,6 +61,23 @@ class GameRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('g')
             ->leftJoin('g.gameTrackers', 't')
             ->andWhere('t.endDate IS NOT NULL')
+            ->andWhere('t.completeDate IS NULL')
+            ->orderBy('g.name')
+            ->getQuery()
+            ->getResult()
+            ;
+
+    }
+
+    /**
+     * @return Game[] Returns an array of Game
+     */
+    public function findGameFullEnd(): array
+    {
+
+        return $this->createQueryBuilder('g')
+            ->leftJoin('g.gameTrackers', 't')
+            ->andWhere('t.completeDate IS NOT NULL')
             ->orderBy('g.name')
             ->getQuery()
             ->getResult()

@@ -540,6 +540,9 @@ class GameController extends AbstractController
         case 4:
             $games = $gameRepository->findGameEnd();
             break;
+        case 5:
+            $games = $gameRepository->findGameFullEnd();
+            break;
         default:
             $games = $gameRepository->findAllFilter($sort, $order);
         }

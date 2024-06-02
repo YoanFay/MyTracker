@@ -6,24 +6,25 @@
     <h1 class="d-inline">Liste des jeux</h1><a class="d-inline" href="{{ path('game_add') }}"><i class="material-icons">add_circle</i></a>
 
     <div class="mt-3">
-        <button class="btn btn-primary" onclick="gameList('name', 'ASC', 1)">Tout</button>
-        <button class="btn btn-primary" onclick="gameList('name', 'ASC', 2)">Jeux pas commencé</button>
-        <button class="btn btn-primary" onclick="gameList('name', 'ASC', 3)">Jeux en cours</button>
-        <button class="btn btn-primary" onclick="gameList('name', 'ASC', 4)">Jeux terminé</button>
+        <button class="btn btn-primary littleBtn my-1" onclick="gameList('name', 'ASC', 1)">Tout</button>
+        <button class="btn btn-primary littleBtn my-1" onclick="gameList('name', 'ASC', 2)">Jeux pas commencé</button>
+        <button class="btn btn-primary littleBtn my-1" onclick="gameList('name', 'ASC', 3)">Jeux en cours</button>
+        <button class="btn btn-primary littleBtn my-1" onclick="gameList('name', 'ASC', 4)">Jeux terminé</button>
+        <button class="btn btn-primary littleBtn my-1" onclick="gameList('name', 'ASC', 5)">Jeux terminés à 100%</button>
     </div>
 
-    <table id="tableGame" class="table tablesorter">
+    <table id="tableGame" class="table table-hover table-striped table-bordered tablesorter littleFont">
         <thead>
-        <tr>
-            <th>Nom</th>
-            <th>Série</th>
-            <th>Sortie le :</th>
-            <th>Commencer le :</th>
-            <th>Fini le :</th>
-            <th>Fini en :</th>
-            <th>Fini à 100% le :</th>
-            <th>Fini à 100% en :</th>
-            <th>Suivit :</th>
+        <tr class="col-12">
+            <th class="col-1"></th>
+            <th class="col-1">Nom</th>
+            <th class="col-1">Série</th>
+            <th class="col-1">Sortie le :</th>
+            <th class="col-1">Commencer le :</th>
+            <th class="col-1">Fini le :</th>
+            <th class="col-1">Fini en :</th>
+            <th class="col-1">Fini à 100% le :</th>
+            <th class="col-1">Fini à 100% en :</th>
         </tr>
         </thead>
         <tbody id="gameList" data-list="1">
