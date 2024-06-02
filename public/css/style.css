@@ -6,6 +6,10 @@ img{
   max-width: 100%;
 }
 
+.formSize{
+  width: 25%;
+}
+
 .center-button {
   position: absolute;
   top: 50%;
@@ -153,5 +157,9 @@ openbtn
 
   .littleFont, .center-button, .littleBtn{
     font-size: 75%;
+  }
+
+  .formSize{
+    width: initial;
   }
 }
