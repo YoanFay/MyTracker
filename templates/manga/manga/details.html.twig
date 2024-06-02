@@ -31,23 +31,23 @@
         </div>
     </div>
 
-    <table class="table table-hover table-striped table-bordered">
+    <table class="table table-hover table-striped table-bordered littleFont">
         <thead>
-        <tr>
-            <th scope="col">Nom</th>
-            <th scope="col">Nombre de page</th>
-            <th scope="col">Sortie le</th>
-            <th scope="col">Commencer le</th>
-            <th scope="col">Finit le</th>
-            <th scope="col">Image</th>
+        <tr class="col-12">
+            <th scope="col" class="col-2">Nom</th>
+            <th scope="col" class="d-lg-table-cell d-none col-2">Nombre de page</th>
+            <th scope="col" class="col-2">Sortie le</th>
+            <th scope="col" class="col-2">Commencer le</th>
+            <th scope="col" class="col-2">Finit le</th>
+            <th scope="col" class="col-2">Image</th>
         </tr>
         </thead>
         <tbody>
         {% set checkRead = "ok" %}
         {% for tome in manga.mangaTomes %}
-            <tr>
-                <td><a class="text-decoration-none text-black" href="{{ path('manga_tome_edit', {'id': tome.id}) }}">Tome {{ tome.tomeNumber }}</a></td>
-                <td>{{ tome.page }} pages</td>
+            <tr class="col-12">
+                <td class="col-2"><a class="text-decoration-none text-black" href="{{ path('manga_tome_edit', {'id': tome.id}) }}">Tome {{ tome.tomeNumber }}</a></td>
+                <td class="d-lg-table-cell d-none">{{ tome.page }} pages</td>
                 <td>{{ tome.releaseDate|dateFNoDay }}</td>
                 {% if tome.readingStartDate %}
                     <td>{{ tome.readingStartDate|dateF }}</td>
@@ -58,14 +58,14 @@
                         {% set checkRead = null %}
                             <p>En cours</p>
                             <a href="{{ path('manga_tome_read', {'id': tome.id}) }}"
-                               class="position-absolute bottom-0 mb-2 btn btn-primary">Terminer</a>
+                               class="position-absolute bottom-0 mb-2 btn btn-primary littleBtn">Terminer</a>
                         {% endif %}
                     </td>
                 {% else %}
-                    <td>
+                    <td class="position-relative">
                         {% if checkRead != null and "now"|date('U') > tome.releaseDate|date('U') %}
                             <a href="{{ path('manga_tome_start', {'id': tome.id}) }}"
-                               class="btn btn-primary">
+                               class="center-button btn btn-primary littleBtn text-center p-2">
                                 Commencer
                             </a>
                         {% endif %}
@@ -75,10 +75,10 @@
                 {% endif %}
                 <td>
                     {% if tome.cover %}
-                        <img {% if tome.cover %} src="{{ tome.cover }}" alt="{{ tome.tomeNumber }} poster" {% else %} src="/image/visuel-a-venir.jpg" alt="Visuel à venir" {% endif %}
+                        <img {% if tome.cover %} src="{% if app.environment == "dev" %}{{ tome.cover|replace({'/public': ''}) }}{% else %}{{ tome.cover }}{% endif %}" alt="{{ tome.tomeNumber }} poster" {% else %} src="/image/visuel-a-venir.jpg" alt="Visuel à venir" {% endif %}
                                 width="150px" data-bs-toggle="modal" data-bs-target="#imageModal"
                                 class="cursor-click img-modal-trigger"
-                                data-img-url="{{ tome.cover|replace({'../public': ''}) }}">
+                                data-img-url="{% if app.environment == "dev" %}{{ tome.cover|replace({'/public': ''}) }}{% else %}{{ tome.cover }}{% endif %}">
                     {% endif %}
                 </td>
             </tr>

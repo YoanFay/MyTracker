@@ -2,6 +2,18 @@
   color: #ff0000ff;
 }
 
+img{
+  max-width: 100%;
+}
+
+.center-button {
+  position: absolute;
+  top: 50%;
+  left: 50%; /* Si vous voulez centrer également horizontalement */
+  transform: translate(-50%, -50%);
+  max-width: 75%;
+}
+
 #snackbar {
   visibility: hidden;
   min-width: 250px;
@@ -137,5 +149,9 @@ openbtn
 
   .openbtn{
     display: block;
+  }
+
+  .littleFont, .center-button, .littleBtn{
+    font-size: 75%;
   }
 }
