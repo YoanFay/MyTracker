@@ -70,6 +70,7 @@ class UpdateMoviesCommand extends Command
             $data = json_decode($response->getBody(), true);
 
             $movie->setName($data['title']);
+            $movie->setReleaseDate($data['release_date']);
 
             $movie->setSlug($this->strSpecialCharsLower->serie($movie->getName()));
 
