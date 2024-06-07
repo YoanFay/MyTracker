@@ -72,7 +72,7 @@ class UpdateMoviesCommand extends Command
 
             $movie->setName($data['title']);
 
-            $releaseDate = DateTime::createFromFormat('Y/m/d', $data['release_date']);
+            $releaseDate = DateTime::createFromFormat('Y-m-d', $data['release_date']);
 
             if($releaseDate) {
                 $movie->setReleaseDate($releaseDate);
