@@ -4,7 +4,9 @@ namespace App\Controller;
 
 use App\Entity\Movie;
 use App\Form\MovieType;
+use App\Repository\EpisodeShowRepository;
 use App\Repository\MovieGenreRepository;
+use App\Repository\SerieRepository;
 use App\Service\StrSpecialCharsLower;
 use Doctrine\Persistence\ManagerRegistry;
 use GuzzleHttp\Client;
@@ -69,6 +71,22 @@ class MovieController extends AbstractController
             'controller_name' => 'SerieController',
             'form' => $form->createView(),
             'navLinkId' => 'movie',
+        ]);
+    }
+
+    #[Route('/movie/detail/{id}', name: 'movie_detail')]
+    public function detail(MovieRepository $movieRepository, $id): Response
+    {
+
+        $movie = $movieRepository->findOneBy(['id' => $id]);
+
+        $movieGenres = $movie->getMovieGenres();
+
+        return $this->render('movie/details.html.twig', [
+            'controller_name' => 'MovieController',
+            'movie' => $movie,
+            'movieGenres' => $movieGenres,
+            'navLinkId' => 'serie_list',
         ]);
     }
 }
