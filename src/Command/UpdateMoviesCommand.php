@@ -5,6 +5,7 @@ namespace App\Command;
 use App\Repository\MovieGenreRepository;
 use App\Repository\MovieRepository;
 use App\Service\StrSpecialCharsLower;
+use DateTime;
 use Doctrine\Persistence\ObjectManager;
 use GuzzleHttp\Client;
 use Doctrine\Persistence\ManagerRegistry;
@@ -70,7 +71,12 @@ class UpdateMoviesCommand extends Command
             $data = json_decode($response->getBody(), true);
 
             $movie->setName($data['title']);
-            $movie->setReleaseDate($data['release_date']);
+
+            $releaseDate = DateTime::createFromFormat('Y/m/d', $data['release_date']);
+
+            if($releaseDate) {
+                $movie->setReleaseDate($releaseDate);
+            }
 
             $movie->setSlug($this->strSpecialCharsLower->serie($movie->getName()));
 
