@@ -33,6 +33,7 @@
                     </ul>
                 </div>
             </div>
+            <a class="btn btn-primary" href="{{path('movie')}}">Retour</a>
         </div>
         <img {% if movie.artwork %} src="{{ movie.artwork }}" alt="{{ movie.name }} poster" {% else %} src="/image/visuel-a-venir.jpg" alt="Visuel à venir" {% endif %}
                 width="300px" data-bs-toggle="modal" data-bs-target="#imageModal" class="cursor-click">

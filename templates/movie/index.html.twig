@@ -18,9 +18,9 @@
         {% set currentDate = "now"|date("Y-m-d") %}
         {% set startOfYear = currentDate|date("Y-01-01") %}
         {% set daysSinceStartOfYear = currentDate|date_modify('-' ~ startOfYear|date("U") ~ ' seconds')|date("z") + 1 %}
-        
+
         {% for dateKey in sortedDateKeys %}
-        <tbody>
+            <tbody>
             {% set date = dateKey|date("d/m/Y") %}
             {% set dateShow = dateKey|date("Y/m/d") %}
             {% set duration = [] %}
@@ -41,31 +41,31 @@
                     - {{ duration[dateKey]|MsToHM }} de visionnage
                 </th>
             </tr>
-        </tbody>
-        <tbody id="row{{dateKey|date('U')}}" {# class="d-none" #}>
+            </tbody>
+            <tbody id="row{{ dateKey|date('U') }}" {# class="d-none" #}>
             {% set prev = 0 %}
             <div>
-            {% for movie in moviesByDate[dateKey]|sort((a, b) => a.showDate <=> b.showDate) %}
-                <tr>
-                    <td>{{ movie.name }}</td>
-                    {# <td>{{ movie.showDate|date_modify('-' ~ (90 / 100) * movie.duration ~ ' milliseconds')|date("H\\hi") }}</td> #}
-                    <td>{{ movie.showDate|date("H\\hi") }}</td>
-                    <td class="text-end">
-                    {% if movie.artwork %}
-                        <img src="{{movie.artwork}}" width="150px" alt="{{movie.name}} poster">
-                    {% else %}
-                        <img src="/image/visuel-a-venir.jpg" width="150px" alt="Visuel à venir">
-                    {% endif %}
-                    </td>
-                </tr>
+                {% for movie in moviesByDate[dateKey]|sort((a, b) => a.showDate <=> b.showDate) %}
+                    <tr>
+                        <td><a class="text-decoration-none text-black" href="{{ path('movie_detail', {'id': movie.id}) }}">{{ movie.name }}</a></td>
+                        {# <td>{{ movie.showDate|date_modify('-' ~ (90 / 100) * movie.duration ~ ' milliseconds')|date("H\\hi") }}</td> #}
+                        <td>{{ movie.showDate|date("H\\hi") }}</td>
+                        <td class="text-end">
+                            {% if movie.artwork %}
+                                <img src="{{ movie.artwork }}" width="150px" alt="{{ movie.name }} poster">
+                            {% else %}
+                                <img src="/image/visuel-a-venir.jpg" width="150px" alt="Visuel à venir">
+                            {% endif %}
+                        </td>
+                    </tr>
                     {% set globalDuration = globalDuration + movie.duration %}
-            {% endfor %}
+                {% endfor %}
             </div>
-        </tbody>
+            </tbody>
         {% endfor %}
     </table>
 
-<div class="ms-3">
-    <p>{{ (globalDuration / daysSinceStartOfYear)|MsToHM }} de visionnage en moyenne par jour
-</div>
+    <div class="ms-3">
+        <p>{{ (globalDuration / daysSinceStartOfYear)|MsToHM }} de visionnage en moyenne par jour
+    </div>
 {% endblock %}
