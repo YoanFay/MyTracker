@@ -178,6 +178,10 @@ class EpisodeShowController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
+            $date = DateTime::createFromFormat('d/m/Y H:i', $request->request->get('episode_show')['showDate']);
+
+            $episode->setShowDate($date);
+
             $user = $usersRepository->findOneBy(['plexName' => 'yoan.f8']);
 
             $episode->setUser($user);
@@ -202,16 +206,16 @@ class EpisodeShowController extends AbstractController
     public function episodeCategories(EpisodeShowRepository $episodeShowRepository, SerieTypeRepository $serieTypeRepository, $categorie): Response
     {
 
-        $voyelle = array('a','e','i','o','u');
+        $voyelle = array('a', 'e', 'i', 'o', 'u');
 
         $serieType = $serieTypeRepository->find($categorie);
 
         $title = $serieType->getName();
         $nav = strtolower($title);
 
-        if(in_array($title[0], $voyelle)){
+        if (in_array($title[0], $voyelle)) {
             $text = "d'".$nav;
-        }else{
+        } else {
             $text = "de ".$nav;
         }
 
