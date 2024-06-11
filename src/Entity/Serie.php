@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\SerieRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: SerieRepository::class)]
@@ -50,6 +51,18 @@ class Serie
 
     #[ORM\ManyToOne(inversedBy: 'series')]
     private ?SerieType $serieType = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $status = null;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $firstAired = null;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $lastAired = null;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $nextAired = null;
 
     public function __construct()
     {
@@ -280,6 +293,54 @@ class Serie
     public function setSerieType(?SerieType $serieType): static
     {
         $this->serieType = $serieType;
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?string $status): static
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getFirstAired(): ?\DateTimeInterface
+    {
+        return $this->firstAired;
+    }
+
+    public function setFirstAired(?\DateTimeInterface $firstAired): static
+    {
+        $this->firstAired = $firstAired;
+
+        return $this;
+    }
+
+    public function getLastAired(): ?\DateTimeInterface
+    {
+        return $this->lastAired;
+    }
+
+    public function setLastAired(?\DateTimeInterface $lastAired): static
+    {
+        $this->lastAired = $lastAired;
+
+        return $this;
+    }
+
+    public function getNextAired(): ?\DateTimeInterface
+    {
+        return $this->nextAired;
+    }
+
+    public function setNextAired(?\DateTimeInterface $nextAired): static
+    {
+        $this->nextAired = $nextAired;
 
         return $this;
     }

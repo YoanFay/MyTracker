@@ -4,57 +4,86 @@
 
 {% block body %}
 
-<div class="d-flex flex-lg-row flex-column-reverse justify-content-between p-3">
-    <div>
-    <h1 class="d-inline">{{ serie.name }}</h1> <a class="d-inline" href="{{ path('serie_edit', {'id': serie.id}) }}"><i class="material-icons">edit</i></a>
-    <h2>{{ countEpisode }} épisodes vus - {{ totalDuration|MsToHM }} de visionnage total</h2>
-    {% if serie.serieType.name != 'Anime' %}
-    <br>
-    <div class="d-flex flex-row flex-wrap">
-        <div class="m-2">
-            <strong>Genre : </strong>
-            <ul>
-                {% for genre in genres %}
-                    <li>{{ genre.nameFra }}</li>
-                {% endfor %} 
-            </ul>
-        </div>
-        {% for key, tagType in tagTypes %}
-            <div class="m-2">
-                <strong>{{ key }} : </strong><br>
-                <ul>
-                    {% for tag in tagType %}
-                        <li>{% if tag.nameFra%}{{ tag.nameFra }}{% else %}{{ tag.nameEng }}{% endif %}</li>
-                    {% endfor %} 
-                </ul>
+    <div class="d-flex flex-lg-row flex-column-reverse justify-content-between p-3">
+        <div>
+            <h1 class="d-inline">{{ serie.name }}</h1> <a class="d-inline"
+                                                          href="{{ path('serie_edit', {'id': serie.id}) }}"><i
+                        class="material-icons">edit</i></a>
+            <h2>{{ countEpisode }} épisodes vus - {{ totalDuration|MsToHM }} de visionnage total</h2>
+            <br>
+            <div class="d-flex flex-column flex-wrap">
+                <div class="m-2">
+                    <ul>
+                        {% if serie.firstAired %}
+                            <li>
+                                <strong>Date de sortie du premier épisode : </strong>{{ serie.firstAired|dateFNoDay }}
+                            </li>
+                        {% endif %}
+                        {% if serie.lastAired %}
+                            <li>
+                                <strong>Date de sortie du dernier épisode : </strong>{{ serie.lastAired|dateFNoDay }}
+                            </li>
+                        {% endif %}
+                        {% if serie.nextAired %}
+                            <li>
+                                <strong>Date de sortie du prochain épisode : </strong>{{ serie.nextAired|dateFNoDay }}
+                            </li>
+                        {% elseif serie.status == "Continuing" %}
+                            <li>
+                                <strong>Date de sortie du prochain épisode : </strong> En pause
+                            </li>
+                        {% elseif serie.status == "Ended" %}
+                            <li>
+                                <strong>Date de sortie du prochain épisode : </strong> Terminer
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+                <div class="d-flex flex-row flex-wrap">
+                {% if serie.serieType.name != 'Anime' %}
+                    <div class="m-2">
+                        <strong>Genre : </strong>
+                        <ul>
+                            {% for genre in genres %}
+                                <li>{{ genre.nameFra }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% for key, tagType in tagTypes %}
+                        <div class="m-2">
+                            <strong>{{ key }} : </strong><br>
+                            <ul>
+                                {% for tag in tagType %}
+                                    <li>{% if tag.nameFra %}{{ tag.nameFra }}{% else %}{{ tag.nameEng }}{% endif %}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="m-2">
+                        <strong>Genres : </strong>
+                        <ul>
+                            {% for genre in animeGenres %}
+                                <li>{{ genre.name }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="m-2">
+                        <strong>Thèmes : </strong>
+                        <ul>
+                            {% for theme in animeThemes %}
+                                <li>{{ theme.name }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+                </div>
             </div>
-        {% endfor %} 
         </div>
-    {% else %}
-    <br>
-    <div class="d-flex flex-row flex-wrap">
-        <div class="m-2">
-            <strong>Genres : </strong>
-            <ul>
-                {% for genre in animeGenres %}
-                    <li>{{ genre.name }}</li>
-                {% endfor %} 
-            </ul>
-        </div>
-        <div class="m-2">
-            <strong>Thèmes : </strong>
-            <ul>
-                {% for theme in animeThemes %}
-                    <li>{{ theme.name }}</li>
-                {% endfor %} 
-            </ul>
-        </div>
-        </div>
-    {% endif %}
+        <img {% if serie.artwork %} src="{{ serie.artwork }}" alt="{{ serie.name }} poster" {% else %} src="/image/visuel-a-venir.jpg" alt="Visuel à venir" {% endif %}
+                width="300px" data-bs-toggle="modal" data-bs-target="#imageModal" class="cursor-click">
     </div>
-    <img {% if serie.artwork %} src="{{serie.artwork}}" alt="{{serie.name}} poster" {% else %} src="/image/visuel-a-venir.jpg" alt="Visuel à venir" {% endif %} width="300px" data-bs-toggle="modal" data-bs-target="#imageModal" class="cursor-click">
-</div>
-    
+
 
     <table class="table table-hover table-striped table-bordered">
         <thead>
@@ -77,19 +106,21 @@
         </tbody>
     </table>
 
-<!-- Modal -->
-<div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="imageModalLabel">Image en Plein Écran</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body text-center" style="overflow: hidden;">
-          <img {% if serie.artwork %} src="{{serie.artwork}}" alt="{{serie.name}} poster" {% else %} src="/image/visuel-a-venir.jpg" alt="Visuel à venir" {% endif %} style="max-height: calc(100vh - 50px); width: auto; max-width: 100%;">
-      </div>
+    <!-- Modal -->
+    <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="imageModalLabel">Image en Plein Écran</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center" style="overflow: hidden;">
+                    <img {% if serie.artwork %} src="{{ serie.artwork }}" alt="{{ serie.name }} poster" {% else %} src="/image/visuel-a-venir.jpg" alt="Visuel à venir" {% endif %}
+                            style="max-height: calc(100vh - 50px); width: auto; max-width: 100%;">
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
 
 {% endblock %}

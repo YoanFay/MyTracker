@@ -97,39 +97,42 @@ openbtn
   height: 3px;
   transition: all .4s;
   width: 50%;
-  &:nth-of-type(1) {
-      top: 16px;
-  }
-  &:nth-of-type(2) {
-      top: 24px;
-  }
-  &:nth-of-type(3) {
-      top: 32px;
-  }
 }
+
+.openbtn span:nth-of-type(1) {
+   top: 16px;
+ }
+
+.openbtn span:nth-of-type(2) {
+   top: 24px;
+ }
+
+.openbtn span:nth-of-type(3) {
+   top: 32px;
+ }
 
 .openbtn.active .openbtn-area {
   transform: rotate(360deg);
 }
 
 
-.openbtn.active span{
-  &:nth-of-type(1) {
-      width: 45%;
-      top: 18px;
-      left: 14px;
-      transform: translateY(6px) rotate(-45deg);
-  }
-  &:nth-of-type(2) {
-      opacity: 0;
-  }
-  &:nth-of-type(3) {
-      width: 45%;
-      top: 30px;
-      left: 14px;
-      transform: translateY(-6px) rotate(45deg);
-  }
-}
+.openbtn.active span:nth-of-type(1) {
+   width: 45%;
+   top: 18px;
+   left: 14px;
+   transform: translateY(6px) rotate(-45deg);
+ }
+
+.openbtn.active span:nth-of-type(2) {
+   opacity: 0;
+ }
+
+.openbtn.active span:nth-of-type(3) {
+   width: 45%;
+   top: 30px;
+   left: 14px;
+   transform: translateY(-6px) rotate(45deg);
+ }
 
 @media only screen and (max-width: 600px) {
 
@@ -137,11 +140,11 @@ openbtn
     width: 100%;
     margin-left: initial;
   }
-  
+
   .menu{
     display: none;
   }
-  
+
   .menu-active{
     display: block !important;
     position: absolute;
