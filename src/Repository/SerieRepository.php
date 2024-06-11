@@ -127,7 +127,7 @@ class SerieRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('s')
             ->andWhere('s.nextAired IS NULL OR s.nextAired < CURRENT_DATE()')
-            ->andWhere('s.status <> :status')
+            ->andWhere('s.status <> :status OR s.status IS NULL')
             ->setParameter('status', "Ended")
             ->getQuery()
             ->getResult()
