@@ -42,8 +42,8 @@ class UpdateDateCommand extends Command
     protected function configure(): void
     {
 
-        $this->setName('app:update-id');
-        $this->setDescription('Pour les ID des épisodes et des séries');
+        $this->setName('app:update-date');
+        $this->setDescription('Pour les date des épisodes et des séries');
     }
 
 
