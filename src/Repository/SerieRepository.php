@@ -126,7 +126,7 @@ class SerieRepository extends ServiceEntityRepository
     public function UpdateAired(): array
     {
         return $this->createQueryBuilder('s')
-            ->andWhere('s.nextAired IS NULL OR s.nextAired < NOW()')
+            ->andWhere('s.nextAired IS NULL OR s.nextAired < CURRENT_DATE()')
             ->andWhere('s.status <> :status')
             ->setParameter('status', "Ended")
             ->getQuery()
