@@ -179,10 +179,28 @@ class UpdateDateCommand extends Command
                 $lastAired = null;
             }
 
-            $serie->setNextAired($nextAired);
             $serie->setLastAired($lastAired);
 
-            $serie->setStatus($data['data']['status']['name']);
+            if ($serie->getStatus() !== $data['data']['status']['name']) {
+
+                if(!isset($serieUpdate)) {
+
+                    $serieUpdate = $this->serieUpdateRepository->serieDate($serie, $today->format('Y-m-d'));
+
+                    if (!$serieUpdate) {
+                        $serieUpdate = new SerieUpdate();
+                        $serieUpdate->setSerie($serie);
+                        $serieUpdate->setUpdatedAt($today);
+                    }
+                }
+
+                $serieUpdate->setOldStatus($serie->getStatus());
+                $serieUpdate->setNewStatus($data['data']['status']['name']);
+                $serie->setStatus($data['data']['status']['name']);
+
+                $this->manager->persist($serieUpdate);
+
+            }
 
             $this->manager->persist($serie);
             $this->manager->flush();
