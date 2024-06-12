@@ -26,7 +26,7 @@ class SerieUpdateRepository extends ServiceEntityRepository
     /**
      * @throws NonUniqueResultException
      */
-    public function serieDate($serie, $date): array
+    public function serieDate($serie, $date)
     {
         return $this->createQueryBuilder('s')
             ->andWhere('s.serie = :serie')
