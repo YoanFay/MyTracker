@@ -34,10 +34,31 @@ class Age extends AbstractExtension
 
         $age = $today->format('Y') - $date->format('Y');
 
-        $date->setDate('2024', $date->format('m'), $date->format('d'));
+        if($age > 0) {
 
-        if($date >= $today){
-            $age--;
+            $date->setDate('2024', $date->format('m'), $date->format('d'));
+
+            if ($date >= $today) {
+                $age--;
+            }
+
+            $age .= " ans";
+
+        }else{
+
+            $age = $today->format('m') - $date->format('m');
+
+            if($age > 0){
+
+                if ($date->format('d') >= $today->format('d')) {
+                    $age--;
+                }
+
+                $age .= " mois";
+
+            }else{
+                $age = $today->format('d') - $date->format('d')." jours";
+            }
         }
 
         return $age;
