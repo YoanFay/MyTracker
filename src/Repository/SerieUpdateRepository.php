@@ -24,7 +24,6 @@ class SerieUpdateRepository extends ServiceEntityRepository
 
 
     /**
-     * @return SerieUpdate[] Returns an array of Serie objects
      * @throws NonUniqueResultException
      */
     public function serieDate($serie, $date): array
