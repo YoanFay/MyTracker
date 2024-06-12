@@ -123,11 +123,24 @@ class SerieRepository extends ServiceEntityRepository
     /**
      * @return Serie[] Returns an array of Serie objects
      */
-    public function UpdateAired(): array
+    public function updateAired(): array
     {
         return $this->createQueryBuilder('s')
             ->andWhere('s.nextAired IS NULL OR s.nextAired < CURRENT_DATE()')
             ->andWhere('s.status <> :status OR s.status IS NULL')
+            ->setParameter('status', "Ended")
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    /**
+     * @return Serie[] Returns an array of Serie objects
+     */
+    public function ended(): array
+    {
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.status = :status')
             ->setParameter('status', "Ended")
             ->getQuery()
             ->getResult()

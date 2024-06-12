@@ -64,6 +64,9 @@ class Serie
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $nextAired = null;
 
+    #[ORM\OneToMany(mappedBy: 'serie', targetEntity: SerieUpdate::class)]
+    private Collection $serieUpdates;
+
     public function __construct()
     {
         $this->episodeShows = new ArrayCollection();
@@ -71,6 +74,7 @@ class Serie
         $this->tags = new ArrayCollection();
         $this->animeGenres = new ArrayCollection();
         $this->animeThemes = new ArrayCollection();
+        $this->serieUpdates = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -341,6 +345,36 @@ class Serie
     public function setNextAired(?\DateTimeInterface $nextAired): static
     {
         $this->nextAired = $nextAired;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, SerieUpdate>
+     */
+    public function getSerieUpdates(): Collection
+    {
+        return $this->serieUpdates;
+    }
+
+    public function addSerieUpdate(SerieUpdate $serieUpdate): static
+    {
+        if (!$this->serieUpdates->contains($serieUpdate)) {
+            $this->serieUpdates->add($serieUpdate);
+            $serieUpdate->setSerie($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSerieUpdate(SerieUpdate $serieUpdate): static
+    {
+        if ($this->serieUpdates->removeElement($serieUpdate)) {
+            // set the owning side to null (unless already changed)
+            if ($serieUpdate->getSerie() === $this) {
+                $serieUpdate->setSerie(null);
+            }
+        }
 
         return $this;
     }
