@@ -34,9 +34,11 @@ class Age extends AbstractExtension
 
         $age = $today->format('Y') - $date->format('Y');
 
-        $date->setDate('2024', $date->format('m'), $date->format('d'));
+        $anniversaire = $date;
 
-        if ($date >= $today) {
+        $anniversaire->setDate('2024', $date->format('m'), $date->format('d'));
+
+        if ($anniversaire >= $today) {
             $age--;
         }
 
