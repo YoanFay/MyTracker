@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\SerieUpdate;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -21,8 +22,10 @@ class SerieUpdateRepository extends ServiceEntityRepository
         parent::__construct($registry, SerieUpdate::class);
     }
 
+
     /**
      * @return SerieUpdate[] Returns an array of Serie objects
+     * @throws NonUniqueResultException
      */
     public function serieDate($serie, $date): array
     {
@@ -32,7 +35,7 @@ class SerieUpdateRepository extends ServiceEntityRepository
             ->andWhere('s.updatedAt = :date')
             ->setParameter('date', $date)
             ->getQuery()
-            ->getResult()
+            ->getOneOrNullResult()
             ;
     }
 
