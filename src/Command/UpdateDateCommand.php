@@ -2,10 +2,7 @@
 
 namespace App\Command;
 
-use App\Entity\EpisodeShow;
-use App\Entity\Serie;
 use App\Entity\SerieUpdate;
-use App\Repository\EpisodeShowRepository;
 use App\Repository\SerieRepository;
 use App\Repository\SerieUpdateRepository;
 use DateTime;
@@ -155,7 +152,7 @@ class UpdateDateCommand extends Command
                 $nextAired = null;
             }
 
-            if ($serie->getNextAired()->format('Y-m-d') !== $nextAired->format('Y-m-d')) {
+            if ($serie->getNextAired() !== $nextAired) {
 
                 $serieUpdate = $this->serieUpdateRepository->serieDate($serie, $today->format('Y-m-d'));
 
