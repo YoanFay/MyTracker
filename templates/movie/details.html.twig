@@ -13,7 +13,7 @@
                         <ul>
                             {% if movie.releaseDate %}
                             <li>
-                                <strong>Date de sortie : </strong>{{ movie.releaseDate|dateFNoDay }}
+                                <strong>Date de sortie : </strong>{{ movie.releaseDate|dateFNoDay }} - ( {{ movie.releaseDate|age }} ans )
                             </li>
                             {% endif %}
                             <li>

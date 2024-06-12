@@ -16,7 +16,7 @@
                     <ul>
                         {% if serie.firstAired %}
                             <li>
-                                <strong>Date de sortie du premier épisode : </strong>{{ serie.firstAired|dateFNoDay }}
+                                <strong>Date de sortie du premier épisode : </strong>{{ serie.firstAired|dateFNoDay }} - ( {{ serie.firstAired|age }} ans )
                             </li>
                         {% endif %}
                         {% if serie.lastAired %}
