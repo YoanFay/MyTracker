@@ -11,6 +11,7 @@ class Age extends AbstractExtension
 {
     public function getFilters(): array
     {
+
         return [
 // If your filter generates SAFE HTML, you should add a third
 // parameter: ['is_safe' => ['html']]
@@ -19,50 +20,25 @@ class Age extends AbstractExtension
         ];
     }
 
+
     public function getFunctions(): array
     {
+
         return [
             new TwigFunction('function_name', [$this, 'doSomething']),
         ];
     }
 
-    public function calculAge($date) {
+
+    public function calculAge($date)
+    {
 
         $today = new DateTime();
 
         $today->setTime(0, 0);
 
-        $age = $today->format('Y') - $date->format('Y');
+        $diff = date_diff($date, $today);
 
-        $anniversaire = $date;
-
-        $anniversaire->setDate('2024', $date->format('m'), $date->format('d'));
-
-        if ($anniversaire >= $today) {
-            $age--;
-        }
-
-        if($age > 0) {
-
-            $age .= " ans";
-
-        }else{
-
-            $age = $today->format('m') - $date->format('m');
-
-            if ($date->format('d') >= $today->format('d')) {
-                $age--;
-            }
-
-            if($age > 0){
-
-                $age .= " mois";
-
-            }else{
-                $age = $today->format('d') - $date->format('d')." jours";
-            }
-        }
-
-        return $age;
+        return $diff->format('%y')." ans ".$diff->format('%m')." mois ".$diff->format('%d')." jours";
     }
 }
