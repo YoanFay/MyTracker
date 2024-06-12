@@ -116,6 +116,7 @@ class UpdateDateCommand extends Command
 
                 if (!$serieUpdate) {
                     $serieUpdate = new SerieUpdate();
+                    $serieUpdate->setSerie($serie);
                     $serieUpdate->setUpdatedAt($today);
                 }
 
@@ -158,6 +159,7 @@ class UpdateDateCommand extends Command
 
                 if (!$serieUpdate) {
                     $serieUpdate = new SerieUpdate();
+                    $serieUpdate->setSerie($serie);
                     $serieUpdate->setUpdatedAt($today);
                 }
 
