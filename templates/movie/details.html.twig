@@ -12,8 +12,8 @@
                 <div class="m-2">
                         <ul>
                             {% if movie.releaseDate %}
-                            <li>
-                                <strong>Date de sortie : </strong>{{ movie.releaseDate|dateFNoDay }} - ( {{ movie.releaseDate|age }} )
+                            <li data-toggle="tooltip" data-placement="top" title="{{ movie.releaseDate|age }}">
+                                <strong>Date de sortie : </strong>{{ movie.releaseDate|dateFNoDay }}
                             </li>
                             {% endif %}
                             <li>
@@ -55,5 +55,21 @@
             </div>
         </div>
     </div>
+
+{% endblock %}
+
+{% block javascript %}
+
+    <script>
+        $(document).ready(function(){
+            if ('ontouchstart' in document.documentElement) {
+                $('[data-toggle="tooltip"]').on('click', function () {
+                    $(this).tooltip('show');
+                });
+            } else {
+                $('[data-toggle="tooltip"]').tooltip();
+            }
+        });
+    </script>
 
 {% endblock %}

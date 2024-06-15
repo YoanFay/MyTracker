@@ -15,12 +15,12 @@
                 <div class="m-2">
                     <ul>
                         {% if serie.firstAired %}
-                            <li>
-                                <strong>Date de sortie du premier épisode : </strong>{{ serie.firstAired|dateFNoDay }} - ( {{ serie.firstAired|age }} )
+                            <li data-toggle="tooltip" data-placement="top" title="{{ serie.firstAired|age }}">
+                                <strong>Date de sortie du premier épisode : </strong>{{ serie.firstAired|dateFNoDay }}
                             </li>
                         {% endif %}
                         {% if serie.lastAired %}
-                            <li>
+                            <li data-toggle="tooltip" data-placement="top" title="{{ serie.lastAired|age }}">
                                 <strong>Date de sortie du dernier épisode : </strong>{{ serie.lastAired|dateFNoDay }}
                             </li>
                         {% endif %}
@@ -122,5 +122,21 @@
             </div>
         </div>
     </div>
+
+{% endblock %}
+
+{% block javascript %}
+
+    <script>
+        $(document).ready(function(){
+            if ('ontouchstart' in document.documentElement) {
+                $('[data-toggle="tooltip"]').on('click', function () {
+                    $(this).tooltip('show');
+                });
+            } else {
+                $('[data-toggle="tooltip"]').tooltip();
+            }
+        });
+    </script>
 
 {% endblock %}
