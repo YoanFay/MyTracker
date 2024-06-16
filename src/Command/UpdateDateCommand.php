@@ -147,7 +147,7 @@ class UpdateDateCommand extends Command
 
             if ($data['data']['nextAired']) {
 
-                $nextAired = DateTime::createFromFormat('Y-m-d', $data['data']['nextAired']);
+                $nextAired = DateTime::createFromFormat('Y-m-d H:i', $data['data']['nextAired']." 00:00");
 
             } else {
                 $nextAired = null;
@@ -183,7 +183,7 @@ class UpdateDateCommand extends Command
 
             if ($serie->getStatus() !== $data['data']['status']['name']) {
 
-                if(!isset($serieUpdate)) {
+                if (!isset($serieUpdate)) {
 
                     $serieUpdate = $this->serieUpdateRepository->serieDate($serie, $today->format('Y-m-d'));
 
