@@ -51,7 +51,7 @@
                 </div>
             </div>
         </div>
-        <img {% if game.cover %} src="{{ game.cover }}" alt="{{ game.name }} poster" {% else %} src="/image/visuel-a-venir.jpg" alt="Visuel à venir" {% endif %}
+        <img {% if game.cover %} src="{% if app.environment == "dev" %}{{ game.cover|replace({'/public': ''}) }}{% else %}{{ game.cover }}{% endif %}" alt="{{ game.name }} poster" {% else %} src="/image/visuel-a-venir.jpg" alt="Visuel à venir" {% endif %}
                 width="auto" height="500px" data-bs-toggle="modal" data-bs-target="#imageModal" class="cursor-click">
     </div>
 {% endblock %}

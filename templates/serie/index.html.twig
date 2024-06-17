@@ -19,7 +19,7 @@
                 <td>{{ serie.serieType.name }}</td>
                 <td>
     {% if serie.artwork %}
-    <img src="{{serie.artwork}}" width="150px" alt="{{serie.name}} poster">
+    <img src="{% if app.environment == "dev" %}{{ serie.artwork|replace({'/public': ''}) }}{% else %}{{ serie.artwork }}{% endif %}" width="150px" alt="{{serie.name}} poster">
     {% else %}
     <img src="/image/visuel-a-venir.jpg" width="150px" alt="Visuel à venir">
     {% endif %}

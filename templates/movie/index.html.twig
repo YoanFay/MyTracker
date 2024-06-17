@@ -52,7 +52,7 @@
                         <td>{{ movie.showDate|date("H\\hi") }}</td>
                         <td class="text-end">
                             {% if movie.artwork %}
-                                <img src="{{ movie.artwork }}" width="150px" alt="{{ movie.name }} poster">
+                                <img src="{% if app.environment == "dev" %}{{ movie.artwork|replace({'/public': ''}) }}{% else %}{{ movie.artwork }}{% endif %}" width="150px" alt="{{ movie.name }} poster">
                             {% else %}
                                 <img src="/image/visuel-a-venir.jpg" width="150px" alt="Visuel à venir">
                             {% endif %}

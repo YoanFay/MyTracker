@@ -80,7 +80,7 @@
                 </div>
             </div>
         </div>
-        <img {% if serie.artwork %} src="{{ serie.artwork }}" alt="{{ serie.name }} poster" {% else %} src="/image/visuel-a-venir.jpg" alt="Visuel à venir" {% endif %}
+        <img {% if serie.artwork %} src="{% if app.environment == "dev" %}{{ serie.artwork|replace({'/public': ''}) }}{% else %}{{ serie.artwork }}{% endif %}" alt="{{ serie.name }} poster" {% else %} src="/image/visuel-a-venir.jpg" alt="Visuel à venir" {% endif %}
                 width="300px" data-bs-toggle="modal" data-bs-target="#imageModal" class="cursor-click">
     </div>
 
@@ -116,7 +116,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body text-center" style="overflow: hidden;">
-                    <img {% if serie.artwork %} src="{{ serie.artwork }}" alt="{{ serie.name }} poster" {% else %} src="/image/visuel-a-venir.jpg" alt="Visuel à venir" {% endif %}
+                    <img {% if serie.artwork %} src="{% if app.environment == "dev" %}{{ serie.artwork|replace({'/public': ''}) }}{% else %}{{ serie.artwork }}{% endif %}" alt="{{ serie.name }} poster" {% else %} src="/image/visuel-a-venir.jpg" alt="Visuel à venir" {% endif %}
                             style="max-height: calc(100vh - 50px); width: auto; max-width: 100%;">
                 </div>
             </div>
