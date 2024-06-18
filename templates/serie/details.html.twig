@@ -25,7 +25,7 @@
                             </li>
                         {% endif %}
                         {% if serie.nextAired %}
-                            <li>
+                            <li data-toggle="tooltip" data-placement="top" title="{{ serie.nextAired|age }}">
                                 <strong>Date de sortie du prochain épisode : </strong>{{ serie.nextAired|dateFNoDay }}
                             </li>
                         {% elseif serie.status == "Continuing" %}

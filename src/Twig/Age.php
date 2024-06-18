@@ -34,18 +34,30 @@ class Age extends AbstractExtension
 
         $diff = date_diff($date, $today);
 
-        $age = "";
+        $age = "Dans ";
+
+        if ($date < $today){
+            $age = "Il y a ";
+        }
+
+        $noY = false;
+        $noM = false;
+        $noD = false;
 
         if($diff->format('%y') > 0){
 
             $age .= $diff->format('%y')." ans ";
 
+        }else{
+            $noY = true;
         }
 
         if ($diff->format('%m') > 0){
 
             $age .= $diff->format('%m')." mois ";
 
+        }else{
+            $noM = true;
         }
 
         if ($diff->format('%d') > 0){
@@ -54,6 +66,11 @@ class Age extends AbstractExtension
 
         }else{
             $age = substr($age, 0, -1);
+            $noD = true;
+        }
+
+        if ($noY && $noM && $noD){
+            $age = "Aujourd'hui";
         }
 
         return $age;
