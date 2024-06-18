@@ -135,6 +135,14 @@ class UpdateDateCommand extends Command
 
         foreach ($series as $serie) {
 
+            $serieUpdate = $this->serieUpdateRepository->serieDate($serie, $today->format('Y-m-d'));
+
+            if (!$serieUpdate) {
+                $serieUpdate = new SerieUpdate();
+                $serieUpdate->setSerie($serie);
+                $serieUpdate->setUpdatedAt($today);
+            }
+
             $response = $client->get($apiUrl."/series/".$serie->getTvdbId()."/extended?meta=translations&short=true", [
                 'headers' => [
                     'Authorization' => 'Bearer '.$token,
@@ -153,15 +161,22 @@ class UpdateDateCommand extends Command
                 $nextAired = null;
             }
 
-            if ($serie->getNextAired() !== $nextAired) {
+            if ($serie->getNextAired() === null && $nextAired !== null) {
 
-                $serieUpdate = $this->serieUpdateRepository->serieDate($serie, $today->format('Y-m-d'));
+                $serieUpdate->setOldNextAired(null);
+                $serieUpdate->setNewNextAired($nextAired);
+                $serie->setNextAired($nextAired);
 
-                if (!$serieUpdate) {
-                    $serieUpdate = new SerieUpdate();
-                    $serieUpdate->setSerie($serie);
-                    $serieUpdate->setUpdatedAt($today);
-                }
+                $this->manager->persist($serieUpdate);
+            } else if ($serie->getNextAired() !== null && $nextAired === null) {
+
+                $serieUpdate->setOldNextAired($serie->getNextAired());
+                $serieUpdate->setNewNextAired(null);
+                $serie->setNextAired(null);
+
+                $this->manager->persist($serieUpdate);
+
+            } else if ($serie->getNextAired() !== null && $nextAired !== null && $serie->getNextAired()->format('Y-m-d') !== $nextAired->format('Y-m-d')) {
 
                 $serieUpdate->setOldNextAired($serie->getNextAired());
                 $serieUpdate->setNewNextAired($nextAired);
@@ -182,17 +197,6 @@ class UpdateDateCommand extends Command
             $serie->setLastAired($lastAired);
 
             if ($serie->getStatus() !== $data['data']['status']['name']) {
-
-                if (!isset($serieUpdate)) {
-
-                    $serieUpdate = $this->serieUpdateRepository->serieDate($serie, $today->format('Y-m-d'));
-
-                    if (!$serieUpdate) {
-                        $serieUpdate = new SerieUpdate();
-                        $serieUpdate->setSerie($serie);
-                        $serieUpdate->setUpdatedAt($today);
-                    }
-                }
 
                 $serieUpdate->setOldStatus($serie->getStatus());
                 $serieUpdate->setNewStatus($data['data']['status']['name']);
