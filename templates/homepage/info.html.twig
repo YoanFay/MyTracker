@@ -7,10 +7,10 @@
     <div class="card col-12">
         <div class="card-body p-0">
             {% for update in updateByDate %}
-                <p class="border-bottom m-0 p-2">{{ update.name }}
-                    {% if update.status and update.status == "Ended" %} - Anime terminé {% endif %}
-                    {% if update.status and update.status == "Continuing" %} - Reprise de l'anime {% endif %}
-                    {% if update.next %} - Le prochain épisode sera le {{ update.next|dateF }} {% endif %}
+                <p class="border-bottom m-0 p-2">
+                    {% if update.status and update.status == "Ended" %}{{ update.name }} est terminé {% endif %}
+                    {% if update.status and update.status == "Continuing" %}Reprise de {{ update.name }} {% endif %}
+                    {% if update.next %}{{ update.name }} - Le prochain épisode sera le {{ update.next|dateF }} {% endif %}
                 </p>
             {% endfor %}
         </div>
