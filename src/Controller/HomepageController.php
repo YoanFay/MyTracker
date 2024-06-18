@@ -68,11 +68,8 @@ class HomepageController extends AbstractController
     {
         $count = $request->request->get('count', 0);
 
-        dump($count - 1);
-
         $date = new DateTime($count.' days');
         $date->setTime(0, 0);
-        dump($date);
 
         $serieUpdate = $serieUpdateRepository->findBy(['updatedAt' => $date]);
 
