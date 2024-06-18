@@ -161,30 +161,18 @@ class UpdateDateCommand extends Command
                 $nextAired = null;
             }
 
-            if ($serie->getNextAired() === null && $nextAired !== null) {
-
-                $serieUpdate->setOldNextAired(null);
-                $serieUpdate->setNewNextAired($nextAired);
-                $serie->setNextAired($nextAired);
-
-                $this->manager->persist($serieUpdate);
-            } else if ($serie->getNextAired() !== null && $nextAired === null) {
-
-                $serieUpdate->setOldNextAired($serie->getNextAired());
-                $serieUpdate->setNewNextAired(null);
-                $serie->setNextAired(null);
-
-                $this->manager->persist($serieUpdate);
-
-            } else if ($serie->getNextAired() !== null && $nextAired !== null && $serie->getNextAired()->format('Y-m-d') !== $nextAired->format('Y-m-d')) {
-
+            if (
+                ($serie->getNextAired() === null && $nextAired !== null) ||
+                ($serie->getNextAired() !== null && $nextAired === null) ||
+                ($serie->getNextAired() !== null && $nextAired !== null && $serie->getNextAired()->format('Y-m-d') !== $nextAired->format('Y-m-d'))
+            ) {
                 $serieUpdate->setOldNextAired($serie->getNextAired());
                 $serieUpdate->setNewNextAired($nextAired);
                 $serie->setNextAired($nextAired);
 
                 $this->manager->persist($serieUpdate);
-
             }
+
 
             if ($data['data']['lastAired']) {
 
