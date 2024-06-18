@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use DateTime;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
@@ -49,5 +50,34 @@ class TimeService
         }
         
         return $secondes;
+    }
+
+    public function frenchFormatDate($date): string
+    {
+
+        if (is_string($date)) {
+            $date = new DateTime($date);
+        }
+
+        // Jour de la semaine
+        $joursSemaine = array('Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi');
+        $jourSemaine = $joursSemaine[$date->format('w')];
+
+        // Numéro du jour avec suffixe (1er, 2e, etc.)
+        $numeroJour = $date->format('j');
+        $suffixe = ($numeroJour == 1) ? 'er' : '';
+
+        // Mois
+        $moisEnFrancais = array(
+            'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet',
+            'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'
+        );
+        $mois = $moisEnFrancais[$date->format('n') - 1];
+
+        // Année
+        $annee = $date->format('Y');
+
+        // Affichage de la date
+        return $jourSemaine." ".$numeroJour.$suffixe." ".$mois." ".$annee;
     }
 }

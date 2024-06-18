@@ -78,8 +78,51 @@
         </div>
     </div>
 
+    <div id="divInfo" class="d-lg-flex flex-lg-row justify-content-lg-around mt-lg-12 mt-5">
+    </div>
+    <div class="col-12 d-flex flex-row">
+        <div id="loadSpin" class="card-body py-1 py-lg-0">
+            <div class="d-flex justify-content-center align-items-center">
+                <div class="spinner-border" role="status">
+                    <span class="sr-only"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}
 
 {% block javascript %}
+
+    <script>
+
+        $.ajax({
+            url: "{{ path('home_info') }}",
+            method: "POST",
+            success: function (data) {
+                $("#divInfo").html(data);
+                $('#loadSpin').addClass('d-none');
+            }
+        })
+
+        function changeDate(count){
+
+            $("#divInfo").html('');
+            $('#loadSpin').removeClass('d-none');
+
+            $.ajax({
+                url: "{{ path('home_info') }}",
+                method: "POST",
+                data: {
+                    'count': count,
+                },
+                success: function (data) {
+                    $("#divInfo").html(data);
+                    $('#loadSpin').addClass('d-none');
+                }
+            })
+        }
+
+    </script>
 
 {% endblock %}

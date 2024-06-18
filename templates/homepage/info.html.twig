@@ -1,0 +1,18 @@
+<div class="card col-12 col-lg-11">
+    <div class="card-header d-flex justify-content-between">
+        <i class="material-icons d-flex align-items-center cursor-click" onclick="changeDate({{ previous }})">arrow_back_ios</i>
+        <p class="my-2">Information du {{ date }}</p>
+        <i class="material-icons d-flex align-items-center {% if next > 0 %} user-select-none{%else%} cursor-click {% endif %}" {% if next <= 0 %} onclick="changeDate({{ next }})" {% endif %}>arrow_forward_ios</i>
+    </div>
+    <div class="card col-12">
+        <div class="card-body p-0">
+            {% for update in updateByDate %}
+                <p class="border-bottom m-0 p-2">{{ update.name }}
+                    {% if update.status and update.status == "Ended" %} - Anime terminé {% endif %}
+                    {% if update.status and update.status == "Continuing" %} - Reprise de l'anime {% endif %}
+                    {% if update.next %} - Le prochain épisode sera le {{ update.next|dateF }} {% endif %}
+                </p>
+            {% endfor %}
+        </div>
+    </div>
+</div>

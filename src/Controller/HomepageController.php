@@ -4,9 +4,11 @@ namespace App\Controller;
 
 use App\Repository\GameRepository;
 use App\Repository\MangaTomeRepository;
+use App\Repository\SerieUpdateRepository;
 use DateTime;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Bugsnag\BugsnagBundle\DependencyInjection\ClientFactory;
@@ -53,7 +55,45 @@ class HomepageController extends AbstractController
             'countGameEnd' => $countGameEnd,
             'countGameEndYear' => $countGameEndYear,
             'countGameFullEnd' => $countGameFullEnd,
-            'countGameFullEndYear' => $countGameFullEndYear,
+            'countGameFullEndYear' => $countGameFullEndYear
+        ]);
+    }
+
+
+    /**
+     * @Route("/homeInfo", name="home_info")
+     * @throws Exception
+     */
+    public function homeInfo(SerieUpdateRepository $serieUpdateRepository, TimeService $timeService, Request $request): Response
+    {
+        $count = $request->request->get('count', 0);
+
+        dump($count - 1);
+
+        $date = new DateTime($count.' days');
+        $date->setTime(0, 0);
+        dump($date);
+
+        $serieUpdate = $serieUpdateRepository->findBy(['updatedAt' => $date]);
+
+        $updateByDate = [];
+
+        foreach ($serieUpdate as $update) {
+
+            $newInfo = [
+                'name' => $update->getSerie()->getName(),
+                'next' => $update->getNewNextAired(),
+                'status' => $update->getNewStatus()
+            ];
+
+            $updateByDate[] = $newInfo;
+        }
+
+        return $this->render("homepage/info.html.twig", [
+            'next' => $count + 1,
+            'previous' => $count - 1,
+            'date' => $timeService->frenchFormatDate($date),
+            'updateByDate' => $updateByDate,
         ]);
     }
 }
