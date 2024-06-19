@@ -25,19 +25,16 @@ class UpdateArtworkCommand extends Command
 
     private SerieRepository $serieRepository;
 
-    private EpisodeShowRepository $episodeShowRepository;
-
     private ObjectManager $manager;
     
     private KernelInterface $kernel;
 
 
-    public function __construct(SerieRepository $serieRepository, EpisodeShowRepository $episodeShowRepository, ManagerRegistry $managerRegistry, KernelInterface $kernel)
+    public function __construct(SerieRepository $serieRepository, ManagerRegistry $managerRegistry, KernelInterface $kernel)
     {
 
         parent::__construct();
         $this->serieRepository = $serieRepository;
-        $this->episodeShowRepository = $episodeShowRepository;
         $this->manager = $managerRegistry->getManager();
         $this->kernel = $kernel;
     }
@@ -112,8 +109,16 @@ class UpdateArtworkCommand extends Command
             
             // Lien de l'image à télécharger
             $lienImage = $data['artworks'][0]['image'];
-                
-            $cover = imagecreatefromstring(file_get_contents($lienImage));
+
+            $cover = null;
+
+            $fileContent = file_get_contents($lienImage);
+
+            if($fileContent !== false){
+
+                $cover = imagecreatefromstring($fileContent);
+
+            }
             
             $projectDir = $this->kernel->getProjectDir();
 
@@ -121,7 +126,7 @@ class UpdateArtworkCommand extends Command
             $cheminImageDestination = "/public/image/serie/poster/" . $serie->getSlug().'.jpeg';
 
             // Téléchargement et enregistrement de l'image
-            if (imagejpeg($cover, $projectDir . $cheminImageDestination, 100)) {
+            if ($cover && imagejpeg($cover, $projectDir . $cheminImageDestination, 100)) {
                 $serie->setArtwork($cheminImageDestination);
             } else {
                 $serie->setArtwork(null);

@@ -47,6 +47,7 @@ class UpdateMoviesCommand extends Command
         $this->strSpecialCharsLower = $strSpecialCharsLower;
     }
 
+
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
 
@@ -74,17 +75,21 @@ class UpdateMoviesCommand extends Command
 
             $releaseDate = DateTime::createFromFormat('Y-m-d', $data['release_date']);
 
-            if($releaseDate) {
+            if ($releaseDate) {
                 $movie->setReleaseDate($releaseDate);
             }
 
-            $movie->setSlug($this->strSpecialCharsLower->serie($movie->getName()));
+            if ($movie->getName() !== null) {
+                $movie->setSlug($this->strSpecialCharsLower->serie($movie->getName()));
+            }
 
-            foreach ($data['genres'] as $genre){
+            foreach ($data['genres'] as $genre) {
 
                 $addGenre = $this->movieGenreRepository->findOneBy(['name' => $genre['name']]);
 
-                $movie->addMovieGenre($addGenre);
+                if ($addGenre !== null) {
+                    $movie->addMovieGenre($addGenre);
+                }
 
             }
 
@@ -100,15 +105,19 @@ class UpdateMoviesCommand extends Command
             // Lien de l'image à télécharger
             $lienImage = "https://image.tmdb.org/t/p/w600_and_h900_bestv2".$data['posters'][0]['file_path'];
 
-            $cover = imagecreatefromstring(file_get_contents($lienImage));
+            $fileContent = file_get_contents($lienImage);
+
+            $cover = $fileContent ?
+                imagecreatefromstring($fileContent) :
+                null;
 
             $projectDir = $this->kernel->getProjectDir();
 
             // Chemin où enregistrer l'image
-            $cheminImageDestination = "/public/image/movie/poster/" . $movie->getSlug().'.jpeg';
+            $cheminImageDestination = "/public/image/movie/poster/".$movie->getSlug().'.jpeg';
 
             // Téléchargement et enregistrement de l'image
-            if (imagejpeg($cover, $projectDir . $cheminImageDestination, 100)) {
+            if ($cover && imagejpeg($cover, $projectDir.$cheminImageDestination, 100)) {
                 $movie->setArtwork($cheminImageDestination);
             } else {
                 $movie->setArtwork(null);

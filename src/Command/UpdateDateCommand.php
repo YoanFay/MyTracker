@@ -88,7 +88,7 @@ class UpdateDateCommand extends Command
 
             $data = json_decode($response->getBody(), true);
 
-            $firstAired = DateTime::createFromFormat('Y-m-d', $data['data']['firstAired']);
+            $firstAired = DateTime::createFromFormat('Y-m-d', $data['data']['firstAired']) ? DateTime::createFromFormat('Y-m-d', $data['data']['firstAired']) : null;
 
             $serie->setFirstAired($firstAired);
 
@@ -155,7 +155,7 @@ class UpdateDateCommand extends Command
 
             if ($data['data']['nextAired']) {
 
-                $nextAired = DateTime::createFromFormat('Y-m-d H:i', $data['data']['nextAired']." 00:00");
+                $nextAired = DateTime::createFromFormat('Y-m-d H:i', $data['data']['nextAired']." 00:00") ? DateTime::createFromFormat('Y-m-d H:i', $data['data']['nextAired']." 00:00") : null;
 
             } else {
                 $nextAired = null;
@@ -176,7 +176,7 @@ class UpdateDateCommand extends Command
 
             if ($data['data']['lastAired']) {
 
-                $lastAired = DateTime::createFromFormat('Y-m-d', $data['data']['lastAired']);
+                $lastAired = DateTime::createFromFormat('Y-m-d', $data['data']['lastAired']) ? DateTime::createFromFormat('Y-m-d', $data['data']['lastAired']) : null;
 
             } else {
                 $lastAired = null;

@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -28,6 +29,7 @@ class UpdateGenreTagCommand extends Command
     private genresRepository $genresRepository;
     private tagsRepository $tagsRepository;
     private tagsTypeRepository $tagsTypeRepository;
+    private ObjectManager $manager;
 
 
     protected function configure(): void
