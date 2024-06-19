@@ -178,6 +178,7 @@ class EpisodeShowController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
+
             $date = DateTime::createFromFormat('d/m/Y H:i', $request->request->get('episode_show')['showDate']);
 
             $episode->setShowDate($date);
