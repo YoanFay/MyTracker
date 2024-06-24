@@ -80,7 +80,8 @@ class HomepageController extends AbstractController
             $newInfo = [
                 'name' => $update->getSerie()->getName(),
                 'next' => $update->getNewNextAired(),
-                'status' => $update->getNewStatus()
+                'status' => $update->getNewStatus(),
+                'serie' => $update->getSerie()
             ];
 
             $updateByDate[] = $newInfo;
