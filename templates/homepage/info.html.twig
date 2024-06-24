@@ -11,7 +11,7 @@
                     {% if update.status and update.status == "Ended" %}{{ update.name }} est terminé {% endif %}
                     {% if update.status and update.status == "Continuing" %}Reprise de {{ update.name }} {% endif %}
                     {% if update.next %}{{ update.name }} - Le prochain épisode sera le {{ update.next|dateF }} {% endif %}
-                    {% if update.next == null and update.status == "Continuing" %}{{ update.name }} est en pause{% endif %}
+                    {% if update.next == null and update.serie.status == "Continuing" %}{{ update.name }} est en pause{% endif %}
                 </p>
             {% endfor %}
         </div>
