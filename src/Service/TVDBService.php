@@ -12,8 +12,6 @@ use Symfony\Contracts\Cache\ItemInterface;
 class TVDBService
 {
 
-    private const API_URL = "https://api4.thetvdb.com/v4";
-
     /**
      * @throws InvalidArgumentException
      */
@@ -24,14 +22,14 @@ class TVDBService
 
         $cache->clear();
 
-        return $cache->get('apiKeyTVDB', function (ItemInterface $item, $apiUrl = self::API_URL) {
+        return $cache->get('apiKeyTVDB', function (ItemInterface $item) {
             $item->expiresAfter(2592000);
 
             $client = new Client();
 
             $apiToken = '8f3a7d8f-c61f-4bf7-930d-65eeab4b26ad';
 
-            $response = $client->post($apiUrl."/login", [
+            $response = $client->post("https://api4.thetvdb.com/v4/login", [
                 'headers' => [
                     'Content-Type' => 'application/json',
                     'Accept' => 'application/json',
@@ -57,7 +55,7 @@ class TVDBService
 
         $token = self::getKey();
 
-        $response = $client->get(self::API_URL."/series/".$serie->getTvdbId()."/translations/fra", [
+        $response = $client->get("https://api4.thetvdb.com/v4/series/".$serie->getTvdbId()."/translations/fra", [
             'headers' => [
                 'Authorization' => 'Bearer '.$token,
                 'Content-Type' => 'application/json',
