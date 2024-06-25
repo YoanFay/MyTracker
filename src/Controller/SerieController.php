@@ -8,6 +8,7 @@ use App\Form\SerieEditType;
 use App\Form\SerieAnimeEditType;
 use App\Repository\SerieRepository;
 use App\Repository\EpisodeShowRepository;
+use App\Service\TVDBService;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -67,7 +68,7 @@ class SerieController extends AbstractController
     }
 
     #[Route('/serie/add', name: 'serie_add')]
-    public function addSerie(ManagerRegistry $managerRegistry, Request $request, StrSpecialCharsLower $strSpecialCharsLower): Response
+    public function addSerie(ManagerRegistry $managerRegistry, Request $request, StrSpecialCharsLower $strSpecialCharsLower, TVDBService $TVDBService): Response
     {
 
         $serie = new Serie();
@@ -78,6 +79,10 @@ class SerieController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()){
             
             $serie->setSlug($strSpecialCharsLower->serie($serie->getName()));
+
+            if ($serie->getTvdbId()){
+                $TVDBService->updateSerieName($serie);
+            }
 
             $managerRegistry->getManager()->persist($serie);
             $managerRegistry->getManager()->flush();
