@@ -13,6 +13,39 @@ class TVDBService
 {
 
     /**
+     * @throws GuzzleException
+     * @throws InvalidArgumentException
+     */
+    public function updateSerieName(Serie $serie)
+    {
+
+        $client = new Client();
+
+        $token = self::getKey();
+
+        try {
+            $response = $client->get("https://api4.thetvdb.com/v4/series/".$serie->getTvdbId()."/translations/fra", [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$token,
+                    'Content-Type' => 'application/json',
+                    'Accept' => 'application/json',
+                ],
+            ]);
+
+            $data = json_decode($response->getBody(), true);
+
+        } catch (\Exception $e) {
+            $data = null;
+        }
+
+        if ($data !== null && $data['status'] === "success") {
+            $serie->setName($data['data']['name']);
+            $serie->setVfName(true);
+        }
+    }
+
+
+    /**
      * @throws InvalidArgumentException
      */
     public function getKey()
@@ -23,6 +56,7 @@ class TVDBService
         $cache->clear();
 
         return $cache->get('apiKeyTVDB', function (ItemInterface $item) {
+
             $item->expiresAfter(2592000);
 
             $client = new Client();
@@ -42,33 +76,6 @@ class TVDBService
             return $data['data']['token'];
         });
 
-    }
-
-
-    /**
-     * @throws GuzzleException
-     * @throws InvalidArgumentException
-     */
-    public function updateSerieName(Serie $serie){
-
-        $client = new Client();
-
-        $token = self::getKey();
-
-        $response = $client->get("https://api4.thetvdb.com/v4/series/".$serie->getTvdbId()."/translations/fra", [
-            'headers' => [
-                'Authorization' => 'Bearer '.$token,
-                'Content-Type' => 'application/json',
-                'Accept' => 'application/json',
-            ],
-        ]);
-
-        $data = json_decode($response->getBody(), true);
-
-        if ($data !== null && $data['status'] === "success"){
-            $serie->setName($data['data']['name']);
-            $serie->setVfName(true);
-        }
     }
 
 }
