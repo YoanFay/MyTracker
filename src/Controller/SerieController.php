@@ -77,11 +77,15 @@ class SerieController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()){
-            
-            $serie->setSlug($strSpecialCharsLower->serie($serie->getName()));
 
             if ($serie->getTvdbId()){
                 $TVDBService->updateSerieName($serie);
+            }
+
+            $serie->setSlug($strSpecialCharsLower->serie($serie->getName()));
+
+            if ($serie->getTvdbId()){
+                $TVDBService->updateArtwork($serie);
             }
 
             $managerRegistry->getManager()->persist($serie);
