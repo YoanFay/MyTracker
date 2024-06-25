@@ -22,6 +22,8 @@ class TVDBService
 
         $cache = new FilesystemAdapter();
 
+        $cache->clear();
+
         return $cache->get('apiKeyTVDB', function (ItemInterface $item, $apiUrl = self::API_URL) {
             $item->expiresAfter(2592000);
 
