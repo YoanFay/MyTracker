@@ -77,14 +77,7 @@ class HomepageController extends AbstractController
 
         foreach ($serieUpdate as $update) {
 
-            $newInfo = [
-                'name' => $update->getSerie()->getName(),
-                'next' => $update->getNewNextAired(),
-                'status' => $update->getNewStatus(),
-                'serie' => $update->getSerie()
-            ];
-
-            $updateByDate[] = $newInfo;
+            $updateByDate[] = $update;
         }
 
         return $this->render("homepage/info.html.twig", [

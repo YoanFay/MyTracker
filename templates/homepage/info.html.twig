@@ -8,10 +8,10 @@
         <div class="card-body p-0">
             {% for update in updateByDate %}
                 <p class="border-bottom m-0 p-2">
-                    {% if update.status and update.status == "Ended" %}{{ update.name }} est terminé {% endif %}
-                    {% if update.status and update.status == "Continuing" %}Reprise de {{ update.name }} {% endif %}
-                    {% if update.next %}{{ update.name }} - Le prochain épisode sera le {{ update.next|dateF }} {% endif %}
-                    {% if update.next == null and update.serie.status == "Continuing" %}{{ update.name }} est en pause{% endif %}
+                    {% if update.newStatus and update.newStatus == "Ended" %}{{ update.serie.name }} est terminé {% endif %}
+                    {% if update.newStatus and update.oldStatus != null and update.newStatus == "Continuing" %}Reprise de {{ update.serie.name }} {% endif %}
+                    {% if update.newNextAired %}{{ update.serie.name }} - Le prochain épisode sera le {{ update.newNextAired|dateF }} {% endif %}
+                    {% if update.newNextAired == null and update.serie.status == "Continuing" %}{{ update.serie.name }} est en pause{% endif %}
                 </p>
             {% endfor %}
         </div>
