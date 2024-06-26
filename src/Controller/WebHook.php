@@ -8,6 +8,7 @@ use App\Repository\MovieRepository;
 use App\Repository\SerieTypeRepository;
 use App\Service\StrSpecialCharsLower;
 use App\Service\TMDBService;
+use App\Service\TVDBService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,7 +35,8 @@ class WebHook extends AbstractController
         MovieRepository       $movieRepository,
         StrSpecialCharsLower  $strSpecialCharsLower,
         SerieTypeRepository   $serieTypeRepository,
-        TMDBService           $TMDBService
+        TMDBService           $TMDBService,
+        TVDBService           $TVDBService
     ): Response
     {
 
@@ -151,18 +153,36 @@ class WebHook extends AbstractController
 
                         $episode = new EpisodeShow;
 
-                        $episode->setPlexId($episodeId);
-                        $episode->setName($jsonData['Metadata']['title']);
-                        $episode->setShowDate(new \DateTime());
-                        $episode->setSerie($serie);
-                        $episode->setUser($user);
                         $episode->setTvdbId($tvdbId);
+
+                        if ($episode->getTvdbId()){
+                            $TVDBService->updateEpisodeName($episode);
+
+                            if(!$jsonData['Metadata']['duration']){
+                                $TVDBService->updateEpisodeDuration($episode);
+                            }
+
+                        }else{
+                            $episode->setName($jsonData['Metadata']['title']);
+                            $episode->setDuration($jsonData['Metadata']['duration'] ?? null);
+                        }
+
+                        $episode->setPlexId($episodeId);
+                        $episode->setShowDate(new \DateTime());
+                        $episode->setUser($user);
                         $episode->setSaison($jsonData['Metadata']['parentTitle']);
                         $episode->setSaisonNumber($jsonData['Metadata']['parentIndex']);
                         $episode->setEpisodeNumber($jsonData['Metadata']['index']);
-                        $episode->setDuration(isset($jsonData['Metadata']['duration']) ?
-                            $jsonData['Metadata']['duration'] :
-                            null);
+
+                        if ($episode->getTvdbId() && !$serie->getTvdbId()){
+                            $serie->setTvdbId($TVDBService->getSerieIdByEpisodeId($episode->getTvdbId()));
+
+                            $TVDBService->updateSerieInfo($serie);
+
+                            $em->persist($serie);
+                        }
+
+                        $episode->setSerie($serie);
 
                         $em->persist($episode);
                         $em->flush();

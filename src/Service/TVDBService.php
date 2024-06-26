@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\EpisodeShow;
 use App\Entity\Serie;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
@@ -15,12 +16,26 @@ class TVDBService
 
     private KernelInterface $kernel;
 
+
     public function __construct(KernelInterface $kernel)
     {
+
         $this->kernel = $kernel;
     }
 
-    public function getData($url){
+
+    public function getSerieIdByEpisodeId($episodeId)
+    {
+
+        $data = self::getData("/episodes/".$episodeId);
+
+        return $data['data']['seriesId'];
+
+    }
+
+
+    public function getData($url)
+    {
 
         $client = new Client();
 
@@ -42,56 +57,6 @@ class TVDBService
         }
 
         return $data;
-    }
-
-
-    public function updateSerieName(Serie $serie): void
-    {
-
-        $data = self::getData("/series/".$serie->getTvdbId()."/translations/fra");
-
-        if ($data !== null && $data['status'] === "success") {
-            $serie->setName($data['data']['name']);
-            $serie->setVfName(true);
-        }
-    }
-
-    public function updateArtwork(Serie $serie): void
-    {
-
-        $data = self::getData("/series/".$serie->getTvdbId()."/artworks?lang=fra&type=2");
-
-        $status = $data['status'];
-        $data = $data['data'];
-
-        if ($status === "success" && $data['artworks'] == []) {
-
-            $data = self::getData("/series/".$serie->getTvdbId()."/artworks?lang=eng&type=2");
-
-            $status = $data['status'];
-            $data = $data['data'];
-        }
-
-        if ($status === "success" && $data['artworks'] == []) {
-            return;
-        }
-
-        // Lien de l'image à télécharger
-        $lienImage = $data['artworks'][0]['image'];
-
-        $cover = imagecreatefromstring(file_get_contents($lienImage));
-
-        $projectDir = $this->kernel->getProjectDir();
-
-        // Chemin où enregistrer l'image
-        $cheminImageDestination = "/public/image/serie/poster/" . $serie->getSlug().'.jpeg';
-
-        // Téléchargement et enregistrement de l'image
-        if (imagejpeg($cover, $projectDir . $cheminImageDestination, 100)) {
-            $serie->setArtwork($cheminImageDestination);
-        } else {
-            $serie->setArtwork(null);
-        }
     }
 
 
@@ -126,6 +91,92 @@ class TVDBService
             return $data['data']['token'];
         });
 
+    }
+
+
+    public function updateSerieInfo(Serie $serie): void
+    {
+
+        self::updateSerieName($serie);
+        self::updateArtwork($serie);
+
+    }
+
+
+    public function updateSerieName(Serie $serie): void
+    {
+
+        $data = self::getData("/series/".$serie->getTvdbId()."/translations/fra");
+
+        if ($data !== null && $data['status'] === "success") {
+            $serie->setName($data['data']['name']);
+            $serie->setVfName(true);
+        }
+    }
+
+
+    public function updateArtwork(Serie $serie): void
+    {
+
+        $data = self::getData("/series/".$serie->getTvdbId()."/artworks?lang=fra&type=2");
+
+        $status = $data['status'];
+        $data = $data['data'];
+
+        if ($status === "success" && $data['artworks'] == []) {
+
+            $data = self::getData("/series/".$serie->getTvdbId()."/artworks?lang=eng&type=2");
+
+            $status = $data['status'];
+            $data = $data['data'];
+        }
+
+        if ($status === "success" && $data['artworks'] == []) {
+            return;
+        }
+
+        // Lien de l'image à télécharger
+        $lienImage = $data['artworks'][0]['image'];
+
+        $cover = imagecreatefromstring(file_get_contents($lienImage));
+
+        $projectDir = $this->kernel->getProjectDir();
+
+        // Chemin où enregistrer l'image
+        $cheminImageDestination = "/public/image/serie/poster/".$serie->getSlug().'.jpeg';
+
+        // Téléchargement et enregistrement de l'image
+        if (imagejpeg($cover, $projectDir.$cheminImageDestination, 100)) {
+            $serie->setArtwork($cheminImageDestination);
+        } else {
+            $serie->setArtwork(null);
+        }
+    }
+
+
+    public function updateEpisodeName(EpisodeShow $episodeShow): void
+    {
+
+        $data = self::getData("/episodes/".$episodeShow->getTvdbId()."/translations/fra");
+
+        if ($data !== null && $data['status'] === "success") {
+            $episodeShow->setName($data['data']['name']);
+            $episodeShow->setVfName(true);
+        }
+    }
+
+
+    public function updateEpisodeDuration(EpisodeShow $episodeShow): void
+    {
+
+        $data = self::getData("/episodes/".$episodeShow->getTvdbId());
+
+        if ($data !== null && $data['status'] === "success") {
+
+            $duration = $data['data']['runtime'] * 60000;
+
+            $episodeShow->setDuration($duration);
+        }
     }
 
 }

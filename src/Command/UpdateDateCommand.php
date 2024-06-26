@@ -5,6 +5,7 @@ namespace App\Command;
 use App\Entity\SerieUpdate;
 use App\Repository\SerieRepository;
 use App\Repository\SerieUpdateRepository;
+use App\Service\TVDBService;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
@@ -29,14 +30,17 @@ class UpdateDateCommand extends Command
 
     private ObjectManager $manager;
 
+    private TVDBService $TVDBService;
 
-    public function __construct(SerieRepository $serieRepository, SerieUpdateRepository $serieUpdateRepository, ManagerRegistry $managerRegistry)
+
+    public function __construct(SerieRepository $serieRepository, SerieUpdateRepository $serieUpdateRepository, ManagerRegistry $managerRegistry, TVDBService $TVDBService)
     {
 
         parent::__construct();
         $this->serieRepository = $serieRepository;
         $this->serieUpdateRepository = $serieUpdateRepository;
         $this->manager = $managerRegistry->getManager();
+        $this->TVDBService = $TVDBService;
     }
 
 
@@ -59,20 +63,8 @@ class UpdateDateCommand extends Command
 
         $apiUrl = 'https://api4.thetvdb.com/v4';
 
-        $apiToken = '8f3a7d8f-c61f-4bf7-930d-65eeab4b26ad';
-
-        $response = $client->post($apiUrl."/login", [
-            'headers' => [
-                'Content-Type' => 'application/json',
-                'Accept' => 'application/json',
-            ],
-            'json' => ['apiKey' => $apiToken],
-        ]);
-
-        $data = json_decode($response->getBody(), true);
-
         // Récupérez le token
-        $token = $data['data']['token'];
+        $token = $this->TVDBService->getKey();
 
         $series = $this->serieRepository->noFirstAired();
 
