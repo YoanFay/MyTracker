@@ -13,6 +13,13 @@ use Symfony\Contracts\Cache\ItemInterface;
 class TVDBService
 {
 
+    private KernelInterface $kernel;
+
+    public function __construct(KernelInterface $kernel)
+    {
+        $this->kernel = $kernel;
+    }
+
     public function getData($url){
 
         $client = new Client();
@@ -49,7 +56,7 @@ class TVDBService
         }
     }
 
-    public function updateArtwork(Serie $serie, KernelInterface $kernel): void
+    public function updateArtwork(Serie $serie): void
     {
 
         $data = self::getData("/series/".$serie->getTvdbId()."/artworks?lang=fra&type=2");
@@ -74,7 +81,7 @@ class TVDBService
 
         $cover = imagecreatefromstring(file_get_contents($lienImage));
 
-        $projectDir = $kernel->getProjectDir();
+        $projectDir = $this->kernel->getProjectDir();
 
         // Chemin où enregistrer l'image
         $cheminImageDestination = "/public/image/serie/poster/" . $serie->getSlug().'.jpeg';
@@ -100,7 +107,21 @@ class TVDBService
 
             $item->expiresAfter(2592000);
 
-            $data = self::getData("/login");
+            $client = new Client();
+
+            $apiUrl = 'https://api4.thetvdb.com/v4';
+
+            $apiToken = '8f3a7d8f-c61f-4bf7-930d-65eeab4b26ad';
+
+            $response = $client->post($apiUrl."/login", [
+                'headers' => [
+                    'Content-Type' => 'application/json',
+                    'Accept' => 'application/json',
+                ],
+                'json' => ['apiKey' => $apiToken],
+            ]);
+
+            $data = json_decode($response->getBody(), true);
 
             return $data['data']['token'];
         });
