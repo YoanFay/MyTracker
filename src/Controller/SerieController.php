@@ -21,13 +21,38 @@ class SerieController extends AbstractController
 {
 
     #[Route('/serie', name: 'serie')]
-    public function index(SerieRepository $serieRepository): Response
+    public function index(SerieRepository $serieRepository, EpisodeShowRepository $episodeShowRepository): Response
     {
         $series = $serieRepository->findAll();
 
+        $serieTab = [];
+
+        foreach ($series as $serie){
+
+            $lastEpisode = $episodeShowRepository->findLastEpisode($serie);
+
+            $serieTab[] = [
+                'id' => $serie->getId(),
+                'name' => $serie->getName(),
+                'serieType' => $serie->getSerieType()->getName(),
+                'artwork' => $serie->getArtwork(),
+                'lastDate' => $lastEpisode?->getShowDate(),
+            ];
+
+        }
+
+        uasort($serieTab, function($a, $b) {
+            // Utilise strtotime pour convertir les dates en timestamps pour une comparaison facile
+            $dateA = $a['lastDate'];
+            $dateB = $b['lastDate'];
+
+            // Retourne -1 si $dateA est inférieur à $dateB, 1 si supérieur, 0 si égal
+            return $dateB <=> $dateA;
+        });
+
         return $this->render('serie/index.html.twig', [
             'controller_name' => 'SerieController',
-            'series' => $series,
+            'series' => $serieTab,
             'navLinkId' => 'serie_list',
         ]);
     }

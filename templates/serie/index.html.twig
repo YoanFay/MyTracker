@@ -8,6 +8,7 @@
         <thead>
         <tr>
             <th scope="col">Nom</th>
+            <th scope="col">Dernier visionnage</th>
             <th scope="col">Type</th>
             <th scope="col">Image</th>
         </tr>
@@ -16,14 +17,16 @@
         {% for serie in series %}
             <tr class="clickable-row cursor-click" data-href="{{ path('serie_detail', {'id': serie.id}) }}">
                 <td>{{ serie.name }}</td>
-                <td>{{ serie.serieType.name }}</td>
+                <td>{% if serie.lastDate %}{{ serie.lastDate|dateFNoDay }}{% else %}Pas de données{% endif %}</td>
+                <td>{{ serie.serieType }}</td>
                 <td>
-    {% if serie.artwork %}
-    <img src="{% if app.environment == "dev" %}{{ serie.artwork|replace({'/public': ''}) }}{% else %}{{ serie.artwork }}{% endif %}" width="150px" alt="{{serie.name}} poster">
-    {% else %}
-    <img src="/image/visuel-a-venir.jpg" width="150px" alt="Visuel à venir">
-    {% endif %}
-    </td>
+                    {% if serie.artwork %}
+                        <img src="{% if app.environment == "dev" %}{{ serie.artwork|replace({'/public': ''}) }}{% else %}{{ serie.artwork }}{% endif %}"
+                             width="150px" alt="{{ serie.name }} poster">
+                    {% else %}
+                        <img src="/image/visuel-a-venir.jpg" width="150px" alt="Visuel à venir">
+                    {% endif %}
+                </td>
             </tr>
         {% endfor %}
         </tbody>
@@ -32,13 +35,13 @@
 {% endblock %}
 
 {% block javascript %}
-<script>
+    <script>
 
-    jQuery(document).ready(function($) {
-    $(".clickable-row").click(function () {
-        window.location = $(this).data("href");
-    });
-});
+        jQuery(document).ready(function ($) {
+            $(".clickable-row").click(function () {
+                window.location = $(this).data("href");
+            });
+        });
 
-</script>
+    </script>
 {% endblock %}

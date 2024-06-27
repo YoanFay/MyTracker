@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\EpisodeShow;
+use App\Entity\Serie;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
@@ -283,6 +284,23 @@ class EpisodeShowRepository extends ServiceEntityRepository
             ->setParameter('date', $year.'-'.$month.'-%')
             ->getQuery()
             ->getResult();
+    }
+
+
+    /**
+     * @return float|int|mixed|string|null
+     * @throws NonUniqueResultException
+     */
+    public function findLastEpisode(Serie $serie)
+    {
+
+        return $this->createQueryBuilder('e')
+            ->andWhere('e.serie = :serie')
+            ->setParameter('serie', $serie)
+            ->orderBy('e.showDate', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
     //    public function findOneBySomeField($value): ?EpisodeShow
