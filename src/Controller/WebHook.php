@@ -101,11 +101,18 @@ class WebHook extends AbstractController
 
                 $serieId = str_replace(["plex://show/"], [""], $jsonData['Metadata']['grandparentGuid']);
 
-                $episodeId = str_replace(["plex://episode/", "local://"], ["", ""], $jsonData['Metadata']['guid']);
+                if (isset($jsonData['Metadata']['Guid'])) {
+                    foreach ($jsonData['Metadata']['Guid'] as $guid) {
+                        if (isset($guid['id']) && strpos($guid['id'], 'tvdb://') === 0) {
+                            $episodeId = str_replace(["tvdb://"], [""], $guid['id']);
+                            break;
+                        }
+                    }
+                }
 
                 $serie = $serieRepository->findOneBy(['plexId' => $serieId]);
 
-                if(!$serie){
+                if(!$serie and isset($episodeId)){
                     $tvdbSerieId = $TVDBService->getSerieIdByEpisodeId($episodeId);
 
                     $serie = $serieRepository->findOneBy(['tvdbId' => $tvdbSerieId]);
