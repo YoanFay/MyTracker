@@ -19,7 +19,7 @@
         {% set startOfYear = currentDate|date("Y-01-01") %}
         {% set daysSinceStartOfYear = currentDate|date_modify('-' ~ startOfYear|date("U") ~ ' seconds')|date("z") + 1 %}
 
-        {% for dateKey in sortedDateKeys %}
+        {% for dateKey in sortedDateKeys|reverse %}
             <tbody>
             {% set date = dateKey|date("d/m/Y") %}
             {% set dateShow = dateKey|date("Y/m/d") %}
