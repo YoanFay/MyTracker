@@ -27,7 +27,7 @@ class SerieController extends AbstractController
 
         if ($id < 0) {
             $series = $serieRepository->findAll();
-        } else if($id = 404) {
+        } else if($id === 404) {
 
             $serieType = $serieTypeRepository->findOneBy(['name' => 'Anime']);
 
