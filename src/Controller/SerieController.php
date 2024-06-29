@@ -8,6 +8,7 @@ use App\Form\SerieEditType;
 use App\Form\SerieAnimeEditType;
 use App\Repository\SerieRepository;
 use App\Repository\EpisodeShowRepository;
+use App\Repository\SerieTypeRepository;
 use App\Service\TVDBService;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,10 +21,18 @@ use App\Service\StrSpecialCharsLower;
 class SerieController extends AbstractController
 {
 
-    #[Route('/serie', name: 'serie')]
-    public function index(SerieRepository $serieRepository, EpisodeShowRepository $episodeShowRepository): Response
+    #[Route('/serie/{id}', name: 'serie')]
+    public function index(SerieRepository $serieRepository, EpisodeShowRepository $episodeShowRepository, SerieTypeRepository $serieTypeRepository, $id = -1): Response
     {
-        $series = $serieRepository->findAll();
+
+        if($id < 0){
+            $series = $serieRepository->findAll();
+        }else{
+
+            $serieType = $serieTypeRepository->find($id);
+
+            $series = $serieRepository->findBy(['serieType' => $serieType]);
+        }
 
         $serieTab = [];
 

@@ -90,7 +90,19 @@
                         <ul id="series">
                             <li>
                                 <a id="serie_list" class="nav-links-child"
-                                   href="{{ path('serie') }}">Liste</a>
+                                   href="{{ path('serie') }}">Tout</a>
+                            </li>
+                            <li>
+                                <a id="serie_anime_list" class="nav-links-child"
+                                   href="{{ path('serie', {'id': '1'}) }}">Animes</a>
+                            </li>
+                            <li>
+                                <a id="serie_séries_list" class="nav-links-child"
+                                   href="{{ path('serie', {'id': '3'}) }}">Séries</a>
+                            </li>
+                            <li>
+                                <a id="serie_replay_list" class="nav-links-child"
+                                   href="{{ path('serie', {'id': '2'}) }}">Replay</a>
                             </li>
                             <li>
                                 <a id="serie_add" class="nav-links-child"
