@@ -147,6 +147,21 @@ class SerieRepository extends ServiceEntityRepository
             ;
     }
 
+    /**
+     * @return Serie[] Returns an array of Serie objects
+     */
+    public function noThemeGenre(): array
+    {
+        return $this->createQueryBuilder('s')
+            ->leftJoin('s.serieType', 't')
+            ->andWhere('s.animeGenres is EMPTY or s.animeThemes is EMPTY')
+            ->andWhere('t.name = :type')
+            ->setParameter('type', 'Anime')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
 
 //    public function findOneBySomeField($value): ?Serie
 //    {
