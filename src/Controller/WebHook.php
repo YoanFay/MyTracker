@@ -175,6 +175,8 @@ class WebHook extends AbstractController
 
                             if(!$jsonData['Metadata']['duration']){
                                 $TVDBService->updateEpisodeDuration($episode);
+                            }else{
+                                $episode->setDuration($jsonData['Metadata']['duration']);
                             }
 
                         }else{
