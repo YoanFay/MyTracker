@@ -79,6 +79,7 @@
                 {% endif %}
                 </div>
             </div>
+            <a class="btn btn-primary" href="{% if idSerie %}{{ path('serie', {'id': idSerie}) }}{%else%}{{ path('serie') }}{%endif%}">Retour</a>
         </div>
         <img {% if serie.artwork %} src="{% if app.environment == "dev" %}{{ serie.artwork|replace({'/public': ''}) }}{% else %}{{ serie.artwork }}{% endif %}" alt="{{ serie.name }} poster" {% else %} src="/image/visuel-a-venir.jpg" alt="Visuel à venir" {% endif %}
                 width="300px" data-bs-toggle="modal" data-bs-target="#imageModal" class="cursor-click">

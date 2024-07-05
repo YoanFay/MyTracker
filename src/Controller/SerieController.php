@@ -13,6 +13,7 @@ use App\Service\TVDBService;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
@@ -23,8 +24,22 @@ class SerieController extends AbstractController
 
 
     #[Route('/serie/detail/{id}', name: 'serie_detail')]
-    public function detail(SerieRepository $serieRepository, EpisodeShowRepository $episodeShowRepository, $id): Response
+    public function detail(Request $request, RequestStack $requestStack, SerieRepository $serieRepository, EpisodeShowRepository $episodeShowRepository, $id): Response
     {
+
+        $referer = $request->headers->get('referer');
+        $idSerie = null;
+        $session = $requestStack->getSession();
+
+        if($session->get('idSerie')){
+            $idSerie = $session->get('idSerie');
+        }
+
+        if (!$idSerie && str_contains($referer, "http://localhost:8000/serie/") && !str_contains($referer, "edit")){
+            $idSerie = str_replace('http://localhost:8000/serie/', '', $referer);
+
+            $session->set('idSerie', $idSerie);
+        }
 
         $serie = $serieRepository->findOneBy(['id' => $id]);
         $totalDuration = $episodeShowRepository->getDurationBySerie($id);
@@ -54,6 +69,7 @@ class SerieController extends AbstractController
             'tagTypes' => $tagTypes,
             'animeGenres' => $animeGenres,
             'animeThemes' => $animeThemes,
+            'idSerie' => $idSerie,
             'navLinkId' => 'serie_list',
         ]);
     }
