@@ -53,6 +53,14 @@ class TMDBService
 
         }
 
+        if(!$movie->getDuration()){
+
+            $duration = $data['runtime'] * 60000;
+
+            $movie->setDuration($duration);
+
+        }
+
         $data = self::getData('/movie/'.$movie->getTmdbId().'/images?include_image_language=fr');
 
         // Lien de l'image à télécharger
