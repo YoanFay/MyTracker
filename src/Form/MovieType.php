@@ -16,23 +16,14 @@ class MovieType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name', TextType::class, [
-                'label' => 'Nom du film',
-                'required' => true,
-                'attr' => ['class' => 'form-control'],
-            ])
-            ->add('showDate', DateTimeType::class, [
-                'label' => 'Date de visionnage',
-                'widget' => 'single_text',
-                'attr' => ['class' => 'form-control'],
-            ])
             ->add('tmdbId', IntegerType::class, [
                 'label' => "ID TMDB",
                 'attr' => ['class' => 'form-control'],
                 'required' => false,
             ])
-            ->add('duration', IntegerType::class, [
-                'label' => "Durée de l'épisode",
+            ->add('showDate', DateTimeType::class, [
+                'label' => 'Date de visionnage',
+                'widget' => 'single_text',
                 'attr' => ['class' => 'form-control'],
             ])
             ->add('submit', SubmitType::class, [

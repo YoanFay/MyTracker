@@ -3,11 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\Movie;
+use App\Entity\Users;
 use App\Form\MovieType;
 use App\Repository\EpisodeShowRepository;
 use App\Repository\MovieGenreRepository;
 use App\Repository\SerieRepository;
 use App\Service\StrSpecialCharsLower;
+use App\Service\TMDBService;
 use Doctrine\Persistence\ManagerRegistry;
 use GuzzleHttp\Client;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -48,7 +50,7 @@ class MovieController extends AbstractController
     }
 
     #[Route('/movie/add', name: 'movie_add')]
-    public function addMovie(ManagerRegistry $managerRegistry, Request $request, StrSpecialCharsLower $strSpecialCharsLower): Response
+    public function addMovie(ManagerRegistry $managerRegistry, Request $request, StrSpecialCharsLower $strSpecialCharsLower, TMDBService $TMDBService): Response
     {
 
         $movie = new Movie();
@@ -57,9 +59,12 @@ class MovieController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()){
-            
-            $movie->setSlug($strSpecialCharsLower->serie($movie->getName()));
-            $movie->setUser($this->getUser());
+
+            $TMDBService->updateInfo($movie);
+
+            /** @var Users $user */
+            $user = $this->getUser();
+            $movie->setUser($user);
 
             $managerRegistry->getManager()->persist($movie);
             $managerRegistry->getManager()->flush();
@@ -68,7 +73,7 @@ class MovieController extends AbstractController
         }
 
         return $this->render('movie/add.html.twig', [
-            'controller_name' => 'SerieController',
+            'controller_name' => 'MovieController',
             'form' => $form->createView(),
             'navLinkId' => 'movie',
         ]);
