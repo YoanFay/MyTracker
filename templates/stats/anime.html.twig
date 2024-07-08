@@ -53,7 +53,7 @@
 
         const ctx1 = document.getElementById('myChart1');
 
-        new Chart(ctx1, {
+        const chart1 = new Chart(ctx1, {
             type: 'bar',
             data: {
                 labels: {{ labelGenreChart | raw }},
@@ -73,7 +73,7 @@
                             callback: function(value) {
                                 return toHHMM(value);
                             }
-                        }
+                        },
                     },
                     x: {
                         stacked: true,
@@ -95,7 +95,7 @@
 
         const ctx2 = document.getElementById('myChart2');
 
-        new Chart(ctx2, {
+        const chart2 = new Chart(ctx2, {
             type: 'bar',
             data: {
                 labels: {{ labelThemeChart | raw }},
@@ -134,6 +134,42 @@
                 }
             }
         });
+
+        ctx1.onclick = (evt) => {
+            const res = chart1.getElementsAtEventForMode(
+                evt,
+                'nearest',
+                { intersect: true },
+                true
+            );
+            // If didn't click on a bar, `res` will be an empty array
+            if (res.length === 0) {
+                return;
+            }
+
+            let route = "{{ path('serie_genre', { name: 'fileId_' }) }}";
+            route = route.replace('fileId_', chart1.data.labels[res[0].index]);
+
+            window.location.href = route;
+        };
+
+        ctx2.onclick = (evt) => {
+            const res = chart2.getElementsAtEventForMode(
+                evt,
+                'nearest',
+                { intersect: true },
+                true
+            );
+            // If didn't click on a bar, `res` will be an empty array
+            if (res.length === 0) {
+                return;
+            }
+
+            let route = "{{ path('serie_theme', { name: 'fileId_' }) }}";
+            route = route.replace('fileId_', chart2.data.labels[res[0].index]);
+
+            window.location.href = route;
+        };
     </script>
 
 {% endblock %}

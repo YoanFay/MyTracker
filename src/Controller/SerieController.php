@@ -6,6 +6,8 @@ use App\Entity\Serie;
 use App\Form\SerieType;
 use App\Form\SerieEditType;
 use App\Form\SerieAnimeEditType;
+use App\Repository\AnimeGenreRepository;
+use App\Repository\AnimeThemeRepository;
 use App\Repository\SerieRepository;
 use App\Repository\EpisodeShowRepository;
 use App\Repository\SerieTypeRepository;
@@ -200,6 +202,90 @@ class SerieController extends AbstractController
             'form' => $form->createView(),
             'serie' => $serie,
             'navLinkId' => 'serie_add',
+        ]);
+    }
+
+
+    #[Route('/serie/genre/{name}', name: 'serie_genre')]
+    public function animeByGenre(SerieRepository $serieRepository, EpisodeShowRepository $episodeShowRepository, AnimeGenreRepository $animeGenreRepository, $name): Response
+    {
+
+        $animeGenre = $animeGenreRepository->findOneBy(['name' => $name]);
+
+        $series = $animeGenre->getSerie();
+
+        $serieTab = [];
+
+        foreach ($series as $serie) {
+
+            $lastEpisode = $episodeShowRepository->findLastEpisode($serie);
+
+            $serieTab[] = [
+                'id' => $serie->getId(),
+                'name' => $serie->getName(),
+                'serieType' => $serie->getSerieType()->getName(),
+                'artwork' => $serie->getArtwork(),
+                'lastDate' => $lastEpisode?->getShowDate(),
+            ];
+
+        }
+
+        uasort($serieTab, function ($a, $b) {
+
+            // Utilise strtotime pour convertir les dates en timestamps pour une comparaison facile
+            $dateA = $a['lastDate'];
+            $dateB = $b['lastDate'];
+
+            // Retourne -1 si $dateA est inférieur à $dateB, 1 si supérieur, 0 si égal
+            return $dateB <=> $dateA;
+        });
+
+        return $this->render('serie/index.html.twig', [
+            'controller_name' => 'SerieController',
+            'series' => $serieTab,
+            'navLinkId' => 'serie_list',
+        ]);
+    }
+
+
+    #[Route('/serie/theme/{name}', name: 'serie_theme')]
+    public function animeByTheme(SerieRepository $serieRepository, EpisodeShowRepository $episodeShowRepository, AnimeThemeRepository $animeThemeRepository, $name): Response
+    {
+
+        $animeTheme = $animeThemeRepository->findOneBy(['name' => $name]);
+
+        $series = $animeTheme->getSerie();
+
+        $serieTab = [];
+
+        foreach ($series as $serie) {
+
+            $lastEpisode = $episodeShowRepository->findLastEpisode($serie);
+
+            $serieTab[] = [
+                'id' => $serie->getId(),
+                'name' => $serie->getName(),
+                'serieType' => $serie->getSerieType()->getName(),
+                'artwork' => $serie->getArtwork(),
+                'lastDate' => $lastEpisode?->getShowDate(),
+            ];
+
+        }
+
+        uasort($serieTab, function ($a, $b) {
+
+            // Utilise strtotime pour convertir les dates en timestamps pour une comparaison facile
+            $dateA = $a['lastDate'];
+            $dateB = $b['lastDate'];
+
+            // Retourne -1 si $dateA est inférieur à $dateB, 1 si supérieur, 0 si égal
+            return $dateB <=> $dateA;
+        });
+
+        return $this->render('serie/index.html.twig', [
+            'controller_name' => 'SerieController',
+            'series' => $serieTab,
+            'navLinkId' => 'serie_list',
         ]);
     }
 
