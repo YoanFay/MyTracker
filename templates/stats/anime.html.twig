@@ -5,7 +5,7 @@
 {% block body %}
 
     <div class="d-flex flex-column flex-lg-row col-12 h-50">
-        <div class="card col-12 col-lg-6 h-100">
+        <div class="card col-12 h-100">
             <div class="card-header">
                 Temps de visionnage par genre
             </div>
@@ -15,7 +15,10 @@
                 </div>
             </div>
         </div>
-        <div class="card col-12 col-lg-6 h-100">
+    </div>
+
+    <div class="d-flex flex-column flex-lg-row col-12 h-50">
+        <div class="card col-12 h-100">
             <div class="card-header">
                 Temps de visionnage par thème
             </div>
@@ -51,7 +54,7 @@
         const ctx1 = document.getElementById('myChart1');
 
         new Chart(ctx1, {
-            type: 'pie',
+            type: 'bar',
             data: {
                 labels: {{ labelGenreChart | raw }},
                 datasets: [{
@@ -61,18 +64,30 @@
                 }]
             },
             options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        stacked: false,
+                        ticks: {
+                            stepSize: 180000000,
+                            callback: function(value) {
+                                return toHHMM(value);
+                            }
+                        }
+                    },
+                    x: {
+                        stacked: true,
+                    }
+                },
                 plugins: {
                     tooltip: {
                         callbacks: {
                             label: function (context) {
-                                const value = context.parsed;
-                                return `Temps de visionnage : ${toHHMM(value)}`;
+                                const value = context.parsed.y;
+                                const datasetLabel = context.dataset.label || '';
+                                return `${datasetLabel}: ${toHHMM(value)}`;
                             }
                         }
-                    },
-                    legend: {
-                        position: 'bottom',
-                        display: false
                     }
                 }
             }
@@ -81,7 +96,7 @@
         const ctx2 = document.getElementById('myChart2');
 
         new Chart(ctx2, {
-            type: 'pie',
+            type: 'bar',
             data: {
                 labels: {{ labelThemeChart | raw }},
                 datasets: [{
@@ -91,18 +106,30 @@
                 }]
             },
             options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        stacked: false,
+                        ticks: {
+                            stepSize: 180000000,
+                            callback: function(value) {
+                                return toHHMM(value);
+                            }
+                        }
+                    },
+                    x: {
+                        stacked: true,
+                    }
+                },
                 plugins: {
                     tooltip: {
                         callbacks: {
                             label: function (context) {
-                                const value = context.parsed;
-                                return `Temps de visionnage : ${toHHMM(value)}`;
+                                const value = context.parsed.y;
+                                const datasetLabel = context.dataset.label || '';
+                                return `${datasetLabel}: ${toHHMM(value)}`;
                             }
                         }
-                    },
-                    legend: {
-                        position: 'bottom',
-                        display: false
                     }
                 }
             }
