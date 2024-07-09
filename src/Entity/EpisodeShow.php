@@ -52,6 +52,7 @@ class EpisodeShow
     public function __construct()
     {
         $this->setShowDate(new \DateTime());
+        $this->name = "TBA";
     }
 
     public function getId(): ?int

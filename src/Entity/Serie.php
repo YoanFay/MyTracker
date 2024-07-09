@@ -75,6 +75,7 @@ class Serie
         $this->animeGenres = new ArrayCollection();
         $this->animeThemes = new ArrayCollection();
         $this->serieUpdates = new ArrayCollection();
+        $this->name = "TBA";
     }
 
     public function getId(): ?int
