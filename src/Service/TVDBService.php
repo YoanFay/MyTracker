@@ -139,6 +139,7 @@ class TVDBService
         }
 
         $lienImage = null;
+        $score = 0;
 
         foreach ($data['artworks'] as $artwork) {
             if ($artwork['language'] === "fra") {
@@ -146,7 +147,12 @@ class TVDBService
                 $serie->setVfName(true);
                 break;
             } else if ($artwork['language'] === "eng" || $artwork['language'] === null) {
-                $lienImage = $artwork['image'];
+
+                if($artwork['score'] > $score){
+                    $lienImage = $artwork['image'];
+                    $score = $artwork['score'];
+                }
+
             }
         }
 
