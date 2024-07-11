@@ -200,8 +200,9 @@ class TVDBService
             $serie->setArtwork($cheminImageDestination);
 
         } else {
+            print_r($serie->getName()." - Pas d'artwork\n");
             $serie->setArtwork(null);
-            $serie->setVfName(false);
+            $serie->setVfArtwork(false);
         }
     }
 
