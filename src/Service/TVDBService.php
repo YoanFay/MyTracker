@@ -139,7 +139,7 @@ class TVDBService
         }
 
         $lienImage = null;
-        $score = 0;
+        $score = -1;
 
         foreach ($data['artworks'] as $artwork) {
             if ($artwork['language'] === "fra" && $artwork['includesText'] && $artwork['score'] >= $score) {
@@ -151,7 +151,7 @@ class TVDBService
 
         if ($lienImage === null) {
 
-            $score = 0;
+            $score = -1;
 
             foreach ($data['artworks'] as $artwork) {
                 if ($artwork['language'] === "eng" && $artwork['includesText'] && $artwork['score'] >= $score) {
@@ -164,10 +164,10 @@ class TVDBService
 
         if ($lienImage === null) {
 
-            $score = 0;
+            $score = -1;
 
             foreach ($data['artworks'] as $artwork) {
-                if ($artwork['language'] === null && $artwork['score'] >= $score) {
+                if (/*$artwork['language'] === null && */$artwork['score'] >= $score) {
                         $lienImage = $artwork['image'];
                         $score = $artwork['score'];
                 }
