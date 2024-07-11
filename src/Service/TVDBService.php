@@ -141,6 +141,7 @@ class TVDBService
         foreach ($data['artworks'] as $artwork) {
             if ($artwork['language'] === "fra") {
                 $lienImage = $artwork['image'];
+                $serie->setVfName(true);
                 break;
             } else if ($artwork['language'] === "eng" || $artwork['language'] === null) {
                 $lienImage = $artwork['image'];
@@ -163,6 +164,7 @@ class TVDBService
             $serie->setArtwork($cheminImageDestination);
         } else {
             $serie->setArtwork(null);
+            $serie->setVfName(false);
         }
     }
 

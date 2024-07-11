@@ -67,6 +67,9 @@ class Serie
     #[ORM\OneToMany(mappedBy: 'serie', targetEntity: SerieUpdate::class)]
     private Collection $serieUpdates;
 
+    #[ORM\Column(type: "boolean")]
+    private bool $vfArtwork = false;
+
     public function __construct()
     {
         $this->episodeShows = new ArrayCollection();
@@ -376,6 +379,18 @@ class Serie
                 $serieUpdate->setSerie(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isVfArtwork(): ?bool
+    {
+        return $this->vfArtwork;
+    }
+
+    public function setVfArtwork(bool $vfArtwork): static
+    {
+        $this->vfArtwork = $vfArtwork;
 
         return $this;
     }

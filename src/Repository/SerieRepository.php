@@ -70,7 +70,7 @@ class SerieRepository extends ServiceEntityRepository
     public function findArtworkId(): array
     {
         return $this->createQueryBuilder('s')
-            ->andWhere('s.artwork IS NULL')
+            ->andWhere('s.vfArtwork IS NULL')
             ->andWhere('s.tvdbId IS NOT NULL')
             ->getQuery()
             ->getResult()
