@@ -152,6 +152,10 @@ class TVDBService
             return;
         }
 
+        if($serie->getArtwork()){
+            unlink($serie->getArtwork());
+        }
+
         $cover = imagecreatefromstring(file_get_contents($lienImage));
 
         $projectDir = $this->kernel->getProjectDir();
@@ -161,7 +165,9 @@ class TVDBService
 
         // Téléchargement et enregistrement de l'image
         if (imagejpeg($cover, $projectDir.$cheminImageDestination, 100)) {
+
             $serie->setArtwork($cheminImageDestination);
+
         } else {
             $serie->setArtwork(null);
             $serie->setVfName(false);
