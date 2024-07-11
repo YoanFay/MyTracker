@@ -118,25 +118,38 @@ class TVDBService
     public function updateArtwork(Serie $serie): void
     {
 
-        $data = self::getData("/series/".$serie->getTvdbId()."/artworks?lang=fra&type=2");
+        //$data = self::getData("/series/".$serie->getTvdbId()."/artworks?lang=fra&type=2");
+        $data = self::getData("/series/".$serie->getTvdbId()."/artworks?type=2");
 
         $status = $data['status'];
         $data = $data['data'];
 
-        if ($status === "success" && $data['artworks'] == []) {
+        /*if ($status === "success" && $data['artworks'] == []) {
 
             $data = self::getData("/series/".$serie->getTvdbId()."/artworks?lang=eng&type=2");
 
             $status = $data['status'];
             $data = $data['data'];
-        }
+        }*/
 
         if ($status === "success" && $data['artworks'] == []) {
             return;
         }
 
-        // Lien de l'image à télécharger
-        $lienImage = $data['artworks'][0]['image'];
+        $lienImage = null;
+
+        foreach ($data['artworks'] as $artwork) {
+            if ($artwork['language'] === "fra") {
+                $lienImage = $artwork['image'];
+                break;
+            } else if ($artwork['language'] === "eng" || $artwork['language'] === null) {
+                $lienImage = $artwork['image'];
+            }
+        }
+
+        if ($lienImage === null) {
+            return;
+        }
 
         $cover = imagecreatefromstring(file_get_contents($lienImage));
 
