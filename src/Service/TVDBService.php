@@ -181,7 +181,7 @@ class TVDBService
         }
 
         if ($lienImage === null) {
-            print_r($serie->getName()." - Pas d'artwork<br>");
+            print_r($serie->getName()." - Pas d'artwork\n");
             return;
         }
 
