@@ -143,23 +143,46 @@ class TVDBService
 
         foreach ($data['artworks'] as $artwork) {
             if ($artwork['language'] === "fra") {
-                $lienImage = $artwork['image'];
-                $serie->setVfName(true);
+
+                if ($artwork['score'] > $score) {
+                    $lienImage = $artwork['image'];
+                    $serie->setVfName(true);
+                }
             }
         }
 
         if ($lienImage === null) {
+
+            $score = 0;
+
             foreach ($data['artworks'] as $artwork) {
                 if ($artwork['language'] === "eng") {
-                    $lienImage = $artwork['image'];
-                    break;
+
+                    if ($artwork['score'] > $score) {
+                        $lienImage = $artwork['image'];
+                        $serie->setVfName(true);
+                    }
+
                 } else if ($artwork['language'] === null) {
 
                     if ($artwork['score'] > $score) {
                         $lienImage = $artwork['image'];
                         $score = $artwork['score'];
                     }
+                }
+            }
+        }
 
+        if ($lienImage === null) {
+
+            $score = 0;
+
+            foreach ($data['artworks'] as $artwork) {
+                if ($artwork['language'] === null) {
+
+                    if ($artwork['score'] > $score) {
+                        $lienImage = $artwork['image'];
+                    }
                 }
             }
         }
