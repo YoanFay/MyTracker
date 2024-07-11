@@ -118,6 +118,8 @@ class TVDBService
     public function updateArtwork(Serie $serie): void
     {
 
+        $projectDir = $this->kernel->getProjectDir();
+
         //$data = self::getData("/series/".$serie->getTvdbId()."/artworks?lang=fra&type=2");
         $data = self::getData("/series/".$serie->getTvdbId()."/artworks?type=2");
 
@@ -153,12 +155,10 @@ class TVDBService
         }
 
         if($serie->getArtwork()){
-            unlink($serie->getArtwork());
+            unlink($projectDir.$serie->getArtwork());
         }
 
         $cover = imagecreatefromstring(file_get_contents($lienImage));
-
-        $projectDir = $this->kernel->getProjectDir();
 
         // Chemin où enregistrer l'image
         $cheminImageDestination = "/public/image/serie/poster/".$serie->getSlug().'.jpeg';
