@@ -145,14 +145,22 @@ class TVDBService
             if ($artwork['language'] === "fra") {
                 $lienImage = $artwork['image'];
                 $serie->setVfName(true);
-                break;
-            } else if ($artwork['language'] === "eng" || $artwork['language'] === null) {
+            }
+        }
 
-                if($artwork['score'] > $score){
+        if ($lienImage === null) {
+            foreach ($data['artworks'] as $artwork) {
+                if ($artwork['language'] === "eng") {
                     $lienImage = $artwork['image'];
-                    $score = $artwork['score'];
-                }
+                    break;
+                } else if ($artwork['language'] === null) {
 
+                    if ($artwork['score'] > $score) {
+                        $lienImage = $artwork['image'];
+                        $score = $artwork['score'];
+                    }
+
+                }
             }
         }
 
@@ -160,7 +168,7 @@ class TVDBService
             return;
         }
 
-        if($serie->getArtwork()){
+        if ($serie->getArtwork()) {
             unlink($projectDir.$serie->getArtwork());
         }
 
