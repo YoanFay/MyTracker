@@ -146,7 +146,7 @@ class TVDBService
 
                 if ($artwork['score'] > $score) {
                     $lienImage = $artwork['image'];
-                    $serie->setVfName(true);
+                    $serie->setVfArtwork(true);
                 }
             }
         }
@@ -160,7 +160,7 @@ class TVDBService
 
                     if ($artwork['score'] > $score) {
                         $lienImage = $artwork['image'];
-                        $serie->setVfName(true);
+                        $serie->setVfArtwork(true);
                     }
                 }
             }
