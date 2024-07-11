@@ -142,7 +142,7 @@ class TVDBService
         $score = 0;
 
         foreach ($data['artworks'] as $artwork) {
-            if ($artwork['language'] === "fra" && $artwork['includesText'] && $artwork['score'] > $score) {
+            if ($artwork['language'] === "fra" && $artwork['includesText'] && $artwork['score'] >= $score) {
                     $lienImage = $artwork['image'];
                     $serie->setVfArtwork(true);
                     $score = $artwork['score'];
@@ -154,7 +154,7 @@ class TVDBService
             $score = 0;
 
             foreach ($data['artworks'] as $artwork) {
-                if ($artwork['language'] === "eng" && $artwork['includesText'] && $artwork['score'] > $score) {
+                if ($artwork['language'] === "eng" && $artwork['includesText'] && $artwork['score'] >= $score) {
                         $lienImage = $artwork['image'];
                         $serie->setVfArtwork(true);
                         $score = $artwork['score'];
@@ -167,7 +167,7 @@ class TVDBService
             $score = 0;
 
             foreach ($data['artworks'] as $artwork) {
-                if ($artwork['language'] === null && $artwork['score'] > $score) {
+                if ($artwork['language'] === null && $artwork['score'] >= $score) {
                         $lienImage = $artwork['image'];
                         $score = $artwork['score'];
                 }
