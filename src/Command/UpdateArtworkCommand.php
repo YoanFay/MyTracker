@@ -5,6 +5,7 @@ namespace App\Command;
 use App\Entity\EpisodeShow;
 use App\Repository\EpisodeShowRepository;
 use App\Repository\SerieRepository;
+use App\Service\TVDBService;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
@@ -25,21 +26,21 @@ class UpdateArtworkCommand extends Command
 
     private SerieRepository $serieRepository;
 
-    private EpisodeShowRepository $episodeShowRepository;
-
     private ObjectManager $manager;
     
     private KernelInterface $kernel;
 
+    private TVDBService $TVDBService;
 
-    public function __construct(SerieRepository $serieRepository, EpisodeShowRepository $episodeShowRepository, ManagerRegistry $managerRegistry, KernelInterface $kernel)
+
+    public function __construct(SerieRepository $serieRepository, ManagerRegistry $managerRegistry, KernelInterface $kernel, TVDBService $TVDBService)
     {
 
         parent::__construct();
         $this->serieRepository = $serieRepository;
-        $this->episodeShowRepository = $episodeShowRepository;
         $this->manager = $managerRegistry->getManager();
         $this->kernel = $kernel;
+        $this->TVDBService = $TVDBService;
     }
 
 
@@ -57,75 +58,11 @@ class UpdateArtworkCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
 
-        $client = new Client();
-
-        $apiUrl = 'https://api4.thetvdb.com/v4';
-
-        $apiToken = '8f3a7d8f-c61f-4bf7-930d-65eeab4b26ad';
-
-        $response = $client->post($apiUrl."/login", [
-            'headers' => [
-                'Content-Type' => 'application/json',
-                'Accept' => 'application/json',
-            ],
-            'json' => ['apiKey' => $apiToken],
-        ]);
-
-        $data = json_decode($response->getBody(), true);
-
-        // Récupérez le token
-        $token = $data['data']['token'];
-
         $series = $this->serieRepository->findArtworkId();
 
         foreach ($series as $serie) {
 
-            $response = $client->get($apiUrl."/series/".$serie->getTvdbId()."/artworks?lang=fra&type=2", [
-                'headers' => [
-                    'Authorization' => 'Bearer '.$token,
-                    'Content-Type' => 'application/json',
-                    'Accept' => 'application/json',
-                ],
-            ]);
-
-            $data = json_decode($response->getBody(), true);
-            $status = $data['status'];
-            $data = $data['data'];
-            if ($status === "success" && $data['artworks'] == []) {
-
-                $response = $client->get($apiUrl."/series/".$serie->getTvdbId()."/artworks?lang=eng&type=2", [
-                    'headers' => [
-                        'Authorization' => 'Bearer '.$token,
-                        'Content-Type' => 'application/json',
-                        'Accept' => 'application/json',
-                    ],
-                ]);
-
-                $data = json_decode($response->getBody(), true);
-                $status = $data['status'];
-                $data = $data['data'];
-            }
-
-            if ($status === "success" && $data['artworks'] == []) {
-                continue;
-            }
-            
-            // Lien de l'image à télécharger
-            $lienImage = $data['artworks'][0]['image'];
-                
-            $cover = imagecreatefromstring(file_get_contents($lienImage));
-            
-            $projectDir = $this->kernel->getProjectDir();
-
-            // Chemin où enregistrer l'image
-            $cheminImageDestination = "/public/image/serie/poster/" . $serie->getSlug().'.jpeg';
-
-            // Téléchargement et enregistrement de l'image
-            if (imagejpeg($cover, $projectDir . $cheminImageDestination, 100)) {
-                $serie->setArtwork($cheminImageDestination);
-            } else {
-                $serie->setArtwork(null);
-            }
+            $this->TVDBService->updateArtwork($serie);
 
             $this->manager->persist($serie);
             $this->manager->flush();
