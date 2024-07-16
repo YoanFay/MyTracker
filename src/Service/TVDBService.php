@@ -2,8 +2,12 @@
 
 namespace App\Service;
 
+use App\Entity\Company;
 use App\Entity\EpisodeShow;
 use App\Entity\Serie;
+use DateTime;
+use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ObjectManager;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Psr\Cache\InvalidArgumentException;
@@ -16,11 +20,14 @@ class TVDBService
 
     private KernelInterface $kernel;
 
+    private ObjectManager $manager;
 
-    public function __construct(KernelInterface $kernel)
+
+    public function __construct(KernelInterface $kernel, ManagerRegistry $managerRegistry)
     {
 
         $this->kernel = $kernel;
+        $this->manager = $managerRegistry->getManager();
     }
 
 
@@ -126,14 +133,6 @@ class TVDBService
         $status = $data['status'];
         $data = $data['data'];
 
-        /*if ($status === "success" && $data['artworks'] == []) {
-
-            $data = self::getData("/series/".$serie->getTvdbId()."/artworks?lang=eng&type=2");
-
-            $status = $data['status'];
-            $data = $data['data'];
-        }*/
-
         if ($status === "success" && $data['artworks'] == []) {
             return;
         }
@@ -224,6 +223,48 @@ class TVDBService
 
             $episodeShow->setDuration($duration);
         }
+    }
+
+    public function createCompany($id): ?Company
+    {
+
+        $data = self::getData("/companies/".$id);
+
+        if ($data !== null && $data['status'] === "success") {
+
+            $data = $data['data'];
+
+            $company = new Company();
+
+            $company->setTvdbId($id);
+            $company->setName($data['name']);
+            $company->setType($data['companyType']['companyTypeName']);
+            $company->setCountry($data['country']);
+
+            if(isset($data['activeDate'])){
+
+                $startedDate = DateTime::createFromFormat('Y-m-d', $data['activeDate']);
+
+                if($startedDate) {
+                    $company->setStartedAt($startedDate);
+                }
+            }
+
+            if($data['parentCompany']['id']){
+
+                $company->setParent(self::createCompany($data['parentCompany']['id']));
+
+            }
+
+            $this->manager->persist($company);
+            $this->manager->flush();
+
+            return $company;
+
+        }
+
+        return null;
+
     }
 
 }

@@ -70,15 +70,19 @@ class Serie
     #[ORM\Column(type: "boolean")]
     private bool $vfArtwork = false;
 
+    #[ORM\ManyToMany(targetEntity: Company::class, inversedBy: 'series')]
+    private Collection $company;
+
     public function __construct()
     {
+        $this->name = "TBA";
         $this->episodeShows = new ArrayCollection();
         $this->genres = new ArrayCollection();
         $this->tags = new ArrayCollection();
         $this->animeGenres = new ArrayCollection();
         $this->animeThemes = new ArrayCollection();
         $this->serieUpdates = new ArrayCollection();
-        $this->name = "TBA";
+        $this->company = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -391,6 +395,30 @@ class Serie
     public function setVfArtwork(bool $vfArtwork): static
     {
         $this->vfArtwork = $vfArtwork;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Company>
+     */
+    public function getCompany(): Collection
+    {
+        return $this->company;
+    }
+
+    public function addCompany(Company $company): static
+    {
+        if (!$this->company->contains($company)) {
+            $this->company->add($company);
+        }
+
+        return $this;
+    }
+
+    public function removeCompany(Company $company): static
+    {
+        $this->company->removeElement($company);
 
         return $this;
     }
