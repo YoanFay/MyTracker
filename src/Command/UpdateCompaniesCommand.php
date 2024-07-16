@@ -51,21 +51,13 @@ class UpdateCompaniesCommand extends Command
 
         $series = $this->serieRepository->noCompanies();
 
-        print_r('Je récupére les séries \n\n');
-
         foreach ($series as $serie) {
 
-            print_r('Je regarde une série \n\n');
-
-            $data = $this->TVDBService->getData('series/'.$serie->getTvdbId().'/extended');
-
-            print_r('ID : '.$data['data']['companies'][0]['id']);
+            $data = $this->TVDBService->getData('/series/'.$serie->getTvdbId().'/extended');
 
             $companies = $data['data']['companies'];
 
             foreach ($companies as $company){
-
-                print_r('Je regarde une company \n\n');
 
                 $searchCompany = $this->companyRepository->findOneBy(['tvdbId' => $company['id']]);
 
