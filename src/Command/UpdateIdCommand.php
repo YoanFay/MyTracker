@@ -5,18 +5,14 @@ namespace App\Command;
 use App\Entity\EpisodeShow;
 use App\Repository\EpisodeShowRepository;
 use App\Repository\SerieRepository;
+use App\Service\TVDBService;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
-use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
-use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
 
 
 class UpdateIdCommand extends Command
@@ -28,14 +24,17 @@ class UpdateIdCommand extends Command
 
     private ObjectManager $manager;
 
+    private TVDBService $TVDBService;
 
-    public function __construct(SerieRepository $serieRepository, EpisodeShowRepository $episodeShowRepository, ManagerRegistry $managerRegistry)
+
+    public function __construct(SerieRepository $serieRepository, EpisodeShowRepository $episodeShowRepository, ManagerRegistry $managerRegistry, TVDBService $TVDBService)
     {
 
         parent::__construct();
         $this->serieRepository = $serieRepository;
         $this->episodeShowRepository = $episodeShowRepository;
         $this->manager = $managerRegistry->getManager();
+        $this->TVDBService = $TVDBService;
     }
 
 
@@ -53,25 +52,6 @@ class UpdateIdCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
 
-        $client = new Client();
-
-        $apiUrl = 'https://api4.thetvdb.com/v4';
-
-        $apiToken = '8f3a7d8f-c61f-4bf7-930d-65eeab4b26ad';
-
-        $response = $client->post($apiUrl."/login", [
-            'headers' => [
-                'Content-Type' => 'application/json',
-                'Accept' => 'application/json',
-            ],
-            'json' => ['apiKey' => $apiToken],
-        ]);
-
-        $data = json_decode($response->getBody(), true);
-
-        // Récupérez le token
-        $token = $data['data']['token'];
-
         $series = $this->serieRepository->findNotTvdbId();
 
         foreach ($series as $serie) {
@@ -81,15 +61,8 @@ class UpdateIdCommand extends Command
             $episode = $this->episodeShowRepository->findBySerie($serie);
 
             if ($episode && $episode->getTvdbId()) {
-                $response = $client->get($apiUrl."/episodes/".$episode->getTvdbId(), [
-                    'headers' => [
-                        'Authorization' => 'Bearer '.$token,
-                        'Content-Type' => 'application/json',
-                        'Accept' => 'application/json',
-                    ],
-                ]);
 
-                $data = json_decode($response->getBody(), true);
+                $data = $this->TVDBService->getData("/episodes/".$episode->getTvdbId());
 
                 $serie->setTvdbId($data['data']['seriesId']);
 
@@ -105,15 +78,8 @@ class UpdateIdCommand extends Command
                 $data3 = null;
 
                 if ($episodeWithoutTVDB->getSerie()->getTvdbId()) {
-                    $response = $client->get($apiUrl."/series/".$episodeWithoutTVDB->getSerie()->getTvdbId()."/episodes/default?page=1&season=".$episodeWithoutTVDB->getSaisonNumber()."&episodeNumber=".$episodeWithoutTVDB->getEpisodeNumber(), [
-                        'headers' => [
-                            'Authorization' => 'Bearer '.$token,
-                            'Content-Type' => 'application/json',
-                            'Accept' => 'application/json',
-                        ],
-                    ]);
 
-                    $data3 = json_decode($response->getBody(), true);
+                    $data3 = $this->TVDBService->getData("/series/".$episodeWithoutTVDB->getSerie()->getTvdbId()."/episodes/default?page=1&season=".$episodeWithoutTVDB->getSaisonNumber()."&episodeNumber=".$episodeWithoutTVDB->getEpisodeNumber());
 
                     $episodeWithoutTVDB->setTvdbId($data3['data']['episodes'][0]['id']);
 

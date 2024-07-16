@@ -10,15 +10,9 @@ use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\GuzzleException;
-use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
 
 
 class UpdateDateCommand extends Command
@@ -53,32 +47,17 @@ class UpdateDateCommand extends Command
 
 
     /**
-     * @throws GuzzleException|NonUniqueResultException
+     * @throws NonUniqueResultException
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-
-        $client = new Client();
         $today = new DateTime();
-
-        $apiUrl = 'https://api4.thetvdb.com/v4';
-
-        // Récupérez le token
-        $token = $this->TVDBService->getKey();
 
         $series = $this->serieRepository->noFirstAired();
 
         foreach ($series as $serie) {
 
-            $response = $client->get($apiUrl."/series/".$serie->getTvdbId()."/extended?meta=translations&short=true", [
-                'headers' => [
-                    'Authorization' => 'Bearer '.$token,
-                    'Content-Type' => 'application/json',
-                    'Accept' => 'application/json',
-                ],
-            ]);
-
-            $data = json_decode($response->getBody(), true);
+            $data = $this->TVDBService->getData("/series/".$serie->getTvdbId()."/extended?meta=translations&short=true");
 
             $firstAired = DateTime::createFromFormat('Y-m-d', $data['data']['firstAired']);
 
@@ -92,15 +71,7 @@ class UpdateDateCommand extends Command
 
         foreach ($series as $serie) {
 
-            $response = $client->get($apiUrl."/series/".$serie->getTvdbId()."/extended?meta=translations&short=true", [
-                'headers' => [
-                    'Authorization' => 'Bearer '.$token,
-                    'Content-Type' => 'application/json',
-                    'Accept' => 'application/json',
-                ],
-            ]);
-
-            $data = json_decode($response->getBody(), true);
+            $data = $this->TVDBService->getData("/series/".$serie->getTvdbId()."/extended?meta=translations&short=true");
 
             if ($serie->getStatus() !== $data['data']['status']['name']) {
 
@@ -135,15 +106,7 @@ class UpdateDateCommand extends Command
                 $serieUpdate->setUpdatedAt($today);
             }
 
-            $response = $client->get($apiUrl."/series/".$serie->getTvdbId()."/extended?meta=translations&short=true", [
-                'headers' => [
-                    'Authorization' => 'Bearer '.$token,
-                    'Content-Type' => 'application/json',
-                    'Accept' => 'application/json',
-                ],
-            ]);
-
-            $data = json_decode($response->getBody(), true);
+            $data = $this->TVDBService->getData("/series/".$serie->getTvdbId()."/extended?meta=translations&short=true");
 
             if ($data['data']['nextAired']) {
 

@@ -2,15 +2,11 @@
 
 namespace App\Command;
 
-use Symfony\Component\Console\Attribute\AsCommand;
+use App\Service\TVDBService;
+use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\GuzzleException;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Repository\SerieRepository;
 use App\Repository\GenresRepository;
@@ -28,6 +24,8 @@ class UpdateGenreTagCommand extends Command
     private genresRepository $genresRepository;
     private tagsRepository $tagsRepository;
     private tagsTypeRepository $tagsTypeRepository;
+    private TVDBService $TVDBService;
+    private ObjectManager $manager;
 
 
     protected function configure(): void
@@ -38,7 +36,7 @@ class UpdateGenreTagCommand extends Command
     }
 
 
-    public function __construct(SerieRepository $serieRepository, GenresRepository $genresRepository, TagsRepository $tagsRepository, TagsTypeRepository $tagsTypeRepository, ManagerRegistry $managerRegistry)
+    public function __construct(SerieRepository $serieRepository, GenresRepository $genresRepository, TagsRepository $tagsRepository, TagsTypeRepository $tagsTypeRepository, ManagerRegistry $managerRegistry, TVDBService $TVDBService)
     {
 
         parent::__construct();
@@ -47,43 +45,17 @@ class UpdateGenreTagCommand extends Command
         $this->tagsRepository = $tagsRepository;
         $this->tagsTypeRepository = $tagsTypeRepository;
         $this->manager = $managerRegistry->getManager();
+        $this->TVDBService = $TVDBService;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         
-        $client = new Client();
-
-        $apiUrl = 'https://api4.thetvdb.com/v4';
-
-        $apiToken = '8f3a7d8f-c61f-4bf7-930d-65eeab4b26ad';
-
-        $response = $client->post($apiUrl."/login", [
-            'headers' => [
-                'Content-Type' => 'application/json',
-                'Accept' => 'application/json',
-            ],
-            'json' => ['apiKey' => $apiToken],
-        ]);
-
-        $data = json_decode($response->getBody(), true);
-
-        // Récupérez le token
-        $token = $data['data']['token'];
-        
         $series = $this->serieRepository->findNoGenre();
         
         foreach($series as $serie){
-            
-                $response = $client->get($apiUrl."/series/".$serie->getTvdbId()."/extended", [
-                    'headers' => [
-                        'Authorization' => 'Bearer '.$token,
-                        'Content-Type' => 'application/json',
-                        'Accept' => 'application/json',
-                    ],
-                ]);
 
-                $data = json_decode($response->getBody(), true);
+                $data = $this->TVDBService->getData("/series/".$serie->getTvdbId()."/extended");
                 
                 if($data['status'] === "success"){
                     

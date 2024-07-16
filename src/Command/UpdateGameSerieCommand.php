@@ -8,19 +8,17 @@ use App\Repository\GameSerieRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
     name: 'app:update-game-serie',
     description: 'Pour mettre à jour la série des jeux',
 )]
-class UpdateMovieSerieCommand extends Command
+class UpdateGameSerieCommand extends Command
 {
 
 
@@ -40,6 +38,10 @@ class UpdateMovieSerieCommand extends Command
         $this->manager = $managerRegistry->getManager();
     }
 
+
+    /**
+     * @throws GuzzleException
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
 
