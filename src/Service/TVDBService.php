@@ -5,6 +5,7 @@ namespace App\Service;
 use App\Entity\Company;
 use App\Entity\EpisodeShow;
 use App\Entity\Serie;
+use App\Repository\CompanyRepository;
 use DateTime;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
@@ -22,12 +23,15 @@ class TVDBService
 
     private ObjectManager $manager;
 
+    private CompanyRepository $companyRepository;
 
-    public function __construct(KernelInterface $kernel, ManagerRegistry $managerRegistry)
+
+    public function __construct(KernelInterface $kernel, ManagerRegistry $managerRegistry, CompanyRepository $companyRepository)
     {
 
         $this->kernel = $kernel;
         $this->manager = $managerRegistry->getManager();
+        $this->companyRepository = $companyRepository;
     }
 
 
@@ -252,7 +256,13 @@ class TVDBService
 
             if($data['parentCompany']['id']){
 
-                $company->setParent(self::createCompany($data['parentCompany']['id']));
+                $searchCompany = $this->companyRepository->findOneBy(['tvdbId' => $company['id']]);
+
+                if(!$searchCompany){
+                    $company->setParent(self::createCompany($data['parentCompany']['id']));
+                }else{
+                    $company->setParent($searchCompany);
+                }
 
             }
 
