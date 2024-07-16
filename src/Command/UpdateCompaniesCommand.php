@@ -49,7 +49,7 @@ class UpdateCompaniesCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
 
-        $series = $this->serieRepository->findAll();
+        $series = $this->serieRepository->noCompanies();
 
         foreach ($series as $serie) {
 

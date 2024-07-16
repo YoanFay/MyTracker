@@ -178,6 +178,19 @@ class SerieRepository extends ServiceEntityRepository
             ;
     }
 
+    /**
+     * @return Serie[] Returns an array of Serie objects
+     */
+    public function noCompanies(): array
+    {
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.company is EMPTY')
+            ->andWhere('s.tvdbId IS NOT NULL')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
 
 //    public function findOneBySomeField($value): ?Serie
 //    {
