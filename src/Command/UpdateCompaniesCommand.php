@@ -53,7 +53,7 @@ class UpdateCompaniesCommand extends Command
 
         foreach ($series as $serie) {
 
-            $data = $this->TVDBService->getData('series/'.$serie->getId().'/extended');
+            $data = $this->TVDBService->getData('series/'.$serie->getTvdbId().'/extended');
 
             $companies = $data['data']['companies'];
 
