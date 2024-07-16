@@ -256,7 +256,7 @@ class TVDBService
 
             if($data['parentCompany']['id']){
 
-                $searchCompany = $this->companyRepository->findOneBy(['tvdbId' => $company['id']]);
+                $searchCompany = $this->companyRepository->findOneBy(['tvdbId' => $data['parentCompany']['id']]);
 
                 if(!$searchCompany){
                     $company->setParent(self::createCompany($data['parentCompany']['id']));
