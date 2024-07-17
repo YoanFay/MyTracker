@@ -47,14 +47,14 @@ class SerieController extends AbstractController
         $totalDuration = $episodeShowRepository->getDurationBySerie($id);
         $countEpisode = $episodeShowRepository->getCountBySerie($id);
 
-        $studio = null;
-        $network = null;
+        $studios = [];
+        $networks = [];
 
         foreach($serie->getCompany()->getValues() as $company){
             if ($company->getType() === "Studio"){
-                $studio = $company->getName();
+                $studios[] = $company->getName();
             }elseif ($company->getType() === "Network"){
-                $network = $company->getName();
+                $networks[] = $company->getName();
             }
         }
 
@@ -83,8 +83,8 @@ class SerieController extends AbstractController
             'animeGenres' => $animeGenres,
             'animeThemes' => $animeThemes,
             'idSerie' => $idSerie,
-            'studio' => $studio,
-            'network' => $network,
+            'studios' => $studios,
+            'networks' => $networks,
             'navLinkId' => 'serie_list',
         ]);
     }

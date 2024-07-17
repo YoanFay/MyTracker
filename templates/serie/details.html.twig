@@ -10,10 +10,20 @@
                                                           href="{{ path('serie_edit', {'id': serie.id}) }}"><i
                         class="material-icons">edit</i></a>
             <h2>{{ countEpisode }} épisodes vus - {{ totalDuration|MsToHM }} de visionnage total</h2>
-            {% if studio != null%}
-            <h3>Studio : {{ studio }}</h3>
-            {% elseif network != null %}
-                <h3>Créer par : {{ network }}</h3>
+            {% if studios != [] %}
+                <h3>
+                    Studio :
+                    {% for studio in studios %}
+                        {{ studio }}{% if not loop.last %}, {%endif%}
+                    {% endfor %}
+                </h3>
+            {% elseif networks != [] %}
+                <h3>
+                    Créer par :
+                    {% for network in networks %}
+                        {{ network }}{% if not loop.last %}, {%endif%}
+                    {% endfor %}
+                </h3>
             {% endif %}
             <br>
             <div class="d-flex flex-column flex-wrap">
