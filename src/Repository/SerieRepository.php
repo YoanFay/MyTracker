@@ -71,7 +71,7 @@ class SerieRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('s')
             ->leftJoin('s.artwork', 'a')
-            ->andWhere('(a.language <> :eng' AND 'a.language <> :fra) OR s.artwork IS NULL')
+            ->andWhere('(a.language <> :eng AND a.language <> :fra) OR s.artwork IS NULL')
             ->setParameter('eng', 'eng')
             ->setParameter('fra', 'fra')
             ->andWhere('s.tvdbId IS NOT NULL')
