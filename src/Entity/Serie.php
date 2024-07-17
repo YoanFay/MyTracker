@@ -31,9 +31,6 @@ class Serie
     #[ORM\Column(type: "boolean")]
     private $vfName = false;
 
-    #[ORM\Column(type: "string", length: 255, nullable: true)]
-    private $artwork = null;
-
     #[ORM\ManyToMany(targetEntity: Genres::class, mappedBy: 'serie')]
     private Collection $genres;
 
@@ -67,11 +64,11 @@ class Serie
     #[ORM\OneToMany(mappedBy: 'serie', targetEntity: SerieUpdate::class)]
     private Collection $serieUpdates;
 
-    #[ORM\Column(type: "boolean")]
-    private bool $vfArtwork = false;
-
     #[ORM\ManyToMany(targetEntity: Company::class, inversedBy: 'series')]
     private Collection $company;
+
+    #[ORM\OneToOne(inversedBy: 'serie', cascade: ['persist', 'remove'])]
+    private ?Artwork $artwork = null;
 
     public function __construct()
     {
@@ -161,18 +158,6 @@ class Serie
                 $episodeShow->setSerie(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getArtwork(): ?string
-    {
-        return $this->artwork;
-    }
-
-    public function setArtwork(?string $artwork): static
-    {
-        $this->artwork = $artwork;
 
         return $this;
     }
@@ -387,18 +372,6 @@ class Serie
         return $this;
     }
 
-    public function isVfArtwork(): ?bool
-    {
-        return $this->vfArtwork;
-    }
-
-    public function setVfArtwork(bool $vfArtwork): static
-    {
-        $this->vfArtwork = $vfArtwork;
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, Company>
      */
@@ -419,6 +392,18 @@ class Serie
     public function removeCompany(Company $company): static
     {
         $this->company->removeElement($company);
+
+        return $this;
+    }
+
+    public function getArtwork(): ?Artwork
+    {
+        return $this->artwork;
+    }
+
+    public function setArtwork(?Artwork $artwork): static
+    {
+        $this->artwork = $artwork;
 
         return $this;
     }

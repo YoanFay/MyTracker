@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\Artwork;
 use App\Entity\Company;
 use App\Entity\EpisodeShow;
 use App\Entity\Serie;
@@ -141,52 +142,51 @@ class TVDBService
             return;
         }
 
-        $lienImage = null;
+        $image = null;
         $score = -1;
 
         foreach ($data['artworks'] as $artwork) {
             if ($artwork['language'] === "fra" && $artwork['includesText'] && $artwork['score'] >= $score) {
-                    $lienImage = $artwork['image'];
-                    $serie->setVfArtwork(true);
+                $image = $artwork;
                     $score = $artwork['score'];
             }
         }
 
-        if ($lienImage === null) {
+        if ($image === null) {
 
             $score = -1;
 
             foreach ($data['artworks'] as $artwork) {
                 if ($artwork['language'] === "eng" && $artwork['includesText'] && $artwork['score'] >= $score) {
-                        $lienImage = $artwork['image'];
-                        $serie->setVfArtwork(true);
+                    $image = $artwork;
                         $score = $artwork['score'];
                 }
             }
         }
 
-        if ($lienImage === null) {
+        if ($image === null) {
 
             $score = -1;
 
             foreach ($data['artworks'] as $artwork) {
                 if (/*$artwork['language'] === null && */$artwork['score'] >= $score) {
-                        $lienImage = $artwork['image'];
+                        $image = $artwork;
                         $score = $artwork['score'];
                 }
             }
         }
 
-        if ($lienImage === null) {
+        if ($image === null) {
             print_r($serie->getName()." - Pas d'artwork\n");
             return;
         }
 
         if ($serie->getArtwork()) {
-            unlink($projectDir.$serie->getArtwork());
+            unlink($projectDir.$serie->getArtwork()->getPath());
+            $this->manager->remove($serie->getArtwork());
         }
 
-        $cover = imagecreatefromstring(file_get_contents($lienImage));
+        $cover = imagecreatefromstring(file_get_contents($image['image']));
 
         // Chemin où enregistrer l'image
         $cheminImageDestination = "/public/image/serie/poster/".$serie->getSlug().'.jpeg';
@@ -194,12 +194,25 @@ class TVDBService
         // Téléchargement et enregistrement de l'image
         if (imagejpeg($cover, $projectDir.$cheminImageDestination, 100)) {
 
-            $serie->setArtwork($cheminImageDestination);
+            $serieArtwork = new Artwork();
+
+            $serieArtwork->setType('Série');
+            $serieArtwork->setSerie($serie);
+            $serieArtwork->setApiId($image['id']);
+            $serieArtwork->setHeight($image['height']);
+            $serieArtwork->setWidth($image['width']);
+            $serieArtwork->setLanguage($image['language']);
+            $serieArtwork->setPath($cheminImageDestination);
+            $serieArtwork->setText($image['includesText']);
+
+            $this->manager->persist($serieArtwork);
+            $this->manager->flush();
+
+            $serie->setArtwork($serieArtwork);
 
         } else {
             print_r($serie->getName()." - Pas d'artwork\n");
             $serie->setArtwork(null);
-            $serie->setVfArtwork(false);
         }
     }
 

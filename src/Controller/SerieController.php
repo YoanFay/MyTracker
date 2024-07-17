@@ -73,6 +73,20 @@ class SerieController extends AbstractController
             array_push($tagTypes[$tag->getTagsType()->getNameFra()], $tag);
         }
 
+        $height = null;
+        $width = 400;
+
+        $artwork = $serie->getArtwork();
+
+        if ($artwork && $artwork->getPath() && $artwork->getHeight() && $artwork->getWidth() && $artwork->getWidth() > 0){
+
+            if($width > $artwork->getWidth()){
+                $width = $artwork->getWidth();
+            }
+
+            $height = ($width * $artwork->getHeight()) / $artwork->getWidth();
+        }
+
         return $this->render('serie/details.html.twig', [
             'controller_name' => 'SerieController',
             'serie' => $serie,
@@ -85,6 +99,8 @@ class SerieController extends AbstractController
             'idSerie' => $idSerie,
             'studios' => $studios,
             'networks' => $networks,
+            'height' => $height,
+            'width' => $width,
             'navLinkId' => 'serie_list',
         ]);
     }

@@ -70,7 +70,8 @@ class SerieRepository extends ServiceEntityRepository
     public function findArtworkId(): array
     {
         return $this->createQueryBuilder('s')
-            ->andWhere('s.vfArtwork = false')
+            ->leftJoin('s.artwork', 'a')
+            ->andWhere('a.language <> "eng" AND a.language <> "fra"')
             ->andWhere('s.tvdbId IS NOT NULL')
             ->getQuery()
             ->getResult()

@@ -14,14 +14,14 @@
                 <h3>
                     Studio :
                     {% for studio in studios %}
-                        {{ studio }}{% if not loop.last %}, {%endif%}
+                        {{ studio }}{% if not loop.last %}, {% endif %}
                     {% endfor %}
                 </h3>
             {% elseif networks != [] %}
                 <h3>
                     Créer par :
                     {% for network in networks %}
-                        {{ network }}{% if not loop.last %}, {%endif%}
+                        {{ network }}{% if not loop.last %}, {% endif %}
                     {% endfor %}
                 </h3>
             {% endif %}
@@ -97,8 +97,9 @@
             <a class="btn btn-primary"
                href="{% if idSerie %}{{ path('serie', {'id': idSerie}) }}{% else %}{{ path('serie') }}{% endif %}">Retour</a>
         </div>
-        <img {% if serie.artwork %} src="{% if app.environment == "dev" %}{{ serie.artwork|replace({'/public': ''}) }}{% else %}{{ serie.artwork }}{% endif %}" alt="{{ serie.name }} poster" {% else %} src="/image/visuel-a-venir.jpg" alt="Visuel à venir" {% endif %}
-                width="300px" data-bs-toggle="modal" data-bs-target="#imageModal" class="cursor-click">
+        <img {% if serie.artwork and serie.artwork.path %} src="{% if app.environment == "dev" %}{{ serie.artwork.path|replace({'/public': ''}) }}{% else %}{{ serie.artwork.path }}{% endif %}" alt="{{ serie.name }} poster" {% else %} src="/image/visuel-a-venir.jpg" alt="Visuel à venir" {% endif %}
+                width="{{ width }}px" {% if height %}height="{{ height }}px"{% endif %} data-bs-toggle="modal"
+                data-bs-target="#imageModal" class="cursor-click">
     </div>
 
 
@@ -133,7 +134,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body text-center" style="overflow: hidden;">
-                    <img {% if serie.artwork %} src="{% if app.environment == "dev" %}{{ serie.artwork|replace({'/public': ''}) }}{% else %}{{ serie.artwork }}{% endif %}" alt="{{ serie.name }} poster" {% else %} src="/image/visuel-a-venir.jpg" alt="Visuel à venir" {% endif %}
+                    <img {% if serie.artwork and serie.artwork.path %} src="{% if app.environment == "dev" %}{{ serie.artwork.path|replace({'/public': ''}) }}{% else %}{{ serie.artwork.path }}{% endif %}" alt="{{ serie.name }} poster" {% else %} src="/image/visuel-a-venir.jpg" alt="Visuel à venir" {% endif %}
                             style="max-height: calc(100vh - 50px); width: auto; max-width: 100%;">
                 </div>
             </div>
