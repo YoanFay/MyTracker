@@ -23,6 +23,7 @@
             <thead>
             <tr>
                 <th scope="col" class="col-lg-8 col-6">Nom</th>
+                <th scope="col" class="col-lg-8 col-6">Nom API</th>
                 <th scope="col" class="col-lg-2 col-1">Status</th>
                 <th scope="col" class="col-lg-2 col-3">Studio</th>
             </tr>
@@ -30,6 +31,7 @@
             <tbody>
             {% for anime in animes %}
                 <tr>
+                    <td>{{ anime.origin }}</td>
                     <td>{{ anime.name }}</td>
                     <td>{{ anime.status }}</td>
                     <td>{{ anime.studio }}</td>
