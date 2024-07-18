@@ -27,6 +27,8 @@ class TestApiController extends AbstractController
 
         foreach ($series as $serie) {
 
+            sleep(10);
+
             $animeData = [
                 'origin' => $serie->getName()
             ];
@@ -34,8 +36,6 @@ class TestApiController extends AbstractController
             $variables = [
                 "search" => $serie->getName()
             ];
-
-            dump($variables);
 
             $http = new Client;
 
@@ -46,9 +46,6 @@ class TestApiController extends AbstractController
                         'variables' => $variables,
                     ]
                 ]);
-
-                dump($response->getHeader('X-RateLimit-Remaining')[0]);
-                dump($response->getHeader('X-RateLimit-Reset')[0]);
 
             } catch (\Exception $e) {
 
