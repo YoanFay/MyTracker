@@ -31,6 +31,8 @@ class TestApiController extends AbstractController
                 'origin' => $serie->getName()
             ];
 
+            dump($serie->getName());
+
 // Define our query variables and values that will be used in the query request
             $variables = [
                 "search" => $serie->getName()
@@ -47,7 +49,7 @@ class TestApiController extends AbstractController
                     ]
                 ]);
             }catch (\Exception){
-                break;
+                continue;
             }
 
                 if ($response->getHeader('X-RateLimit-Remaining')[0] == 0){
@@ -73,6 +75,9 @@ class TestApiController extends AbstractController
                     'status' => $data['status'],
                     'studio' => $studio,
                 ];
+
+            dump($animeData);
+            dump("--------------------------------------------------------------------------------------------");
 
                 $animes[] = $animeData;
 
