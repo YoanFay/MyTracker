@@ -44,7 +44,9 @@ query ($id: Int) { # Define which variables will be used in the query (id)
             ]
         ]);
 
-        dd($response);
+        $data = json_decode($response->getBody(), true);
+
+        dd($data);
 
 
         return $this->render('test_api/index.html.twig', [
