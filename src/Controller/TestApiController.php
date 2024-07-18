@@ -31,12 +31,10 @@ class TestApiController extends AbstractController
                 'origin' => $serie->getName()
             ];
 
-// Define our query variables and values that will be used in the query request
             $variables = [
-                "search" => $serie->getName()
+                "search" => htmlspecialchars($serie->getName())
             ];
 
-// Make the HTTP Api request
             $http = new Client;
 
             try {
