@@ -44,11 +44,7 @@ class UpdateArtworkCommand extends Command
 
         $series = $this->serieRepository->findArtworkId();
 
-        print_r("J'ai récupérer les séries");
-
         foreach ($series as $serie) {
-
-            print_r("Je test une série");
 
             $this->TVDBService->updateArtwork($serie);
 
