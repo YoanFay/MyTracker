@@ -21,6 +21,8 @@ class TestApiController extends AbstractController
 
         $series = $serieRepository->findAnime();
 
+        dd($series);
+
         $animes = [];
 
         $query = 'query ($search: String) { Media (search: $search, type: ANIME) { title{english}, type, status ,studios{nodes{id, name, isAnimationStudio}}}}';
