@@ -15,3 +15,10 @@ framework:
     #fragments: true
     php_errors:
         log: true
+
+when@dev:
+    framework:
+        http_client:
+            default_options:
+                verify_peer: true
+                cafile: '%kernel.project_dir%/config/cacert.pem'
