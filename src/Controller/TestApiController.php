@@ -29,7 +29,7 @@ class TestApiController extends AbstractController
 
 // Define our query variables and values that will be used in the query request
             $variables = [
-                "search" => "Alya Sometimes Hides Her Feelings in Russian"
+                "search" => $serie->getName()
             ];
 
 // Make the HTTP Api request
@@ -65,8 +65,6 @@ class TestApiController extends AbstractController
                 ];
 
                 $animes[] = $animeData;
-
-            sleep(30);
 
         }
 
