@@ -27,6 +27,10 @@ class TestApiController extends AbstractController
 
         foreach ($series as $serie) {
 
+            $animeData = [
+                'origin' => $serie->getName()
+            ];
+
 // Define our query variables and values that will be used in the query request
             $variables = [
                 "search" => $serie->getName()
@@ -63,7 +67,7 @@ class TestApiController extends AbstractController
                     }
                 }
 
-                $animeData = [
+                $animeData += [
                     'name' => $data['title']['english'],
                     'status' => $data['status'],
                     'studio' => $studio,
