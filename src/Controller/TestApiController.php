@@ -19,7 +19,7 @@ class TestApiController extends AbstractController
     public function index(SerieRepository $serieRepository): Response
     {
 
-        $series = $serieRepository->findAnimeWithLimit(10);
+        $series = $serieRepository->findAnime();
 
         $animes = [];
 
@@ -43,7 +43,7 @@ class TestApiController extends AbstractController
                 ]);
 
                 if ($response->getHeader('X-RateLimit-Remaining')[0] == 0){
-                    sleep($response->getHeader('X-RateLimit-Reset')[0]);
+                    sleep(70);
                 }
 
                 $data = json_decode($response->getBody(), true);
