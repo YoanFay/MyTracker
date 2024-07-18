@@ -70,7 +70,11 @@ class TestApiController extends AbstractController
 
                 $animes[] = $animeData;
 
+                dump($animeData);
+
         }
+
+        dd($animes);
 
         return $this->render('test_api/index.html.twig', [
             'controller_name' => 'TestApiController',
