@@ -17,22 +17,11 @@ class TestApiController extends AbstractController
     public function index(): Response
     {
 
-        $query = '
-query ($id: Int) { # Define which variables will be used in the query (id)
-  Media (id: $id, type: ANIME) { # Insert our variables into the query arguments (id) (type: ANIME is hard-coded in the query)
-    id
-    title {
-      romaji
-      english
-      native
-    }
-  }
-}
-';
+        $query = 'query ($search: String) { Media (search: $search, type: ANIME) { title{english}, type, status, relations{edges{id, relationType}, nodes{id}} ,studios{nodes{id, name, isAnimationStudio}}}}';
 
 // Define our query variables and values that will be used in the query request
         $variables = [
-            "id" => 15125
+            "search" => "Alya Sometimes Hides Her Feelings in Russian"
         ];
 
 // Make the HTTP Api request
