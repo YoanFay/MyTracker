@@ -194,6 +194,21 @@ class SerieRepository extends ServiceEntityRepository
             ;
     }
 
+    /**
+     * @return Serie[] Returns an array of Serie objects
+     */
+    public function findAnimeWithLimit($limit): array
+    {
+        return $this->createQueryBuilder('s')
+            ->leftJoin('s.serieType', 't')
+            ->andWhere('t.name = :type')
+            ->setParameter('type', 'Anime')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
 
 //    public function findOneBySomeField($value): ?Serie
 //    {

@@ -19,7 +19,7 @@ class TestApiController extends AbstractController
     public function index(SerieRepository $serieRepository): Response
     {
 
-        $series = $serieRepository->findAnime();
+        $series = $serieRepository->findAnimeWithLimit(10);
 
         $animes = [];
 
