@@ -61,7 +61,7 @@ class TestApiController extends AbstractController
                 $animeData = [
                     'name' => $data['title']['english'],
                     'status' => $data['status'],
-                    'Studio d\'animation' => $studio,
+                    'studio' => $studio,
                 ];
 
                 $animes[] = $animeData;
@@ -70,11 +70,9 @@ class TestApiController extends AbstractController
 
         }
 
-        dd($animes);
-
-
         return $this->render('test_api/index.html.twig', [
             'controller_name' => 'TestApiController',
+            'animes' => $animes,
         ]);
     }
 }

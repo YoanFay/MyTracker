@@ -3,18 +3,39 @@
 {% block title %}Hello TestApiController!{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    <style>
+      .example-wrapper {
+        margin: 1em auto;
+        max-width: 800px;
+        width: 95%;
+        font: 18px/1.5 sans-serif;
+      }
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+      .example-wrapper code {
+        background: #F5F5F5;
+        padding: 2px 6px;
+      }
+    </style>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'C:/wamp642/www/MyTracker/src/Controller/TestApiController.php'|file_link(0) }}">src/Controller/TestApiController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/wamp642/www/MyTracker/templates/test_api/index.html.twig'|file_link(0) }}">templates/test_api/index.html.twig</a></code></li>
-    </ul>
-</div>
+    <div class="example-wrapper">
+
+        <table class="table table-hover table-striped table-bordered">
+            <thead>
+            <tr>
+                <th scope="col" class="col-lg-8 col-6">Nom</th>
+                <th scope="col" class="col-lg-2 col-1">Status</th>
+                <th scope="col" class="col-lg-2 col-3">Studio</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for anime in animes %}
+                <tr>
+                    <td>{{ anime.name }}</td>
+                    <td>{{ serie.status }}</td>
+                    <td>{{ serie.studio }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock %}
