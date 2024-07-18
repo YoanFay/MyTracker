@@ -31,8 +31,6 @@ class TestApiController extends AbstractController
                 'origin' => $serie->getName()
             ];
 
-            dump($serie->getName());
-
 // Define our query variables and values that will be used in the query request
             $variables = [
                 "search" => $serie->getName()
@@ -48,7 +46,11 @@ class TestApiController extends AbstractController
                         'variables' => $variables,
                     ]
                 ]);
+
             }catch (\Exception){
+
+                dump($serie->getName());
+
                 continue;
             }
 
@@ -75,9 +77,6 @@ class TestApiController extends AbstractController
                     'status' => $data['status'],
                     'studio' => $studio,
                 ];
-
-            dump($animeData);
-            dump("--------------------------------------------------------------------------------------------");
 
                 $animes[] = $animeData;
 
