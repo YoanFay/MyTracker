@@ -56,6 +56,8 @@ class TestApiController extends AbstractController
 
                 $studio = null;
 
+                dd($data);
+
                 foreach ($data['studios']['node'] as $node) {
 
                     dump($node);
