@@ -60,6 +60,8 @@ class TestApiController extends AbstractController
 
             $animes[] = $animeData;
 
+            sleep(1);
+
         }
 
         dd($animes);
