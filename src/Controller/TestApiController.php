@@ -32,7 +32,7 @@ class TestApiController extends AbstractController
             ];
 
             $variables = [
-                "search" => htmlspecialchars($serie->getName())
+                "search" => $serie->getName()
             ];
 
             $http = new Client;
@@ -45,38 +45,44 @@ class TestApiController extends AbstractController
                     ]
                 ]);
 
-            }catch (\Exception){
+            } catch (\Exception) {
 
-                dump($serie->getName());
+                $animeData += [
+                    'name' => null,
+                    'status' => null,
+                    'studio' => null,
+                ];
+
+                $animes[] = $animeData;
 
                 continue;
             }
 
-                if ($response->getHeader('X-RateLimit-Remaining')[0] == 0){
-                    sleep(70);
+            if ($response->getHeader('X-RateLimit-Remaining')[0] == 0) {
+                sleep(70);
+            }
+
+            $data = json_decode($response->getBody(), true);
+
+            $data = $data['data']['Media'];
+
+            $studio = null;
+
+            foreach ($data['studios']['nodes'] as $node) {
+
+                if ($node['isAnimationStudio']) {
+                    $studio = $node['name'];
                 }
 
-                $data = json_decode($response->getBody(), true);
+            }
 
-                $data = $data['data']['Media'];
+            $animeData += [
+                'name' => $data['title']['english'],
+                'status' => $data['status'],
+                'studio' => $studio,
+            ];
 
-                $studio = null;
-
-                foreach ($data['studios']['nodes'] as $node) {
-
-                    if ($node['isAnimationStudio']) {
-                        $studio = $node['name'];
-                    }
-
-                }
-
-                $animeData += [
-                    'name' => $data['title']['english'],
-                    'status' => $data['status'],
-                    'studio' => $studio,
-                ];
-
-                $animes[] = $animeData;
+            $animes[] = $animeData;
 
         }
 
