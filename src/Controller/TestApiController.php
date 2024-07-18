@@ -42,7 +42,7 @@ class TestApiController extends AbstractController
                     ]
                 ]);
 
-                dd($response->getHeader('X-RateLimit-Remaining'));
+                dd($response->getHeader('X-RateLimit-Remaining')[0]);
 
                 if ($response->getHeader('X-RateLimit-Reset') === 0){
 
