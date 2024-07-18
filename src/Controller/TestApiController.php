@@ -47,6 +47,8 @@ class TestApiController extends AbstractController
                     ]
                 ]);
 
+                dump($response->getHeader('X-RateLimit-Remaining')[0]);
+
             } catch (\Exception $e) {
 
                 dump($e);
