@@ -47,7 +47,7 @@ class TestApiController extends AbstractController
                     ]
                 ]);
             }catch (\Exception){
-                continue;
+                break;
             }
 
                 if ($response->getHeader('X-RateLimit-Remaining')[0] == 0){
@@ -65,6 +65,7 @@ class TestApiController extends AbstractController
                     if ($node['isAnimationStudio']) {
                         $studio = $node['name'];
                     }
+
                 }
 
                 $animeData += [
