@@ -35,6 +35,8 @@ class TestApiController extends AbstractController
                 "search" => $serie->getName()
             ];
 
+            dump($variables);
+
             $http = new Client;
 
             try {
