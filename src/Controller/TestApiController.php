@@ -57,6 +57,9 @@ class TestApiController extends AbstractController
                 $studio = null;
 
                 foreach ($data['studios']['node'] as $node) {
+
+                    dump($node);
+
                     if ($node['isAnimationStudio']) {
                         $studio = $node['name'];
                     }
@@ -70,11 +73,7 @@ class TestApiController extends AbstractController
 
                 $animes[] = $animeData;
 
-                dump($animeData);
-
         }
-
-        dd($animes);
 
         return $this->render('test_api/index.html.twig', [
             'controller_name' => 'TestApiController',
