@@ -43,6 +43,8 @@ class TestApiController extends AbstractController
                     ]
                 ]);
 
+                dd($response->getHeader('X-RateLimit-Remaining'));
+
                 $data = json_decode($response->getBody(), true);
 
                 $data = $data['data']['Media'];
@@ -69,7 +71,7 @@ class TestApiController extends AbstractController
 
             }
 
-            sleep(10);
+            sleep(30);
 
         }
 
