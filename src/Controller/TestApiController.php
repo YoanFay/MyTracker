@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Repository\SerieRepository;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
+use mysql_xdevapi\Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -24,7 +25,7 @@ class TestApiController extends AbstractController
 
         $query = 'query ($search: String) { Media (search: $search, type: ANIME) { title{english}, type, status ,studios{nodes{id, name, isAnimationStudio}}}}';
 
-        foreach ($series as $serie){
+        foreach ($series as $serie) {
 
 // Define our query variables and values that will be used in the query request
             $variables = [
@@ -33,32 +34,40 @@ class TestApiController extends AbstractController
 
 // Make the HTTP Api request
             $http = new Client;
-            $response = $http->post('https://graphql.anilist.co', [
-                'json' => [
-                    'query' => $query,
-                    'variables' => $variables,
-                ]
-            ]);
 
-            $data = json_decode($response->getBody(), true);
+            try {
+                $response = $http->post('https://graphql.anilist.co', [
+                    'json' => [
+                        'query' => $query,
+                        'variables' => $variables,
+                    ]
+                ]);
 
-            $data = $data['data']['Media'];
+                $data = json_decode($response->getBody(), true);
 
-            $studio = null;
+                $data = $data['data']['Media'];
 
-            foreach ($data['studios']['node'] as $node){
-                if($node['isAnimationStudio']){
-                    $studio = $node['name'];
+                $studio = null;
+
+                foreach ($data['studios']['node'] as $node) {
+                    if ($node['isAnimationStudio']) {
+                        $studio = $node['name'];
+                    }
                 }
+
+                $animeData = [
+                    'name' => $data['title']['english'],
+                    'status' => $data['status'],
+                    'Studio d\'animation' => $studio,
+                ];
+
+                $animes[] = $animeData;
+
+            } catch (Exception) {
+
+                dd($animes);
+
             }
-
-            $animeData = [
-                'name' => $data['title']['english'],
-                'status' => $data['status'],
-                'Studio d\'animation' => $studio,
-            ];
-
-            $animes[] = $animeData;
 
             sleep(10);
 
