@@ -35,7 +35,6 @@ class TestApiController extends AbstractController
 // Make the HTTP Api request
             $http = new Client;
 
-            try {
                 $response = $http->post('https://graphql.anilist.co', [
                     'json' => [
                         'query' => $query,
@@ -64,12 +63,6 @@ class TestApiController extends AbstractController
                 ];
 
                 $animes[] = $animeData;
-
-            } catch (Exception) {
-
-                dd($animes);
-
-            }
 
             sleep(30);
 
