@@ -27,8 +27,6 @@ class TestApiController extends AbstractController
 
         foreach ($series as $serie) {
 
-            sleep(10);
-
             $animeData = [
                 'origin' => $serie->getName()
             ];
@@ -48,8 +46,6 @@ class TestApiController extends AbstractController
                 ]);
 
             } catch (\Exception $e) {
-
-                dump($e);
 
                 $animeData += [
                     'name' => null,
