@@ -107,31 +107,28 @@ class UpdateCompaniesCommand extends Command
 
             $data = $data['data']['Media'];
 
-            $studio = null;
-
             foreach ($data['studios']['nodes'] as $node) {
 
                 if ($node['isAnimationStudio']) {
-                    $studio = $node;
+
+                    $company = $this->companyRepository->findOneBy(['name' => $node['name'], 'type' => 'Studio']);
+
+                    if(!$company){
+
+                        $company = new Company();
+
+                        $company->setName($node['name']);
+                        $company->setType('Studio');
+
+                    }
+
+                    $company->addSeries($serie);
+
+                    $this->manager->persist($company);
+                    $this->manager->flush();
                 }
 
             }
-
-            $company = $this->companyRepository->findOneBy(['name' => $studio['name'], 'type' => 'Studio']);
-
-            if(!$company){
-
-                $company = new Company();
-
-                $company->setName($studio['name']);
-                $company->setType('Studio');
-
-            }
-
-            $company->addSeries($serie);
-
-            $this->manager->persist($company);
-            $this->manager->flush();
 
         }
 
