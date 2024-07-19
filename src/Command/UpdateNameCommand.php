@@ -81,7 +81,7 @@ class UpdateNameCommand extends Command
             }
 
             if ($data !== null && $data['status'] === "success") {
-
+                $serie->setNameEng($data['data']['name']);
                 $this->manager->persist($serie);
                 $this->manager->flush();
             }
