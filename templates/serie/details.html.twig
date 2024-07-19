@@ -14,14 +14,14 @@
                 <h3>
                     Studio :
                     {% for studio in studios %}
-                        <a class="text-decoration-none text-black" href="{{ studio.id }}">{{ studio.name }}</a>{% if not loop.last %}, {% endif %}
+                        <a class="text-decoration-none text-black" href=" {{path('serie_company', {'id': studio.id})}}">{{ studio.name }}</a>{% if not loop.last %}, {% endif %}
                     {% endfor %}
                 </h3>
             {% elseif networks != [] %}
                 <h3>
                     Créer par :
                     {% for network in networks %}
-                        <a class="text-decoration-none text-black" href="{{ network.id }}">{{ network.name }}</a>{% if not loop.last %}, {% endif %}
+                        <a class="text-decoration-none text-black" href="{{path('serie_company', {'id': network.id})}}">{{ network.name }}</a>{% if not loop.last %}, {% endif %}
                     {% endfor %}
                 </h3>
             {% endif %}
