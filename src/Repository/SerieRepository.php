@@ -187,8 +187,27 @@ class SerieRepository extends ServiceEntityRepository
     public function noCompanies(): array
     {
         return $this->createQueryBuilder('s')
+            ->leftJoin('s.serieType', 't')
             ->andWhere('s.company is EMPTY')
             ->andWhere('s.tvdbId IS NOT NULL')
+            ->andWhere('t.name <> :type')
+            ->setParameter('type', 'Anime')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    /**
+     * @return Serie[] Returns an array of Serie objects
+     */
+    public function animeNoCompanies(): array
+    {
+        return $this->createQueryBuilder('s')
+            ->leftJoin('s.serieType', 't')
+            ->andWhere('s.company is EMPTY')
+            ->andWhere('s.tvdbId IS NOT NULL')
+            ->andWhere('t.name = :type')
+            ->setParameter('type', 'Anime')
             ->getQuery()
             ->getResult()
             ;
