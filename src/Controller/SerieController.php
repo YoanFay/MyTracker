@@ -8,6 +8,7 @@ use App\Form\SerieEditType;
 use App\Form\SerieAnimeEditType;
 use App\Repository\AnimeGenreRepository;
 use App\Repository\AnimeThemeRepository;
+use App\Repository\CompanyRepository;
 use App\Repository\SerieRepository;
 use App\Repository\EpisodeShowRepository;
 use App\Repository\SerieTypeRepository;
@@ -52,9 +53,9 @@ class SerieController extends AbstractController
 
         foreach($serie->getCompany()->getValues() as $company){
             if ($company->getType() === "Studio"){
-                $studios[] = $company->getName();
+                $studios[] = $company;
             }elseif ($company->getType() === "Network"){
-                $networks[] = $company->getName();
+                $networks[] = $company;
             }
         }
 
@@ -288,6 +289,46 @@ class SerieController extends AbstractController
         $serieTab = [];
 
         foreach ($series as $serie) {
+
+            $lastEpisode = $episodeShowRepository->findLastEpisode($serie);
+
+            $serieTab[] = [
+                'id' => $serie->getId(),
+                'name' => $serie->getName(),
+                'serieType' => $serie->getSerieType()->getName(),
+                'artwork' => $serie->getArtwork(),
+                'lastDate' => $lastEpisode?->getShowDate(),
+            ];
+
+        }
+
+        uasort($serieTab, function ($a, $b) {
+
+            // Utilise strtotime pour convertir les dates en timestamps pour une comparaison facile
+            $dateA = $a['lastDate'];
+            $dateB = $b['lastDate'];
+
+            // Retourne -1 si $dateA est inférieur à $dateB, 1 si supérieur, 0 si égal
+            return $dateB <=> $dateA;
+        });
+
+        return $this->render('serie/index.html.twig', [
+            'controller_name' => 'SerieController',
+            'series' => $serieTab,
+            'navLinkId' => 'serie_list',
+        ]);
+    }
+
+
+    #[Route('/serie/company/{id}', name: 'serie_company')]
+    public function serieByCompany(EpisodeShowRepository $episodeShowRepository, CompanyRepository $companyRepository, $id): Response
+    {
+
+        $company = $companyRepository->find($id);
+
+        $serieTab = [];
+
+        foreach ($company->getSeries() as $serie) {
 
             $lastEpisode = $episodeShowRepository->findLastEpisode($serie);
 
