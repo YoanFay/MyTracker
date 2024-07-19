@@ -71,6 +71,20 @@ class UpdateNameCommand extends Command
                 $this->manager->persist($serie);
                 $this->manager->flush();
             }
+
+            try {
+
+                $data = $this->TVDBService->getData("/series/".$serie->getTvdbId()."/translations/eng");
+
+            } catch (Exception) {
+                $data = null;
+            }
+
+            if ($data !== null && $data['status'] === "success") {
+
+                $this->manager->persist($serie);
+                $this->manager->flush();
+            }
         }
 
         $episodes = $this->episodeShowRepository->findBySerieWithTVDB();

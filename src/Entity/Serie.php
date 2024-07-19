@@ -70,6 +70,9 @@ class Serie
     #[ORM\OneToOne(inversedBy: 'serie', cascade: ['persist', 'remove'])]
     private ?Artwork $artwork = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $nameEng = null;
+
     public function __construct()
     {
         $this->name = "TBA";
@@ -404,6 +407,18 @@ class Serie
     public function setArtwork(?Artwork $artwork): static
     {
         $this->artwork = $artwork;
+
+        return $this;
+    }
+
+    public function getNameEng(): ?string
+    {
+        return $this->nameEng;
+    }
+
+    public function setNameEng(?string $nameEng): static
+    {
+        $this->nameEng = $nameEng;
 
         return $this;
     }

@@ -82,7 +82,7 @@ class UpdateCompaniesCommand extends Command
         foreach ($series as $serie) {
 
             $variables = [
-                "search" => $serie->getName()
+                "search" => $serie->getNameEng()
             ];
 
             $http = new Client();
