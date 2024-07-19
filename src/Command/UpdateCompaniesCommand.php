@@ -24,16 +24,12 @@ class UpdateCompaniesCommand extends Command
 
     private ObjectManager $manager;
 
-    private TVDBService $TVDBService;
-
     private SerieRepository $serieRepository;
 
     private CompanyRepository $companyRepository;
 
-    private Client $client;
 
-
-    public function __construct(ManagerRegistry $managerRegistry, TVDBService $TVDBService, SerieRepository $serieRepository, CompanyRepository $companyRepository, Client $client)
+    public function __construct(ManagerRegistry $managerRegistry, TVDBService $TVDBService, SerieRepository $serieRepository, CompanyRepository $companyRepository)
     {
 
         parent::__construct();
@@ -41,7 +37,6 @@ class UpdateCompaniesCommand extends Command
         $this->TVDBService = $TVDBService;
         $this->serieRepository = $serieRepository;
         $this->companyRepository = $companyRepository;
-        $this->client = $client;
     }
 
 
@@ -90,8 +85,10 @@ class UpdateCompaniesCommand extends Command
                 "search" => $serie->getName()
             ];
 
+            $http = new Client();
+
             try {
-                $response = $this->client->post('https://graphql.anilist.co', [
+                $response = $http->post('https://graphql.anilist.co', [
                     'json' => [
                         'query' => $query,
                         'variables' => $variables,
