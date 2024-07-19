@@ -124,6 +124,12 @@ class TVDBService
             $serie->setName($data['data']['name']);
             $serie->setVfName(true);
         }
+
+        $data = self::getData("/series/".$serie->getTvdbId()."/translations/eng");
+
+        if ($data !== null && $data['status'] === "success") {
+            $serie->setNameEng($data['data']['name']);
+        }
     }
 
 
@@ -267,7 +273,7 @@ class TVDBService
                 }
             }
 
-            if($data['parentCompany']['id']){
+            /*if($data['parentCompany']['id']){
 
                 $searchCompany = $this->companyRepository->findOneBy(['tvdbId' => $data['parentCompany']['id']]);
 
@@ -277,7 +283,7 @@ class TVDBService
                     $company->setParent($searchCompany);
                 }
 
-            }
+            }*/
 
             $this->manager->persist($company);
             $this->manager->flush();

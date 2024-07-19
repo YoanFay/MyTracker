@@ -50,7 +50,7 @@ class UpdateCompaniesCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
 
-        /*$series = $this->serieRepository->noCompanies();
+        $series = $this->serieRepository->noCompanies();
 
         foreach ($series as $serie) {
 
@@ -60,12 +60,14 @@ class UpdateCompaniesCommand extends Command
 
             foreach ($companies as $company){
 
-                $searchCompany = $this->companyRepository->findOneBy(['tvdbId' => $company['id']]);
+                if ($company['companyType']['companyTypeName'] === 'Network') {
+                    $searchCompany = $this->companyRepository->findOneBy(['tvdbId' => $company['id']]);
 
-                if(!$searchCompany){
-                    $serie->addCompany($this->TVDBService->createCompany($company['id']));
-                }else{
-                    $serie->addCompany($searchCompany);
+                    if (!$searchCompany) {
+                        $serie->addCompany($this->TVDBService->createCompany($company['id']));
+                    } else {
+                        $serie->addCompany($searchCompany);
+                    }
                 }
 
             }
@@ -73,7 +75,7 @@ class UpdateCompaniesCommand extends Command
             $this->manager->persist($serie);
             $this->manager->flush();
 
-        }*/
+        }
 
         $series = $this->serieRepository->animeNoCompanies();
 
