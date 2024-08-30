@@ -111,6 +111,8 @@ class UpdateDateCommand extends Command
             $ok = false;
             $name = $serie->getLastSeasonName();
 
+            dump($name);
+
             do {
 
                 $variables = [
