@@ -120,8 +120,6 @@ class UpdateDateCommand extends Command
 
                 $http = new Client();
 
-                dump('ok 2');
-
                 try {
                     $response = $http->post('https://graphql.anilist.co', [
                         'json' => [
@@ -133,8 +131,6 @@ class UpdateDateCommand extends Command
                 } catch (\Exception|GuzzleException $e) {
                     continue;
                 }
-
-                dump('ok 3');
 
                 if ($response->getHeader('X-RateLimit-Remaining')[0] == 0) {
                     sleep(60);
@@ -149,8 +145,6 @@ class UpdateDateCommand extends Command
                     "RELEASING" => "Continuing",
                     "NOT_YET_RELEASED" => "Upcoming",
                 };
-
-                dump($status);
 
                 $relation = null;
                 $relationKey = null;
@@ -195,7 +189,7 @@ class UpdateDateCommand extends Command
 
         $series = $this->serieRepository->updateAired();
 
-        $query = 'query ($search: String) { Media (search: $search, type: ANIME) { nextAiringEpisode{airingAt}, startDate{day, month, year}, endDate{day, month, year}, status, relations{ edges{relationType}, nodes{title{english}} }}';
+        $query = 'query ($search: String) { Media (search: $search, type: ANIME) { nextAiringEpisode{airingAt}, startDate{day, month, year}, endDate{day, month, year}, status, relations{ edges{relationType}, nodes{title{english}} }}}';
 
         foreach ($series as $serie) {
 
@@ -227,7 +221,6 @@ class UpdateDateCommand extends Command
 
 
                 } catch (\Exception|GuzzleException $e) {
-                    dump($e);
                     continue;
                 }
 
