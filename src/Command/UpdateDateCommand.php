@@ -182,6 +182,9 @@ class UpdateDateCommand extends Command
 
             $serie->setLastSeasonName($name);
 
+            $this->manager->persist($serie);
+            $this->manager->flush();
+
             if ($serie->getStatus() !== $status) {
 
                 $serieUpdate = $this->serieUpdateRepository->serieDate($serie, $today->format('Y-m-d'));
