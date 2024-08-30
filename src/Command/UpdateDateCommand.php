@@ -108,7 +108,7 @@ class UpdateDateCommand extends Command
                 $serie->setLastSeasonName($serie->getNameEng());
             }
 
-            $ok = false;
+            $ok = true;
 
             $name = $serie->getLastSeasonName();
 
@@ -158,16 +158,11 @@ class UpdateDateCommand extends Command
                     }
                 }
 
-                dump($relation);
-                dump($status);
-
                 if ($relation && ($status === "Ended" || $status === "Upcoming")) {
                     $name = $data['relations']['nodes'][$relationKey]['title']['english'];
                 } else {
-                    $ok = true;
+                    $ok = false;
                 }
-
-                dump($ok);
 
             } while ($ok);
 
@@ -210,7 +205,7 @@ class UpdateDateCommand extends Command
                 $serie->setLastSeasonName($serie->getNameEng());
             }
 
-            $ok = false;
+            $ok = true;
 
             $name = $serie->getLastSeasonName();
 
@@ -264,7 +259,7 @@ class UpdateDateCommand extends Command
                 if ($relation && $status === "Ended") {
                     $name = $data['relations']['nodes'][$relationKey]['title']['english'];
                 } else {
-                    $ok = true;
+                    $ok = false;
                 }
 
             } while ($ok);
