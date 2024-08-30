@@ -140,6 +140,10 @@ class UpdateDateCommand extends Command
 
                 $data = json_decode($response->getBody(), true);
 
+                if ($data){
+                    dump('ok');
+                }
+
                 $data = $data['data']['Media'];
 
                 $status = match ($data['status']) {

@@ -107,10 +107,6 @@ class UpdateCompaniesCommand extends Command
 
             $data = json_decode($response->getBody(), true);
 
-            if ($data){
-                dump('ok');
-            }
-
             $data = $data['data']['Media'];
 
             foreach ($data['studios']['nodes'] as $node) {
