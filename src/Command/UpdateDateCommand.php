@@ -177,7 +177,7 @@ class UpdateDateCommand extends Command
                 continue;
             }
 
-            dump($status);
+            dump("Status Final : ".$status);
 
             $serie->setLastSeasonName($name);
 
