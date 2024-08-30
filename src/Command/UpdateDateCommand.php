@@ -114,6 +114,8 @@ class UpdateDateCommand extends Command
 
             do {
 
+                dump($name);
+
                 $variables = [
                     "search" => $name
                 ];
