@@ -168,6 +168,12 @@ class UpdateDateCommand extends Command
 
                 if ($relation && ($status === "Ended" || $status === "Upcoming")) {
                     $name = $data['relations']['nodes'][$relationKey]['title']['english'];
+
+                    $serie->setLastSeasonName($name);
+
+                    $this->manager->persist($serie);
+                    $this->manager->flush();
+
                     $ok = true;
                 } else {
                     $ok = false;
@@ -180,11 +186,6 @@ class UpdateDateCommand extends Command
             }
 
             dump("Status Final : ".$status);
-
-            $serie->setLastSeasonName($name);
-
-            $this->manager->persist($serie);
-            $this->manager->flush();
 
             if ($serie->getStatus() !== $status) {
 
