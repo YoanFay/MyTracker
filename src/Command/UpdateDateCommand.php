@@ -136,10 +136,10 @@ class UpdateDateCommand extends Command
 
                 } catch (\Exception|GuzzleException $e) {
                     sleep(60);
-                    continue;
                 }
 
                 if ($response->getHeader('X-RateLimit-Remaining')[0] == 0) {
+                    $ok = false;
                     sleep(60);
                 }
 
@@ -168,13 +168,14 @@ class UpdateDateCommand extends Command
 
                 if ($relation && ($status === "Ended" || $status === "Upcoming")) {
                     $name = $data['relations']['nodes'][$relationKey]['title']['english'];
+                    $ok = true;
                 } else {
                     $ok = false;
                 }
 
             } while ($ok);
 
-            if (!isset($status)){
+            if (!isset($status) || !isset($data)){
                 continue;
             }
 
