@@ -133,16 +133,13 @@ class UpdateDateCommand extends Command
                 } catch (\Exception|GuzzleException $e) {
                     continue;
                 }
+                    dump('ok');
 
                 if ($response->getHeader('X-RateLimit-Remaining')[0] == 0) {
                     sleep(60);
                 }
 
                 $data = json_decode($response->getBody(), true);
-
-                if ($data){
-                    dump('ok');
-                }
 
                 $data = $data['data']['Media'];
 
