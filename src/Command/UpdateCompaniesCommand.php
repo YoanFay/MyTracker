@@ -109,6 +109,10 @@ class UpdateCompaniesCommand extends Command
 
             $data = $data['data']['Media'];
 
+            if ($data){
+                dump('ok');
+            }
+
             foreach ($data['studios']['nodes'] as $node) {
 
                 if ($node['isAnimationStudio']) {
