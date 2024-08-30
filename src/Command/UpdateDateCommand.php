@@ -173,7 +173,7 @@ class UpdateDateCommand extends Command
 
             } while ($ok);
 
-            if (!isset($data)){
+            if (!isset($status)){
                 continue;
             }
 
