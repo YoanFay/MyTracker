@@ -242,13 +242,11 @@ class UpdateDateCommand extends Command
                 $relationKey = null;
 
                 foreach ($data['relations']['edges'] as $key => $relationType) {
-                    if ($relationType === "SEQUEL") {
-                        $relation = $relationType;
+                    if ($relationType['relationType'] === "SEQUEL") {
+                        $relation = $relationType['relationType'];
                         $relationKey = $key;
                     }
                 }
-
-                dump($relation);
 
                 if ($relation && $status === "Ended") {
                     $name = $data['relations']['nodes'][$relationKey]['title']['english'];
