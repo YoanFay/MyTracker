@@ -148,6 +148,8 @@ class UpdateDateCommand extends Command
                     "NOT_YET_RELEASED" => "Upcoming",
                 };
 
+                dump($status);
+
                 $relation = null;
                 $relationKey = null;
 
