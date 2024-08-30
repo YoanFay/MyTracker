@@ -109,11 +109,12 @@ class UpdateDateCommand extends Command
             }
 
             $ok = false;
-            $name = $serie->getLastSeasonName();
-
-            dump($name);
 
             do {
+
+                $name = $serie->getLastSeasonName();
+
+                dump($name);
 
                 $variables = [
                     "search" => $name
@@ -199,9 +200,12 @@ class UpdateDateCommand extends Command
             }
 
             $ok = false;
-            $name = $serie->getLastSeasonName();
 
             do {
+
+                $name = $serie->getLastSeasonName();
+
+                dump($name);
 
                 $variables = [
                     "search" => $name
