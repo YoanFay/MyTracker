@@ -114,8 +114,6 @@ class UpdateDateCommand extends Command
 
                 $name = $serie->getLastSeasonName();
 
-                dump('ok');
-
                 $variables = [
                     "search" => $name
                 ];
@@ -219,6 +217,8 @@ class UpdateDateCommand extends Command
 
                 $http = new Client();
 
+                dump('ok');
+
                 try {
                     $response = $http->post('https://graphql.anilist.co', [
                         'json' => [
@@ -230,6 +230,8 @@ class UpdateDateCommand extends Command
                 } catch (\Exception|GuzzleException $e) {
                     continue;
                 }
+
+                dump('ok 2');
 
                 if ($response->getHeader('X-RateLimit-Remaining')[0] == 0) {
                     sleep(60);
