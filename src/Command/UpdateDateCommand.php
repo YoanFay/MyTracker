@@ -150,6 +150,7 @@ class UpdateDateCommand extends Command
                 $relationKey = null;
 
                 foreach ($data['relations']['edges'] as $key => $relationType) {
+                    dump($relationType);
                     if ($relationType['relationType'] === "SEQUEL") {
                         $relation = $relationType['relationType'];
                         $relationKey = $key;
