@@ -217,8 +217,6 @@ class UpdateDateCommand extends Command
 
                 $http = new Client();
 
-                dump('ok');
-
                 try {
                     $response = $http->post('https://graphql.anilist.co', [
                         'json' => [
@@ -226,6 +224,8 @@ class UpdateDateCommand extends Command
                             'variables' => $variables,
                         ]
                     ]);
+
+                    dump('ok');
 
                 } catch (\Exception|GuzzleException $e) {
                     continue;
