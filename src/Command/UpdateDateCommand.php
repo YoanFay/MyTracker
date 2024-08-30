@@ -114,8 +114,6 @@ class UpdateDateCommand extends Command
 
                 $name = $serie->getLastSeasonName();
 
-                dump($name);
-
                 $variables = [
                     "search" => $name
                 ];
@@ -207,6 +205,8 @@ class UpdateDateCommand extends Command
 
                 $name = $serie->getLastSeasonName();
 
+                dump($name);
+
                 $variables = [
                     "search" => $name
                 ];
@@ -230,6 +230,10 @@ class UpdateDateCommand extends Command
                 }
 
                 $data = json_decode($response->getBody(), true);
+
+                if ($data){
+                    dump('ok');
+                }
 
                 $data = $data['data']['Media'];
 
