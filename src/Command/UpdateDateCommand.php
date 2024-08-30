@@ -135,7 +135,7 @@ class UpdateDateCommand extends Command
                     ]);
 
                 } catch (\Exception|GuzzleException $e) {
-                    dump('test');
+                    sleep(60);
                     continue;
                 }
 
