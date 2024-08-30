@@ -156,6 +156,9 @@ class UpdateDateCommand extends Command
                     }
                 }
 
+                dump($relation);
+                dump($status);
+
                 if ($relation && $status === "Ended") {
                     $name = $data['relations']['nodes'][$relationKey]['title']['english'];
                 } else {
