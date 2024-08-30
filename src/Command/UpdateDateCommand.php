@@ -173,14 +173,14 @@ class UpdateDateCommand extends Command
                     $this->manager->persist($serie);
                     $this->manager->flush();
 
-                    if ($status === "Ended" || $status === "Upcoming") {
-                        $name = $data['relations']['nodes'][$relationKey]['title']['english'];
+                }
 
-                        $ok = true;
-                    } else {
-                        $ok = false;
-                    }
+                if ($relation && ($status === "Ended" || $status === "Upcoming")) {
+                    $name = $data['relations']['nodes'][$relationKey]['title']['english'];
 
+                    $ok = true;
+                } else {
+                    $ok = false;
                 }
 
             } while ($ok);
