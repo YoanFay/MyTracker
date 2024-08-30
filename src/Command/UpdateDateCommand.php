@@ -114,6 +114,8 @@ class UpdateDateCommand extends Command
 
             do {
 
+                dump($name);
+
                 $variables = [
                     "search" => $name
                 ];
@@ -168,7 +170,6 @@ class UpdateDateCommand extends Command
                 continue;
             }
 
-            dump($name);
             dump($status);
 
             $serie->setLastSeasonName($name);
