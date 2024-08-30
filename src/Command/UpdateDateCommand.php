@@ -164,6 +164,13 @@ class UpdateDateCommand extends Command
 
             } while ($ok);
 
+            if (!isset($data)){
+                continue;
+            }
+
+            dump($name);
+            dump($status);
+
             $serie->setLastSeasonName($name);
 
             if ($serie->getStatus() !== $status) {
