@@ -132,6 +132,8 @@ class UpdateDateCommand extends Command
                     continue;
                 }
 
+                dump($response);
+
                 if ($response->getHeader('X-RateLimit-Remaining')[0] == 0) {
                     sleep(60);
                 }
