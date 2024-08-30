@@ -10,6 +10,8 @@ use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -51,15 +53,44 @@ class UpdateDateCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+
         $today = new DateTime();
 
         $series = $this->serieRepository->noFirstAired();
 
+        $query = 'query ($search: String) { Media (search: $search, type: ANIME) { startDate{day, month, year} }}';
+
         foreach ($series as $serie) {
 
-            $data = $this->TVDBService->getData("/series/".$serie->getTvdbId()."/extended?meta=translations&short=true");
+            $variables = [
+                "search" => $serie->getNameEng()
+            ];
 
-            $firstAired = DateTime::createFromFormat('Y-m-d', $data['data']['firstAired']);
+            $http = new Client();
+
+            try {
+                $response = $http->post('https://graphql.anilist.co', [
+                    'json' => [
+                        'query' => $query,
+                        'variables' => $variables,
+                    ]
+                ]);
+
+            } catch (\Exception|GuzzleException $e) {
+                continue;
+            }
+
+            if ($response->getHeader('X-RateLimit-Remaining')[0] == 0) {
+                sleep(60);
+            }
+
+            $data = json_decode($response->getBody(), true);
+
+            $data = $data['data']['Media'];
+
+            $firstDate = $data['startDate']['year']."-".$data['startDate']['month']."-".$data['startDate']['day'];
+
+            $firstAired = DateTime::createFromFormat('Y-m-d', $firstDate);
 
             $serie->setFirstAired($firstAired);
 
@@ -69,11 +100,72 @@ class UpdateDateCommand extends Command
 
         $series = $this->serieRepository->ended();
 
+        $query = 'query ($search: String) { Media (search: $search, type: ANIME) { status, relations{ edges{relationType}, nodes{title{english}} } }}';
+
         foreach ($series as $serie) {
 
-            $data = $this->TVDBService->getData("/series/".$serie->getTvdbId()."/extended?meta=translations&short=true");
+            if (!$serie->getLastSeasonName()) {
+                $serie->setLastSeasonName($serie->getNameEng());
+            }
 
-            if ($serie->getStatus() !== $data['data']['status']['name']) {
+            $ok = false;
+            $name = $serie->getLastSeasonName();
+
+            do {
+
+                $variables = [
+                    "search" => $name
+                ];
+
+                $http = new Client();
+
+                try {
+                    $response = $http->post('https://graphql.anilist.co', [
+                        'json' => [
+                            'query' => $query,
+                            'variables' => $variables,
+                        ]
+                    ]);
+
+                } catch (\Exception|GuzzleException $e) {
+                    continue;
+                }
+
+                if ($response->getHeader('X-RateLimit-Remaining')[0] == 0) {
+                    sleep(60);
+                }
+
+                $data = json_decode($response->getBody(), true);
+
+                $data = $data['data']['Media'];
+
+                $status = match ($data['status']) {
+                    "FINISHED" => "Ended",
+                    "RELEASING" => "Continuing",
+                    "NOT_YET_RELEASED" => "Upcoming",
+                };
+
+                $relation = null;
+                $relationKey = null;
+
+                foreach ($data['relations']['edges'] as $key => $relationType) {
+                    if ($relationType === "SEQUEL") {
+                        $relation = $relationType;
+                        $relationKey = $key;
+                    }
+                }
+
+                if ($relation && $status === "Ended") {
+                    $name = $data['relations']['nodes'][$relationKey]['title']['english'];
+                } else {
+                    $ok = true;
+                }
+
+            } while ($ok);
+
+            $serie->setLastSeasonName($name);
+
+            if ($serie->getStatus() !== $status) {
 
                 $serieUpdate = $this->serieUpdateRepository->serieDate($serie, $today->format('Y-m-d'));
 
@@ -84,8 +176,8 @@ class UpdateDateCommand extends Command
                 }
 
                 $serieUpdate->setOldStatus($serie->getStatus());
-                $serieUpdate->setNewStatus($data['data']['status']['name']);
-                $serie->setStatus($data['data']['status']['name']);
+                $serieUpdate->setNewStatus($status);
+                $serie->setStatus($status);
 
                 $this->manager->persist($serieUpdate);
 
@@ -96,7 +188,70 @@ class UpdateDateCommand extends Command
 
         $series = $this->serieRepository->updateAired();
 
+        $query = 'query ($search: String) { Media (search: $search, type: ANIME) { nextAiringEpisode{airingAt}, startDate{day, month, year}, endDate{day, month, year}, status, relations{ edges{relationType}, nodes{title{english}} }}';
+
         foreach ($series as $serie) {
+
+            if (!$serie->getLastSeasonName()) {
+                $serie->setLastSeasonName($serie->getNameEng());
+            }
+
+            $ok = false;
+            $name = $serie->getLastSeasonName();
+
+            do {
+
+                $variables = [
+                    "search" => $name
+                ];
+
+                $http = new Client();
+
+                try {
+                    $response = $http->post('https://graphql.anilist.co', [
+                        'json' => [
+                            'query' => $query,
+                            'variables' => $variables,
+                        ]
+                    ]);
+
+                } catch (\Exception|GuzzleException $e) {
+                    continue;
+                }
+
+                if ($response->getHeader('X-RateLimit-Remaining')[0] == 0) {
+                    sleep(60);
+                }
+
+                $data = json_decode($response->getBody(), true);
+
+                $data = $data['data']['Media'];
+
+                $status = match ($data['status']) {
+                    "FINISHED" => "Ended",
+                    "RELEASING" => "Continuing",
+                    "NOT_YET_RELEASED" => "Upcoming",
+                };
+
+                $relation = null;
+                $relationKey = null;
+
+                foreach ($data['relations']['edges'] as $key => $relationType) {
+                    if ($relationType === "SEQUEL") {
+                        $relation = $relationType;
+                        $relationKey = $key;
+                    }
+                }
+
+                if ($relation && $status === "Ended") {
+                    $name = $data['relations']['nodes'][$relationKey]['title']['english'];
+                } else {
+                    $ok = true;
+                }
+
+            } while ($ok);
+
+            $serie->setLastSeasonName($name);
 
             $serieUpdate = $this->serieUpdateRepository->serieDate($serie, $today->format('Y-m-d'));
 
@@ -106,13 +261,23 @@ class UpdateDateCommand extends Command
                 $serieUpdate->setUpdatedAt($today);
             }
 
-            $data = $this->TVDBService->getData("/series/".$serie->getTvdbId()."/extended?meta=translations&short=true");
+            if ($data['nextAiringEpisode']) {
 
-            if ($data['data']['nextAired']) {
+                $nextAired = new DateTime();
 
-                $nextAired = DateTime::createFromFormat('Y-m-d H:i', $data['data']['nextAired']." 00:00");
+                $nextAired->setTimestamp($data['nextAiringEpisode']);
 
-            } else {
+            } elseif($status === "Upcoming" && $data['startDate']['year']) {
+
+                $day = $data['startDate']['day'] ?? 1;
+                $month = $data['startDate']['month'] ?? 1;
+                $year = $data['startDate']['year'];
+
+                $firstDate = $year."-".$month."-".$day;
+
+                $nextAired = DateTime::createFromFormat('Y-m-d', $firstDate);
+
+            }else{
                 $nextAired = null;
             }
 
@@ -131,7 +296,13 @@ class UpdateDateCommand extends Command
 
             if ($data['data']['lastAired']) {
 
-                $lastAired = DateTime::createFromFormat('Y-m-d', $data['data']['lastAired']);
+                $day = $data['endDate']['day'] ?? 1;
+                $month = $data['endDate']['month'] ?? 1;
+                $year = $data['endDate']['year'];
+
+                $lastDate = $year."-".$month."-".$day;
+
+                $lastAired = DateTime::createFromFormat('Y-m-d', $lastDate);
 
             } else {
                 $lastAired = null;
@@ -139,11 +310,11 @@ class UpdateDateCommand extends Command
 
             $serie->setLastAired($lastAired);
 
-            if ($serie->getStatus() !== $data['data']['status']['name']) {
+            if ($serie->getStatus() !== $status) {
 
                 $serieUpdate->setOldStatus($serie->getStatus());
-                $serieUpdate->setNewStatus($data['data']['status']['name']);
-                $serie->setStatus($data['data']['status']['name']);
+                $serieUpdate->setNewStatus($status);
+                $serie->setStatus($status);
 
                 $this->manager->persist($serieUpdate);
 

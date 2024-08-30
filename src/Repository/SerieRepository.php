@@ -133,7 +133,7 @@ class SerieRepository extends ServiceEntityRepository
             ->andWhere('s.nextAired IS NULL OR s.nextAired < CURRENT_DATE()')
             ->andWhere('s.status <> :status OR s.status IS NULL')
             ->setParameter('status', "Ended")
-            ->andWhere('s.tvdbId NOT IN (359149)')
+            ->andWhere('s.tvdbId NOT IN (359149, 76703)')
             ->getQuery()
             ->getResult()
             ;

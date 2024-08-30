@@ -73,6 +73,9 @@ class Serie
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nameEng = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $lastSeasonName = null;
+
     public function __construct()
     {
         $this->name = "TBA";
@@ -419,6 +422,18 @@ class Serie
     public function setNameEng(?string $nameEng): static
     {
         $this->nameEng = $nameEng;
+
+        return $this;
+    }
+
+    public function getLastSeasonName(): ?string
+    {
+        return $this->lastSeasonName;
+    }
+
+    public function setLastSeasonName(?string $lastSeasonName): static
+    {
+        $this->lastSeasonName = $lastSeasonName;
 
         return $this;
     }
