@@ -110,9 +110,9 @@ class UpdateDateCommand extends Command
 
             $ok = false;
 
-            do {
+            $name = $serie->getLastSeasonName();
 
-                $name = $serie->getLastSeasonName();
+            do {
 
                 $variables = [
                     "search" => $name
@@ -199,9 +199,9 @@ class UpdateDateCommand extends Command
 
             $ok = false;
 
-            do {
+            $name = $serie->getLastSeasonName();
 
-                $name = $serie->getLastSeasonName();
+            do {
 
                 dump($name);
 
@@ -223,8 +223,6 @@ class UpdateDateCommand extends Command
                 } catch (\Exception|GuzzleException $e) {
                     continue;
                 }
-
-                dump('ok 2');
 
                 if ($response->getHeader('X-RateLimit-Remaining')[0] == 0) {
                     sleep(60);
