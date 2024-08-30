@@ -133,7 +133,6 @@ class UpdateDateCommand extends Command
                 } catch (\Exception|GuzzleException $e) {
                     continue;
                 }
-                    dump('ok');
 
                 if ($response->getHeader('X-RateLimit-Remaining')[0] == 0) {
                     sleep(60);
@@ -207,8 +206,6 @@ class UpdateDateCommand extends Command
             do {
 
                 $name = $serie->getLastSeasonName();
-
-                dump($name);
 
                 $variables = [
                     "search" => $name
