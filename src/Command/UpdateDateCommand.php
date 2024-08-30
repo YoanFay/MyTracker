@@ -162,6 +162,9 @@ class UpdateDateCommand extends Command
                     }
                 }
 
+                dump($relation);
+                dump($status);
+
                 if ($relation && ($status === "Ended" || $status === "Upcoming")) {
                     $name = $data['relations']['nodes'][$relationKey]['title']['english'];
                 } else {
