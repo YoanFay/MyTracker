@@ -112,6 +112,10 @@ class UpdateDateCommand extends Command
 
             $name = $serie->getLastSeasonName();
 
+            if ($serie->getSerieType()->getName() !== "Anime"){
+                continue;
+            }
+
             do {
 
                 dump($name);
@@ -157,9 +161,6 @@ class UpdateDateCommand extends Command
                         $relationKey = $key;
                     }
                 }
-
-                dump($relation);
-                dump($status);
 
                 if ($relation && ($status === "Ended" || $status === "Upcoming")) {
                     $name = $data['relations']['nodes'][$relationKey]['title']['english'];
