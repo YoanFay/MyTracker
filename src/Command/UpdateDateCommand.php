@@ -227,7 +227,7 @@ class UpdateDateCommand extends Command
 
 
                 } catch (\Exception|GuzzleException $e) {
-                    dump('ok');
+                    dump($e);
                     continue;
                 }
 
@@ -264,6 +264,10 @@ class UpdateDateCommand extends Command
                 }
 
             } while ($ok);
+
+            if (!isset($data)){
+                continue;
+            }
 
             $serie->setLastSeasonName($name);
 
