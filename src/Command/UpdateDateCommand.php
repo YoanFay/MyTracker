@@ -114,8 +114,6 @@ class UpdateDateCommand extends Command
 
             do {
 
-                dump($name);
-
                 $variables = [
                     "search" => $name
                 ];
@@ -152,17 +150,13 @@ class UpdateDateCommand extends Command
                 $relationKey = null;
 
                 foreach ($data['relations']['edges'] as $key => $relationType) {
-                    dump($relationType);
                     if ($relationType['relationType'] === "SEQUEL") {
                         $relation = $relationType['relationType'];
                         $relationKey = $key;
                     }
                 }
 
-                dump($relation);
-                dump($status);
-
-                if ($relation && $status === "Ended") {
+                if ($relation && ($status === "Ended" || $status === "Upcoming")) {
                     $name = $data['relations']['nodes'][$relationKey]['title']['english'];
                 } else {
                     $ok = true;
