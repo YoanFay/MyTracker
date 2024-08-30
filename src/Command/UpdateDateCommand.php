@@ -167,6 +167,8 @@ class UpdateDateCommand extends Command
                     $ok = true;
                 }
 
+                dump($ok);
+
             } while ($ok);
 
             if (!isset($data)){
