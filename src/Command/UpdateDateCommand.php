@@ -118,8 +118,6 @@ class UpdateDateCommand extends Command
 
             do {
 
-                dump($name);
-
                 $variables = [
                     "search" => $name
                 ];
@@ -163,9 +161,6 @@ class UpdateDateCommand extends Command
                     }
                 }
 
-                dump($relation);
-                dump($status);
-
                 if ($relation){
 
                     $serie->setLastSeasonName($name);
@@ -188,8 +183,6 @@ class UpdateDateCommand extends Command
             if (!isset($status) || !isset($data)){
                 continue;
             }
-
-            dump("Status Final : ".$status);
 
             if ($serie->getStatus() !== $status) {
 
@@ -273,7 +266,16 @@ class UpdateDateCommand extends Command
                     }
                 }
 
-                if ($relation && $status === "Ended") {
+                if ($relation){
+
+                    $serie->setLastSeasonName($name);
+
+                    $this->manager->persist($serie);
+                    $this->manager->flush();
+
+                }
+
+                if ($relation && ($status === "Ended" || $status === "Upcoming")) {
                     $name = $data['relations']['nodes'][$relationKey]['title']['english'];
                 } else {
                     $ok = false;
@@ -281,7 +283,7 @@ class UpdateDateCommand extends Command
 
             } while ($ok);
 
-            if (!isset($data)){
+            if (!isset($status) || !isset($data)){
                 continue;
             }
 
