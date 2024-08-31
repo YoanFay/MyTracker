@@ -127,6 +127,21 @@ class SerieRepository extends ServiceEntityRepository
     /**
      * @return Serie[] Returns an array of Serie objects
      */
+    public function noFirstAiredAnime(): array
+    {
+        return $this->createQueryBuilder('s')
+            ->leftJoin('s.serieType', 't')
+            ->andWhere('s.firstAired IS NULL')
+            ->andWhere('t.name = :type')
+            ->setParameter('type', 'Anime')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    /**
+     * @return Serie[] Returns an array of Serie objects
+     */
     public function updateAired(): array
     {
         return $this->createQueryBuilder('s')
@@ -144,12 +159,48 @@ class SerieRepository extends ServiceEntityRepository
     /**
      * @return Serie[] Returns an array of Serie objects
      */
+    public function updateAiredAnime(): array
+    {
+        return $this->createQueryBuilder('s')
+            ->leftJoin('s.serieType', 't')
+            ->andWhere('s.nextAired IS NULL OR s.nextAired < CURRENT_DATE()')
+            ->andWhere('s.status <> :status OR s.status IS NULL')
+            ->setParameter('status', "Ended")
+            ->orWhere('s.status = :statusUpcoming')
+            ->setParameter('statusUpcoming', "Upcoming")
+            ->andWhere('s.tvdbId NOT IN (359149, 76703)')
+            ->andWhere('t.name = :type')
+            ->setParameter('type', 'Anime')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    /**
+     * @return Serie[] Returns an array of Serie objects
+     */
     public function ended(): array
     {
         return $this->createQueryBuilder('s')
             ->andWhere('s.status = :status')
             ->setParameter('status', "Ended")
             ->andWhere('s.tvdbId NOT IN (359149)')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    /**
+     * @return Serie[] Returns an array of Serie objects
+     */
+    public function endedAnime(): array
+    {
+        return $this->createQueryBuilder('s')
+            ->leftJoin('s.serieType', 't')
+            ->andWhere('s.status = :status')
+            ->setParameter('status', "Ended")
+            ->andWhere('t.name = :type')
+            ->setParameter('type', 'Anime')
             ->getQuery()
             ->getResult()
             ;

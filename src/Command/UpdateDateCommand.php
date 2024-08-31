@@ -60,7 +60,7 @@ class UpdateDateCommand extends Command
 
         $today = new DateTime();
 
-        $series = $this->serieRepository->noFirstAired();
+        $series = $this->serieRepository->noFirstAiredAnime();
 
         $query = 'query ($search: String) { Media (search: $search, type: ANIME) { startDate{day, month, year} }}';
 
@@ -78,7 +78,7 @@ class UpdateDateCommand extends Command
             $this->manager->flush();
         }
 
-        $series = $this->serieRepository->ended();
+        $series = $this->serieRepository->endedAnime();
 
         $query = 'query ($search: String) { Media (search: $search, type: ANIME) { status, relations{ edges{relationType}, nodes{title{english}} } }}';
 
