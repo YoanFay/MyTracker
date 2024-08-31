@@ -168,7 +168,7 @@ class UpdateDateCommand extends Command
             }
 
 
-            if ($data['endDate']) {
+            if ($data['endDate']['year']) {
 
                 $day = $data['endDate']['day'] ?? 1;
                 $month = $data['endDate']['month'] ?? 1;
