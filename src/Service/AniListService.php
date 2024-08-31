@@ -49,6 +49,7 @@ class AniListService
 
 
         } catch (\Exception|GuzzleException $e) {
+            sleep(60);
             return null;
         }
 
