@@ -5,6 +5,7 @@ namespace App\Command;
 use App\Entity\SerieUpdate;
 use App\Repository\SerieRepository;
 use App\Repository\SerieUpdateRepository;
+use App\Service\AniListService;
 use App\Service\TVDBService;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
@@ -28,8 +29,10 @@ class UpdateDateCommand extends Command
 
     private TVDBService $TVDBService;
 
+    private AniListService $aniListService;
 
-    public function __construct(SerieRepository $serieRepository, SerieUpdateRepository $serieUpdateRepository, ManagerRegistry $managerRegistry, TVDBService $TVDBService)
+
+    public function __construct(SerieRepository $serieRepository, SerieUpdateRepository $serieUpdateRepository, ManagerRegistry $managerRegistry, TVDBService $TVDBService, AniListService $aniListService)
     {
 
         parent::__construct();
@@ -37,6 +40,7 @@ class UpdateDateCommand extends Command
         $this->serieUpdateRepository = $serieUpdateRepository;
         $this->manager = $managerRegistry->getManager();
         $this->TVDBService = $TVDBService;
+        $this->aniListService = $aniListService;
     }
 
 
@@ -62,31 +66,7 @@ class UpdateDateCommand extends Command
 
         foreach ($series as $serie) {
 
-            $variables = [
-                "search" => $serie->getNameEng()
-            ];
-
-            $http = new Client();
-
-            try {
-                $response = $http->post('https://graphql.anilist.co', [
-                    'json' => [
-                        'query' => $query,
-                        'variables' => $variables,
-                    ]
-                ]);
-
-            } catch (\Exception|GuzzleException $e) {
-                continue;
-            }
-
-            if ($response->getHeader('X-RateLimit-Remaining')[0] == 0) {
-                sleep(60);
-            }
-
-            $data = json_decode($response->getBody(), true);
-
-            $data = $data['data']['Media'];
+            $data = $this->aniListService->getData($query, $serie);
 
             $firstDate = $data['startDate']['year']."-".$data['startDate']['month']."-".$data['startDate']['day'];
 
@@ -102,85 +82,13 @@ class UpdateDateCommand extends Command
 
         $query = 'query ($search: String) { Media (search: $search, type: ANIME) { status, relations{ edges{relationType}, nodes{title{english}} } }}';
 
-        /*foreach ($series as $serie) {
+        foreach ($series as $serie) {
 
-            if (!$serie->getLastSeasonName()) {
-                $serie->setLastSeasonName($serie->getNameEng());
-            }
+            $data = $this->aniListService->getData($query, $serie);
 
-            $ok = true;
-
-            $name = $serie->getLastSeasonName();
-
-            if ($serie->getSerieType()->getName() !== "Anime"){
-                continue;
-            }
-
-            do {
-
-                $variables = [
-                    "search" => $name
-                ];
-
-                $http = new Client();
-
-                try {
-                    $response = $http->post('https://graphql.anilist.co', [
-                        'json' => [
-                            'query' => $query,
-                            'variables' => $variables,
-                        ]
-                    ]);
-
-                } catch (\Exception|GuzzleException $e) {
-                    sleep(60);
-                }
-
-                if ($response->getHeader('X-RateLimit-Remaining')[0] == 0) {
-                    $ok = false;
-                    sleep(60);
-                }
-
-                $data = json_decode($response->getBody(), true);
-
-                $data = $data['data']['Media'];
-
-                $status = match ($data['status']) {
-                    "FINISHED" => "Ended",
-                    "RELEASING" => "Continuing",
-                    "NOT_YET_RELEASED" => "Upcoming",
-                };
-
-                $relation = null;
-                $relationKey = null;
-
-                foreach ($data['relations']['edges'] as $key => $relationType) {
-                    if ($relationType['relationType'] === "SEQUEL") {
-                        $relation = $relationType['relationType'];
-                        $relationKey = $key;
-                    }
-                }
-
-                if ($relation){
-
-                    $serie->setLastSeasonName($name);
-
-                    $this->manager->persist($serie);
-                    $this->manager->flush();
-
-                }
-
-                if ($relation && ($status === "Ended" || $status === "Upcoming")) {
-                    $name = $data['relations']['nodes'][$relationKey]['title']['english'];
-
-                    $ok = true;
-                } else {
-                    $ok = false;
-                }
-
-            } while ($ok);
-
-            if (!isset($status) || !isset($data)){
+            if ($data) {
+                $status = $this->aniListService->getStatus($data);
+            } else {
                 continue;
             }
 
@@ -203,7 +111,7 @@ class UpdateDateCommand extends Command
             }
             $this->manager->persist($serie);
             $this->manager->flush();
-        }*/
+        }
 
         $series = $this->serieRepository->updateAired();
 
@@ -211,83 +119,13 @@ class UpdateDateCommand extends Command
 
         foreach ($series as $serie) {
 
-            if (!$serie->getLastSeasonName()) {
-                $serie->setLastSeasonName($serie->getNameEng());
-            }
+            $data = $this->aniListService->getData($query, $serie);
 
-            $ok = true;
-
-            $name = $serie->getLastSeasonName();
-
-            do {
-
-                dump($name);
-
-                $variables = [
-                    "search" => $name
-                ];
-
-                $http = new Client();
-
-                try {
-                    $response = $http->post('https://graphql.anilist.co', [
-                        'json' => [
-                            'query' => $query,
-                            'variables' => $variables,
-                        ]
-                    ]);
-
-
-                } catch (\Exception|GuzzleException $e) {
-                    continue;
-                }
-
-                if ($response->getHeader('X-RateLimit-Remaining')[0] == 0) {
-                    sleep(60);
-                }
-
-                $data = json_decode($response->getBody(), true);
-
-                $data = $data['data']['Media'];
-
-                $status = match ($data['status']) {
-                    "FINISHED" => "Ended",
-                    "RELEASING" => "Continuing",
-                    "NOT_YET_RELEASED" => "Upcoming",
-                };
-
-                $relation = null;
-                $relationKey = null;
-
-                foreach ($data['relations']['edges'] as $key => $relationType) {
-                    if ($relationType['relationType'] === "SEQUEL") {
-                        $relation = $relationType['relationType'];
-                        $relationKey = $key;
-                    }
-                }
-
-                if ($relation){
-
-                    $serie->setLastSeasonName($name);
-
-                    $this->manager->persist($serie);
-                    $this->manager->flush();
-
-                }
-
-                if ($relation && ($status === "Ended" || $status === "Upcoming")) {
-                    $name = $data['relations']['nodes'][$relationKey]['title']['english'];
-                } else {
-                    $ok = false;
-                }
-
-            } while ($ok);
-
-            if (!isset($status) || !isset($data)){
+            if ($data) {
+                $status = $this->aniListService->getStatus($data);
+            } else {
                 continue;
             }
-
-            $serie->setLastSeasonName($name);
 
             $serieUpdate = $this->serieUpdateRepository->serieDate($serie, $today->format('Y-m-d'));
 
@@ -303,7 +141,7 @@ class UpdateDateCommand extends Command
 
                 $nextAired->setTimestamp($data['nextAiringEpisode']['airingAt']);
 
-            } elseif($status === "Upcoming" && $data['startDate']['year']) {
+            } else if ($status === "Upcoming" && $data['startDate']['year']) {
 
                 $day = $data['startDate']['day'] ?? 1;
                 $month = $data['startDate']['month'] ?? 1;
@@ -313,7 +151,7 @@ class UpdateDateCommand extends Command
 
                 $nextAired = DateTime::createFromFormat('Y-m-d', $firstDate);
 
-            }else{
+            } else {
                 $nextAired = null;
             }
 
@@ -330,7 +168,7 @@ class UpdateDateCommand extends Command
             }
 
 
-            if ($data['data']['lastAired']) {
+            if ($data['endDate']) {
 
                 $day = $data['endDate']['day'] ?? 1;
                 $month = $data['endDate']['month'] ?? 1;

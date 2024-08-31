@@ -364,6 +364,9 @@ class SerieController extends AbstractController
     public function index(SerieRepository $serieRepository, EpisodeShowRepository $episodeShowRepository, SerieTypeRepository $serieTypeRepository, $id = -1): Response
     {
 
+        dump($serieRepository->ended());
+        dd($serieRepository->updateAired());
+
         if ($id < 0) {
             $series = $serieRepository->findAll();
         } else if ($id == 404) {
