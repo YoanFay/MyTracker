@@ -35,7 +35,82 @@ class AniListService
         $this->companyRepository = $companyRepository;
     }
 
-    public function request($query, $variables){
+
+    public function getData($query, $serie)
+    {
+
+        $name = $this->getLastSeasonName($serie);
+
+        $variables = [
+            "search" => $name
+        ];
+
+        return $this->request($query, $variables);
+
+    }
+
+
+    public function getLastSeasonName($serie)
+    {
+
+        $query = 'query ($search: String) { Media (search: $search, type: ANIME) { status, relations{ edges{relationType}, nodes{title{english}} }}}';
+
+        if (!$serie->getLastSeasonName()) {
+            $serie->setLastSeasonName($serie->getNameEng());
+        }
+
+        $name = $serie->getLastSeasonName();
+
+        $ok = true;
+
+        do {
+
+            dump($name);
+
+            $variables = [
+                "search" => $name
+            ];
+
+            $data = $this->request($query, $variables);
+
+            if ($data) {
+                $status = $this->getStatus($data);
+
+                $relation = null;
+                $relationKey = null;
+
+                foreach ($data['relations']['edges'] as $key => $relationType) {
+                    if ($relationType['relationType'] === "SEQUEL") {
+                        $relation = $relationType['relationType'];
+                        $relationKey = $key;
+                    }
+                }
+
+                if ($relation) {
+
+                    $serie->setLastSeasonName($name);
+
+                    $this->manager->persist($serie);
+                    $this->manager->flush();
+
+                }
+
+                if ($relation && ($status === "Ended" || $status === "Upcoming")) {
+                    $name = $data['relations']['nodes'][$relationKey]['title']['english'];
+                } else {
+                    $ok = false;
+                }
+            }
+
+        } while ($ok);
+
+        return $name;
+
+    }
+
+
+    public function request($query, $variables)
+    {
 
         $http = new Client();
 
@@ -63,82 +138,15 @@ class AniListService
 
     }
 
-    public function getStatus($data){
+
+    public function getStatus($data)
+    {
 
         return match ($data['status']) {
             "FINISHED" => "Ended",
             "RELEASING" => "Continuing",
             "NOT_YET_RELEASED" => "Upcoming",
         };
-
-    }
-
-    public function getLastSeasonName($serie){
-
-        $query = 'query ($search: String) { Media (search: $search, type: ANIME) { status, relations{ edges{relationType}, nodes{title{english}} }}}';
-
-        if (!$serie->getLastSeasonName()) {
-            $serie->setLastSeasonName($serie->getNameEng());
-        }
-
-        $name = $serie->getLastSeasonName();
-
-        $ok = true;
-
-        do {
-
-            dump($name);
-
-            $variables = [
-                "search" => $name
-            ];
-
-            $data = $this->request($query, $variables);
-
-            $status = $this->getStatus($data);
-
-            $relation = null;
-            $relationKey = null;
-
-            foreach ($data['relations']['edges'] as $key => $relationType) {
-                if ($relationType['relationType'] === "SEQUEL") {
-                    $relation = $relationType['relationType'];
-                    $relationKey = $key;
-                }
-            }
-
-            if ($relation){
-
-                $serie->setLastSeasonName($name);
-
-                $this->manager->persist($serie);
-                $this->manager->flush();
-
-            }
-
-            if ($relation && ($status === "Ended" || $status === "Upcoming")) {
-                $name = $data['relations']['nodes'][$relationKey]['title']['english'];
-            } else {
-                $ok = false;
-            }
-
-        } while ($ok);
-
-        return $name;
-
-    }
-
-
-    public function getData($query, $serie)
-    {
-
-        $name = $this->getLastSeasonName($serie);
-
-        $variables = [
-            "search" => $name
-        ];
-
-        return $this->request($query, $variables);
 
     }
 
