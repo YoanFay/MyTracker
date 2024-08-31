@@ -102,7 +102,7 @@ class UpdateDateCommand extends Command
 
         $query = 'query ($search: String) { Media (search: $search, type: ANIME) { status, relations{ edges{relationType}, nodes{title{english}} } }}';
 
-        foreach ($series as $serie) {
+        /*foreach ($series as $serie) {
 
             if (!$serie->getLastSeasonName()) {
                 $serie->setLastSeasonName($serie->getNameEng());
@@ -203,7 +203,7 @@ class UpdateDateCommand extends Command
             }
             $this->manager->persist($serie);
             $this->manager->flush();
-        }
+        }*/
 
         $series = $this->serieRepository->updateAired();
 
@@ -296,6 +296,8 @@ class UpdateDateCommand extends Command
                 $serieUpdate->setSerie($serie);
                 $serieUpdate->setUpdatedAt($today);
             }
+
+            dump($data['nextAiringEpisode']);
 
             if ($data['nextAiringEpisode']) {
 
