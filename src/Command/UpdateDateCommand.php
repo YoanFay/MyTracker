@@ -297,13 +297,11 @@ class UpdateDateCommand extends Command
                 $serieUpdate->setUpdatedAt($today);
             }
 
-            dump($data['nextAiringEpisode']);
-
             if ($data['nextAiringEpisode']) {
 
                 $nextAired = new DateTime();
 
-                $nextAired->setTimestamp($data['nextAiringEpisode']);
+                $nextAired->setTimestamp($data['nextAiringEpisode']['airingAt']);
 
             } elseif($status === "Upcoming" && $data['startDate']['year']) {
 
