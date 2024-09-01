@@ -36,10 +36,14 @@ class AniListService
     }
 
 
-    public function getData($query, $serie)
+    public function getData($query, Serie $serie, $lastSeason = true)
     {
 
-        $name = $this->getLastSeasonName($serie);
+        if ($lastSeason){
+            $name = $this->getLastSeasonName($serie);
+        }else{
+            $name = $serie->getNameEng();
+        }
 
         $variables = [
             "search" => $name

@@ -66,7 +66,7 @@ class UpdateDateCommand extends Command
 
         foreach ($series as $serie) {
 
-            $data = $this->aniListService->getData($query, $serie);
+            $data = $this->aniListService->getData($query, $serie, false);
 
             $firstDate = $data['startDate']['year']."-".$data['startDate']['month']."-".$data['startDate']['day'];
 
