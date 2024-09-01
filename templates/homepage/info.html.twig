@@ -2,7 +2,7 @@
     <div class="card-header d-flex justify-content-between">
         <i class="material-icons d-flex align-items-center cursor-click" onclick="changeDate({{ previous }})">arrow_back_ios</i>
         <p class="my-2">Information du {{ date }}</p>
-        <i class="material-icons d-flex align-items-center {% if next > 0 %} user-select-none{%else%} cursor-click {% endif %}" {% if next <= 0 %} onclick="changeDate({{ next }})" {% endif %}>arrow_forward_ios</i>
+        <i class="material-icons d-flex align-items-center {% if next > 0 %} user-select-none{% else %} cursor-click {% endif %}" {% if next <= 0 %} onclick="changeDate({{ next }})" {% endif %}>arrow_forward_ios</i>
     </div>
     <div class="card col-12">
         <div class="card-body p-0">
@@ -12,6 +12,7 @@
                     {% if update.newStatus and update.oldStatus == "Ended" and update.newStatus == "Continuing" %}Reprise de {{ update.serie.name }} {% endif %}
                     {% if update.newNextAired %}{{ update.serie.name }} - Le prochain épisode sera le {{ update.newNextAired|dateF }} {% endif %}
                     {% if update.newNextAired == null and update.serie.status == "Continuing" and update.oldStatus != "Ended" %}{{ update.serie.name }} est en pause{% endif %}
+                    {% if update.newStatus == "Upcomming" %}La prochaine saison de {{ update.serie.name }} à été annoncé{% if update.newNextAired %} pour le {{ newNextAired }}{% endif %}{% endif %}
                 </p>
             {% endfor %}
         </div>
