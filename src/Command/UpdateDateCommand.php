@@ -65,7 +65,7 @@ class UpdateDateCommand extends Command
             
         }
 
-        /*$series = $this->serieRepository->noFirstAired();
+        $series = $this->serieRepository->noFirstAired();
 
         foreach ($series as $serie){
 
@@ -87,7 +87,7 @@ class UpdateDateCommand extends Command
 
             $this->updateDateService->updateAired($serie);
 
-        }*/
+        }
 
         return Command::SUCCESS;
     }
