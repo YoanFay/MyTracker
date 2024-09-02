@@ -117,8 +117,12 @@ class SerieRepository extends ServiceEntityRepository
     public function noFirstAired(): array
     {
         return $this->createQueryBuilder('s')
+            ->leftJoin('s.serieType', 't')
             ->andWhere('s.firstAired IS NULL')
             ->andWhere('s.tvdbId IS NOT NULL')
+            ->andWhere('t.name <> :type')
+            ->setParameter('type', 'Anime')
+            ->orWhere('s.tvdbId IN (302218)')
             ->getQuery()
             ->getResult()
             ;
@@ -151,7 +155,8 @@ class SerieRepository extends ServiceEntityRepository
             ->setParameter('status', "Ended")
             ->orWhere('s.status = :statusUpcoming')
             ->setParameter('statusUpcoming', "Upcoming")
-            ->andWhere('s.tvdbId NOT IN (359149, 76703)')
+            ->andWhere('s.tvdbId NOT IN (359149)')
+            ->orWhere('s.tvdbId IN (302218)')
             ->getQuery()
             ->getResult()
             ;
@@ -169,7 +174,7 @@ class SerieRepository extends ServiceEntityRepository
             ->setParameter('status', "Ended")
             ->orWhere('s.status = :statusUpcoming')
             ->setParameter('statusUpcoming', "Upcoming")
-            ->andWhere('s.tvdbId NOT IN (359149, 76703, 302218)')
+            ->andWhere('s.tvdbId NOT IN (76703, 302218)')
             ->andWhere('t.name = :type')
             ->setParameter('type', 'Anime')
             ->getQuery()
@@ -183,9 +188,13 @@ class SerieRepository extends ServiceEntityRepository
     public function ended(): array
     {
         return $this->createQueryBuilder('s')
+            ->leftJoin('s.serieType', 't')
             ->andWhere('s.status = :status')
             ->setParameter('status', "Ended")
             ->andWhere('s.tvdbId NOT IN (359149)')
+            ->andWhere('t.name <> :type')
+            ->setParameter('type', 'Anime')
+            ->orWhere('s.tvdbId IN (302218)')
             ->getQuery()
             ->getResult()
             ;
@@ -202,7 +211,7 @@ class SerieRepository extends ServiceEntityRepository
             ->setParameter('status', "Ended")
             ->andWhere('t.name = :type')
             ->setParameter('type', 'Anime')
-            ->andWhere('s.tvdbId NOT IN (302218)')
+            ->andWhere('s.tvdbId NOT IN (76703, 302218)')
             ->getQuery()
             ->getResult()
             ;

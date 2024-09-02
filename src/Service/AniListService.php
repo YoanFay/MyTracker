@@ -20,19 +20,13 @@ use Symfony\Contracts\Cache\ItemInterface;
 class AniListService
 {
 
-    private KernelInterface $kernel;
-
     private ObjectManager $manager;
 
-    private CompanyRepository $companyRepository;
 
-
-    public function __construct(KernelInterface $kernel, ManagerRegistry $managerRegistry, CompanyRepository $companyRepository)
+    public function __construct(ManagerRegistry $managerRegistry)
     {
 
-        $this->kernel = $kernel;
         $this->manager = $managerRegistry->getManager();
-        $this->companyRepository = $companyRepository;
     }
 
 
