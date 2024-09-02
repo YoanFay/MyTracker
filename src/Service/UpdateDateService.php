@@ -89,7 +89,6 @@ class UpdateDateService
                 $serieUpdate = new SerieUpdate();
                 $serieUpdate->setSerie($anime);
                 $serieUpdate->setUpdatedAt($this->today);
-                dump($data);
             }
 
             $serieUpdate->setOldStatus($anime->getStatus());
@@ -150,7 +149,6 @@ class UpdateDateService
             $serieUpdate = new SerieUpdate();
             $serieUpdate->setSerie($anime);
             $serieUpdate->setUpdatedAt($this->today);
-            dump($data);
         }
 
         if ($data['nextAiringEpisode']) {
