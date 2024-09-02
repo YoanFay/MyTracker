@@ -41,7 +41,7 @@ class UpdateDateCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
 
-        $animes = $this->serieRepository->noFirstAiredAnime();
+        /*$animes = $this->serieRepository->noFirstAiredAnime();
 
         foreach ($animes as $anime) {
             
@@ -63,7 +63,7 @@ class UpdateDateCommand extends Command
             
             $this->updateDateService->updateAiredAnime($anime);
             
-        }
+        }*/
 
         $series = $this->serieRepository->noFirstAired();
 

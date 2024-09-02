@@ -220,6 +220,7 @@ class UpdateDateService
     {
 
         $serieUpdate = $this->serieUpdateRepository->serieDate($serie, $this->today->format('Y-m-d'));
+
         if (!$serieUpdate) {
             $serieUpdate = new SerieUpdate();
             $serieUpdate->setSerie($serie);
