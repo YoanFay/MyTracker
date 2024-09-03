@@ -27,7 +27,11 @@ class FrenchDateExtension extends AbstractExtension
         ];
     }
 
-    public function dateUpcoming($date, $type = 'day'){
+    public function dateUpcoming($date, $type){
+
+        if (!$type){
+            $type = "day";
+        }
 
         if (is_string($date)) {
             $date = new DateTime($date);
