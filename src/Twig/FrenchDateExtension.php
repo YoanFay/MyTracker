@@ -23,8 +23,40 @@ class FrenchDateExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('function_name', [$this, 'doSomething']),
+            new TwigFunction('dateUpcoming', [$this, 'dateUpcoming']),
         ];
+    }
+
+    public function dateUpcoming($date, $type = 'day'){
+
+        if (is_string($date)) {
+            $date = new DateTime($date);
+        }
+
+        // Jour de la semaine
+        $joursSemaine = array('Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi');
+        $day = $joursSemaine[$date->format('w')];
+
+        // Mois
+        $moisEnFrancais = array(
+            'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet',
+            'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'
+        );
+
+        $month = $moisEnFrancais[$date->format('n') - 1];
+
+        $year = $date->format('Y');
+
+        // Numéro du jour avec suffixe (1er, 2e, etc.)
+        $numeroJour = $date->format('j');
+        $suffixe = ($numeroJour == 1) ? 'er' : '';
+
+        return match ($type){
+            'year' => $year,
+            'month' => $month." ".$year,
+            'day' => 'le '.$day.$suffixe." ".$month." ".$year
+        };
+
     }
 
     public function frenchFormatDate($date): string

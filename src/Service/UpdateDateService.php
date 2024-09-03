@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\Serie;
 use App\Entity\SerieUpdate;
 use App\Repository\SerieUpdateRepository;
 use DateTime;
@@ -130,7 +131,7 @@ class UpdateDateService
     }
 
 
-    public function updateAiredAnime($anime)
+    public function updateAiredAnime(Serie $anime)
     {
 
         $query = 'query ($search: String) { Media (search: $search, type: ANIME) { nextAiringEpisode{airingAt}, startDate{day, month, year}, endDate{day, month, year}, status, relations{ edges{relationType}, nodes{title{english}} }}}';
@@ -158,6 +159,16 @@ class UpdateDateService
             $nextAired->setTimestamp($data['nextAiringEpisode']['airingAt']);
 
         } else if ($status === "Upcoming" && $data['startDate']['year']) {
+
+            $typeDate = 'year';
+
+            if ($data['startDate']['day']){
+                $typeDate = 'day';
+            }elseif ($data['startDate']['month']){
+                $typeDate = 'month';
+            }
+
+            $anime->setNextAiredType($typeDate);
 
             $day = $data['startDate']['day'] ?? 1;
             $month = $data['startDate']['month'] ?? 1;
