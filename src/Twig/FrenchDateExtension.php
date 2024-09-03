@@ -52,13 +52,13 @@ class FrenchDateExtension extends AbstractExtension
         $year = $date->format('Y');
 
         // Numéro du jour avec suffixe (1er, 2e, etc.)
-        $numeroJour = $date->format('j');
-        $suffixe = ($numeroJour == 1) ? 'er' : '';
+        $numDay = $date->format('j');
+        $suffixe = ($numDay == 1) ? 'er' : '';
 
         return match ($type){
             'year' => $year,
             'month' => $month." ".$year,
-            'day' => 'le '.$day.$suffixe." ".$month." ".$year
+            'day' => 'le '.$day." ".$numDay.$suffixe." ".$month." ".$year
         };
 
     }
