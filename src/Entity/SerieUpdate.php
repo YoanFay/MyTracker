@@ -33,6 +33,9 @@ class SerieUpdate
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $newNextAired = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $nextAiredType = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -106,6 +109,18 @@ class SerieUpdate
     public function setNewNextAired(?\DateTimeInterface $newNextAired): static
     {
         $this->newNextAired = $newNextAired;
+
+        return $this;
+    }
+
+    public function getNextAiredType(): ?string
+    {
+        return $this->nextAiredType;
+    }
+
+    public function setNextAiredType(?string $nextAiredType): static
+    {
+        $this->nextAiredType = $nextAiredType;
 
         return $this;
     }

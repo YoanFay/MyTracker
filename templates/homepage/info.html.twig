@@ -12,7 +12,7 @@
                     {% if update.newStatus and update.oldStatus == "Ended" and update.newStatus == "Continuing" %}Reprise de {{ update.serie.name }} {% endif %}
                     {% if update.newNextAired and update.newStatus != "Upcoming" %}{{ update.serie.name }} - Le prochain épisode sera le {{ update.newNextAired|dateF }} {% endif %}
                     {% if update.newNextAired == null and update.serie.status == "Continuing" and update.oldStatus != "Ended" and update.oldStatus != null %}{{ update.serie.name }} est en pause{% endif %}
-                    {% if update.newStatus == "Upcoming" %}La prochaine saison de {{ update.serie.name }} à été annoncé{% if update.newNextAired %} pour {{ dateUpcoming(update.newNextAired, update.serie.nextAiredType) }}{% endif %}{% endif %}
+                    {% if update.newStatus == "Upcoming" %}La prochaine saison de {{ update.serie.name }} à été annoncé{% if update.newNextAired %} pour {{ dateUpcoming(update.newNextAired, update.nextAiredType) }}{% endif %}{% endif %}
                 </p>
             {% endfor %}
         </div>
