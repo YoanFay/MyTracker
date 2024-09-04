@@ -168,7 +168,7 @@ class UpdateDateService
                 $typeDate = 'month';
             }
 
-            $anime->setNextAiredType($typeDate);
+            $serieUpdate->setNextAiredType($typeDate);
 
             $day = $data['startDate']['day'] ?? 1;
             $month = $data['startDate']['month'] ?? 1;
