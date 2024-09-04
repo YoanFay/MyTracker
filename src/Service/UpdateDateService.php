@@ -189,7 +189,6 @@ class UpdateDateService
         ) {
             $serieUpdate->setOldNextAired($anime->getNextAired());
             $serieUpdate->setNewNextAired($nextAired);
-            $serieUpdate->setNextAiredType($nextAired);
 
             $this->manager->persist($serieUpdate);
         }
