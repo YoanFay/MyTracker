@@ -65,6 +65,14 @@ class UpdateDateCommand extends Command
             
         }
 
+        $animes = $this->serieRepository->getAnimeWithoutLastDate();
+
+        foreach ($animes as $anime) {
+
+            $this->updateDateService->updateLastAiredAnime($anime);
+
+        }
+
         $series = $this->serieRepository->noFirstAired();
 
         foreach ($series as $serie){

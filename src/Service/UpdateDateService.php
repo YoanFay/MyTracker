@@ -69,6 +69,39 @@ class UpdateDateService
     }
 
 
+    public function updateLastAiredAnime(Serie $anime)
+    {
+
+        $query = 'query ($search: String) { Media (search: $search, type: ANIME) { endDate{day, month, year} }}';
+
+        if ($anime->getLastSeasonName()) {
+
+            $data = $this->aniListService->getDataByName($query, $anime->getLastSeasonName());
+
+            if (!$data['endDate']['year']) {
+                $data = $this->aniListService->getDataByName($query, $this->aniListService->getPrequelSeasonName($anime->getLastSeasonName()));
+            }
+
+        }else{
+            $data = $this->aniListService->getDataByName($query, $anime->getNameEng());
+        }
+
+        if (!$data['endDate']['year']) {
+            return null;
+        }
+
+        $lastDate = $data['endDate']['year']."-".$data['endDate']['month']."-".$data['endDate']['day'];
+
+        $lastAired = DateTime::createFromFormat('Y-m-d', $lastDate);
+
+        $anime->setLastAired($lastAired);
+
+        $this->manager->persist($anime);
+        $this->manager->flush();
+
+    }
+
+
     public function updateEndedAnime($anime)
     {
 
@@ -152,6 +185,8 @@ class UpdateDateService
             $serieUpdate->setUpdatedAt($this->today);
         }
 
+        $typeDate = null;
+
         if ($data['nextAiringEpisode']) {
 
             $nextAired = new DateTime();
@@ -162,13 +197,11 @@ class UpdateDateService
 
             $typeDate = 'year';
 
-            if ($data['startDate']['day']){
+            if ($data['startDate']['day']) {
                 $typeDate = 'day';
-            }elseif ($data['startDate']['month']){
+            } else if ($data['startDate']['month']) {
                 $typeDate = 'month';
             }
-
-            $serieUpdate->setNextAiredType($typeDate);
 
             $day = $data['startDate']['day'] ?? 1;
             $month = $data['startDate']['month'] ?? 1;
@@ -190,6 +223,9 @@ class UpdateDateService
             $serieUpdate->setOldNextAired($anime->getNextAired());
             $serieUpdate->setNewNextAired($nextAired);
             $anime->setNextAired($nextAired);
+
+            $serieUpdate->setNextAiredType($typeDate);
+            $anime->setNextAiredType($typeDate);
 
             $this->manager->persist($serieUpdate);
         }

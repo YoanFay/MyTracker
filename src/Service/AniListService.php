@@ -48,6 +48,51 @@ class AniListService
     }
 
 
+    public function getDataByName($query, $name)
+    {
+
+        $variables = [
+            "search" => $name
+        ];
+
+        return $this->request($query, $variables);
+
+    }
+
+
+    public function getPrequelSeasonName($name)
+    {
+
+        $query = 'query ($search: String) { Media (search: $search, type: ANIME) { status, relations{ edges{relationType}, nodes{title{english}} }}}';
+
+            $variables = [
+                "search" => $name
+            ];
+
+            $data = $this->request($query, $variables);
+
+            if ($data) {
+
+                $relationKey = null;
+
+                foreach ($data['relations']['edges'] as $key => $relationType) {
+                    if ($relationType['relationType'] === "PREQUEL") {
+                        $relationKey = $key;
+                    }
+                }
+
+                if ($relationKey) {
+
+                    return $data['relations']['nodes'][$relationKey]['title']['english'];
+
+                }
+            }
+
+        return $name;
+
+    }
+
+
     public function getLastSeasonName($serie)
     {
 

@@ -18,11 +18,14 @@ class SerieRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
+
         parent::__construct($registry, Serie::class);
     }
 
+
     public function add(Serie $entity, bool $flush = false): void
     {
+
         $this->getEntityManager()->persist($entity);
 
         if ($flush) {
@@ -30,8 +33,10 @@ class SerieRepository extends ServiceEntityRepository
         }
     }
 
+
     public function remove(Serie $entity, bool $flush = false): void
     {
+
         $this->getEntityManager()->remove($entity);
 
         if ($flush) {
@@ -39,36 +44,40 @@ class SerieRepository extends ServiceEntityRepository
         }
     }
 
+
     /**
      * @return Serie[] Returns an array of Serie objects
      */
     public function findNotTvdbId(): array
     {
+
         return $this->createQueryBuilder('s')
             ->andWhere('s.tvdbId IS NULL')
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
     }
+
 
     /**
      * @return Serie[] Returns an array of Serie objects
      */
     public function findTvdbId(): array
     {
+
         return $this->createQueryBuilder('s')
             ->andWhere('s.tvdbId IS NOT NULL')
             ->andWhere('s.vfName = false')
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
     }
+
 
     /**
      * @return Serie[] Returns an array of Serie objects
      */
     public function findArtworkId(): array
     {
+
         return $this->createQueryBuilder('s')
             ->leftJoin('s.artwork', 'a')
             ->andWhere('(a.language <> :eng AND a.language <> :fra) OR s.artwork IS NULL')
@@ -76,15 +85,16 @@ class SerieRepository extends ServiceEntityRepository
             ->setParameter('fra', 'fra')
             ->andWhere('s.tvdbId IS NOT NULL')
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
     }
+
 
     /**
      * @return Serie[] Returns an array of Serie objects
      */
     public function findNoGenre(): array
     {
+
         return $this->createQueryBuilder('s')
             ->leftJoin('s.genres', 'g')
             ->leftJoin('s.serieType', 't')
@@ -93,29 +103,31 @@ class SerieRepository extends ServiceEntityRepository
             ->andWhere('t.name <> :type')
             ->setParameter('type', 'Anime')
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
     }
+
 
     /**
      * @return Serie[] Returns an array of Serie objects
      */
     public function findAnime(): array
     {
+
         return $this->createQueryBuilder('s')
             ->leftJoin('s.serieType', 't')
             ->andWhere('t.name = :type')
             ->setParameter('type', 'Anime')
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
     }
+
 
     /**
      * @return Serie[] Returns an array of Serie objects
      */
     public function noFirstAired(): array
     {
+
         return $this->createQueryBuilder('s')
             ->leftJoin('s.serieType', 't')
             ->andWhere('s.firstAired IS NULL')
@@ -123,15 +135,16 @@ class SerieRepository extends ServiceEntityRepository
             ->andWhere('t.name <> :type OR s.tvdbId IN (302218)')
             ->setParameter('type', 'Anime')
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
     }
+
 
     /**
      * @return Serie[] Returns an array of Serie objects
      */
     public function noFirstAiredAnime(): array
     {
+
         return $this->createQueryBuilder('s')
             ->leftJoin('s.serieType', 't')
             ->andWhere('s.firstAired IS NULL')
@@ -139,15 +152,16 @@ class SerieRepository extends ServiceEntityRepository
             ->setParameter('type', 'Anime')
             ->andWhere('s.tvdbId NOT IN (302218)')
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
     }
+
 
     /**
      * @return Serie[] Returns an array of Serie objects
      */
     public function updateAired(): array
     {
+
         return $this->createQueryBuilder('s')
             ->leftJoin('s.serieType', 't')
             ->andWhere('s.nextAired IS NULL OR s.nextAired < CURRENT_DATE()')
@@ -158,15 +172,16 @@ class SerieRepository extends ServiceEntityRepository
             ->andWhere('t.name <> :type OR s.tvdbId IN (302218)')
             ->setParameter('type', 'Anime')
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
     }
+
 
     /**
      * @return Serie[] Returns an array of Serie objects
      */
     public function updateAiredAnime(): array
     {
+
         return $this->createQueryBuilder('s')
             ->leftJoin('s.serieType', 't')
             ->andWhere('s.nextAired IS NULL OR s.nextAired < CURRENT_DATE()')
@@ -178,15 +193,16 @@ class SerieRepository extends ServiceEntityRepository
             ->andWhere('t.name = :type')
             ->setParameter('type', 'Anime')
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
     }
+
 
     /**
      * @return Serie[] Returns an array of Serie objects
      */
     public function ended(): array
     {
+
         return $this->createQueryBuilder('s')
             ->leftJoin('s.serieType', 't')
             ->andWhere('s.status = :status')
@@ -195,15 +211,16 @@ class SerieRepository extends ServiceEntityRepository
             ->andWhere('t.name <> :type OR s.tvdbId IN (302218)')
             ->setParameter('type', 'Anime')
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
     }
+
 
     /**
      * @return Serie[] Returns an array of Serie objects
      */
     public function endedAnime(): array
     {
+
         return $this->createQueryBuilder('s')
             ->leftJoin('s.serieType', 't')
             ->andWhere('s.status = :status')
@@ -212,30 +229,61 @@ class SerieRepository extends ServiceEntityRepository
             ->setParameter('type', 'Anime')
             ->andWhere('s.tvdbId NOT IN (76703, 302218)')
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
     }
+
+
+    /**
+     * @return Serie[] Returns an array of Serie objects
+     */
+    public function getAnimeWithoutLastDate(): array
+    {
+        $qb = $this->createQueryBuilder('s');
+
+        return $qb
+            ->leftJoin('s.serieType', 't')
+            ->where('t.name = :typeName')
+            ->andWhere(
+                $qb->expr()->orX(
+                    's.lastAired IS NULL',
+                    $qb->expr()->andX(
+                        's.lastAired < :currentDate',
+                        's.status = :status'
+                    )
+                )
+            )
+            ->setParameter('typeName', 'Anime')
+            ->setParameter('currentDate', new \DateTime())
+            ->setParameter('status', 'Continuing')
+            ->getQuery()
+            ->getResult();
+    }
+
+
+
 
     /**
      * @return Serie[] Returns an array of Serie objects
      */
     public function noThemeGenre(): array
     {
+
         return $this->createQueryBuilder('s')
             ->leftJoin('s.serieType', 't')
             ->andWhere('s.animeGenres is EMPTY or s.animeThemes is EMPTY')
             ->andWhere('t.name = :type')
             ->setParameter('type', 'Anime')
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
     }
+
 
     /**
      * @return Serie[] Returns an array of Serie objects
      */
     public function serieByGenre($animeGenre): array
     {
+
         return $this->createQueryBuilder('s')
             ->leftJoin('s.serieType', 't')
             ->andWhere('s.animeGenres IN (:idGenre)')
@@ -243,15 +291,16 @@ class SerieRepository extends ServiceEntityRepository
             ->andWhere('t.name = :type')
             ->setParameter('type', 'Anime')
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
     }
+
 
     /**
      * @return Serie[] Returns an array of Serie objects
      */
     public function noCompanies(): array
     {
+
         return $this->createQueryBuilder('s')
             ->leftJoin('s.serieType', 't')
             ->andWhere('s.company is EMPTY')
@@ -259,15 +308,16 @@ class SerieRepository extends ServiceEntityRepository
             ->andWhere('t.name <> :type')
             ->setParameter('type', 'Anime')
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
     }
+
 
     /**
      * @return Serie[] Returns an array of Serie objects
      */
     public function animeNoCompanies(): array
     {
+
         return $this->createQueryBuilder('s')
             ->leftJoin('s.serieType', 't')
             ->andWhere('s.company is EMPTY')
@@ -275,23 +325,23 @@ class SerieRepository extends ServiceEntityRepository
             ->andWhere('t.name = :type')
             ->setParameter('type', 'Anime')
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
     }
+
 
     /**
      * @return Serie[] Returns an array of Serie objects
      */
     public function findAnimeWithLimit($limit): array
     {
+
         return $this->createQueryBuilder('s')
             ->leftJoin('s.serieType', 't')
             ->andWhere('t.name = :type')
             ->setParameter('type', 'Anime')
             ->setMaxResults($limit)
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
     }
 
 

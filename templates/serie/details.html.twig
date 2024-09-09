@@ -41,7 +41,7 @@
                         {% endif %}
                         {% if serie.nextAired %}
                             <li data-toggle="tooltip" data-placement="top" title="{{ serie.nextAired|age }}">
-                                <strong>Date de sortie du prochain épisode : </strong>{{ serie.nextAired|dateFNoDay }}
+                                <strong>Date de sortie du prochain épisode : </strong>{% if serie.serieType.name == "Anime" %}{{ dateUpcoming(serie.nextAired, serie.nextAiredType)|replace({'le ': ''}) }}{%else%}{{ serie.nextAired|dateFNoDay }}{%endif%}
                             </li>
                         {% elseif serie.status == "Continuing" %}
                             <li>
