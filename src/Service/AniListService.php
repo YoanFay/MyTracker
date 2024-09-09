@@ -96,7 +96,7 @@ class AniListService
     public function getLastSeasonName($serie)
     {
 
-        $query = 'query ($search: String) { Media (search: $search, type: ANIME) { status, relations{ edges{relationType}, nodes{title{english}} }}}';
+        $query = 'query ($search: String) { Media (search: $search, type: ANIME) { endDate, status, relations{ edges{relationType}, nodes{title{english}} }}}';
 
         if (!$serie->getLastSeasonName()) {
             $serie->setLastSeasonName($serie->getNameEng());
@@ -132,6 +132,10 @@ class AniListService
                 if ($relation) {
 
                     $serie->setLastSeasonName($name);
+
+                    if ($data['endDate']['year']){
+                        $serie->setLastAired(DateTime::createFromFormat('Y-m-d', $data['endDate']['year']."-".$data['endDate']['month']."-".$data['endDate']['day']));
+                    }
 
                     $this->manager->persist($serie);
                     $this->manager->flush();
