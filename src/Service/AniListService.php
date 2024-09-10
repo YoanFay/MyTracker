@@ -96,7 +96,7 @@ class AniListService
     public function getLastSeasonName($serie)
     {
 
-        $query = 'query ($search: String) { Media (search: $search, type: ANIME) { endDate, status, relations{ edges{relationType}, nodes{title{english}} }}}';
+        $query = 'query ($search: String) { Media (search: $search, type: ANIME) { endDate{day, month, year}, status, relations{ edges{relationType}, nodes{title{english}} }}}';
 
         if (!$serie->getLastSeasonName()) {
             $serie->setLastSeasonName($serie->getNameEng());
