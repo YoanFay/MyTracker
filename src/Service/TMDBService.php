@@ -61,17 +61,27 @@ class TMDBService
 
         }
 
+        dump($movie);
+
         $data = self::getData('/movie/'.$movie->getTmdbId().'/images?include_image_language=fr');
 
         // Lien de l'image à télécharger
         $lienImage = "https://image.tmdb.org/t/p/w600_and_h900_bestv2".$data['posters'][0]['file_path'];
 
+        dump($lienImage);
+
         $cover = imagecreatefromstring(file_get_contents($lienImage));
+
+        dump($cover);
 
         $projectDir = $this->kernel->getProjectDir();
 
+        dump($projectDir);
+
         // Chemin où enregistrer l'image
         $cheminImageDestination = "/public/image/movie/poster/".$movie->getSlug().'.jpeg';
+
+        dump($cheminImageDestination);
 
         // Téléchargement et enregistrement de l'image
         if (imagejpeg($cover, $projectDir.$cheminImageDestination, 100)) {
