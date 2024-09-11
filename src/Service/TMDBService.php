@@ -70,6 +70,8 @@ class TMDBService
 
         dump($lienImage);
 
+        dump(file_get_contents($lienImage));
+
         $cover = imagecreatefromstring(file_get_contents($lienImage));
 
         dump($cover);
