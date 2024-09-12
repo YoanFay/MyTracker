@@ -62,6 +62,14 @@ class MovieRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
+    public function getNoArtwork(){
+
+        return $this->createQueryBuilder('m')
+            ->andWhere('m.artwork IS NULL')
+            ->getQuery()
+            ->getResult();
+    }
+
 //    /**
 //     * @return Movie[] Returns an array of Movie objects
 //     */

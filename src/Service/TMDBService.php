@@ -61,7 +61,14 @@ class TMDBService
 
         }
 
-        dump($movie);
+        $movie = $this->updateArtwork($movie);
+
+        $movie->setUpdated(true);
+
+    }
+
+    public function updateArtwork($movie)
+    {
 
         $data = self::getData('/movie/'.$movie->getTmdbId().'/images?include_image_language=fr');
 
@@ -76,13 +83,13 @@ class TMDBService
         $cheminImageDestination = "/public/image/movie/poster/".$movie->getSlug().'.jpeg';
 
         // Téléchargement et enregistrement de l'image
-        if (imagejpeg($cover, $projectDir.$cheminImageDestination, 100)) {
+        if ($cover && imagejpeg($cover, $projectDir.$cheminImageDestination, 100)) {
             $movie->setArtwork($cheminImageDestination);
         } else {
             $movie->setArtwork(null);
         }
 
-        $movie->setUpdated(true);
+        return $movie;
 
     }
 

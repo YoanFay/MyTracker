@@ -2,7 +2,9 @@
 
 namespace App\Command;
 
+use App\Repository\MovieRepository;
 use App\Repository\SerieRepository;
+use App\Service\TMDBService;
 use App\Service\TVDBService;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
@@ -16,18 +18,24 @@ class UpdateArtworkCommand extends Command
 
     private SerieRepository $serieRepository;
 
+    private MovieRepository $movieRepository;
+
     private ObjectManager $manager;
 
     private TVDBService $TVDBService;
 
+    private TMDBService $TMDBService;
 
-    public function __construct(SerieRepository $serieRepository, ManagerRegistry $managerRegistry, TVDBService $TVDBService)
+
+    public function __construct(SerieRepository $serieRepository, MovieRepository $movieRepository, ManagerRegistry $managerRegistry, TVDBService $TVDBService, TMDBService $TMDBService)
     {
 
         parent::__construct();
         $this->serieRepository = $serieRepository;
+        $this->movieRepository = $movieRepository;
         $this->manager = $managerRegistry->getManager();
         $this->TVDBService = $TVDBService;
+        $this->TMDBService = $TMDBService;
     }
 
 
@@ -49,6 +57,16 @@ class UpdateArtworkCommand extends Command
             $this->TVDBService->updateArtwork($serie);
 
             $this->manager->persist($serie);
+            $this->manager->flush();
+        }
+
+        $movies = $this->movieRepository->getNoArtwork();
+
+        foreach ($movies as $movie) {
+
+            $this->TMDBService->updateArtwork($movie);
+
+            $this->manager->persist($movie);
             $this->manager->flush();
         }
 
