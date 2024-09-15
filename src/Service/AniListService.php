@@ -96,7 +96,7 @@ class AniListService
     public function getLastSeasonName($serie)
     {
 
-        $query = 'query ($search: String) { Media (search: $search, type: ANIME) { endDate{day, month, year}, status, relations{ edges{relationType}, nodes{title{english}} }}}';
+        $query = 'query ($search: String) { Media (search: $search, type: ANIME) { endDate{day, month, year}, status, relations{ edges{relationType}, nodes{title{english}, title{romaji}} }}}';
 
         if (!$serie->getLastSeasonName()) {
             $serie->setLastSeasonName($serie->getNameEng());
@@ -129,6 +129,17 @@ class AniListService
                     }
                 }
 
+                if ($relation && ($status === "Ended" || $status === "Upcoming")) {
+                    $name = $data['relations']['nodes'][$relationKey]['title']['english'];
+
+                    if (!$name){
+                        $name = $data['relations']['nodes'][$relationKey]['title']['romaji'];
+                    }
+
+                } else {
+                    $ok = false;
+                }
+
                 if ($relation) {
 
                     $serie->setLastSeasonName($name);
@@ -140,12 +151,6 @@ class AniListService
                     $this->manager->persist($serie);
                     $this->manager->flush();
 
-                }
-
-                if ($relation && ($status === "Ended" || $status === "Upcoming")) {
-                    $name = $data['relations']['nodes'][$relationKey]['title']['english'];
-                } else {
-                    $ok = false;
                 }
             }
 
