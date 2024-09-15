@@ -253,6 +253,8 @@ class UpdateDateService
             $serieUpdate->setNewStatus($status);
             $anime->setStatus($status);
 
+            $this->updateEndedAnime($anime);
+
             $this->manager->persist($serieUpdate);
 
         }
