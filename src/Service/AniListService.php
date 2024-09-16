@@ -83,6 +83,8 @@ class AniListService
 
                 if ($relationKey) {
 
+                    dump('PREQUEL : '.$data['relations']['nodes'][$relationKey]['title']['english']);
+
                     return $data['relations']['nodes'][$relationKey]['title']['english'];
 
                 }
