@@ -245,7 +245,9 @@ class UpdateDateService
             $lastAired = null;
         }
 
-        $anime->setLastAired($lastAired);
+        if ($lastAired) {
+            $anime->setLastAired($lastAired);
+        }
 
         if ($anime->getStatus() !== $status) {
 
@@ -299,7 +301,11 @@ class UpdateDateService
         } else {
             $lastAired = null;
         }
-        $serie->setLastAired($lastAired);
+
+        if ($lastAired) {
+            $serie->setLastAired($lastAired);
+        }
+
         if ($serie->getStatus() !== $data['data']['status']['name']) {
             $serieUpdate->setOldStatus($serie->getStatus());
             $serieUpdate->setNewStatus($data['data']['status']['name']);
