@@ -11,6 +11,7 @@ class FrenchDateExtension extends AbstractExtension
 {
     public function getFilters(): array
     {
+
         return [
 // If your filter generates SAFE HTML, you should add a third
 // parameter: ['is_safe' => ['html']]
@@ -20,16 +21,20 @@ class FrenchDateExtension extends AbstractExtension
         ];
     }
 
+
     public function getFunctions(): array
     {
+
         return [
             new TwigFunction('dateUpcoming', [$this, 'dateUpcoming']),
         ];
     }
 
-    public function dateUpcoming($date, $type){
 
-        if (!$type){
+    public function dateUpcoming($date, $type)
+    {
+
+        if (!$type) {
             $type = "day";
         }
 
@@ -53,9 +58,11 @@ class FrenchDateExtension extends AbstractExtension
 
         // Numéro du jour avec suffixe (1er, 2e, etc.)
         $numDay = $date->format('j');
-        $suffixe = ($numDay == 1) ? 'er' : '';
+        $suffixe = ($numDay == 1) ?
+            'er' :
+            '';
 
-        return match ($type){
+        return match ($type) {
             'year' => $year,
             'month' => $month." ".$year,
             'day' => 'le '.$day." ".$numDay.$suffixe." ".$month." ".$year
@@ -63,57 +70,63 @@ class FrenchDateExtension extends AbstractExtension
 
     }
 
+
     public function frenchFormatDate($date): string
     {
-        
+
         if (is_string($date)) {
             $date = new DateTime($date);
         }
-        
-    // Jour de la semaine
-    $joursSemaine = array('Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi');
-    $jourSemaine = $joursSemaine[$date->format('w')];
 
-    // Numéro du jour avec suffixe (1er, 2e, etc.)
-    $numeroJour = $date->format('j');
-    $suffixe = ($numeroJour == 1) ? 'er' : '';
+        // Jour de la semaine
+        $joursSemaine = array('Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi');
+        $jourSemaine = $joursSemaine[$date->format('w')];
 
-    // Mois
-    $moisEnFrancais = array(
-        'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet',
-        'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'
-    );
-    $mois = $moisEnFrancais[$date->format('n') - 1];
+        // Numéro du jour avec suffixe (1er, 2e, etc.)
+        $numeroJour = $date->format('j');
+        $suffixe = ($numeroJour == 1) ?
+            'er' :
+            '';
 
-    // Année
-    $annee = $date->format('Y');
+        // Mois
+        $moisEnFrancais = array(
+            'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet',
+            'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'
+        );
+        $mois = $moisEnFrancais[$date->format('n') - 1];
 
-    // Affichage de la date
-    return $jourSemaine." ".$numeroJour.$suffixe." ".$mois." ".$annee;
+        // Année
+        $annee = $date->format('Y');
+
+        // Affichage de la date
+        return $jourSemaine." ".$numeroJour.$suffixe." ".$mois." ".$annee;
     }
+
 
     public function frenchFormatDateNoDay($date): string
     {
-        
+
         if (is_string($date)) {
             $date = new DateTime($date);
         }
 
-    // Numéro du jour avec suffixe (1er, 2e, etc.)
-    $numeroJour = $date->format('j');
-    $suffixe = ($numeroJour == 1) ? 'er' : '';
+        // Numéro du jour avec suffixe (1er, 2e, etc.)
+        $numeroJour = $date->format('j');
+        $suffixe = ($numeroJour == 1) ?
+            'er' :
+            '';
 
-    // Mois
-    $moisEnFrancais = array(
-        'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet',
-        'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'
-    );
-    $mois = $moisEnFrancais[$date->format('n') - 1];
+        // Mois
+        $moisEnFrancais = array(
+            'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet',
+            'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'
+        );
+        $mois = $moisEnFrancais[$date->format('n') - 1];
 
-    // Année
-    $annee = $date->format('Y');
+        // Année
+        $annee = $date->format('Y');
 
-    // Affichage de la date
-    return $numeroJour.$suffixe." ".$mois." ".$annee;
+        // Affichage de la date
+        return $numeroJour.$suffixe." ".$mois." ".$annee;
     }
 }
