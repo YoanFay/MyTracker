@@ -243,6 +243,7 @@ class SerieRepository extends ServiceEntityRepository
         return $qb
             ->leftJoin('s.serieType', 't')
             ->where('t.name = :typeName')
+            ->andWhere('s.tvdbId NOT IN (302218)')
             ->andWhere(
                 $qb->expr()->orX(
                     's.lastAired IS NULL',

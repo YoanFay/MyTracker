@@ -83,6 +83,7 @@ class UpdateDateService
             dump($data['endDate']['year']);
 
             if (!$data['endDate']['year']) {
+                dump("Cherche Prequel");
                 $data = $this->aniListService->getDataByName($query, $this->aniListService->getPrequelSeasonName($anime->getLastSeasonName()));
             }
 
