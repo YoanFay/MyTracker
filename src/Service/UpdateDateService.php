@@ -76,33 +76,22 @@ class UpdateDateService
 
         if ($anime->getLastSeasonName()) {
 
-            dump('Last Season : '.$anime->getLastSeasonName());
-
             $data = $this->aniListService->getDataByName($query, $anime->getLastSeasonName());
 
-            dump($data['endDate']['year']);
-
             if (!$data['endDate']['year']) {
-                dump("Cherche Prequel");
                 $data = $this->aniListService->getDataByName($query, $this->aniListService->getPrequelSeasonName($anime->getLastSeasonName()));
             }
 
         }else{
 
-            dump('Anime : '.$anime->getName());
-
             $data = $this->aniListService->getDataByName($query, $anime->getNameEng());
         }
-
-        dump($data['endDate']['year']);
 
         if (!$data['endDate']['year']) {
             return null;
         }
 
         $lastDate = $data['endDate']['year']."-".$data['endDate']['month']."-".$data['endDate']['day'];
-
-        dump($lastDate);
 
         $lastAired = DateTime::createFromFormat('Y-m-d', $lastDate);
 
