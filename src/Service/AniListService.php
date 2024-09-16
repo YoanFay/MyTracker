@@ -76,8 +76,8 @@ class AniListService
                 $relationKey = null;
 
                 foreach ($data['relations']['edges'] as $key => $relationType) {
-                    dump($relationType);
-                    dump($key);
+                    dump('Relation : '.$relationType['relationType']);
+                    dump('Key : '.$key);
                     if ($relationType['relationType'] === "PREQUEL") {
                         $relationKey = $key;
                     }
