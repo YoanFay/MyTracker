@@ -63,8 +63,8 @@ class FrenchDateExtension extends AbstractExtension
             '';
 
         return match ($type) {
-            'year' => $year,
-            'month' => $month." ".$year,
+            'year' => 'en '.$year,
+            'month' => 'en '.$month." ".$year,
             'day' => 'le '.$day." ".$numDay.$suffixe." ".$month." ".$year
         };
 
