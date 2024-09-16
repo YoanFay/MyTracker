@@ -35,7 +35,7 @@ class UpdateDateService
 
     }
 
-/*
+
     public function updateFirstAiredAnime($anime)
     {
 
@@ -67,7 +67,6 @@ class UpdateDateService
         $this->manager->flush();
 
     }
-*/
 
     public function updateLastAiredAnime(Serie $anime)
     {
@@ -113,7 +112,7 @@ class UpdateDateService
 
     }
 
-/*
+
     public function updateEndedAnime($anime)
     {
 
@@ -328,6 +327,5 @@ class UpdateDateService
         $this->manager->flush();
 
     }
-    */
 
 }

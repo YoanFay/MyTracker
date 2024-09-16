@@ -40,7 +40,7 @@ class UpdateDateCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-
+/*
         $animes = $this->serieRepository->noFirstAiredAnime();
 
         foreach ($animes as $anime) {
@@ -64,7 +64,7 @@ class UpdateDateCommand extends Command
             $this->updateDateService->updateAiredAnime($anime);
             
         }
-
+*/
         $animes = $this->serieRepository->getAnimeWithoutLastDate();
 
         foreach ($animes as $anime) {
@@ -72,7 +72,7 @@ class UpdateDateCommand extends Command
             $this->updateDateService->updateLastAiredAnime($anime);
 
         }
-
+/*
         $series = $this->serieRepository->noFirstAired();
 
         foreach ($series as $serie){
@@ -96,7 +96,7 @@ class UpdateDateCommand extends Command
             $this->updateDateService->updateAired($serie);
 
         }
-
+*/
         return Command::SUCCESS;
     }
 }
