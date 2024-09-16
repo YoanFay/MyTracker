@@ -35,7 +35,7 @@ class UpdateDateService
 
     }
 
-
+/*
     public function updateFirstAiredAnime($anime)
     {
 
@@ -67,30 +67,42 @@ class UpdateDateService
         $this->manager->flush();
 
     }
-
+*/
 
     public function updateLastAiredAnime(Serie $anime)
     {
+
 
         $query = 'query ($search: String) { Media (search: $search, type: ANIME) { endDate{day, month, year} }}';
 
         if ($anime->getLastSeasonName()) {
 
+            dump('Last Season : '.$anime->getLastSeasonName());
+
             $data = $this->aniListService->getDataByName($query, $anime->getLastSeasonName());
+
+            dump($data['endDate']['year']);
 
             if (!$data['endDate']['year']) {
                 $data = $this->aniListService->getDataByName($query, $this->aniListService->getPrequelSeasonName($anime->getLastSeasonName()));
             }
 
         }else{
+
+            dump('Anime : '.$anime->getName());
+
             $data = $this->aniListService->getDataByName($query, $anime->getNameEng());
         }
+
+        dump($data['endDate']['year']);
 
         if (!$data['endDate']['year']) {
             return null;
         }
 
         $lastDate = $data['endDate']['year']."-".$data['endDate']['month']."-".$data['endDate']['day'];
+
+        dump($lastDate);
 
         $lastAired = DateTime::createFromFormat('Y-m-d', $lastDate);
 
@@ -101,7 +113,7 @@ class UpdateDateService
 
     }
 
-
+/*
     public function updateEndedAnime($anime)
     {
 
@@ -316,5 +328,6 @@ class UpdateDateService
         $this->manager->flush();
 
     }
+    */
 
 }
