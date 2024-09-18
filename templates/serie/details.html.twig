@@ -14,14 +14,16 @@
                 <h3>
                     Studio :
                     {% for studio in studios %}
-                        <a class="text-decoration-none text-black" href=" {{path('serie_company', {'id': studio.id})}}">{{ studio.name }}</a>{% if not loop.last %}, {% endif %}
+                        <a class="text-decoration-none text-black"
+                           href=" {{ path('serie_company', {'id': studio.id}) }}">{{ studio.name }}</a>{% if not loop.last %}, {% endif %}
                     {% endfor %}
                 </h3>
             {% elseif networks != [] %}
                 <h3>
                     Créer par :
                     {% for network in networks %}
-                        <a class="text-decoration-none text-black" href="{{path('serie_company', {'id': network.id})}}">{{ network.name }}</a>{% if not loop.last %}, {% endif %}
+                        <a class="text-decoration-none text-black"
+                           href="{{ path('serie_company', {'id': network.id}) }}">{{ network.name }}</a>{% if not loop.last %}, {% endif %}
                     {% endfor %}
                 </h3>
             {% endif %}
@@ -41,7 +43,8 @@
                         {% endif %}
                         {% if serie.nextAired %}
                             <li data-toggle="tooltip" data-placement="top" title="{{ serie.nextAired|age }}">
-                                <strong>Date de sortie du prochain épisode : </strong>{% if serie.serieType.name == "Anime" %}{{ dateUpcoming(serie.nextAired, serie.nextAiredType)|replace({'le ': '', 'en ': ''}) }}{%else%}{{ serie.nextAired|dateFNoDay }}{%endif%}
+                                <strong>Date de sortie du prochain épisode
+                                    : </strong>{% if serie.serieType.name == "Anime" %}{{ dateUpcoming(serie.nextAired, serie.nextAiredType)|replace({'le ': '', 'en ': ''}) }}{% else %}{{ serie.nextAired|dateFNoDay }}{% endif %}
                             </li>
                         {% elseif serie.status == "Continuing" %}
                             <li>
@@ -94,12 +97,13 @@
                     {% endif %}
                 </div>
             </div>
+            {% set image = infoImage(serie, app.environment) %}
             <a class="btn btn-primary"
                href="{% if idSerie %}{{ path('serie', {'id': idSerie}) }}{% else %}{{ path('serie') }}{% endif %}">Retour</a>
         </div>
-        <img {% if serie.artwork and serie.artwork.path %} src="{% if app.environment == "dev" %}{{ serie.artwork.path|replace({'/public': ''}) }}{% else %}{{ serie.artwork.path }}{% endif %}" alt="{{ serie.name }} poster" {% else %} src="/image/visuel-a-venir.jpg" alt="Visuel à venir" {% endif %}
-                width="{{ width }}px" {% if height %}height="{{ height }}px"{% endif %} data-bs-toggle="modal"
-                data-bs-target="#imageModal" class="cursor-click">
+        <img src="{{ image.path }}" alt="{{ image.alt }}"
+             width="{{ image.width }}px" {% if image.height %}height="{{ image.height }}px"{% endif %} data-bs-toggle="modal"
+             data-bs-target="#imageModal" class="cursor-click">
     </div>
 
 
@@ -134,7 +138,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body text-center" style="overflow: hidden;">
-                    <img {% if serie.artwork and serie.artwork.path %} src="{% if app.environment == "dev" %}{{ serie.artwork.path|replace({'/public': ''}) }}{% else %}{{ serie.artwork.path }}{% endif %}" alt="{{ serie.name }} poster" {% else %} src="/image/visuel-a-venir.jpg" alt="Visuel à venir" {% endif %}
+                    <img src="{{ image.path }}" alt="{{ image.alt }}"
                             style="max-height: calc(100vh - 50px); width: auto; max-width: 100%;">
                 </div>
             </div>

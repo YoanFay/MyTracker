@@ -15,17 +15,13 @@
         </thead>
         <tbody>
         {% for serie in series %}
+            {% set image = infoImage(serie.entity, app.environment) %}
             <tr class="clickable-row cursor-click" data-href="{{ path('serie_detail', {'id': serie.id}) }}">
                 <td>{{ serie.name }}</td>
                 <td>{% if serie.lastDate %}{{ serie.lastDate|dateFNoDay }}{% else %}Pas de données{% endif %}</td>
                 <td>{{ serie.serieType }}</td>
                 <td>
-                    {% if serie.artwork and serie.artwork.path %}
-                        <img src="{% if app.environment == "dev" %}{{ serie.artwork.path|replace({'/public': ''}) }}{% else %}{{ serie.artwork.path }}{% endif %}"
-                             width="150px" alt="{{ serie.name }} poster">
-                    {% else %}
-                        <img src="/image/visuel-a-venir.jpg" width="150px" alt="Visuel à venir">
-                    {% endif %}
+                        <img src="{{ image.path }}" width="150px" alt="{{ image.alt }}">
                 </td>
             </tr>
         {% endfor %}

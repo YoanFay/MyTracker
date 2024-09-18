@@ -38,11 +38,15 @@ class SerieController extends AbstractController
             $idSerie = $session->get('idSerie');
         }
 
-        if (!$idSerie && str_contains($referer, "http://localhost:8000/serie/") && !str_contains($referer, "edit")){
+        if (!$idSerie && str_contains($referer, "http://localhost:8000/serie/") && (!str_contains($referer, "edit") || !str_contains($referer, "detail"))){
             $idSerie = str_replace('http://localhost:8000/serie/', '', $referer);
+
+            $idSerie = str_replace('detail/', '', $idSerie);
 
             $session->set('idSerie', $idSerie);
         }
+
+        $idSerie = str_replace('detail/', '', $idSerie);
 
         $serie = $serieRepository->findOneBy(['id' => $id]);
         $totalDuration = $episodeShowRepository->getDurationBySerie($id);
@@ -74,20 +78,6 @@ class SerieController extends AbstractController
             array_push($tagTypes[$tag->getTagsType()->getNameFra()], $tag);
         }
 
-        $height = null;
-        $width = 400;
-
-        $artwork = $serie->getArtwork();
-
-        if ($artwork && $artwork->getPath() && $artwork->getHeight() && $artwork->getWidth() && $artwork->getWidth() > 0){
-
-            if($width > $artwork->getWidth()){
-                $width = $artwork->getWidth();
-            }
-
-            $height = ($width * $artwork->getHeight()) / $artwork->getWidth();
-        }
-
         return $this->render('serie/details.html.twig', [
             'controller_name' => 'SerieController',
             'serie' => $serie,
@@ -100,8 +90,6 @@ class SerieController extends AbstractController
             'idSerie' => $idSerie,
             'studios' => $studios,
             'networks' => $networks,
-            'height' => $height,
-            'width' => $width,
             'navLinkId' => 'serie_list',
         ]);
     }
@@ -256,6 +244,7 @@ class SerieController extends AbstractController
                 'serieType' => $serie->getSerieType()->getName(),
                 'artwork' => $serie->getArtwork(),
                 'lastDate' => $lastEpisode?->getShowDate(),
+                'entity' => $serie,
             ];
 
         }
@@ -298,6 +287,7 @@ class SerieController extends AbstractController
                 'serieType' => $serie->getSerieType()->getName(),
                 'artwork' => $serie->getArtwork(),
                 'lastDate' => $lastEpisode?->getShowDate(),
+                'entity' => $serie,
             ];
 
         }
@@ -338,6 +328,7 @@ class SerieController extends AbstractController
                 'serieType' => $serie->getSerieType()->getName(),
                 'artwork' => $serie->getArtwork(),
                 'lastDate' => $lastEpisode?->getShowDate(),
+                'entity' => $serie,
             ];
 
         }
@@ -390,6 +381,7 @@ class SerieController extends AbstractController
                 'serieType' => $serie->getSerieType()->getName(),
                 'artwork' => $serie->getArtwork(),
                 'lastDate' => $lastEpisode?->getShowDate(),
+                'entity' => $serie,
             ];
 
         }
