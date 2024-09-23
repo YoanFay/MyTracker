@@ -358,13 +358,9 @@ class SerieController extends AbstractController
         $id = $request->request->get('id');
         $text = $request->request->get('text');
 
-        dump($id);
-        dump($text);
-
         if ($id < 0) {
             $series = $serieRepository->search(null, $text);
 
-            dump($series);
         } else if ($id == 404) {
 
             $series = $serieRepository->noThemeGenre($text);
