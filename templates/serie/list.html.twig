@@ -1,0 +1,8 @@
+{% for serie in series %}
+    {% set image = infoImage(serie.entity, app.environment) %}
+    <div class="cursor-click container col-2 px-3 my-4 d-flex flex-column"
+         onclick="openDetail('{{ path('serie_detail', {'id': serie.id}) }}')">
+        <img class="rounded mx-auto d-block" src="{{ image.path }}" width="150px" alt="{{ image.alt }}">
+        <p class="text-center">{{ serie.name }}</p>
+    </div>
+{% endfor %}

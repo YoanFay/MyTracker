@@ -4,14 +4,22 @@
 
 {% block body %}
 
-    <div class="col-12 d-flex flex-row justify-content-between flex-wrap">
-        {% for serie in series %}
-            {% set image = infoImage(serie.entity, app.environment) %}
-            <div class="cursor-click container col-2 px-3 my-4 d-flex flex-column" onclick="openDetail('{{ path('serie_detail', {'id': serie.id}) }}')">
-                <img class="rounded mx-auto d-block" src="{{ image.path }}" width="150px" alt="{{ image.alt }}">
-                <p class="text-center">{{ serie.name }}</p>
+    <div class="mt-4 ms-2 w-25">
+        <label>Recherche</label>
+        <input id="search" type="text" class="form-control" onkeyup="search()">
+    </div>
+
+    <div id="divList" class="col-12 d-flex flex-row justify-content-between flex-wrap">
+
+    </div>
+    <div id="loadSpin" class="col-12 d-flex flex-row h-75">
+        <div class="card-body py-1 py-lg-0 h-100">
+            <div class="d-flex justify-content-center align-items-center h-100">
+                <div class="spinner-border" role="status">
+                    <span class="sr-only"></span>
+                </div>
             </div>
-        {% endfor %}
+        </div>
     </div>
 
 {% endblock %}
@@ -19,13 +27,37 @@
 {% block javascript %}
     <script>
 
-        jQuery(document).ready(function ($) {
-            $(".clickable-row").click(function () {
-                window.location = $(this).data("href");
-            });
-        });
+        $.ajax({
+            url: "{{ path('serie_list') }}",
+            method: "POST",
+            data: {
+                'id': {{ id }},
+            },
+            success: function (data) {
+                $("#divList").html(data);
+                $('#loadSpin').addClass('d-none');
+            }
+        })
 
-        function openDetail(href){
+        function search(){
+
+            const text = $('#search').val();
+
+            $.ajax({
+                url: "{{ path('serie_list') }}",
+                method: "POST",
+                data: {
+                    'id': {{ id }},
+                    'text': text,
+                },
+                success: function (data) {
+                    $("#divList").html(data);
+                    $('#loadSpin').addClass('d-none');
+                }
+            })
+        }
+
+        function openDetail(href) {
             window.location = href;
         }
 

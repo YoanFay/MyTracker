@@ -34,11 +34,11 @@ class SerieController extends AbstractController
         $idSerie = null;
         $session = $requestStack->getSession();
 
-        if($session->get('idSerie')){
+        if ($session->get('idSerie')) {
             $idSerie = $session->get('idSerie');
         }
 
-        if (!$idSerie && str_contains($referer, "http://localhost:8000/serie/") && (!str_contains($referer, "edit") || !str_contains($referer, "detail"))){
+        if (!$idSerie && str_contains($referer, "http://localhost:8000/serie/") && (!str_contains($referer, "edit") || !str_contains($referer, "detail"))) {
             $idSerie = str_replace('http://localhost:8000/serie/', '', $referer);
 
             $idSerie = str_replace('detail/', '', $idSerie);
@@ -55,10 +55,10 @@ class SerieController extends AbstractController
         $studios = [];
         $networks = [];
 
-        foreach($serie->getCompany()->getValues() as $company){
-            if ($company->getType() === "Studio"){
+        foreach ($serie->getCompany()->getValues() as $company) {
+            if ($company->getType() === "Studio") {
                 $studios[] = $company;
-            }elseif ($company->getType() === "Network"){
+            } else if ($company->getType() === "Network") {
                 $networks[] = $company;
             }
         }
@@ -351,22 +351,29 @@ class SerieController extends AbstractController
     }
 
 
-    #[Route('/serie/{id}', name: 'serie')]
-    public function index(SerieRepository $serieRepository, EpisodeShowRepository $episodeShowRepository, SerieTypeRepository $serieTypeRepository, $id = -1): Response
+    #[Route('/serie/list', name: 'serie_list')]
+    public function serieList(SerieRepository $serieRepository, SerieTypeRepository $serieTypeRepository, EpisodeShowRepository $episodeShowRepository, Request $request)
     {
 
+        $id = $request->request->get('id');
+        $text = $request->request->get('text');
+
+        dump($id);
+        dump($text);
+
         if ($id < 0) {
-            $series = $serieRepository->findAll();
+            $series = $serieRepository->search(null, $text);
+
+            dump($series);
         } else if ($id == 404) {
 
-            $serieType = $serieTypeRepository->findOneBy(['name' => 'Anime']);
+            $series = $serieRepository->noThemeGenre($text);
 
-            $series = $serieRepository->noThemeGenre($serieType);
         } else {
 
             $serieType = $serieTypeRepository->find($id);
 
-            $series = $serieRepository->findBy(['serieType' => $serieType]);
+            $series = $serieRepository->search($serieType, $text);
         }
 
         $serieTab = [];
@@ -396,10 +403,32 @@ class SerieController extends AbstractController
             return $dateB <=> $dateA;
         });
 
-        return $this->render('serie/index.html.twig', [
+        return $this->render('serie/list.html.twig', [
             'controller_name' => 'SerieController',
             'series' => $serieTab,
             'navLinkId' => 'serie_list',
         ]);
+    }
+
+
+    #[Route('/serie/{search}', name: 'serie')]
+    public function index($search = null): Response
+    {
+
+        $id = match ($search) {
+            'Animes' => 1,
+            'Replay' => 2,
+            'Séries' => 3,
+            'Dessins_Animés' => 4,
+            'A_Traiter' => 404,
+            default => -1
+        };
+
+        return $this->render('serie/index.html.twig', [
+            'controller_name' => 'SerieController',
+            'id' => $id,
+            'navLinkId' => 'serie_list',
+        ]);
+
     }
 }

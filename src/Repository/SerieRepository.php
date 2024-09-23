@@ -238,6 +238,7 @@ class SerieRepository extends ServiceEntityRepository
      */
     public function getAnimeWithoutLastDate(): array
     {
+
         $qb = $this->createQueryBuilder('s');
 
         return $qb
@@ -261,19 +262,51 @@ class SerieRepository extends ServiceEntityRepository
     }
 
 
+    /**
+     * @return Serie[] Returns an array of Serie objects
+     */
+    public function noThemeGenre($text): array
+    {
+
+        $qb = $this->createQueryBuilder('s')
+            ->leftJoin('s.serieType', 't')
+            ->andWhere('s.animeGenres is EMPTY or s.animeThemes is EMPTY')
+            ->andWhere('t.name = :type')
+            ->setParameter('type', 'Anime');
+
+        if ($text) {
+            $qb
+                ->andWhere('s.name LIKE :text OR s.nameEng LIKE :text')
+                ->setParameter('text', $text);
+        }
+
+        return $qb
+            ->getQuery()
+            ->getResult();
+    }
 
 
     /**
      * @return Serie[] Returns an array of Serie objects
      */
-    public function noThemeGenre(): array
+    public function search($type, $text): array
     {
 
-        return $this->createQueryBuilder('s')
-            ->leftJoin('s.serieType', 't')
-            ->andWhere('s.animeGenres is EMPTY or s.animeThemes is EMPTY')
-            ->andWhere('t.name = :type')
-            ->setParameter('type', 'Anime')
+        $qb = $this->createQueryBuilder('s');
+
+        if ($type) {
+            $qb
+                ->andWhere('s.serieType = :type')
+                ->setParameter('type', $type);
+        }
+
+        if ($text) {
+            $qb
+                ->andWhere('s.name LIKE :text OR s.nameEng LIKE :text')
+                ->setParameter('text', '%'.$text.'%');
+        }
+
+        return $qb
             ->getQuery()
             ->getResult();
     }
