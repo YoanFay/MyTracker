@@ -23,6 +23,7 @@ class Image extends AbstractExtension
     {
         return [
             new TwigFunction('infoImage', [$this, 'infoImage']),
+            new TwigFunction('infoImageMovie', [$this, 'infoImageMovie']),
         ];
     }
 
@@ -72,6 +73,28 @@ class Image extends AbstractExtension
             'alt' => "Visuel à venir",
             'width' => $width,
             'height' => $height
+        ];
+
+    }
+
+    public function infoImageMovie($path, $name, $env) {
+
+        if ($path && file_exists($this->kernel->getProjectDir().$path)){
+
+            if ($env === "dev"){
+                $path = str_replace('public/', '',$path);
+            }
+
+            return [
+                'path' => $path,
+                'alt' => $name." poster"
+            ];
+
+        }
+
+        return [
+            'path' => "/image/visuel-a-venir.jpg",
+            'alt' => "Visuel à venir"
         ];
 
     }

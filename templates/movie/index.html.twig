@@ -46,16 +46,13 @@
             {% set prev = 0 %}
             <div>
                 {% for movie in moviesByDate[dateKey]|sort((a, b) => a.showDate <=> b.showDate) %}
+                    {% set image = infoImageMovie(movie.artwork, movie.name, app.environment)%}
                     <tr>
                         <td><a class="text-decoration-none text-black" href="{{ path('movie_detail', {'id': movie.id}) }}">{{ movie.name }}</a></td>
                         {# <td>{{ movie.showDate|date_modify('-' ~ (90 / 100) * movie.duration ~ ' milliseconds')|date("H\\hi") }}</td> #}
                         <td>{{ movie.showDate|date("H\\hi") }}</td>
                         <td class="text-end">
-                            {% if movie.artwork %}
-                                <img src="{% if app.environment == "dev" %}{{ movie.artwork|replace({'/public': ''}) }}{% else %}{{ movie.artwork }}{% endif %}" width="150px" alt="{{ movie.name }} poster">
-                            {% else %}
-                                <img src="/image/visuel-a-venir.jpg" width="150px" alt="Visuel à venir">
-                            {% endif %}
+                                <img src="{{ image.path }}" width="150px" alt="{{ image.alt }}">
                         </td>
                     </tr>
                     {% set globalDuration = globalDuration + movie.duration %}
