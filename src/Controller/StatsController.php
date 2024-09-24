@@ -3,10 +3,12 @@
 namespace App\Controller;
 
 use App\Repository\EpisodeRepository;
+use App\Repository\EpisodeShowRepository;
 use App\Repository\MangaRepository;
 use App\Repository\MovieRepository;
 use App\Service\TimeService;
 use DateTime;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -18,7 +20,7 @@ class StatsController extends AbstractController
     * @Route("/stat/episode", name="episode_stat")
     * @throws Exception
     */
-    public function episodeStat(MovieRepository $movieRepository, EpisodeRepository $episodeRepository, TimeService $timeService): Response
+    public function episodeStat(MovieRepository $movieRepository, EpisodeRepository $episodeRepository, TimeService $timeService, EpisodeShowRepository $episodeShowRepository): Response
     {
         
         $movieDuration = $movieRepository->getDuration();
@@ -45,7 +47,7 @@ class StatsController extends AbstractController
         $durationByGenre = $episodeRepository->getDurationGenre();
         $durationByTheme = $episodeRepository->getDurationTheme();
         
-        $allEpisodes = $episodeRepository->findAll();
+        $allEpisodesShow = $episodeShowRepository->findAll();
         $allMovies = $movieRepository->findAll();
         
         $animeByDay = [
@@ -149,20 +151,22 @@ class StatsController extends AbstractController
         ];
         
         
-        foreach ($allEpisodes as $episode) {
+        foreach ($allEpisodesShow as $episodeShow) {
+
+            $episode = $episodeShow->getEpisode();
             
             switch ($episode->getSerie()->getSerieType()->getName()) {
                 case "Anime":
-                    $animeByDay[$episode->getShowDate()->format('l')] += $episode->getDuration();
-                    $animeByMonth[$episode->getShowDate()->format('F')] += $episode->getDuration();
+                    $animeByDay[$episodeShow->getShowDate()->format('l')] += $episode->getDuration();
+                    $animeByMonth[$episodeShow->getShowDate()->format('F')] += $episode->getDuration();
                     break;
                     case "Séries":
-                        $serieByDay[$episode->getShowDate()->format('l')] += $episode->getDuration();
-                        $serieByMonth[$episode->getShowDate()->format('F')] += $episode->getDuration();
+                        $serieByDay[$episodeShow->getShowDate()->format('l')] += $episode->getDuration();
+                        $serieByMonth[$episodeShow->getShowDate()->format('F')] += $episode->getDuration();
                         break;
                         case "Replay":
-                            $replayByDay[$episode->getShowDate()->format('l')] += $episode->getDuration();
-                            $replayByMonth[$episode->getShowDate()->format('F')] += $episode->getDuration();
+                            $replayByDay[$episodeShow->getShowDate()->format('l')] += $episode->getDuration();
+                            $replayByMonth[$episodeShow->getShowDate()->format('F')] += $episode->getDuration();
                             break;
                         }
                         
