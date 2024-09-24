@@ -135,6 +135,10 @@ openbtn
    transform: translateY(-6px) rotate(45deg);
  }
 
+.searchDiv{
+  width: 25%;
+}
+
 @media only screen and (max-width: 600px) {
 
   .body-menu{
@@ -165,5 +169,9 @@ openbtn
 
   .formSize{
     width: initial;
+  }
+
+  .searchDiv{
+    width: 50%;
   }
 }
