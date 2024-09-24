@@ -102,7 +102,8 @@
                href="{% if idSerie %}{{ path('serie', {'id': idSerie}) }}{% else %}{{ path('serie') }}{% endif %}">Retour</a>
         </div>
         <img src="{{ image.path }}" alt="{{ image.alt }}"
-             width="{{ image.width }}px" {% if image.height %}height="{{ image.height }}px"{% endif %} data-bs-toggle="modal"
+             width="{{ image.width }}px" {% if image.height %}height="{{ image.height }}px"{% endif %}
+             data-bs-toggle="modal"
              data-bs-target="#imageModal" class="cursor-click">
     </div>
 
@@ -122,7 +123,14 @@
                 <td>Saison {{ episode.saisonNumber }}</td>
                 <td>Épisode {{ episode.episodeNumber }}</td>
                 <td>{{ episode.name }}</td>
-                <td>{{ episode.showDate|dateF }} à {{ episode.showDate|date("H\\hi") }}</td>
+                <td>
+                    {% for episodeShow in episode.episodeShows %}
+                        {{ episodeShow.showDate|dateF }} à {{ episodeShow.showDate|date("H\\hi") }}
+                        {% if loop.last == false %}
+                            <hr>
+                        {% endif %}
+                    {% endfor %}
+                </td>
             </tr>
         {% endfor %}
         </tbody>
@@ -139,7 +147,7 @@
                 </div>
                 <div class="modal-body text-center" style="overflow: hidden;">
                     <img src="{{ image.path }}" alt="{{ image.alt }}"
-                            style="max-height: calc(100vh - 50px); width: auto; max-width: 100%;">
+                         style="max-height: calc(100vh - 50px); width: auto; max-width: 100%;">
                 </div>
             </div>
         </div>

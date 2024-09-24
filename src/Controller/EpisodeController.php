@@ -173,7 +173,7 @@ class EpisodeController extends AbstractController
 
 
     #[Route('/episode/add', name: 'episode_add')]
-    public function addEpisode(ManagerRegistry $managerRegistry, UsersRepository $usersRepository, Request $request): Response
+    public function addEpisode(ManagerRegistry $managerRegistry, UsersRepository $usersRepository, EpisodeRepository $episodeRepository, Request $request): Response
     {
 
         $episode = new Episode();
@@ -185,20 +185,32 @@ class EpisodeController extends AbstractController
 
             $date = DateTime::createFromFormat('d/m/Y H:i', $request->request->get('episode')['showDate']);
 
-            $episode->setShowDate(null);
+            $checkEpisode = $episodeRepository->findOneBy(['serie' => $episode->getSerie(), 'saisonNumber' => $episode->getSaisonNumber(), 'episodeNumber' => $episode->getEpisodeNumber()]);
 
-            $user = $usersRepository->findOneBy(['plexName' => 'yoan.f8']);
+            if ($checkEpisode) {
 
-            $episode->setUser($user);
+                $episode = $checkEpisode;
 
-            $episode->setDuration($episode->getDuration() * 60000);
+            } else {
 
-            $managerRegistry->getManager()->persist($episode);
-            $managerRegistry->getManager()->flush();
+                $episode->setShowDate(null);
+
+                $user = $usersRepository->findOneBy(['plexName' => 'yoan.f8']);
+
+                $episode->setUser($user);
+
+                $episode->setDuration($episode->getDuration() * 60000);
+
+                $managerRegistry->getManager()->persist($episode);
+                $managerRegistry->getManager()->flush();
+            }
 
             $episodeShow = new EpisodeShow();
             $episodeShow->setShowDate($date);
             $episodeShow->setEpisode($episode);
+
+            $managerRegistry->getManager()->persist($episodeShow);
+            $managerRegistry->getManager()->flush();
 
             return $this->redirectToRoute('episode');
         }

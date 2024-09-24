@@ -90,6 +90,22 @@ class EpisodeShowRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
+
+    /**
+     * @return float|int|mixed|string|null
+     */
+    public function getEpisodesBySerie(Serie $serie): mixed
+    {
+
+        return $this->createQueryBuilder('es')
+            ->leftJoin('es.episode', 'e')
+            ->andWhere('e.serie = :serie')
+            ->setParameter('serie', $serie)
+            ->orderBy('es.showDate', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
 //    /**
 //     * @return EpisodeShow[] Returns an array of EpisodeShow objects
 //     */
