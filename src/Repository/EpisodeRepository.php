@@ -259,23 +259,6 @@ class EpisodeRepository extends ServiceEntityRepository
     /**
      * @return float|int|mixed|string|null
      */
-    public function findMonth()
-    {
-
-        return $this->createQueryBuilder('e')
-            ->select("DATE_FORMAT(e.showDate, '%Y-%m') AS DATE, SUM(e.duration) AS DURATION, t.name AS TYPE")
-            ->leftJoin('e.serie', 's')
-            ->leftJoin('s.serieType', 't')
-            ->addGroupBy("DATE")
-            ->addGroupBy("TYPE")
-            ->getQuery()
-            ->getResult();
-    }
-
-
-    /**
-     * @return float|int|mixed|string|null
-     */
     public function findByDate(string $year, string $month)
     {
 
@@ -301,6 +284,19 @@ class EpisodeRepository extends ServiceEntityRepository
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
+    }
+
+
+    /**
+     * @return float|int|mixed|string|null
+     */
+    public function findByDateNotNull()
+    {
+
+        return $this->createQueryBuilder('e')
+            ->andWhere('e.showDate IS NOT NULL')
+            ->getQuery()
+            ->getResult();
     }
 
     //    public function findOneBySomeField($value): ?Episode

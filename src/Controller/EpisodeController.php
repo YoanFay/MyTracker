@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Episode;
+use App\Entity\EpisodeShow;
 use App\Form\EpisodeType;
+use App\Repository\EpisodeShowRepository;
 use App\Repository\SerieTypeRepository;
 use App\Repository\UsersRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -21,7 +23,7 @@ use DateTime;
 class EpisodeController extends AbstractController
 {
     #[Route('/episode', name: 'episode')]
-    public function index(EpisodeRepository $episodeRepository): Response
+    public function index(EpisodeShowRepository $episodeShowRepository): Response
     {
 
         $listMonth = [
@@ -39,7 +41,7 @@ class EpisodeController extends AbstractController
             '12' => 'Décembre'
         ];
 
-        $dates = $episodeRepository->findMonth();
+        $dates = $episodeShowRepository->findMonth();
 
         $listDate = [];
         $time = [];
@@ -95,11 +97,11 @@ class EpisodeController extends AbstractController
 
 
     #[Route('/allEpisode', name: 'episode_all')]
-    public function allEpisode(SerieRepository $serieRepository, EpisodeRepository $episodeRepository, MovieRepository $MovieRepository): Response
+    public function allEpisode(SerieRepository $serieRepository, EpisodeShowRepository $episodeShowRepository, MovieRepository $MovieRepository): Response
     {
 
         $series = $serieRepository->findAll();
-        $episodes = $episodeRepository->findAll();
+        $episodesShow = $episodeShowRepository->findAll();
         $showSerie = [];
 
         foreach ($series as $serie) {
@@ -116,8 +118,11 @@ class EpisodeController extends AbstractController
         $globalDurationSerie = 0;
         $globalDurationReplay = 0;
 
-        foreach ($episodes as $episode) {
-            $dateKey = $episode->getShowDate()->format("Y-m-d");
+        foreach ($episodesShow as $episodeShow) {
+
+            $episode = $episodeShow->getEpisode();
+
+            $dateKey = $episodeShow->getShowDate()->format("Y-m-d");
 
             $globalDuration += $episode->getDuration();
 
@@ -135,10 +140,10 @@ class EpisodeController extends AbstractController
             }
 
             if (!isset($episodesByDate[$dateKey])) {
-                $episodesByDate[$dateKey] = [$episode];
+                $episodesByDate[$dateKey] = [$episodeShow];
                 $dateKeys[] = $dateKey;
             } else {
-                $episodesByDate[$dateKey][] = $episode;
+                $episodesByDate[$dateKey][] = $episodeShow;
             }
 
             if (!isset($timeByDateType[$dateKey])) {
@@ -154,7 +159,7 @@ class EpisodeController extends AbstractController
 
         return $this->render('episode/allEpisode.html.twig', [
             'series' => $showSerie,
-            'episodes' => $episodes,
+            'episodes' => $episodesShow,
             'episodesByDate' => $episodesByDate,
             'dateKeys' => $dateKeys,
             'timeByDateType' => $timeByDateType,
@@ -203,7 +208,7 @@ class EpisodeController extends AbstractController
 
 
     #[Route('/episode/categorie/{categorie}', name: 'episode_categories')]
-    public function episodeCategories(EpisodeRepository $episodeRepository, SerieTypeRepository $serieTypeRepository, $categorie): Response
+    public function episodeCategories(EpisodeShowRepository $episodeShowRepository, SerieTypeRepository $serieTypeRepository, $categorie): Response
     {
 
         $voyelle = array('a', 'e', 'i', 'o', 'u');
@@ -219,27 +224,30 @@ class EpisodeController extends AbstractController
             $text = "de ".$nav;
         }
 
-        $episodes = $episodeRepository->findByType($serieType);
+        $episodesShow = $episodeShowRepository->findBySerieType($serieType);
 
         $episodesByDate = [];
         $dateKeys = [];
         $globalDuration = 0;
 
-        foreach ($episodes as $episode) {
-            $dateKey = $episode->getShowDate()->format("Y-m-d");
+        foreach ($episodesShow as $episodeShow) {
+
+            $episode = $episodeShow->getEpisode();
+
+            $dateKey = $episodeShow->getShowDate()->format("Y-m-d");
 
             $globalDuration += $episode->getDuration();
 
             if (!isset($episodesByDate[$dateKey])) {
-                $episodesByDate[$dateKey] = [$episode];
+                $episodesByDate[$dateKey] = [$episodeShow];
                 $dateKeys[] = $dateKey;
             } else {
-                $episodesByDate[$dateKey][] = $episode;
+                $episodesByDate[$dateKey][] = $episodeShow;
             }
         }
 
         return $this->render('episode/categories.html.twig', [
-            'episodes' => $episodes,
+            'episodes' => $episodesShow,
             'episodesByDate' => $episodesByDate,
             'dateKeys' => $dateKeys,
             'globalDuration' => $globalDuration,
@@ -251,7 +259,7 @@ class EpisodeController extends AbstractController
 
 
     #[Route('/episode/{year}/{month}', name: 'episode_date')]
-    public function episodeDate(EpisodeRepository $episodeRepository, SerieRepository $serieRepository, $year = 0, $month = 0): Response
+    public function episodeDate(EpisodeShowRepository $episodeShowRepository, SerieRepository $serieRepository, $year = 0, $month = 0): Response
     {
 
         $currentDate = new DateTime();
@@ -278,7 +286,7 @@ class EpisodeController extends AbstractController
         $daysSinceStartOfYear = $startDate->diff($endDate)->days + 1;
 
         $series = $serieRepository->findAll();
-        $episodes = $episodeRepository->findByDate($year, $month);
+        $episodesShow = $episodeShowRepository->findByDate($year, $month);
         $showSerie = [];
 
         $listMonth = [
@@ -313,8 +321,11 @@ class EpisodeController extends AbstractController
         $globalDurationSerie = 0;
         $globalDurationReplay = 0;
 
-        foreach ($episodes as $episode) {
-            $dateKey = $episode->getShowDate()->format("Y-m-d");
+        foreach ($episodesShow as $episodeShow) {
+
+            $episode = $episodeShow->getEpisode();
+
+            $dateKey = $episodeShow->getShowDate()->format("Y-m-d");
 
             $globalDuration += $episode->getDuration();
 
@@ -332,10 +343,10 @@ class EpisodeController extends AbstractController
             }
 
             if (!isset($episodesByDate[$dateKey])) {
-                $episodesByDate[$dateKey] = [$episode];
+                $episodesByDate[$dateKey] = [$episodeShow];
                 $dateKeys[] = $dateKey;
             } else {
-                $episodesByDate[$dateKey][] = $episode;
+                $episodesByDate[$dateKey][] = $episodeShow;
             }
 
             if (!isset($timeByDateType[$dateKey])) {
@@ -353,7 +364,7 @@ class EpisodeController extends AbstractController
             'year' => $year,
             'month' => $month,
             'series' => $showSerie,
-            'episodes' => $episodes,
+            'episodes' => $episodeShow,
             'episodesByDate' => $episodesByDate,
             'dateKeys' => $dateKeys,
             'timeByDateType' => $timeByDateType,

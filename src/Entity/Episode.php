@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\EpisodeRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -17,7 +19,7 @@ class Episode
     #[ORM\Column(type: "string", length: 255, nullable: true)]
     private $plexId;
 
-    #[ORM\Column(type: "datetime")]
+    #[ORM\Column(type: "datetime", nullable: true)]
     private $showDate;
 
     #[ORM\ManyToOne(targetEntity: Serie::class, inversedBy: "episodes")]
@@ -49,10 +51,14 @@ class Episode
     #[ORM\Column(type: "boolean")]
     private $vfName = false;
 
+    #[ORM\OneToMany(mappedBy: 'episode', targetEntity: EpisodeShow::class)]
+    private Collection $episodeShows;
+
     public function __construct()
     {
         $this->setShowDate(new \DateTime());
         $this->name = "TBA";
+        $this->episodeShows = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -77,7 +83,7 @@ class Episode
         return $this->showDate;
     }
 
-    public function setShowDate(\DateTimeInterface $showDate): self
+    public function setShowDate(?\DateTimeInterface $showDate): self
     {
         $this->showDate = $showDate;
 
@@ -188,6 +194,36 @@ class Episode
     public function setVfName(bool $vfName): self
     {
         $this->vfName = $vfName;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, EpisodeShow>
+     */
+    public function getEpisodeShows(): Collection
+    {
+        return $this->episodeShows;
+    }
+
+    public function addEpisodeShow(EpisodeShow $episodeShow): static
+    {
+        if (!$this->episodeShows->contains($episodeShow)) {
+            $this->episodeShows->add($episodeShow);
+            $episodeShow->setEpisode($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEpisodeShow(EpisodeShow $episodeShow): static
+    {
+        if ($this->episodeShows->removeElement($episodeShow)) {
+            // set the owning side to null (unless already changed)
+            if ($episodeShow->getEpisode() === $this) {
+                $episodeShow->setEpisode(null);
+            }
+        }
 
         return $this;
     }

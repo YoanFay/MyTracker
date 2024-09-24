@@ -25,11 +25,11 @@
             {% set dateShow = dateKey|date("Y/m/d") %}
             {% set duration = [] %}
 
-            {% for key, episodes in episodesByDate %}
+            {% for key, episodesShow in episodesByDate %}
                 {% set currentDuration = 0 %}
 
-                {% for episode in episodes %}
-                    {% set currentDuration = currentDuration + episode.duration %}
+                {% for episodeShow in episodesShow %}
+                    {% set currentDuration = currentDuration + episodeShow.episode.duration %}
                 {% endfor %}
 
                 {% set duration = duration|merge({(key): currentDuration}) %}
@@ -46,12 +46,12 @@
             <tbody id="row{{dateKey|date('U')}}" {# class="d-none" #}>
             {% set prev = 0 %}
             <div>
-                {% for episode in episodesByDate[dateKey]|sort((a, b) => a.showDate <=> b.showDate) %}
+                {% for episodeShow in episodesByDate[dateKey]|sort((a, b) => a.showDate <=> b.showDate) %}
                     <tr>
-                        <td><a class="text-decoration-none text-black" href="{{ path('serie_detail', {'id': episode.serie.id }) }}">{{ episode.serie.name }}</a></td>
-                        <td>Saison {{ episode.saisonNumber }}, Épisode {{ episode.episodeNumber }}</td>
-                        <td>{{ episode.name }}</td>
-                        <td>{{ episode.showDate|date("H\\hi") }}</td>
+                        <td><a class="text-decoration-none text-black" href="{{ path('serie_detail', {'id': episodeShow.episode.serie.id }) }}">{{ episodeShow.episode.serie.name }}</a></td>
+                        <td>Saison {{ episodeShow.episode.saisonNumber }}, Épisode {{ episodeShow.episode.episodeNumber }}</td>
+                        <td>{{ episodeShow.episode.name }}</td>
+                        <td>{{ episodeShow.showDate|date("H\\hi") }}</td>
                     </tr>
                 {% endfor %}
             </div>
