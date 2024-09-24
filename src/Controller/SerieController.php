@@ -9,10 +9,12 @@ use App\Form\SerieAnimeEditType;
 use App\Repository\AnimeGenreRepository;
 use App\Repository\AnimeThemeRepository;
 use App\Repository\CompanyRepository;
+use App\Repository\EpisodeShowRepository;
 use App\Repository\SerieRepository;
 use App\Repository\EpisodeRepository;
 use App\Repository\SerieTypeRepository;
 use App\Service\TVDBService;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -351,8 +353,11 @@ class SerieController extends AbstractController
     }
 
 
+    /**
+     * @throws NonUniqueResultException
+     */
     #[Route('/serie/list', name: 'serie_list')]
-    public function serieList(SerieRepository $serieRepository, SerieTypeRepository $serieTypeRepository, EpisodeRepository $episodeRepository, Request $request)
+    public function serieList(SerieRepository $serieRepository, SerieTypeRepository $serieTypeRepository, EpisodeShowRepository $episodeShowRepository, Request $request)
     {
 
         $id = $request->request->get('id');
@@ -376,7 +381,7 @@ class SerieController extends AbstractController
 
         foreach ($series as $serie) {
 
-            $lastEpisode = $episodeRepository->findLastEpisode($serie);
+            $lastEpisode = $episodeShowRepository->findLastEpisodeBySerie($serie);
 
             $serieTab[] = [
                 'id' => $serie->getId(),

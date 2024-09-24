@@ -3,7 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\EpisodeShow;
+use App\Entity\Serie;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -68,6 +70,24 @@ class EpisodeShowRepository extends ServiceEntityRepository
             ->setParameter('date', $year.'-'.$month.'-%')
             ->getQuery()
             ->getResult();
+    }
+
+
+    /**
+     * @return float|int|mixed|string|null
+     * @throws NonUniqueResultException
+     */
+    public function findLastEpisodeBySerie(Serie $serie)
+    {
+
+        return $this->createQueryBuilder('es')
+            ->leftJoin('es.episode', 'e')
+            ->andWhere('e.serie = :serie')
+            ->setParameter('serie', $serie)
+            ->orderBy('es.showDate', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
 //    /**
