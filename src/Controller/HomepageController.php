@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Bugsnag\BugsnagBundle\DependencyInjection\ClientFactory;
 use Bugsnag\Client;
 use App\Repository\SerieRepository;
-use App\Repository\EpisodeShowRepository;
+use App\Repository\EpisodeRepository;
 use App\Repository\MovieRepository;
 use App\Service\TimeService;
 
@@ -25,14 +25,14 @@ class HomepageController extends AbstractController
      * @Route("/", name="home")
      * @throws Exception
      */
-    public function index(MovieRepository $movieRepository, EpisodeShowRepository $episodeShowRepository, MangaTomeRepository $mangaTomeRepository, GameRepository $gameRepository): Response
+    public function index(MovieRepository $movieRepository, EpisodeRepository $episodeRepository, MangaTomeRepository $mangaTomeRepository, GameRepository $gameRepository): Response
     {
 
         $now = new DateTime();
         $year = $now->format("Y");
 
-        $globalTime = $episodeShowRepository->getDutation()['SUM'];
-        $yearTime = $episodeShowRepository->getDutationByYear($year)['SUM'];
+        $globalTime = $episodeRepository->getDutation()['SUM'];
+        $yearTime = $episodeRepository->getDutationByYear($year)['SUM'];
 
         $globalTime += $movieRepository->getDuration()['SUM'];
         $yearTime += $movieRepository->getDutationByYear($year)['SUM'];

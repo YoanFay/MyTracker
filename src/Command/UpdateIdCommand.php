@@ -2,8 +2,8 @@
 
 namespace App\Command;
 
-use App\Entity\EpisodeShow;
-use App\Repository\EpisodeShowRepository;
+use App\Entity\Episode;
+use App\Repository\EpisodeRepository;
 use App\Repository\SerieRepository;
 use App\Service\TVDBService;
 use Doctrine\ORM\NonUniqueResultException;
@@ -20,14 +20,14 @@ class UpdateIdCommand extends Command
 
     private SerieRepository $serieRepository;
 
-    private EpisodeShowRepository $episodeShowRepository;
+    private EpisodeRepository $episodeShowRepository;
 
     private ObjectManager $manager;
 
     private TVDBService $TVDBService;
 
 
-    public function __construct(SerieRepository $serieRepository, EpisodeShowRepository $episodeShowRepository, ManagerRegistry $managerRegistry, TVDBService $TVDBService)
+    public function __construct(SerieRepository $serieRepository, EpisodeRepository $episodeShowRepository, ManagerRegistry $managerRegistry, TVDBService $TVDBService)
     {
 
         parent::__construct();
@@ -57,7 +57,7 @@ class UpdateIdCommand extends Command
         foreach ($series as $serie) {
             $data = null;
             $episode = null;
-            /** @var EpisodeShow $episode */
+            /** @var Episode $episode */
             $episode = $this->episodeShowRepository->findBySerie($serie);
 
             if ($episode && $episode->getTvdbId()) {

@@ -4,7 +4,7 @@ namespace App\Service;
 
 use App\Entity\Artwork;
 use App\Entity\Company;
-use App\Entity\EpisodeShow;
+use App\Entity\Episode;
 use App\Entity\Serie;
 use App\Repository\CompanyRepository;
 use DateTime;

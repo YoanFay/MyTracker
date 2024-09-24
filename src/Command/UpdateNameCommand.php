@@ -2,7 +2,7 @@
 
 namespace App\Command;
 
-use App\Repository\EpisodeShowRepository;
+use App\Repository\EpisodeRepository;
 use App\Repository\SerieRepository;
 use App\Service\TVDBService;
 use Doctrine\ORM\NonUniqueResultException;
@@ -20,14 +20,14 @@ class UpdateNameCommand extends Command
 
     private SerieRepository $serieRepository;
 
-    private EpisodeShowRepository $episodeShowRepository;
+    private EpisodeRepository $episodeShowRepository;
 
     private ObjectManager $manager;
 
     private TVDBService $TVDBService;
 
 
-    public function __construct(SerieRepository $serieRepository, EpisodeShowRepository $episodeShowRepository, ManagerRegistry $managerRegistry, TVDBService $TVDBService)
+    public function __construct(SerieRepository $serieRepository, EpisodeRepository $episodeShowRepository, ManagerRegistry $managerRegistry, TVDBService $TVDBService)
     {
 
         parent::__construct();

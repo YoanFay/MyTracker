@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Épisodes{% endblock %}
+
+{% block body %}
+
+    <table class="table table-hover">
+        <thead class="thead-light">
+        <tr>
+            <th scope="col">Mois</th>
+            <th scope="col">Anime</th>
+            <th scope="col">Série</th>
+            <th scope="col">Replay</th>
+            <th scope="col">Total</th>
+        </tr>
+        </thead>
+
+        <tbody>
+                {% for yearName, year in list %}
+            <tr class="table-secondary">
+                <th colspan="5">
+                    <a class="text-decoration-none text-black" href='{{path("episode_date", {"year": yearName})}}'>{{ yearName }} - {{ year.Total|MsToHM }}</a>
+                </th>
+            </tr>
+        </tbody>
+        <tbody>
+            <div>
+            {% for monthName, month in year %}
+            {% if monthName != 'Total' %}
+            <tr>
+                <td><a class="text-decoration-none text-black" href='{{path("episode_date", {"year": yearName, "month": month.ID})}}'>{{ monthName }}</a></td>
+                <td>{{ month.Anime|MsToHM }}</td>
+                <td>{{ month.Séries|MsToHM }}</td>
+                <td>{{ month.Replay|MsToHM }}</td>
+                <td>{{ month.Total|MsToHM }}</td>
+            <tr>
+        {% endif %}
+        {% endfor %}
+            </div>
+        </tbody>
+        {% endfor %}
+    </table>
+
+{% endblock %}

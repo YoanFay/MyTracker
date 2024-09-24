@@ -15,10 +15,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\UsersRepository;
 use App\Repository\SerieRepository;
-use App\Repository\EpisodeShowRepository;
+use App\Repository\EpisodeRepository;
 use App\Entity\Users;
 use App\Entity\Serie;
-use App\Entity\EpisodeShow;
+use App\Entity\Episode;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 class WebHook extends AbstractController
@@ -28,15 +28,15 @@ class WebHook extends AbstractController
      * @Route("/webhook", name="webhook")
      */
     public function webhook(
-        Request               $request,
-        UsersRepository       $usersRepository,
-        SerieRepository       $serieRepository,
-        EpisodeShowRepository $episodeShowRepository,
-        MovieRepository       $movieRepository,
-        StrSpecialCharsLower  $strSpecialCharsLower,
-        SerieTypeRepository   $serieTypeRepository,
-        TMDBService           $TMDBService,
-        TVDBService           $TVDBService
+        Request              $request,
+        UsersRepository      $usersRepository,
+        SerieRepository      $serieRepository,
+        EpisodeRepository    $episodeRepository,
+        MovieRepository      $movieRepository,
+        StrSpecialCharsLower $strSpecialCharsLower,
+        SerieTypeRepository  $serieTypeRepository,
+        TMDBService          $TMDBService,
+        TVDBService          $TVDBService
     ): Response
     {
 
@@ -150,7 +150,7 @@ class WebHook extends AbstractController
                     if (isset($jsonData['Metadata']['guid'])) {
                         $episodeId = str_replace(["plex://episode/", "local://"], ["", ""], $jsonData['Metadata']['guid']);
 
-                        $episode = $episodeShowRepository->findOneBy(['plexId' => $episodeId, 'user' => $user]);
+                        $episode = $episodeRepository->findOneBy(['plexId' => $episodeId, 'user' => $user]);
                     }
 
                     if (!$episode) {
@@ -166,7 +166,7 @@ class WebHook extends AbstractController
                             }
                         }
 
-                        $episode = new EpisodeShow;
+                        $episode = new Episode;
 
                         $episode->setTvdbId($tvdbId);
 

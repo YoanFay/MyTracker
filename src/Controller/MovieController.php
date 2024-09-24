@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Entity\Movie;
 use App\Entity\Users;
 use App\Form\MovieType;
-use App\Repository\EpisodeShowRepository;
+use App\Repository\EpisodeRepository;
 use App\Repository\MovieGenreRepository;
 use App\Repository\SerieRepository;
 use App\Service\StrSpecialCharsLower;

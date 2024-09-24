@@ -2,30 +2,30 @@
 
 namespace App\Repository;
 
-use App\Entity\EpisodeShow;
+use App\Entity\Episode;
 use App\Entity\Serie;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<EpisodeShow>
+ * @extends ServiceEntityRepository<Episode>
  *
- * @method EpisodeShow|null find($id, $lockMode = null, $lockVersion = null)
- * @method EpisodeShow|null findOneBy(array $criteria, array $orderBy = null)
- * @method EpisodeShow[]    findAll()
- * @method EpisodeShow[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Episode|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Episode|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Episode[]    findAll()
+ * @method Episode[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class EpisodeShowRepository extends ServiceEntityRepository
+class EpisodeRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
 
-        parent::__construct($registry, EpisodeShow::class);
+        parent::__construct($registry, Episode::class);
     }
 
 
-    public function add(EpisodeShow $entity, bool $flush = false): void
+    public function add(Episode $entity, bool $flush = false): void
     {
 
         $this->getEntityManager()->persist($entity);
@@ -36,7 +36,7 @@ class EpisodeShowRepository extends ServiceEntityRepository
     }
 
 
-    public function remove(EpisodeShow $entity, bool $flush = false): void
+    public function remove(Episode $entity, bool $flush = false): void
     {
 
         $this->getEntityManager()->remove($entity);
@@ -303,7 +303,7 @@ class EpisodeShowRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
-    //    public function findOneBySomeField($value): ?EpisodeShow
+    //    public function findOneBySomeField($value): ?Episode
     //    {
     //        return $this->createQueryBuilder('e')
     //            ->andWhere('e.exampleField = :val')

@@ -20,7 +20,7 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: "string", length: 255)]
     private $plexName;
 
-    #[ORM\OneToMany(targetEntity: EpisodeShow::class, mappedBy: "user")]
+    #[ORM\OneToMany(targetEntity: Episode::class, mappedBy: "user")]
     private $episodeShows;
 
     #[ORM\OneToMany(targetEntity: Movie::class, mappedBy: "user")]
@@ -58,7 +58,7 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
-    #[ORM\OneToMany(targetEntity: EpisodeShow::class, mappedBy: "user")]
+    #[ORM\OneToMany(targetEntity: Episode::class, mappedBy: "user")]
     public function getEpisodeShows(): Collection
     {
         return $this->episodeShows;
@@ -70,8 +70,8 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->movies;
     }
 
-    #[ORM\OneToMany(targetEntity: EpisodeShow::class, mappedBy: "user")]
-    public function addEpisodeShow(EpisodeShow $episodeShow): self
+    #[ORM\OneToMany(targetEntity: Episode::class, mappedBy: "user")]
+    public function addEpisodeShow(Episode $episodeShow): self
     {
         if (!$this->episodeShows->contains($episodeShow)) {
             $this->episodeShows[] = $episodeShow;
@@ -81,8 +81,8 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    #[ORM\OneToMany(targetEntity: EpisodeShow::class, mappedBy: "user")]
-    public function removeEpisodeShow(EpisodeShow $episodeShow): self
+    #[ORM\OneToMany(targetEntity: Episode::class, mappedBy: "user")]
+    public function removeEpisodeShow(Episode $episodeShow): self
     {
         if ($this->episodeShows->removeElement($episodeShow)) {
             // set the owning side to null (unless already changed)

@@ -10,7 +10,7 @@ use App\Repository\AnimeGenreRepository;
 use App\Repository\AnimeThemeRepository;
 use App\Repository\CompanyRepository;
 use App\Repository\SerieRepository;
-use App\Repository\EpisodeShowRepository;
+use App\Repository\EpisodeRepository;
 use App\Repository\SerieTypeRepository;
 use App\Service\TVDBService;
 use Doctrine\Persistence\ManagerRegistry;
@@ -27,7 +27,7 @@ class SerieController extends AbstractController
 
 
     #[Route('/serie/detail/{id}', name: 'serie_detail')]
-    public function detail(Request $request, RequestStack $requestStack, SerieRepository $serieRepository, EpisodeShowRepository $episodeShowRepository, $id): Response
+    public function detail(Request $request, RequestStack $requestStack, SerieRepository $serieRepository, EpisodeRepository $episodeRepository, $id): Response
     {
 
         $referer = $request->headers->get('referer');
@@ -49,8 +49,8 @@ class SerieController extends AbstractController
         $idSerie = str_replace('detail/', '', $idSerie);
 
         $serie = $serieRepository->findOneBy(['id' => $id]);
-        $totalDuration = $episodeShowRepository->getDurationBySerie($id);
-        $countEpisode = $episodeShowRepository->getCountBySerie($id);
+        $totalDuration = $episodeRepository->getDurationBySerie($id);
+        $countEpisode = $episodeRepository->getCountBySerie($id);
 
         $studios = [];
         $networks = [];
@@ -225,7 +225,7 @@ class SerieController extends AbstractController
 
 
     #[Route('/serie/genre/{name}', name: 'serie_genre')]
-    public function animeByGenre(SerieRepository $serieRepository, EpisodeShowRepository $episodeShowRepository, AnimeGenreRepository $animeGenreRepository, $name): Response
+    public function animeByGenre(SerieRepository $serieRepository, EpisodeRepository $episodeRepository, AnimeGenreRepository $animeGenreRepository, $name): Response
     {
 
         $animeGenre = $animeGenreRepository->findOneBy(['name' => $name]);
@@ -236,7 +236,7 @@ class SerieController extends AbstractController
 
         foreach ($series as $serie) {
 
-            $lastEpisode = $episodeShowRepository->findLastEpisode($serie);
+            $lastEpisode = $episodeRepository->findLastEpisode($serie);
 
             $serieTab[] = [
                 'id' => $serie->getId(),
@@ -268,7 +268,7 @@ class SerieController extends AbstractController
 
 
     #[Route('/serie/theme/{name}', name: 'serie_theme')]
-    public function animeByTheme(SerieRepository $serieRepository, EpisodeShowRepository $episodeShowRepository, AnimeThemeRepository $animeThemeRepository, $name): Response
+    public function animeByTheme(SerieRepository $serieRepository, EpisodeRepository $episodeRepository, AnimeThemeRepository $animeThemeRepository, $name): Response
     {
 
         $animeTheme = $animeThemeRepository->findOneBy(['name' => $name]);
@@ -279,7 +279,7 @@ class SerieController extends AbstractController
 
         foreach ($series as $serie) {
 
-            $lastEpisode = $episodeShowRepository->findLastEpisode($serie);
+            $lastEpisode = $episodeRepository->findLastEpisode($serie);
 
             $serieTab[] = [
                 'id' => $serie->getId(),
@@ -311,7 +311,7 @@ class SerieController extends AbstractController
 
 
     #[Route('/serie/company/{id}', name: 'serie_company')]
-    public function serieByCompany(EpisodeShowRepository $episodeShowRepository, CompanyRepository $companyRepository, $id): Response
+    public function serieByCompany(EpisodeRepository $episodeRepository, CompanyRepository $companyRepository, $id): Response
     {
 
         $company = $companyRepository->find($id);
@@ -320,7 +320,7 @@ class SerieController extends AbstractController
 
         foreach ($company->getSeries() as $serie) {
 
-            $lastEpisode = $episodeShowRepository->findLastEpisode($serie);
+            $lastEpisode = $episodeRepository->findLastEpisode($serie);
 
             $serieTab[] = [
                 'id' => $serie->getId(),
@@ -352,7 +352,7 @@ class SerieController extends AbstractController
 
 
     #[Route('/serie/list', name: 'serie_list')]
-    public function serieList(SerieRepository $serieRepository, SerieTypeRepository $serieTypeRepository, EpisodeShowRepository $episodeShowRepository, Request $request)
+    public function serieList(SerieRepository $serieRepository, SerieTypeRepository $serieTypeRepository, EpisodeRepository $episodeRepository, Request $request)
     {
 
         $id = $request->request->get('id');
@@ -376,7 +376,7 @@ class SerieController extends AbstractController
 
         foreach ($series as $serie) {
 
-            $lastEpisode = $episodeShowRepository->findLastEpisode($serie);
+            $lastEpisode = $episodeRepository->findLastEpisode($serie);
 
             $serieTab[] = [
                 'id' => $serie->getId(),

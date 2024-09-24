@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\Entity\EpisodeShow;
-use App\Form\EpisodeShowType;
+use App\Entity\Episode;
+use App\Form\EpisodeType;
 use App\Repository\SerieTypeRepository;
 use App\Repository\UsersRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -12,16 +12,16 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\SerieRepository;
-use App\Repository\EpisodeShowRepository;
+use App\Repository\EpisodeRepository;
 use App\Repository\MovieRepository;
 use Bugsnag\BugsnagBundle\DependencyInjection\ClientFactory;
 use Bugsnag\Client;
 use DateTime;
 
-class EpisodeShowController extends AbstractController
+class EpisodeController extends AbstractController
 {
     #[Route('/episode', name: 'episode')]
-    public function index(EpisodeShowRepository $episodeShowRepository): Response
+    public function index(EpisodeRepository $episodeRepository): Response
     {
 
         $listMonth = [
@@ -39,7 +39,7 @@ class EpisodeShowController extends AbstractController
             '12' => 'Décembre'
         ];
 
-        $dates = $episodeShowRepository->findMonth();
+        $dates = $episodeRepository->findMonth();
 
         $listDate = [];
         $time = [];
@@ -86,7 +86,7 @@ class EpisodeShowController extends AbstractController
         $listDate[$saveYear] = $time;
         $listDate[$saveYear]['Total'] = $total;
 
-        return $this->render('episode_show\index.html.twig', [
+        return $this->render('episode\index.html.twig', [
             'list' => $listDate,
             'navLinkId' => 'episode',
         ]);
@@ -95,11 +95,11 @@ class EpisodeShowController extends AbstractController
 
 
     #[Route('/allEpisode', name: 'episode_all')]
-    public function allEpisode(SerieRepository $serieRepository, EpisodeShowRepository $episodeShowRepository, MovieRepository $MovieRepository): Response
+    public function allEpisode(SerieRepository $serieRepository, EpisodeRepository $episodeRepository, MovieRepository $MovieRepository): Response
     {
 
         $series = $serieRepository->findAll();
-        $episodes = $episodeShowRepository->findAll();
+        $episodes = $episodeRepository->findAll();
         $showSerie = [];
 
         foreach ($series as $serie) {
@@ -152,7 +152,7 @@ class EpisodeShowController extends AbstractController
             $timeByDateType[$dateKey][$episode->getSerie()->getSerieType()->getName()] += $episode->getDuration();
         }
 
-        return $this->render('episode_show/allEpisode.html.twig', [
+        return $this->render('episode/allEpisode.html.twig', [
             'series' => $showSerie,
             'episodes' => $episodes,
             'episodesByDate' => $episodesByDate,
@@ -171,14 +171,14 @@ class EpisodeShowController extends AbstractController
     public function addEpisode(ManagerRegistry $managerRegistry, UsersRepository $usersRepository, Request $request): Response
     {
 
-        $episode = new EpisodeShow();
+        $episode = new Episode();
 
-        $form = $this->createForm(EpisodeShowType::class, $episode);
+        $form = $this->createForm(EpisodeType::class, $episode);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $date = DateTime::createFromFormat('d/m/Y H:i', $request->request->get('episode_show')['showDate']);
+            $date = DateTime::createFromFormat('d/m/Y H:i', $request->request->get('episode')['showDate']);
 
             $episode->setShowDate($date);
 
@@ -194,8 +194,8 @@ class EpisodeShowController extends AbstractController
             return $this->redirectToRoute('episode');
         }
 
-        return $this->render('episode_show/add.html.twig', [
-            'controller_name' => 'EpisodeShowController',
+        return $this->render('episode/add.html.twig', [
+            'controller_name' => 'EpisodeController',
             'form' => $form->createView(),
             'navLinkId' => 'episode_add',
         ]);
@@ -203,7 +203,7 @@ class EpisodeShowController extends AbstractController
 
 
     #[Route('/episode/categorie/{categorie}', name: 'episode_categories')]
-    public function episodeCategories(EpisodeShowRepository $episodeShowRepository, SerieTypeRepository $serieTypeRepository, $categorie): Response
+    public function episodeCategories(EpisodeRepository $episodeRepository, SerieTypeRepository $serieTypeRepository, $categorie): Response
     {
 
         $voyelle = array('a', 'e', 'i', 'o', 'u');
@@ -219,7 +219,7 @@ class EpisodeShowController extends AbstractController
             $text = "de ".$nav;
         }
 
-        $episodes = $episodeShowRepository->findByType($serieType);
+        $episodes = $episodeRepository->findByType($serieType);
 
         $episodesByDate = [];
         $dateKeys = [];
@@ -238,7 +238,7 @@ class EpisodeShowController extends AbstractController
             }
         }
 
-        return $this->render('episode_show/categories.html.twig', [
+        return $this->render('episode/categories.html.twig', [
             'episodes' => $episodes,
             'episodesByDate' => $episodesByDate,
             'dateKeys' => $dateKeys,
@@ -251,7 +251,7 @@ class EpisodeShowController extends AbstractController
 
 
     #[Route('/episode/{year}/{month}', name: 'episode_date')]
-    public function episodeDate(EpisodeShowRepository $episodeShowRepository, SerieRepository $serieRepository, $year = 0, $month = 0): Response
+    public function episodeDate(EpisodeRepository $episodeRepository, SerieRepository $serieRepository, $year = 0, $month = 0): Response
     {
 
         $currentDate = new DateTime();
@@ -278,7 +278,7 @@ class EpisodeShowController extends AbstractController
         $daysSinceStartOfYear = $startDate->diff($endDate)->days + 1;
 
         $series = $serieRepository->findAll();
-        $episodes = $episodeShowRepository->findByDate($year, $month);
+        $episodes = $episodeRepository->findByDate($year, $month);
         $showSerie = [];
 
         $listMonth = [
@@ -349,7 +349,7 @@ class EpisodeShowController extends AbstractController
             $timeByDateType[$dateKey][$episode->getSerie()->getSerieType()->getName()] += $episode->getDuration();
         }
 
-        return $this->render('episode_show/episodeDate.html.twig', [
+        return $this->render('episode/episodeDate.html.twig', [
             'year' => $year,
             'month' => $month,
             'series' => $showSerie,

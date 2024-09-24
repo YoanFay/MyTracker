@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Repository\EpisodeShowRepository;
+use App\Repository\EpisodeRepository;
 use App\Repository\MangaRepository;
 use App\Repository\MovieRepository;
 use App\Service\TimeService;
@@ -18,15 +18,15 @@ class StatsController extends AbstractController
     * @Route("/stat/episode", name="episode_stat")
     * @throws Exception
     */
-    public function episodeStat(MovieRepository $movieRepository, EpisodeShowRepository $episodeShowRepository, TimeService $timeService): Response
+    public function episodeStat(MovieRepository $movieRepository, EpisodeRepository $episodeRepository, TimeService $timeService): Response
     {
         
         $movieDuration = $movieRepository->getDuration();
-        $animeDuration = $episodeShowRepository->getDurationByType('Anime');
-        $serieDuration = $episodeShowRepository->getDurationByType('Séries');
-        $replayDuration = $episodeShowRepository->getDurationByType('Replay');
+        $animeDuration = $episodeRepository->getDurationByType('Anime');
+        $serieDuration = $episodeRepository->getDurationByType('Séries');
+        $replayDuration = $episodeRepository->getDurationByType('Replay');
 
-        $durations = $episodeShowRepository->getDurationByType();
+        $durations = $episodeRepository->getDurationByType();
 
         foreach ($durations as $duration){
             switch ($duration['TYPE']){
@@ -42,10 +42,10 @@ class StatsController extends AbstractController
             }
         }
         
-        $durationByGenre = $episodeShowRepository->getDurationGenre();
-        $durationByTheme = $episodeShowRepository->getDurationTheme();
+        $durationByGenre = $episodeRepository->getDurationGenre();
+        $durationByTheme = $episodeRepository->getDurationTheme();
         
-        $allEpisodes = $episodeShowRepository->findAll();
+        $allEpisodes = $episodeRepository->findAll();
         $allMovies = $movieRepository->findAll();
         
         $animeByDay = [
@@ -320,11 +320,11 @@ class StatsController extends AbstractController
                         }
                         
                         #[Route('/stat/anime', name: 'anime_stat')]
-                        public function animeStat(MovieRepository $movieRepository, EpisodeShowRepository $episodeShowRepository, TimeService $timeService): Response
+                        public function animeStat(MovieRepository $movieRepository, EpisodeRepository $episodeRepository, TimeService $timeService): Response
                         {
                             
-                            $durationByGenre = $episodeShowRepository->getDurationGenre();
-                            $durationByTheme = $episodeShowRepository->getDurationTheme();
+                            $durationByGenre = $episodeRepository->getDurationGenre();
+                            $durationByTheme = $episodeRepository->getDurationTheme();
                             
                             $labelGenreChart = "[";
                             $genreChart = "[";

@@ -4,7 +4,7 @@ namespace App\Service;
 
 use App\Entity\Artwork;
 use App\Entity\Company;
-use App\Entity\EpisodeShow;
+use App\Entity\Episode;
 use App\Entity\Serie;
 use App\Repository\CompanyRepository;
 use DateTime;
@@ -223,7 +223,7 @@ class TVDBService
     }
 
 
-    public function updateEpisodeName(EpisodeShow $episodeShow): void
+    public function updateEpisodeName(Episode $episodeShow): void
     {
 
         $data = self::getData("/episodes/".$episodeShow->getTvdbId()."/translations/fra");
@@ -235,7 +235,7 @@ class TVDBService
     }
 
 
-    public function updateEpisodeDuration(EpisodeShow $episodeShow): void
+    public function updateEpisodeDuration(Episode $episodeShow): void
     {
 
         $data = self::getData("/episodes/".$episodeShow->getTvdbId());

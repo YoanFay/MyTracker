@@ -22,7 +22,7 @@ class Serie
     #[ORM\Column(type: "string", length: 255)]
     private $name;
 
-    #[ORM\OneToMany(targetEntity: EpisodeShow::class, mappedBy: "serie")]
+    #[ORM\OneToMany(targetEntity: Episode::class, mappedBy: "serie")]
     private $episodeShows;
 
     #[ORM\Column(type: "integer", nullable: true)]
@@ -149,7 +149,7 @@ class Serie
         return $this->episodeShows;
     }
 
-    public function addEpisodeShow(EpisodeShow $episodeShow): static
+    public function addEpisodeShow(Episode $episodeShow): static
     {
         if (!$this->episodeShows->contains($episodeShow)) {
             $this->episodeShows->add($episodeShow);
@@ -159,7 +159,7 @@ class Serie
         return $this;
     }
 
-    public function removeEpisodeShow(EpisodeShow $episodeShow): static
+    public function removeEpisodeShow(Episode $episodeShow): static
     {
         if ($this->episodeShows->removeElement($episodeShow)) {
             // set the owning side to null (unless already changed)

@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Repository\EpisodeShowRepository;
+use App\Repository\EpisodeRepository;
 use App\Repository\MovieRepository;
 use App\Service\TimeService;
 use DateTime;

@@ -2,7 +2,7 @@
 
 namespace App\Form;
 
-use App\Entity\EpisodeShow;
+use App\Entity\Episode;
 use App\Entity\Serie;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -13,7 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class EpisodeShowType extends AbstractType
+class EpisodeType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -64,7 +64,7 @@ class EpisodeShowType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => EpisodeShow::class,
+            'data_class' => Episode::class,
         ]);
     }
 }
