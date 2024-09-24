@@ -117,7 +117,7 @@
         </tr>
         </thead>
         <tbody>
-        {% for episode in serie.episodeShows.values|sort((a, b) => a.saisonNumber != b.saisonNumber ? a.saisonNumber - b.saisonNumber : a.episodeNumber - b.episodeNumber) %}
+        {% for episode in serie.episodes.values|sort((a, b) => a.saisonNumber != b.saisonNumber ? a.saisonNumber - b.saisonNumber : a.episodeNumber - b.episodeNumber) %}
             <tr>
                 <td>Saison {{ episode.saisonNumber }}</td>
                 <td>Épisode {{ episode.episodeNumber }}</td>

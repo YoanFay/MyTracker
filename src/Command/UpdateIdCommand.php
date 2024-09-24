@@ -20,19 +20,19 @@ class UpdateIdCommand extends Command
 
     private SerieRepository $serieRepository;
 
-    private EpisodeRepository $episodeShowRepository;
+    private EpisodeRepository $episodeRepository;
 
     private ObjectManager $manager;
 
     private TVDBService $TVDBService;
 
 
-    public function __construct(SerieRepository $serieRepository, EpisodeRepository $episodeShowRepository, ManagerRegistry $managerRegistry, TVDBService $TVDBService)
+    public function __construct(SerieRepository $serieRepository, EpisodeRepository $episodeRepository, ManagerRegistry $managerRegistry, TVDBService $TVDBService)
     {
 
         parent::__construct();
         $this->serieRepository = $serieRepository;
-        $this->episodeShowRepository = $episodeShowRepository;
+        $this->episodeRepository = $episodeRepository;
         $this->manager = $managerRegistry->getManager();
         $this->TVDBService = $TVDBService;
     }
@@ -58,7 +58,7 @@ class UpdateIdCommand extends Command
             $data = null;
             $episode = null;
             /** @var Episode $episode */
-            $episode = $this->episodeShowRepository->findBySerie($serie);
+            $episode = $this->episodeRepository->findBySerie($serie);
 
             if ($episode && $episode->getTvdbId()) {
 
@@ -71,7 +71,7 @@ class UpdateIdCommand extends Command
             }
         }
 
-        $episodesWithoutTVDB = $this->episodeShowRepository->findWitoutTVDB();
+        $episodesWithoutTVDB = $this->episodeRepository->findWitoutTVDB();
 
         if ($episodesWithoutTVDB !== []) {
             foreach ($episodesWithoutTVDB as $episodeWithoutTVDB) {

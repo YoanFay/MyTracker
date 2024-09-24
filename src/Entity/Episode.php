@@ -20,11 +20,11 @@ class Episode
     #[ORM\Column(type: "datetime")]
     private $showDate;
 
-    #[ORM\ManyToOne(targetEntity: Serie::class, inversedBy: "episodeShows")]
+    #[ORM\ManyToOne(targetEntity: Serie::class, inversedBy: "episodes")]
     #[ORM\JoinColumn(nullable: false)]
     private $serie;
 
-    #[ORM\ManyToOne(targetEntity: Users::class, inversedBy: "episodeShows")]
+    #[ORM\ManyToOne(targetEntity: Users::class, inversedBy: "episodes")]
     #[ORM\JoinColumn(nullable: false)]
     private $user;
 

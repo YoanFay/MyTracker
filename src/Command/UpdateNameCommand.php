@@ -20,19 +20,19 @@ class UpdateNameCommand extends Command
 
     private SerieRepository $serieRepository;
 
-    private EpisodeRepository $episodeShowRepository;
+    private EpisodeRepository $episodeRepository;
 
     private ObjectManager $manager;
 
     private TVDBService $TVDBService;
 
 
-    public function __construct(SerieRepository $serieRepository, EpisodeRepository $episodeShowRepository, ManagerRegistry $managerRegistry, TVDBService $TVDBService)
+    public function __construct(SerieRepository $serieRepository, EpisodeRepository $episodeRepository, ManagerRegistry $managerRegistry, TVDBService $TVDBService)
     {
 
         parent::__construct();
         $this->serieRepository = $serieRepository;
-        $this->episodeShowRepository = $episodeShowRepository;
+        $this->episodeRepository = $episodeRepository;
         $this->manager = $managerRegistry->getManager();
         $this->TVDBService = $TVDBService;
     }
@@ -87,7 +87,7 @@ class UpdateNameCommand extends Command
             }
         }
 
-        $episodes = $this->episodeShowRepository->findBySerieWithTVDB();
+        $episodes = $this->episodeRepository->findBySerieWithTVDB();
 
         foreach ($episodes as $episode) {
 
@@ -108,7 +108,7 @@ class UpdateNameCommand extends Command
             }
         }
 
-        $episodes = $this->episodeShowRepository->findByDurationNull();
+        $episodes = $this->episodeRepository->findByDurationNull();
 
         foreach ($episodes as $episode) {
 

@@ -21,14 +21,14 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     private $plexName;
 
     #[ORM\OneToMany(targetEntity: Episode::class, mappedBy: "user")]
-    private $episodeShows;
+    private $episodes;
 
     #[ORM\OneToMany(targetEntity: Movie::class, mappedBy: "user")]
     private $movies;
 
     public function __construct()
     {
-        $this->episodeShows = new ArrayCollection();
+        $this->episodes = new ArrayCollection();
         $this->movies = new ArrayCollection();
     }
 
@@ -59,9 +59,9 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\OneToMany(targetEntity: Episode::class, mappedBy: "user")]
-    public function getEpisodeShows(): Collection
+    public function getEpisodes(): Collection
     {
-        return $this->episodeShows;
+        return $this->episodes;
     }
 
     #[ORM\OneToMany(targetEntity: Movie::class, mappedBy: "user")]
@@ -71,23 +71,23 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     #[ORM\OneToMany(targetEntity: Episode::class, mappedBy: "user")]
-    public function addEpisodeShow(Episode $episodeShow): self
+    public function addEpisode(Episode $episode): self
     {
-        if (!$this->episodeShows->contains($episodeShow)) {
-            $this->episodeShows[] = $episodeShow;
-            $episodeShow->setUser($this);
+        if (!$this->episodes->contains($episode)) {
+            $this->episodes[] = $episode;
+            $episode->setUser($this);
         }
 
         return $this;
     }
 
     #[ORM\OneToMany(targetEntity: Episode::class, mappedBy: "user")]
-    public function removeEpisodeShow(Episode $episodeShow): self
+    public function removeEpisode(Episode $episode): self
     {
-        if ($this->episodeShows->removeElement($episodeShow)) {
+        if ($this->episodes->removeElement($episode)) {
             // set the owning side to null (unless already changed)
-            if ($episodeShow->getUser() === $this) {
-                $episodeShow->setUser(null);
+            if ($episode->getUser() === $this) {
+                $episode->setUser(null);
             }
         }
 

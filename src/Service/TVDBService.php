@@ -223,28 +223,28 @@ class TVDBService
     }
 
 
-    public function updateEpisodeName(Episode $episodeShow): void
+    public function updateEpisodeName(Episode $episode): void
     {
 
-        $data = self::getData("/episodes/".$episodeShow->getTvdbId()."/translations/fra");
+        $data = self::getData("/episodes/".$episode->getTvdbId()."/translations/fra");
 
         if ($data !== null && $data['status'] === "success") {
-            $episodeShow->setName($data['data']['name']);
-            $episodeShow->setVfName(true);
+            $episode->setName($data['data']['name']);
+            $episode->setVfName(true);
         }
     }
 
 
-    public function updateEpisodeDuration(Episode $episodeShow): void
+    public function updateEpisodeDuration(Episode $episode): void
     {
 
-        $data = self::getData("/episodes/".$episodeShow->getTvdbId());
+        $data = self::getData("/episodes/".$episode->getTvdbId());
 
         if ($data !== null && $data['status'] === "success") {
 
             $duration = $data['data']['runtime'] * 60000;
 
-            $episodeShow->setDuration($duration);
+            $episode->setDuration($duration);
         }
     }
 

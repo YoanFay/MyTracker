@@ -23,7 +23,7 @@ class Serie
     private $name;
 
     #[ORM\OneToMany(targetEntity: Episode::class, mappedBy: "serie")]
-    private $episodeShows;
+    private $episodes;
 
     #[ORM\Column(type: "integer", nullable: true)]
     private $tvdbId;
@@ -82,7 +82,7 @@ class Serie
     public function __construct()
     {
         $this->name = "TBA";
-        $this->episodeShows = new ArrayCollection();
+        $this->episodes = new ArrayCollection();
         $this->genres = new ArrayCollection();
         $this->tags = new ArrayCollection();
         $this->animeGenres = new ArrayCollection();
@@ -144,27 +144,27 @@ class Serie
         return $this;
     }
 
-    public function getEpisodeShows(): Collection
+    public function getEpisodes(): Collection
     {
-        return $this->episodeShows;
+        return $this->episodes;
     }
 
-    public function addEpisodeShow(Episode $episodeShow): static
+    public function addEpisode(Episode $episode): static
     {
-        if (!$this->episodeShows->contains($episodeShow)) {
-            $this->episodeShows->add($episodeShow);
-            $episodeShow->setSerie($this);
+        if (!$this->episodes->contains($episode)) {
+            $this->episodes->add($episode);
+            $episode->setSerie($this);
         }
 
         return $this;
     }
 
-    public function removeEpisodeShow(Episode $episodeShow): static
+    public function removeEpisode(Episode $episode): static
     {
-        if ($this->episodeShows->removeElement($episodeShow)) {
+        if ($this->episodes->removeElement($episode)) {
             // set the owning side to null (unless already changed)
-            if ($episodeShow->getSerie() === $this) {
-                $episodeShow->setSerie(null);
+            if ($episode->getSerie() === $this) {
+                $episode->setSerie(null);
             }
         }
 

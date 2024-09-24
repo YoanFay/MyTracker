@@ -103,8 +103,8 @@ class EpisodeController extends AbstractController
         $showSerie = [];
 
         foreach ($series as $serie) {
-            if (count($serie->getEpisodeShows()->getValues()) > 0) {
-                $showSerie[$serie->getName()] = $serie->getEpisodeShows()->getValues();
+            if (count($serie->getEpisodes()->getValues()) > 0) {
+                $showSerie[$serie->getName()] = $serie->getEpisodes()->getValues();
             }
         }
 
@@ -300,8 +300,8 @@ class EpisodeController extends AbstractController
         $month = $listMonth[$month];
 
         foreach ($series as $serie) {
-            if (count($serie->getEpisodeShows()->getValues()) > 0) {
-                $showSerie[$serie->getName()] = $serie->getEpisodeShows()->getValues();
+            if (count($serie->getEpisodes()->getValues()) > 0) {
+                $showSerie[$serie->getName()] = $serie->getEpisodes()->getValues();
             }
         }
 
