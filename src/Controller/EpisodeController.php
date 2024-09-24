@@ -185,7 +185,7 @@ class EpisodeController extends AbstractController
 
             $date = DateTime::createFromFormat('d/m/Y H:i', $request->request->get('episode')['showDate']);
 
-            $episode->setShowDate($date);
+            $episode->setShowDate(null);
 
             $user = $usersRepository->findOneBy(['plexName' => 'yoan.f8']);
 
@@ -195,6 +195,10 @@ class EpisodeController extends AbstractController
 
             $managerRegistry->getManager()->persist($episode);
             $managerRegistry->getManager()->flush();
+
+            $episodeShow = new EpisodeShow();
+            $episodeShow->setShowDate($date);
+            $episodeShow->setEpisode($episode);
 
             return $this->redirectToRoute('episode');
         }

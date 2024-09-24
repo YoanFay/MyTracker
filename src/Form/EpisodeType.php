@@ -24,6 +24,7 @@ class EpisodeType extends AbstractType
                 'attr' => ['class' => 'form-control datetimepicker'],
                 'html5' => false,
                 'format' => 'dd/MM/YYYY HH:mm',
+                'mapped' => false
             ])
             ->add('name', TextType::class, [
                 'label' => "Nom de l'épisode",

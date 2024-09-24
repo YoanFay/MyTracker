@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\EpisodeShow;
 use App\Entity\Movie;
 use App\Entity\SerieType;
 use App\Repository\MovieRepository;
@@ -185,7 +186,6 @@ class WebHook extends AbstractController
                         }
 
                         $episode->setPlexId($episodeId);
-                        $episode->setShowDate(new \DateTime());
                         $episode->setUser($user);
                         $episode->setSaison($jsonData['Metadata']['parentTitle']);
                         $episode->setSaisonNumber($jsonData['Metadata']['parentIndex']);
@@ -204,6 +204,13 @@ class WebHook extends AbstractController
                         $em->persist($episode);
                         $em->flush();
                     }
+
+                    $episodeShow = new EpisodeShow();
+                    $episodeShow->setEpisode($episode);
+                    $episodeShow->setShowDate(new \DateTime());
+
+                    $em->persist($episodeShow);
+                    $em->flush();
 
                 }
             }
