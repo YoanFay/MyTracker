@@ -54,6 +54,10 @@
                             <li>
                                 <strong>Date de sortie du prochain épisode : </strong> Terminer
                             </li>
+                        {% elseif serie.status == "Upcoming" %}
+                            <li>
+                                <strong>Date de sortie du prochain épisode : </strong> Nouvelle saison annoncé (Pas encore de date)
+                            </li>
                         {% endif %}
                     </ul>
                 </div>

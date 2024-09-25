@@ -32,6 +32,9 @@
             method: "POST",
             data: {
                 'id': {{ id }},
+                {% if id < -1 %}
+                'company': "{{ companyName }}"
+                {% endif %}
             },
             success: function (data) {
                 $("#divList").html(data);
@@ -39,7 +42,7 @@
             }
         })
 
-        function search(){
+        function search() {
 
             const text = $('#search').val();
 
@@ -49,6 +52,9 @@
                 data: {
                     'id': {{ id }},
                     'text': text,
+                    {% if id < -1 %}
+                    'company': "{{ companyName }}"
+                    {% endif %}
                 },
                 success: function (data) {
                     $("#divList").html(data);

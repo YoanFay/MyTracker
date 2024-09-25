@@ -349,6 +349,8 @@ class SerieController extends AbstractController
 
         return $this->render('serie/index.html.twig', [
             'controller_name' => 'SerieController',
+            'id' => -2,
+            'companyName' => $company->getName(),
             'series' => $serieTab,
             'navLinkId' => 'serie_list',
         ]);
@@ -359,13 +361,22 @@ class SerieController extends AbstractController
      * @throws NonUniqueResultException
      */
     #[Route('/serie/list', name: 'serie_list')]
-    public function serieList(SerieRepository $serieRepository, SerieTypeRepository $serieTypeRepository, EpisodeShowRepository $episodeShowRepository, Request $request)
+    public function serieList(SerieRepository $serieRepository, SerieTypeRepository $serieTypeRepository, EpisodeShowRepository $episodeShowRepository, CompanyRepository $companyRepository, Request $request)
     {
 
         $id = $request->request->get('id');
         $text = $request->request->get('text');
 
-        if ($id < 0) {
+        if ($id < -1){
+
+            $companyName = html_entity_decode($request->request->get('company'));
+
+            $company = $companyRepository->findOneBy(['name' => $companyName]);
+
+            $series = $serieRepository->getSeriesByCompany($company, $text);
+
+        }
+        elseif ($id < 0) {
             $series = $serieRepository->search(null, $text);
 
         } else if ($id == 404) {

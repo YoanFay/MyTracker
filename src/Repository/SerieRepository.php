@@ -277,7 +277,7 @@ class SerieRepository extends ServiceEntityRepository
         if ($text) {
             $qb
                 ->andWhere('s.name LIKE :text OR s.nameEng LIKE :text')
-                ->setParameter('text', $text);
+                ->setParameter('text', '%'.$text.'%');
         }
 
         return $qb
@@ -374,6 +374,29 @@ class SerieRepository extends ServiceEntityRepository
             ->andWhere('t.name = :type')
             ->setParameter('type', 'Anime')
             ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+
+
+    /**
+     * @return Serie[] Returns an array of Serie objects
+     */
+    public function getSeriesByCompany($company, $text): array
+    {
+
+        $qb = $this->createQueryBuilder('s')
+            ->leftjoin('s.company', 'c')
+            ->andWhere('c = :company')
+            ->setParameter('company', $company);
+
+        if ($text) {
+            $qb
+                ->andWhere('s.name LIKE :text OR s.nameEng LIKE :text')
+                ->setParameter('text', '%'.$text.'%');
+        }
+
+        return $qb
             ->getQuery()
             ->getResult();
     }
