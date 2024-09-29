@@ -24,7 +24,7 @@
                         href="{{ path('serie_detail', {id: update.serie.id}) }}">{{ update.serie.name }}</a> à été annoncé{% if update.newNextAired %} pour {{ dateUpcoming(update.newNextAired, update.nextAiredType)|replace({'en ': ''}) }}{% endif %}
                 {% elseif update.newStatus == null and update.oldStatus == null and update.oldNextAired and update.newNextAired == null %}<a
                         class="text-decoration-none text-black"
-                        href="{{ path('serie_detail', {id: update.serie.id}) }}">{{ update.serie.name }}</a> reviendra
+                        href="{{ path('serie_detail', {id: update.serie.id}) }}">{{ update.serie.name }}</a> est terminé pour l'instant
                 {% endif %}
             </p>
             {% endfor %}
