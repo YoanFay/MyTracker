@@ -7,13 +7,26 @@
     <div class="card col-12">
         <div class="card-body p-0">
             {% for update in updateByDate %}
-                <p class="border-bottom m-0 p-2">
-                    {% if update.newStatus and update.newStatus == "Ended" %}<a class="text-decoration-none text-black" href="{{path('serie_detail', {id: update.serie.id})}}">{{ update.serie.name }}</a> est terminé {% endif %}
-                    {% if update.newStatus and update.oldStatus == "Ended" and update.newStatus == "Continuing" %}Reprise de <a class="text-decoration-none text-black" href="{{path('serie_detail', {id: update.serie.id})}}">{{ update.serie.name }}</a> {% endif %}
-                    {% if update.newNextAired and update.newStatus != "Upcoming" %}<a class="text-decoration-none text-black" href="{{path('serie_detail', {id: update.serie.id})}}">{{ update.serie.name }}</a> - Le prochain épisode sera {{ dateUpcoming(update.newNextAired, update.nextAiredType) }} {% endif %}
-                    {% if update.newNextAired == null and update.serie.status == "Continuing" and update.oldStatus != "Ended" and update.oldStatus != null %}<a class="text-decoration-none text-black" href="{{path('serie_detail', {id: update.serie.id})}}">{{ update.serie.name }}</a> est en pause{% endif %}
-                    {% if update.newStatus == "Upcoming" %}La prochaine saison de <a class="text-decoration-none text-black" href="{{path('serie_detail', {id: update.serie.id})}}">{{ update.serie.name }}</a> à été annoncé{% if update.newNextAired %} pour {{ dateUpcoming(update.newNextAired, update.nextAiredType)|replace({'en ': ''}) }}{% endif %}{% endif %}
-                </p>
+            <p class="border-bottom m-0 p-2">
+                {% if update.newStatus and update.newStatus == "Ended" %}<a class="text-decoration-none text-black"
+                                                                            href="{{ path('serie_detail', {id: update.serie.id}) }}">{{ update.serie.name }}</a> est terminé
+                {% elseif update.newStatus and update.oldStatus == "Ended" and update.newStatus == "Continuing" %}Reprise de
+                    <a class="text-decoration-none text-black"
+                       href="{{ path('serie_detail', {id: update.serie.id}) }}">{{ update.serie.name }}</a>
+                {% elseif update.newNextAired and update.newStatus != "Upcoming" %}<a
+                    class="text-decoration-none text-black"
+                    href="{{ path('serie_detail', {id: update.serie.id}) }}">{{ update.serie.name }}</a> - Le prochain épisode sera {{ dateUpcoming(update.newNextAired, update.nextAiredType) }}
+                {% elseif update.newNextAired == null and update.serie.status == "Continuing" and update.oldStatus != "Ended" and update.oldStatus != null %}
+                <a class="text-decoration-none text-black"
+                   href="{{ path('serie_detail', {id: update.serie.id}) }}">{{ update.serie.name }}</a> est en pause
+                {% elseif update.newStatus == "Upcoming" %}La prochaine saison de <a
+                        class="text-decoration-none text-black"
+                        href="{{ path('serie_detail', {id: update.serie.id}) }}">{{ update.serie.name }}</a> à été annoncé{% if update.newNextAired %} pour {{ dateUpcoming(update.newNextAired, update.nextAiredType)|replace({'en ': ''}) }}
+                {% elseif update.newStatus == null and update.oldStatus == null and update.oldNextAired and update.newNextAired = null %}<a
+                        class="text-decoration-none text-black"
+                        href="{{ path('serie_detail', {id: update.serie.id}) }}">{{ update.serie.name }}</a> reviendra
+                {% endif %}
+            </p>
             {% endfor %}
         </div>
     </div>
