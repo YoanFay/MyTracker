@@ -19,7 +19,7 @@ class Movie
     #[ORM\Column(type: "string", length: 255)]
     private $name;
 
-    #[ORM\Column(type: "datetime")]
+    #[ORM\Column(type: "datetime", nullable: true)]
     private $showDate;
 
     #[ORM\Column(type: "integer", nullable: true)]
@@ -50,9 +50,13 @@ class Movie
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $releaseDate = null;
 
+    #[ORM\OneToMany(mappedBy: 'movie', targetEntity: MovieShow::class)]
+    private Collection $movieShows;
+
     public function __construct()
     {
         $this->movieGenres = new ArrayCollection();
+        $this->movieShows = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -77,7 +81,7 @@ class Movie
         return $this->showDate;
     }
 
-    public function setShowDate(\DateTimeInterface $showDate): self
+    public function setShowDate(?\DateTimeInterface $showDate): self
     {
         $this->showDate = $showDate;
 
@@ -203,6 +207,36 @@ class Movie
     public function setReleaseDate(?\DateTimeInterface $releaseDate): static
     {
         $this->releaseDate = $releaseDate;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, MovieShow>
+     */
+    public function getMovieShows(): Collection
+    {
+        return $this->movieShows;
+    }
+
+    public function addMovieShow(MovieShow $movieShow): static
+    {
+        if (!$this->movieShows->contains($movieShow)) {
+            $this->movieShows->add($movieShow);
+            $movieShow->setMovie($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMovieShow(MovieShow $movieShow): static
+    {
+        if ($this->movieShows->removeElement($movieShow)) {
+            // set the owning side to null (unless already changed)
+            if ($movieShow->getMovie() === $this) {
+                $movieShow->setMovie(null);
+            }
+        }
 
         return $this;
     }

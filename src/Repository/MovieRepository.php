@@ -70,6 +70,19 @@ class MovieRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+
+    /**
+     * @return float|int|mixed|string|null
+     */
+    public function findByDateNotNull()
+    {
+
+        return $this->createQueryBuilder('m')
+            ->andWhere('m.showDate IS NOT NULL')
+            ->getQuery()
+            ->getResult();
+    }
+
 //    /**
 //     * @return Movie[] Returns an array of Movie objects
 //     */
