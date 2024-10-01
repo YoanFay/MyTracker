@@ -217,7 +217,20 @@ class HistoriqueController extends AbstractController
 
             $globalDuration['total'] += $duration;
             $dataByDate[$dateKey]['totalDuration'] += $duration;
-            $name = $episode->getSerie()->getName()." / Saison ".$episode->getSaisonNumber().", Épisode ".$episode->getEpisodeNumber()." / ".$episode->getName();
+
+            $episodeNumber = $episode->getEpisodeNumber();
+
+            if ($episodeNumber < 10){
+                $episodeNumber = "0".$episodeNumber;
+            }
+
+            $saisonNumber = $episode->getSaisonNumber();
+
+            if ($saisonNumber < 10){
+                $saisonNumber = "0".$saisonNumber;
+            }
+
+            $name = $episode->getSerie()->getName()." - S".$saisonNumber."E".$episodeNumber." : ".$episode->getName();
 
             $dataByDate[$dateKey]['history'][] = [
                 'id' => $episode->getSerie()->getId(),

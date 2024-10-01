@@ -16,17 +16,29 @@
             <tbody>
 
             <tr class="table-secondary">
-                <th colspan="4" {# OnClick="displayRow({{dateKey|date('U')}})" #}>
+                <th colspan="4">
                     {{ dateKey|dateF }}
                     - {{ data.totalDuration|MsToHM }} de visionnage
                     -
-                    {{ data.animeDuration|MsToHM }} d'animes / {{ data.serieDuration|MsToHM }} de séries
-                    / {{ data.replayDuration|MsToHM }} de replay / {{ data.movieDuration|MsToHM }} de films
+                    {% if data.animeDuration > 0 %}
+                    {{ data.animeDuration|MsToHM }} d'animes{%if data.serieDuration or data.replayDuration or data.movieDuration %} / {% endif %}
+                    {% endif %}
+
+                    {% if data.serieDuration > 0 %}
+                    {{ data.serieDuration|MsToHM }} de séries{%if data.replayDuration or data.movieDuration %} / {% endif %}
+                    {% endif %}
+
+                    {% if data.replayDuration > 0 %}
+                    {{ data.replayDuration|MsToHM }} de replay{%if data.movieDuration %} / {% endif %}
+                    {% endif %}
+
+                    {% if data.movieDuration > 0 %}
+                    {{ data.movieDuration|MsToHM }} de films
+                    {% endif %}
                 </th>
             </tr>
             </tbody>
-            <tbody id="row{{ dateKey|date('U') }}" {# class="d-none" #}>
-            {% set prev = 0 %}
+            <tbody id="row{{ dateKey|date('U') }}">
             <div>
                 {% for show in data.history|sort((a, b) => a.show <=> b.show) %}
                     <tr>
@@ -34,7 +46,7 @@
                             {% if show.type == 'Movie' %}
                                 <a class="text-decoration-none text-black"
                                    href="{{ path('movie_detail', {'id': show.id }) }}">{{ show.name }}</a>
-                                {%else%}
+                            {% else %}
                                 <a class="text-decoration-none text-black"
                                    href="{{ path('serie_detail', {'id': show.id }) }}">{{ show.name }}</a>
                             {% endif %}
@@ -52,7 +64,8 @@
             d'animes
             / {{ globalDuration.serie|MsToHM }} de séries
             / {{ globalDuration.replay|MsToHM }} de replay
-            / {{ globalDuration.movie|MsToHM }} de films</p>
+            / {{ globalDuration.movie|MsToHM }} de films
+        </p>
     </div>
 
 {% endblock %}
