@@ -83,6 +83,23 @@ class MovieRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function getByLikeName($text){
+
+
+        $qb = $this->createQueryBuilder('m');
+
+        if ($text) {
+            $qb
+                ->andWhere('m.name LIKE :text')
+                ->setParameter('text', '%'.$text.'%');
+        }
+
+        return $qb
+            ->getQuery()
+            ->getResult();
+
+    }
+
 //    /**
 //     * @return Movie[] Returns an array of Movie objects
 //     */

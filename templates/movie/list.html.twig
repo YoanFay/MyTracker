@@ -1,0 +1,8 @@
+{% for movie in movies %}
+    {% set image = infoImageMovie(movie.artwork, movie.name, app.environment) %}
+    <div class="cursor-click container col-lg-2 col-4 px-3 my-4 d-flex flex-column"
+         onclick="openDetail('{{ path('movie_detail', {'id': movie.id}) }}')">
+        <img class="rounded mx-auto d-block" src="{{ image.path }}" width="150px" alt="{{ image.alt }}">
+        <p class="text-center">{{ movie.name }}</p>
+    </div>
+{% endfor %}

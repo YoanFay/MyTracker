@@ -1,68 +1,61 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Films {% endblock %}
+{% block title %}Films{% endblock %}
 
 {% block body %}
-    <table class="table table-hover">
-        <thead class="thead-light">
-        <tr>
-            <th scope="col">Nom</th>
-            {# <th>Heure de début</th> #}
-            <th scope="col">Heure de visionnage</th>
-            <th>Poster</th>
-        </tr>
-        </thead>
 
-        {% set sortedDateKeys = dateKeys|sort %}
-        {% set globalDuration = 0 %}
-        {% set currentDate = "now"|date("Y-m-d") %}
-        {% set startOfYear = currentDate|date("Y-01-01") %}
-        {% set daysSinceStartOfYear = currentDate|date_modify('-' ~ startOfYear|date("U") ~ ' seconds')|date("z") + 1 %}
-
-        {% for dateKey in sortedDateKeys|reverse %}
-            <tbody>
-            {% set date = dateKey|date("d/m/Y") %}
-            {% set dateShow = dateKey|date("Y/m/d") %}
-            {% set duration = [] %}
-
-            {% for key, movies in moviesByDate %}
-                {% set currentDuration = 0 %}
-
-                {% for movie in movies %}
-                    {% set currentDuration = currentDuration + movie.duration %}
-                {% endfor %}
-
-                {% set duration = duration|merge({(key): currentDuration}) %}
-
-            {% endfor %}
-            <tr class="table-secondary">
-                <th colspan="4" {# OnClick="displayRow({{dateKey|date('U')}})" #}>
-                    {{ dateShow|dateF }}
-                    - {{ duration[dateKey]|MsToHM }} de visionnage
-                </th>
-            </tr>
-            </tbody>
-            <tbody id="row{{ dateKey|date('U') }}" {# class="d-none" #}>
-            {% set prev = 0 %}
-            <div>
-                {% for movie in moviesByDate[dateKey]|sort((a, b) => a.showDate <=> b.showDate) %}
-                    {% set image = infoImageMovie(movie.artwork, movie.name, app.environment)%}
-                    <tr>
-                        <td><a class="text-decoration-none text-black" href="{{ path('movie_detail', {'id': movie.id}) }}">{{ movie.name }}</a></td>
-                        {# <td>{{ movie.showDate|date_modify('-' ~ (90 / 100) * movie.duration ~ ' milliseconds')|date("H\\hi") }}</td> #}
-                        <td>{{ movie.showDate|date("H\\hi") }}</td>
-                        <td class="text-end">
-                                <img src="{{ image.path }}" width="150px" alt="{{ image.alt }}">
-                        </td>
-                    </tr>
-                    {% set globalDuration = globalDuration + movie.duration %}
-                {% endfor %}
-            </div>
-            </tbody>
-        {% endfor %}
-    </table>
-
-    <div class="ms-3">
-        <p>{{ (globalDuration / daysSinceStartOfYear)|MsToHM }} de visionnage en moyenne par jour
+    <div class="mt-4 ms-2 searchDiv">
+        <label>Recherche</label>
+        <input id="search" type="text" class="form-control" onkeyup="search()">
     </div>
+
+    <div id="divList" class="col-12 d-flex flex-row justify-content-between flex-wrap">
+
+    </div>
+    <div id="loadSpin" class="col-12 d-flex flex-row h-75">
+        <div class="card-body py-1 py-lg-0 h-100">
+            <div class="d-flex justify-content-center align-items-center h-100">
+                <div class="spinner-border" role="status">
+                    <span class="sr-only"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascript %}
+    <script>
+
+        $.ajax({
+            url: "{{ path('movie_list') }}",
+            method: "POST",
+            success: function (data) {
+                $("#divList").html(data);
+                $('#loadSpin').addClass('d-none');
+            }
+        })
+
+        function search() {
+
+            const text = $('#search').val();
+
+            $.ajax({
+                url: "{{ path('serie_list') }}",
+                method: "POST",
+                data: {
+                    'text': text,
+                },
+                success: function (data) {
+                    $("#divList").html(data);
+                    $('#loadSpin').addClass('d-none');
+                }
+            })
+        }
+
+        function openDetail(href) {
+            window.location = href;
+        }
+
+    </script>
 {% endblock %}

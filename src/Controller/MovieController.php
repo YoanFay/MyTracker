@@ -7,9 +7,11 @@ use App\Entity\Users;
 use App\Form\MovieType;
 use App\Repository\EpisodeRepository;
 use App\Repository\MovieGenreRepository;
+use App\Repository\MovieShowRepository;
 use App\Repository\SerieRepository;
 use App\Service\StrSpecialCharsLower;
 use App\Service\TMDBService;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use GuzzleHttp\Client;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -22,30 +24,56 @@ use App\Repository\MovieRepository;
 class MovieController extends AbstractController
 {
     #[Route('/movie', name: 'movie')]
-    public function index(MovieRepository $movieRepository): Response
+    public function index(): Response
     {
-
-        $movies = $movieRepository->findAll();
-
-        $moviesByDate = [];
-        $dateKeys = [];
-
-        foreach ($movies as $movie) {
-            $dateKey = $movie->getShowDate()->format("Y-m-d");
-
-            if (!isset($moviesByDate[$dateKey])) {
-                $moviesByDate[$dateKey] = [$movie];
-                $dateKeys[] = $dateKey;
-            } else {
-                $moviesByDate[$dateKey][] = $movie;
-            }
-        }
-
         return $this->render('movie/index.html.twig', [
-            'moviesByDate' => $moviesByDate,
-            'dateKeys' => $dateKeys,
             'controller_name' => 'MovieController',
             'navLinkId' => 'movie',
+        ]);
+    }
+
+
+    /**
+     * @throws NonUniqueResultException
+     */
+    #[Route('/movie/list', name: 'movie_list')]
+    public function movieList(MovieRepository $movieRepository, MovieShowRepository $movieShowRepository, Request $request)
+    {
+
+        $text = $request->request->get('text');
+
+        $movies = $movieRepository->getByLikeName($text);
+
+        $movieTab = [];
+
+        foreach ($movies as $movie) {
+
+            $lastShow = $movieShowRepository->findLastShowByMovie($movie);
+
+            $movieTab[] = [
+                'id' => $movie->getId(),
+                'name' => $movie->getName(),
+                'artwork' => $movie->getArtwork(),
+                'lastDate' => $lastShow?->getShowDate(),
+                'entity' => $movie,
+            ];
+
+        }
+
+        uasort($movieTab, function ($a, $b) {
+
+            // Utilise strtotime pour convertir les dates en timestamps pour une comparaison facile
+            $dateA = $a['lastDate'];
+            $dateB = $b['lastDate'];
+
+            // Retourne -1 si $dateA est inférieur à $dateB, 1 si supérieur, 0 si égal
+            return $dateB <=> $dateA;
+        });
+
+        return $this->render('movie/list.html.twig', [
+            'controller_name' => 'MovieController',
+            'movies' => $movieTab,
+            'navLinkId' => 'movie_list',
         ]);
     }
 

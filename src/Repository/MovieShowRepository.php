@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\MovieShow;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -18,6 +19,7 @@ class MovieShowRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
+
         parent::__construct($registry, MovieShow::class);
     }
 
@@ -34,6 +36,24 @@ class MovieShowRepository extends ServiceEntityRepository
             ->addGroupBy("DATE")
             ->getQuery()
             ->getResult();
+    }
+
+
+    /**
+     * @throws NonUniqueResultException
+     */
+    public function findLastShowByMovie($movie)
+    {
+
+        return $this->createQueryBuilder('ms')
+            ->leftJoin('ms.movie', 'm')
+            ->andWhere('m = :movie')
+            ->setParameter('movie', $movie)
+            ->orderBy('ms.showDate', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+
     }
 
 //    /**
