@@ -24,7 +24,10 @@ class MovieType extends AbstractType
             ->add('showDate', DateTimeType::class, [
                 'label' => 'Date de visionnage',
                 'widget' => 'single_text',
-                'attr' => ['class' => 'form-control'],
+                'attr' => ['class' => 'form-control datetimepicker'],
+                'html5' => false,
+                'format' => 'dd/MM/YYYY HH:mm',
+                'mapped' => false
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Valider',

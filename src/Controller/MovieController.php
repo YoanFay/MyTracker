@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Movie;
+use App\Entity\MovieShow;
 use App\Entity\Users;
 use App\Form\MovieType;
 use App\Repository\EpisodeRepository;
@@ -11,6 +12,7 @@ use App\Repository\MovieShowRepository;
 use App\Repository\SerieRepository;
 use App\Service\StrSpecialCharsLower;
 use App\Service\TMDBService;
+use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use GuzzleHttp\Client;
@@ -95,6 +97,13 @@ class MovieController extends AbstractController
             $movie->setUser($user);
 
             $managerRegistry->getManager()->persist($movie);
+            $managerRegistry->getManager()->flush();
+
+            $movieShow = new MovieShow();
+            $movieShow->setMovie($movie);
+            $movieShow->setShowDate(DateTime::createFromFormat('d/m/Y H:i', $request->request->get('movie')['showDate']));
+
+            $managerRegistry->getManager()->persist($movieShow);
             $managerRegistry->getManager()->flush();
 
             return $this->redirectToRoute('movie');

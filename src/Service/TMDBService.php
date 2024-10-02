@@ -35,6 +35,8 @@ class TMDBService
 
         $data = self::getData('/movie/'.$movie->getTmdbId().'?language=fr-FR');
 
+        dd($data);
+
         $movie->setName($data['title']);
 
         $releaseDate = DateTime::createFromFormat('Y-m-d', $data['release_date']);

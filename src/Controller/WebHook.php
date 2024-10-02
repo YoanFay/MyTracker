@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\EpisodeShow;
 use App\Entity\Movie;
+use App\Entity\MovieShow;
 use App\Entity\SerieType;
 use App\Repository\MovieRepository;
 use App\Repository\SerieTypeRepository;
@@ -82,7 +83,6 @@ class WebHook extends AbstractController
 
                         $movie->setPlexId($movieId);
                         $movie->setUser($user);
-                        $movie->setShowDate(new \DateTime());
                         $movie->setTmdbId($tvdbMovieId);
                         $movie->setDuration($jsonData['Metadata']['duration'] ?? null);
 
@@ -96,6 +96,13 @@ class WebHook extends AbstractController
                         $em->persist($movie);
                         $em->flush();
                     }
+
+                    $movieShow = new MovieShow();
+                    $movieShow->setMovie($movie);
+                    $movieShow->setShowDate(new \DateTime());
+
+                    $em->persist($movieShow);
+                    $em->flush();
                 }
 
             } else {
@@ -113,7 +120,7 @@ class WebHook extends AbstractController
 
                 $serie = $serieRepository->findOneBy(['plexId' => $serieId]);
 
-                if(!$serie and isset($episodeId)){
+                if (!$serie and isset($episodeId)) {
                     $tvdbSerieId = $TVDBService->getSerieIdByEpisodeId($episodeId);
 
                     $serie = $serieRepository->findOneBy(['tvdbId' => $tvdbSerieId]);
@@ -171,16 +178,16 @@ class WebHook extends AbstractController
 
                         $episode->setTvdbId($tvdbId);
 
-                        if ($episode->getTvdbId()){
+                        if ($episode->getTvdbId()) {
                             $TVDBService->updateEpisodeName($episode);
 
-                            if(!$jsonData['Metadata']['duration']){
+                            if (!$jsonData['Metadata']['duration']) {
                                 $TVDBService->updateEpisodeDuration($episode);
-                            }else{
+                            } else {
                                 $episode->setDuration($jsonData['Metadata']['duration']);
                             }
 
-                        }else{
+                        } else {
                             $episode->setName($jsonData['Metadata']['title']);
                             $episode->setDuration($jsonData['Metadata']['duration'] ?? null);
                         }
@@ -191,7 +198,7 @@ class WebHook extends AbstractController
                         $episode->setSaisonNumber($jsonData['Metadata']['parentIndex']);
                         $episode->setEpisodeNumber($jsonData['Metadata']['index']);
 
-                        if ($episode->getTvdbId() && !$serie->getTvdbId()){
+                        if ($episode->getTvdbId() && !$serie->getTvdbId()) {
                             $serie->setTvdbId($TVDBService->getSerieIdByEpisodeId($episode->getTvdbId()));
 
                             $TVDBService->updateSerieInfo($serie);
