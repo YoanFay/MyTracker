@@ -4,59 +4,68 @@
 
 {% block body %}
 
-<div class="d-flex flex-lg-row flex-column-reverse justify-content-between p-3">
-    <div>
-        <h1 class="d-inline">{{ movie.name }}</h1>
-        <br>
-        <div class="d-flex flex-column flex-wrap">
-            <div class="m-2">
-                <ul>
-                    {% if movie.releaseDate %}
-                        <li data-toggle="tooltip" data-placement="top" title="{{ movie.releaseDate|age }}">
-                            <strong>Date de sortie : </strong>{{ movie.releaseDate|dateFNoDay }}
+    <div class="d-flex flex-lg-row flex-column-reverse justify-content-between p-3">
+        <div>
+            <h1 class="d-inline">{{ movie.name }}</h1>
+            <br>
+            <div class="d-flex flex-column flex-wrap">
+                <div class="m-2">
+                    <ul>
+                        {% if movie.releaseDate %}
+                            <li data-toggle="tooltip" data-placement="top" title="{{ movie.releaseDate|age }}">
+                                <strong>Date de sortie : </strong>{{ movie.releaseDate|dateFNoDay }}
+                            </li>
+                        {% endif %}
+                        <li>
+                            <strong>Date de visionnage : </strong>
+                            {% if movie.movieShows|length == 1 %}
+                                {{ movie.movieShows.0.showDate|dateFNoDay }}
+                            {% else %}
+                                <ul>
+                                    {% for movieShow in movie.movieShows %}
+                                        <li>{{ movieShow.showDate|dateFNoDay }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
                         </li>
-                    {% endif %}
-                    <li>
-                        <strong>Date de visionnage : </strong>{{ movie.showDate|dateFNoDay }}
-                    </li>
-                    <li>
-                        <strong>Durée : </strong>{{ movie.duration|MsToHM }}
-                    </li>
-                </ul>
+                        <li>
+                            <strong>Durée : </strong>{{ movie.duration|MsToHM }}
+                        </li>
+                    </ul>
+                </div>
+                <div class="m-2">
+                    <strong>Genres : </strong>
+                    <ul>
+                        {% for genre in movieGenres %}
+                            <li>{{ genre.name }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
-            <div class="m-2">
-                <strong>Genres : </strong>
-                <ul>
-                    {% for genre in movieGenres %}
-                        <li>{{ genre.name }}</li>
-                    {% endfor %}
-                </ul>
-            </div>
+            <a class="btn btn-primary" href="{{ path('movie') }}">Retour</a>
         </div>
-        <a class="btn btn-primary" href="{{ path('movie') }}">Retour</a>
+        {% set image = infoImageMovie(movie.artwork, movie.name, app.environment) %}
+        <img src="{{ image.path }}"
+             alt="{{ image.alt }} poster"
+             width="300px" data-bs-toggle="modal" data-bs-target="#imageModal" class="cursor-click">
     </div>
-    {% set image = infoImageMovie(movie.artwork, movie.name, app.environment) %}
-    <img src="{{ image.path }}"
-         alt="{{ image.alt }} poster"
-         width="300px" data-bs-toggle="modal" data-bs-target="#imageModal" class="cursor-click">
-</div>
 
-<!-- Modal -->
-<div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="imageModalLabel">Image en Plein Écran</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body text-center" style="overflow: hidden;">
-                <img src="{{ image.path }}" alt="{{ image.alt }}"
-                     style="max-height: calc(100vh - 50px); width: auto; max-width: 100%;">
+    <!-- Modal -->
+    <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="imageModalLabel">Image en Plein Écran</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center" style="overflow: hidden;">
+                    <img src="{{ image.path }}" alt="{{ image.alt }}"
+                         style="max-height: calc(100vh - 50px); width: auto; max-width: 100%;">
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 {% endblock %}
 
