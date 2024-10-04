@@ -56,25 +56,27 @@
                         <i class="metismenu-state-icon material-icons">expand_more</i>
                     </a>
                     <div class="collapse" id="activateEpisodes">
-                        <ul id="historique">
+                        <ul id="history_ul">
                             <li>
-                                <a id="episode" class="nav-links-child"
+                                <a id="history" class="nav-links-child"
                                    href="{{ path('historique') }}">Tout</a>
                             </li>
-                            {#
                             <li>
-                                <a id="episode_anime_list" class="nav-links-child"
-                                   href="{{ path('episode_categories', {'categorie': '1'}) }}">Animes</a>
+                                <a id="history_anime_list" class="nav-links-child"
+                                   href="{{ path('historique_categories', {'categorie': 'anime'}) }}">Animes</a>
                             </li>
                             <li>
-                                <a id="episode_séries_list" class="nav-links-child"
-                                   href="{{ path('episode_categories', {'categorie': '3'}) }}">Séries</a>
+                                <a id="history_series_list" class="nav-links-child"
+                                   href="{{ path('historique_categories', {'categorie': 'series'}) }}">Séries</a>
                             </li>
                             <li>
-                                <a id="episode_replay_list" class="nav-links-child"
-                                   href="{{ path('episode_categories', {'categorie': '2'}) }}">Replay</a>
+                                <a id="history_replay_list" class="nav-links-child"
+                                   href="{{ path('historique_categories', {'categorie': 'replay'}) }}">Replay</a>
                             </li>
-                            #}
+                            <li>
+                                <a id="history_movie_list" class="nav-links-child"
+                                   href="{{ path('historique_categories', {'categorie': 'movie'}) }}">Films</a>
+                            </li>
                             <li>
                                 <a id="episode_add" class="nav-links-child"
                                    href="{{ path('episode_add') }}">Ajouter un épisode</a>

@@ -21,6 +21,9 @@ class SerieType
     #[ORM\OneToMany(mappedBy: 'serieType', targetEntity: Serie::class)]
     private Collection $series;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $slug = null;
+
     public function __construct()
     {
         $this->series = new ArrayCollection();
@@ -69,6 +72,18 @@ class SerieType
                 $series->setSerieType(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(?string $slug): static
+    {
+        $this->slug = $slug;
 
         return $this;
     }
