@@ -56,6 +56,20 @@ class MovieShowRepository extends ServiceEntityRepository
 
     }
 
+
+    /**
+     * @return float|int|mixed|string|null
+     */
+    public function findByDate(string $year, string $month)
+    {
+
+        return $this->createQueryBuilder('ms')
+            ->andWhere('ms.showDate LIKE :date')
+            ->setParameter('date', $year.'-'.$month.'-%')
+            ->getQuery()
+            ->getResult();
+    }
+
 //    /**
 //     * @return MovieShow[] Returns an array of MovieShow objects
 //     */
