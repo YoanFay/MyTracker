@@ -18,7 +18,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
     name: 'app:data-movie-show',
-    description: 'Add a short description for your command',
+    description: 'Update movie to movie show',
 )]
 class DataMovieShowCommand extends Command
 {
@@ -34,13 +34,6 @@ class DataMovieShowCommand extends Command
         parent::__construct();
         $this->movieRepository = $movieRepository;
         $this->manager = $managerRegistry->getManager();
-    }
-    protected function configure(): void
-    {
-        $this
-            ->addArgument('arg1', InputArgument::OPTIONAL, 'Argument description')
-            ->addOption('option1', null, InputOption::VALUE_NONE, 'Option description')
-        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
