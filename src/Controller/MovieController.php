@@ -6,20 +6,14 @@ use App\Entity\Movie;
 use App\Entity\MovieShow;
 use App\Entity\Users;
 use App\Form\MovieType;
-use App\Repository\EpisodeRepository;
-use App\Repository\MovieGenreRepository;
 use App\Repository\MovieShowRepository;
-use App\Repository\SerieRepository;
-use App\Service\StrSpecialCharsLower;
 use App\Service\TMDBService;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
-use GuzzleHttp\Client;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\MovieRepository;
 
@@ -39,7 +33,7 @@ class MovieController extends AbstractController
      * @throws NonUniqueResultException
      */
     #[Route('/movie/list', name: 'movie_list')]
-    public function movieList(MovieRepository $movieRepository, MovieShowRepository $movieShowRepository, Request $request)
+    public function movieList(MovieRepository $movieRepository, MovieShowRepository $movieShowRepository, Request $request): Response
     {
 
         $text = $request->request->get('text');
@@ -75,12 +69,12 @@ class MovieController extends AbstractController
         return $this->render('movie/list.html.twig', [
             'controller_name' => 'MovieController',
             'movies' => $movieTab,
-            'navLinkId' => 'movie_list',
+            'navLinkId' => 'movie',
         ]);
     }
 
     #[Route('/movie/add', name: 'movie_add')]
-    public function addMovie(ManagerRegistry $managerRegistry, Request $request, StrSpecialCharsLower $strSpecialCharsLower, TMDBService $TMDBService): Response
+    public function addMovie(ManagerRegistry $managerRegistry, Request $request, TMDBService $TMDBService): Response
     {
 
         $movie = new Movie();
@@ -128,7 +122,7 @@ class MovieController extends AbstractController
             'controller_name' => 'MovieController',
             'movie' => $movie,
             'movieGenres' => $movieGenres,
-            'navLinkId' => 'serie_list',
+            'navLinkId' => 'movie',
         ]);
     }
 }
