@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Épisodes{% endblock %}
+{% block title %}Historique{% endblock %}
 
 {% block body %}
 
@@ -19,25 +19,25 @@
         <tbody>
                 {% for yearName, year in list %}
             <tr class="table-secondary">
-                <th><a class="text-decoration-none text-black" href='{{path("episode_date", {"year": yearName})}}'>{{ yearName }}</a></th>
-                <td>{{ year.TotalAnime|MsToHM }}</td>
-                <td>{{ year.TotalSéries|MsToHM }}</td>
-                <td>{{ year.TotalReplay|MsToHM }}</td>
-                <td>{{ year.TotalMovie|MsToHM }}</td>
-                <td>{{ year.Total|MsToHM }}</td>
+                <th><a class="text-decoration-none text-black" href='{{path("historique_date", {"year": yearName})}}'>{{ yearName }}</a></th>
+                <td>{{ year.totalAnime|MsToHM }}</td>
+                <td>{{ year.totalSeries|MsToHM }}</td>
+                <td>{{ year.totalReplay|MsToHM }}</td>
+                <td>{{ year.totalMovie|MsToHM }}</td>
+                <td>{{ year.total|MsToHM }}</td>
             </tr>
         </tbody>
         <tbody>
             <div>
             {% for monthName, month in year %}
-            {% if 'Total' not in monthName and month != [] %}
+            {% if 'total' not in monthName and month != [] %}
             <tr>
-                <td><a class="text-decoration-none text-black" href='{{path("episode_date", {"year": yearName, "month": month.ID})}}'>{{ monthName }}</a></td>
-                <td>{{ month.Anime|MsToHM }}</td>
-                <td>{{ month.Séries|MsToHM }}</td>
-                <td>{{ month.Replay|MsToHM }}</td>
-                <td>{{ month.Movie|MsToHM }}</td>
-                <td>{{ month.Total|MsToHM }}</td>
+                <td><a class="text-decoration-none text-black" href='{{path("historique_date", {"year": yearName, "month": month.id})}}'>{{ monthName|capitalize }}</a></td>
+                <td>{{ month.anime|MsToHM }}</td>
+                <td>{{ month.series|MsToHM }}</td>
+                <td>{{ month.replay|MsToHM }}</td>
+                <td>{{ month.movie|MsToHM }}</td>
+                <td>{{ month.total|MsToHM }}</td>
             <tr>
         {% endif %}
         {% endfor %}

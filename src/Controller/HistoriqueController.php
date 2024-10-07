@@ -25,18 +25,18 @@ class HistoriqueController extends AbstractController
     {
 
         $listMonth = [
-            '01' => 'Janvier',
-            '02' => 'Février',
-            '03' => 'Mars',
-            '04' => 'Avril',
-            '05' => 'Mai',
-            '06' => 'Juin',
-            '07' => 'Juillet',
-            '08' => 'Août',
-            '09' => 'Septembre',
-            '10' => 'Octobre',
-            '11' => 'Novembre',
-            '12' => 'Décembre'
+            '01' => 'janvier',
+            '02' => 'fevrier',
+            '03' => 'mars',
+            '04' => 'avril',
+            '05' => 'mai',
+            '06' => 'juin',
+            '07' => 'juillet',
+            '08' => 'aout',
+            '09' => 'septembre',
+            '10' => 'octobre',
+            '11' => 'novembre',
+            '12' => 'decembre'
         ];
 
         $dates = $episodeShowRepository->findMonth();
@@ -54,53 +54,55 @@ class HistoriqueController extends AbstractController
             if (!array_key_exists($year, $listDate)) {
 
                 $listDate[$year] = [
-                    'Janvier' => [],
-                    'Février' => [],
-                    'Mars' => [],
-                    'Avril' => [],
-                    'Mai' => [],
-                    'Juin' => [],
-                    'Juillet' => [],
-                    'Août' => [],
-                    'Septembre' => [],
-                    'Octobre' => [],
-                    'Novembre' => [],
-                    'Décembre' => [],
-                    'TotalAnime' => 0,
-                    'TotalSéries' => 0,
-                    'TotalReplay' => 0,
-                    'TotalMovie' => 0,
-                    'Total' => 0,
+                    'janvier' => [],
+                    'fevrier' => [],
+                    'mars' => [],
+                    'avril' => [],
+                    'mai' => [],
+                    'juin' => [],
+                    'juillet' => [],
+                    'aout' => [],
+                    'septembre' => [],
+                    'octobre' => [],
+                    'novembre' => [],
+                    'decembre' => [],
+                    'totalAnime' => 0,
+                    'totalSeries' => 0,
+                    'totalReplay' => 0,
+                    'totalMovie' => 0,
+                    'total' => 0,
                 ];
             }
 
             if ($listDate[$year][$month] === []) {
                 $listDate[$year][$month] = [
-                    'Anime' => 0,
-                    'Séries' => 0,
-                    'Replay' => 0,
-                    'Movie' => 0,
-                    'Total' => 0,
-                    'ID' => $idMonth,
+                    'anime' => 0,
+                    'series' => 0,
+                    'replay' => 0,
+                    'movie' => 0,
+                    'total' => 0,
+                    'id' => $idMonth,
                 ];
             }
 
-            $listDate[$year][$month][$date['TYPE']] += $date['DURATION'];
-            $listDate[$year][$month]['Total'] += $date['DURATION'];
+            $listDate[$year][$month]['total'] += $date['DURATION'];
 
             switch ($date['TYPE']) {
             case 'Anime':
-                $listDate[$year]['TotalAnime'] += $date['DURATION'];
+                $listDate[$year][$month]['anime'] += $date['DURATION'];
+                $listDate[$year]['totalAnime'] += $date['DURATION'];
                 break;
             case 'Séries':
-                $listDate[$year]['TotalSéries'] += $date['DURATION'];
+                $listDate[$year][$month]['series'] += $date['DURATION'];
+                $listDate[$year]['totalSeries'] += $date['DURATION'];
                 break;
             case 'Replay':
-                $listDate[$year]['TotalReplay'] += $date['DURATION'];
+                $listDate[$year][$month]['replay'] += $date['DURATION'];
+                $listDate[$year]['totalReplay'] += $date['DURATION'];
                 break;
             }
 
-            $listDate[$year]['Total'] += $date['DURATION'];
+            $listDate[$year]['total'] += $date['DURATION'];
 
         }
 
@@ -117,41 +119,41 @@ class HistoriqueController extends AbstractController
             if (!array_key_exists($year, $listDate)) {
 
                 $listDate[$year] = [
-                    'Janvier' => [],
-                    'Février' => [],
-                    'Mars' => [],
-                    'Avril' => [],
-                    'Mai' => [],
-                    'Juin' => [],
-                    'Juillet' => [],
-                    'Août' => [],
-                    'Septembre' => [],
-                    'Octobre' => [],
-                    'Novembre' => [],
-                    'Décembre' => [],
-                    'TotalAnime' => 0,
-                    'TotalSéries' => 0,
-                    'TotalReplay' => 0,
-                    'TotalMovie' => 0,
-                    'Total' => 0,
+                    'janvier' => [],
+                    'fevrier' => [],
+                    'mars' => [],
+                    'avril' => [],
+                    'mai' => [],
+                    'juin' => [],
+                    'juillet' => [],
+                    'aout' => [],
+                    'septembre' => [],
+                    'octobre' => [],
+                    'novembre' => [],
+                    'decembre' => [],
+                    'totalAnime' => 0,
+                    'totalSeries' => 0,
+                    'totalReplay' => 0,
+                    'totalMovie' => 0,
+                    'total' => 0,
                 ];
             }
 
             if ($listDate[$year][$month] === []) {
                 $listDate[$year][$month] = [
-                    'Anime' => 0,
-                    'Séries' => 0,
-                    'Replay' => 0,
-                    'Movie' => 0,
-                    'Total' => 0,
-                    'ID' => $idMonth,
+                    'anime' => 0,
+                    'series' => 0,
+                    'replay' => 0,
+                    'movie' => 0,
+                    'total' => 0,
+                    'id' => $idMonth,
                 ];
             }
 
-            $listDate[$year][$month]['Movie'] += $date['DURATION'];
-            $listDate[$year][$month]['Total'] += $date['DURATION'];
-            $listDate[$year]['TotalMovie'] += $date['DURATION'];
-            $listDate[$year]['Total'] += $date['DURATION'];
+            $listDate[$year][$month]['movie'] += $date['DURATION'];
+            $listDate[$year][$month]['total'] += $date['DURATION'];
+            $listDate[$year]['totalMovie'] += $date['DURATION'];
+            $listDate[$year]['total'] += $date['DURATION'];
 
         }
 
@@ -419,7 +421,7 @@ class HistoriqueController extends AbstractController
     }
 
 
-    #[Route('/historique/date/{year}/{month}', name: 'historique_date')]
+    #[Route('/historique/{year}/{month}', name: 'historique_date')]
     public function historiqueDate(EpisodeShowRepository $episodeShowRepository, SerieRepository $serieRepository, $year = 0, $month = 0): Response
     {
 
