@@ -8,6 +8,7 @@ use App\Repository\SerieRepository;
 use App\Service\TVDBService;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
+use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -27,6 +28,8 @@ class UpdateCompaniesCommand extends Command
     private SerieRepository $serieRepository;
 
     private CompanyRepository $companyRepository;
+
+    private TVDBService $TVDBService;
 
 
     public function __construct(ManagerRegistry $managerRegistry, TVDBService $TVDBService, SerieRepository $serieRepository, CompanyRepository $companyRepository)
@@ -97,7 +100,7 @@ class UpdateCompaniesCommand extends Command
                     ]
                 ]);
 
-            } catch (\Exception|GuzzleException $e) {
+            } catch (Exception|GuzzleException) {
                 continue;
             }
 

@@ -35,9 +35,6 @@ class UpdateDateCommand extends Command
     }
 
 
-    /**
-     * @throws NonUniqueResultException
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
 
