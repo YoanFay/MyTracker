@@ -20,7 +20,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Service\StrSpecialCharsLower;
 
@@ -78,7 +77,7 @@ class SerieController extends AbstractController
                 $tagTypes[$tag->getTagsType()->getNameFra()] = [];
             }
 
-            array_push($tagTypes[$tag->getTagsType()->getNameFra()], $tag);
+            $tagTypes[$tag->getTagsType()->getNameFra()][] = $tag;
         }
 
         return $this->render('serie/details.html.twig', [
@@ -100,7 +99,7 @@ class SerieController extends AbstractController
 
 
     #[Route('/serie/add', name: 'serie_add')]
-    public function addSerie(ManagerRegistry $managerRegistry, Request $request, StrSpecialCharsLower $strSpecialCharsLower, TVDBService $TVDBService, KernelInterface $kernel): Response
+    public function addSerie(ManagerRegistry $managerRegistry, Request $request, StrSpecialCharsLower $strSpecialCharsLower, TVDBService $TVDBService): Response
     {
 
         $serie = new Serie();
@@ -117,7 +116,7 @@ class SerieController extends AbstractController
             $serie->setSlug($strSpecialCharsLower->serie($serie->getName()));
 
             if ($serie->getTvdbId()) {
-                $TVDBService->updateArtwork($serie, $kernel);
+                $TVDBService->updateArtwork($serie);
             }
 
             $managerRegistry->getManager()->persist($serie);
@@ -228,8 +227,11 @@ class SerieController extends AbstractController
     }
 
 
+    /**
+     * @throws NonUniqueResultException
+     */
     #[Route('/serie/genre/{name}', name: 'serie_genre')]
-    public function animeByGenre(SerieRepository $serieRepository, EpisodeRepository $episodeRepository, AnimeGenreRepository $animeGenreRepository, $name): Response
+    public function animeByGenre( EpisodeRepository $episodeRepository, AnimeGenreRepository $animeGenreRepository, $name): Response
     {
 
         $animeGenre = $animeGenreRepository->findOneBy(['name' => $name]);
@@ -271,8 +273,11 @@ class SerieController extends AbstractController
     }
 
 
+    /**
+     * @throws NonUniqueResultException
+     */
     #[Route('/serie/theme/{name}', name: 'serie_theme')]
-    public function animeByTheme(SerieRepository $serieRepository, EpisodeRepository $episodeRepository, AnimeThemeRepository $animeThemeRepository, $name): Response
+    public function animeByTheme(EpisodeRepository $episodeRepository, AnimeThemeRepository $animeThemeRepository, $name): Response
     {
 
         $animeTheme = $animeThemeRepository->findOneBy(['name' => $name]);
@@ -314,6 +319,9 @@ class SerieController extends AbstractController
     }
 
 
+    /**
+     * @throws NonUniqueResultException
+     */
     #[Route('/serie/company/{id}', name: 'serie_company')]
     public function serieByCompany(EpisodeRepository $episodeRepository, CompanyRepository $companyRepository, $id): Response
     {
@@ -361,7 +369,7 @@ class SerieController extends AbstractController
      * @throws NonUniqueResultException
      */
     #[Route('/serie/list', name: 'serie_list')]
-    public function serieList(SerieRepository $serieRepository, SerieTypeRepository $serieTypeRepository, EpisodeShowRepository $episodeShowRepository, CompanyRepository $companyRepository, Request $request)
+    public function serieList(SerieRepository $serieRepository, SerieTypeRepository $serieTypeRepository, EpisodeShowRepository $episodeShowRepository, CompanyRepository $companyRepository, Request $request): Response
     {
 
         $id = $request->request->get('id');

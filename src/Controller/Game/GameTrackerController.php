@@ -3,7 +3,6 @@
 namespace App\Controller\Game;
 
 use App\Entity\GameTracker;
-use App\Form\GameThemeType;
 use App\Form\GameTrackerType;
 use App\Repository\GameRepository;
 use App\Repository\GameTrackerRepository;

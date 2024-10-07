@@ -24,6 +24,7 @@ use App\Service\StrSpecialCharsLower;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -34,7 +35,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class GameController extends AbstractController
 {
     #[Route('/', name: 'game_index', methods: ['GET'])]
-    public function index(GameRepository $gameRepository): Response
+    public function index(): Response
     {
 
         return $this->render('game/game/index.html.twig', [
@@ -118,6 +119,9 @@ class GameController extends AbstractController
     }
 
 
+    /**
+     * @throws GuzzleException
+     */
     #[Route('/add', name: 'game_add', methods: ['GET', 'POST'])]
     public function add(
         Request                  $request,
@@ -486,7 +490,7 @@ class GameController extends AbstractController
 
             $dataGameCover = json_decode($response->getBody(), true)[0];
 
-            $lienImage = 'https:'.str_replace('/t_thumb/', '/t_cover_big/', $dataGameCover['url']);;
+            $lienImage = 'https:'.str_replace('/t_thumb/', '/t_cover_big/', $dataGameCover['url']);
 
             $cover = imagecreatefromstring(file_get_contents($lienImage));
 
@@ -527,25 +531,13 @@ class GameController extends AbstractController
         $sort = $request->request->get('sort', 'name');
         $order = $request->request->get('order', 'DESC');
 
-        switch ($choice){
-        case 1:
-            $games = $gameRepository->findAllFilter($sort, $order);
-            break;
-        case 2:
-            $games = $gameRepository->findGameNotStart();
-            break;
-        case 3:
-            $games = $gameRepository->findGameProgress();
-            break;
-        case 4:
-            $games = $gameRepository->findGameEnd();
-            break;
-        case 5:
-            $games = $gameRepository->findGameFullEnd();
-            break;
-        default:
-            $games = $gameRepository->findAllFilter($sort, $order);
-        }
+        $games = match ($choice) {
+            2 => $gameRepository->findGameNotStart(),
+            3 => $gameRepository->findGameProgress(),
+            4 => $gameRepository->findGameEnd(),
+            5 => $gameRepository->findGameFullEnd(),
+            default => $gameRepository->findAllFilter($sort, $order),
+        };
 
         return $this->render(
             'game/game/list.html.twig',

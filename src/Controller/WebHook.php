@@ -11,26 +11,22 @@ use App\Repository\SerieTypeRepository;
 use App\Service\StrSpecialCharsLower;
 use App\Service\TMDBService;
 use App\Service\TVDBService;
+use DateTime;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\UsersRepository;
 use App\Repository\SerieRepository;
 use App\Repository\EpisodeRepository;
-use App\Entity\Users;
 use App\Entity\Serie;
 use App\Entity\Episode;
-use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 class WebHook extends AbstractController
 {
 
-    /**
-     * @Route("/webhook", name="webhook")
-     */
+    #[Route('/webhook', name: 'webhook')]
     public function webhook(
-        Request              $request,
         UsersRepository      $usersRepository,
         SerieRepository      $serieRepository,
         EpisodeRepository    $episodeRepository,
@@ -38,11 +34,12 @@ class WebHook extends AbstractController
         StrSpecialCharsLower $strSpecialCharsLower,
         SerieTypeRepository  $serieTypeRepository,
         TMDBService          $TMDBService,
-        TVDBService          $TVDBService
+        TVDBService          $TVDBService,
+        ManagerRegistry      $managerRegistry
     ): Response
     {
 
-        $em = $this->getDoctrine()->getManager();
+        $em = $managerRegistry->getManager();
         $payload = $_POST['payload'];
 
         $jsonData = json_decode($payload, true);
@@ -72,7 +69,7 @@ class WebHook extends AbstractController
 
                         if (isset($jsonData['Metadata']['Guid'])) {
                             foreach ($jsonData['Metadata']['Guid'] as $guid) {
-                                if (isset($guid['id']) && strpos($guid['id'], 'tmdb://') === 0) {
+                                if (isset($guid['id']) && str_starts_with($guid['id'], 'tmdb://')) {
                                     $tvdbMovieId = str_replace(["tmdb://"], [""], $guid['id']);
                                     break;
                                 }
@@ -99,7 +96,7 @@ class WebHook extends AbstractController
 
                     $movieShow = new MovieShow();
                     $movieShow->setMovie($movie);
-                    $movieShow->setShowDate(new \DateTime());
+                    $movieShow->setShowDate(new DateTime());
 
                     $em->persist($movieShow);
                     $em->flush();
@@ -111,7 +108,7 @@ class WebHook extends AbstractController
 
                 if (isset($jsonData['Metadata']['Guid'])) {
                     foreach ($jsonData['Metadata']['Guid'] as $guid) {
-                        if (isset($guid['id']) && strpos($guid['id'], 'tvdb://') === 0) {
+                        if (isset($guid['id']) && str_starts_with($guid['id'], 'tvdb://')) {
                             $episodeId = str_replace(["tvdb://"], [""], $guid['id']);
                             break;
                         }
@@ -167,7 +164,7 @@ class WebHook extends AbstractController
 
                         if (isset($jsonData['Metadata']['Guid'])) {
                             foreach ($jsonData['Metadata']['Guid'] as $guid) {
-                                if (isset($guid['id']) && strpos($guid['id'], 'tvdb://') === 0) {
+                                if (isset($guid['id']) && str_starts_with($guid['id'], 'tvdb://')) {
                                     $tvdbId = str_replace(["tvdb://"], [""], $guid['id']);
                                     break;
                                 }
@@ -214,7 +211,7 @@ class WebHook extends AbstractController
 
                     $episodeShow = new EpisodeShow();
                     $episodeShow->setEpisode($episode);
-                    $episodeShow->setShowDate(new \DateTime());
+                    $episodeShow->setShowDate(new DateTime());
 
                     $em->persist($episodeShow);
                     $em->flush();

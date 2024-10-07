@@ -8,6 +8,7 @@ use App\Form\GamePlatformType;
 use App\Repository\GamePlatformRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -91,6 +92,10 @@ class GamePlatformController extends AbstractController
         return $this->redirectToRoute('game_platform_index', [], Response::HTTP_SEE_OTHER);
     }
 
+
+    /**
+     * @throws GuzzleException
+     */
     #[Route('/add', name: 'game_platform_add', methods: ['GET', 'POST'])]
     public function add(Request $request, EntityManagerInterface $entityManager): Response
     {

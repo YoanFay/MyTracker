@@ -6,6 +6,7 @@ use App\Entity\MangaTome;
 use App\Form\MangaTomeType;
 use App\Repository\MangaRepository;
 use App\Repository\MangaTomeRepository;
+use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
@@ -171,7 +172,7 @@ class MangaTomeController extends AbstractController
             ]);
         }
 
-        $tome->setReadingStartDate(new \DateTime());
+        $tome->setReadingStartDate(new DateTime());
 
         $managerRegistry->getManager()->persist($tome);
         $managerRegistry->getManager()->flush();
@@ -197,7 +198,7 @@ class MangaTomeController extends AbstractController
             ]);
         }
 
-        $tome->setReadingEndDate(new \DateTime());
+        $tome->setReadingEndDate(new DateTime());
 
         $managerRegistry->getManager()->persist($tome);
         $managerRegistry->getManager()->flush();

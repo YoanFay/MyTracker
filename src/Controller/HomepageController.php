@@ -10,21 +10,18 @@ use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
-use Bugsnag\BugsnagBundle\DependencyInjection\ClientFactory;
-use Bugsnag\Client;
-use App\Repository\SerieRepository;
 use App\Repository\EpisodeRepository;
 use App\Repository\MovieRepository;
 use App\Service\TimeService;
+use Symfony\Component\Routing\Annotation\Route;
 
 
 class HomepageController extends AbstractController
 {
     /**
-     * @Route("/", name="home")
      * @throws Exception
      */
+    #[Route('/', name: 'home')]
     public function index(MovieRepository $movieRepository, EpisodeRepository $episodeRepository, MangaTomeRepository $mangaTomeRepository, GameRepository $gameRepository): Response
     {
 
@@ -61,9 +58,9 @@ class HomepageController extends AbstractController
 
 
     /**
-     * @Route("/homeInfo", name="home_info")
      * @throws Exception
      */
+    #[Route('/homeInfo', name: 'home_info')]
     public function homeInfo(SerieUpdateRepository $serieUpdateRepository, TimeService $timeService, Request $request): Response
     {
         $count = $request->request->get('count', 0);

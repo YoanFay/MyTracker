@@ -70,6 +70,16 @@ class MovieShowRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function getDuration()
+    {
+        return $this->createQueryBuilder('ms')
+            ->leftJoin('ms.movie', 'm')
+            ->select('SUM(m.duration) AS SUM')
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
+    }
+
 //    /**
 //     * @return MovieShow[] Returns an array of MovieShow objects
 //     */
