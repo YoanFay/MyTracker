@@ -275,17 +275,17 @@ class HistoriqueController extends AbstractController
 
         }
 
-        $currentDate = new DateTime('now');
-        $startOfYear = new DateTime($currentDate->format('Y').'-01-01');
-        $daysSinceStartOfYear = $currentDate->diff($startOfYear)->days + 1;
+        krsort($dataByDate);
+
+        $startDate = new DateTime(array_key_last($dataByDate));
+        $endDate = new DateTime('now');
+        $daysSinceStartOfYear = $endDate->diff($startDate)->days + 1;
 
         foreach ($globalDuration as $key => $duration) {
 
             $globalDuration[$key] = $duration / $daysSinceStartOfYear;
 
         }
-
-        krsort($dataByDate);
 
         return $this->render('historique/allHistorique.html.twig', [
             'dataByDate' => $dataByDate,
@@ -301,10 +301,6 @@ class HistoriqueController extends AbstractController
     #[Route('/historique/categorie/{categorie}', name: 'historique_categories')]
     public function historiqueCategories(EpisodeShowRepository $episodeShowRepository, SerieTypeRepository $serieTypeRepository, MovieShowRepository $movieShowRepository, $categorie): Response
     {
-
-        $currentDate = new DateTime('now');
-        $startOfYear = new DateTime($currentDate->format('Y').'-01-01');
-        $daysSinceStartOfYear = $currentDate->diff($startOfYear)->days + 1;
 
         if ($categorie !== 'movie') {
 
@@ -402,9 +398,13 @@ class HistoriqueController extends AbstractController
             }
         }
 
-        $globalDurationAverage = $globalDuration / $daysSinceStartOfYear;
-
         krsort($dataByDate);
+
+        $startDate = new DateTime(array_key_last($dataByDate));
+        $endDate = new DateTime('now');
+        $daysSinceStartOfYear = $endDate->diff($startDate)->days + 1;
+
+        $globalDurationAverage = $globalDuration / $daysSinceStartOfYear;
 
         return $this->render('historique/categories.html.twig', [
             'dataByDate' => $dataByDate,
