@@ -3,42 +3,32 @@
 {% block title %}Manga{% endblock %}
 
 {% block body %}
-            <table id="tableManga" class="table table-hover table-striped table-bordered tablesorter littleFont">
-        <thead>
-        <tr class="col-12">
-            <th scope="col" class="col-3">Nom</th>
-            <th scope="col" class="col-2">Tome lu</th>
-            <th scope="col" class="col-2">Auteur</th>
-            <th scope="col" class="col-2">Éditeur</th>
-            <th scope="col" class="col-3">Date de publication</th>
-        </tr>
-        </thead>
-        <tbody>
-    {% for manga in mangas %}
-            <tr class="clickable-row cursor-click" data-href="{{ path('manga_details', {'id': manga.info.id}) }}">
-                <td>{{ manga.info.name }}</td>
-                <td >{{ manga.tomeRead }} / {{ manga.tomeRelease }}</td>
-                <td>{{ manga.info.author.name }}</td>
-                <td>{{ manga.info.editor.name }}</td>
-                <td>{{ manga.info.releaseDate|dateFNoDay }} - {% if manga.info.endDate %} {{ manga.info.endDate|dateFNoDay }} {% else %} En cours {% endif %}</td>
-            </tr>
+    <div id="divList" class="col-12 d-flex flex-row justify-content-between flex-wrap">
+        {% for manga in mangas %}
+            {% set image = infoImageManga(manga.info, manga.firstTomeCover, app.environment) %}
+            <div class="cursor-click container col-lg-2 col-4 px-3 my-4 d-flex flex-column"
+                 onclick="openDetail('{{ path('manga_details', {'id': manga.info.id}) }}')" data-bs-toggle="tooltip"
+                 data-bs-placement="bottom" data-bs-html="true" title="{{ manga.tooltip }}">
+                <img class="rounded mx-auto d-block" src="{{ image.path }}" width="150px" height="225px"
+                     alt="{{ image.alt }}">
+                <p class="text-center">{{ manga.info.name }}<br>({{ manga.tomeRead }} / {{ manga.tomeRelease }})</p>
+            </div>
         {% endfor %}
-        </tbody>
-    </table>
+    </div>
 {% endblock %}
 
 {% block javascript %}
-<script>
 
-    jQuery(document).ready(function($) {
-    $(".clickable-row").click(function () {
-        window.location = $(this).data("href");
-    });
+    <script>
 
-    $("#tableManga").trigger('update').tablesorter({
-        'resort': true
-        });
-});
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
 
-</script>
+        function openDetail(href) {
+            window.location = href;
+        }
+    </script>
+
 {% endblock %}

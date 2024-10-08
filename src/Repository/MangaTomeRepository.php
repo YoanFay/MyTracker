@@ -91,6 +91,18 @@ class MangaTomeRepository extends ServiceEntityRepository
             ;
     }
 
+    public function getFirstCover($manga)
+    {
+        return $this->createQueryBuilder('mt')
+            ->select('mt.cover AS COVER')
+            ->andWhere('mt.manga = :manga')
+            ->andWhere('mt.tomeNumber = 1')
+            ->setParameter('manga', $manga)
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
+    }
+
     /*public function getTomeTheme()
     {
         return $this->createQueryBuilder('e')

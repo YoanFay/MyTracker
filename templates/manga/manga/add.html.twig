@@ -3,43 +3,53 @@
 {% block title %}Ajouter un manga{% endblock %}
 
 {% block body %}
-    <div class="card">
-        {{ form_start(form) }}
+
+    <div class="h-100 w-100 d-flex flex-column justify-content-center align-items-center">
+        <div class="card">
+            <div class="card-header">
+                Ajouter un manga
+            </div>
+            <div class="card-body">{{ form_start(form) }}
                 {{form_row(form.name)}}
                 {{form_row(form.releaseDate)}}
                 {{form_row(form.endDate)}}
                 {{form_row(form.nbTomes)}}
                 {{form_row(form.type)}}
-        <label class="my-2">Genres</label>
-        {% set firstLetter = null %}
-        <div class="col-12 d-flex flex-row flex-wrap">
-            {% for key, genre in form.genres %}
-            {% if genre.vars.label|first != firstLetter %}
-                <p class="col-12"><strong>{{ genre.vars.label|first}}</strong></p>
-                {% set firstLetter = genre.vars.label|first %}
-            {% endif %}
-            <div class="col-3">
-                {{form_widget(genre)}}
-                {{form_label(genre)}}
+                <label class="my-2">Genres</label>
+                {% set firstLetter = null %}
+                <div class="col-12 d-flex flex-row flex-wrap">
+                    {% for key, genre in form.genres %}
+                        {% if genre.vars.label|first != firstLetter %}
+                            <p class="col-12"><strong>{{ genre.vars.label|first}}</strong></p>
+                            {% set firstLetter = genre.vars.label|first %}
+                        {% endif %}
+                        <div class="col-3">
+                            {{form_widget(genre)}}
+                            {{form_label(genre)}}
+                        </div>
+                    {% endfor %}
+                </div>
+                <label class="my-2">Thèmes</label>
+                {% set firstLetter = null %}
+                <div class="col-12 d-flex flex-row flex-wrap">
+                    {% for key, theme in form.themes %}
+                        {% if theme.vars.label|first != firstLetter %}
+                            <p class="col-12"><strong>{{ theme.vars.label|first}}</strong></p>
+                            {% set firstLetter = theme.vars.label|first %}
+                        {% endif %}
+                        <div class="col-3">
+                            {{form_widget(theme)}}
+                            {{form_label(theme)}}
+                        </div>
+                    {% endfor %}
+                </div>
+                {{form_row(form.author)}}
+                {{form_row(form.designer)}}
+                {{form_row(form.editor)}}
+                {{ form_end(form) }}
+                <a class="btn btn-secondary mt-1" href="{{ path('manga') }}">Retour</a>
             </div>
-            {% endfor %}
         </div>
-        <label class="my-2">Thèmes</label>
-        {% set firstLetter = null %}
-        <div class="col-12 d-flex flex-row flex-wrap">
-            {% for key, theme in form.themes %}
-            {% if theme.vars.label|first != firstLetter %}
-                <p class="col-12"><strong>{{ theme.vars.label|first}}</strong></p>
-                {% set firstLetter = theme.vars.label|first %}
-            {% endif %}
-            <div class="col-3">
-                {{form_widget(theme)}}
-                {{form_label(theme)}}
-            </div>
-            {% endfor %}
-        </div>
-        {{form_row(form.author)}}
-        {{form_row(form.editor)}}
-        {{ form_end(form) }}
     </div>
+
 {% endblock %}

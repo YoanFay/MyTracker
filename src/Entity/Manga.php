@@ -46,6 +46,10 @@ class Manga
     #[ORM\JoinColumn(nullable: false)]
     private ?MangaEditor $editor = null;
 
+    #[ORM\ManyToOne(inversedBy: 'mangas')]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?MangaDesigner $designer = null;
+
     #[ORM\OneToMany(mappedBy: 'manga', targetEntity: MangaTome::class)]
     private Collection $mangaTomes;
 
@@ -192,6 +196,18 @@ class Manga
     public function setEditor(?MangaEditor $editor): static
     {
         $this->editor = $editor;
+
+        return $this;
+    }
+
+    public function getDesigner(): ?MangaDesigner
+    {
+        return $this->designer;
+    }
+
+    public function setDesigner(?MangaDesigner $designer): static
+    {
+        $this->designer = $designer;
 
         return $this;
     }

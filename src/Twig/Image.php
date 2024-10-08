@@ -2,12 +2,11 @@
 
 namespace App\Twig;
 
+use App\Entity\Manga;
 use App\Entity\Serie;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Twig\Extension\AbstractExtension;
-use Twig\TwigFilter;
 use Twig\TwigFunction;
-use DateTime;
 
 class Image extends AbstractExtension
 {
@@ -24,10 +23,12 @@ class Image extends AbstractExtension
         return [
             new TwigFunction('infoImage', [$this, 'infoImage']),
             new TwigFunction('infoImageMovie', [$this, 'infoImageMovie']),
+            new TwigFunction('infoImageManga', [$this, 'infoImageManga']),
         ];
     }
 
-    public function infoImage(Serie $serie, $env) {
+    public function infoImage(Serie $serie, $env): array
+    {
 
         $height = null;
         $width = 400;
@@ -77,7 +78,8 @@ class Image extends AbstractExtension
 
     }
 
-    public function infoImageMovie($path, $name, $env) {
+    public function infoImageMovie($path, $name, $env): array
+    {
 
         if ($path && file_exists($this->kernel->getProjectDir().$path)){
 
@@ -88,6 +90,29 @@ class Image extends AbstractExtension
             return [
                 'path' => $path,
                 'alt' => $name." poster"
+            ];
+
+        }
+
+        return [
+            'path' => "/image/visuel-a-venir.jpg",
+            'alt' => "Visuel à venir"
+        ];
+
+    }
+
+    public function infoImageManga(Manga $manga, $path, $env): array
+    {
+
+        if ($path && file_exists($this->kernel->getProjectDir().$path)){
+
+            if ($env === "dev"){
+                $path = str_replace('public/', '',$path);
+            }
+
+            return [
+                'path' => $path,
+                'alt' => $manga->getName()." poster"
             ];
 
         }

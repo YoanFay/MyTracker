@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Manga;
+use App\Entity\MangaDesigner;
 use App\Entity\MangaType;
 use App\Entity\MangaAuthor;
 use App\Entity\MangaEditor;
@@ -63,6 +64,12 @@ class MangaFormType extends AbstractType
                 'class' => MangaAuthor::class,
                 'choice_label' => 'name',
                 'attr' => ['class' => 'form-control'],
+            ])
+            ->add('designer', EntityType::class, [
+                'class' => MangaDesigner::class,
+                'choice_label' => 'name',
+                'attr' => ['class' => 'form-control'],
+                'required' => false
             ])
             ->add('editor', EntityType::class, [
                 'class' => MangaEditor::class,

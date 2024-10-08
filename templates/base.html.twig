@@ -26,6 +26,7 @@
         {{ encore_entry_script_tags('app') }}
     {% endblock %}
 
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="/jqueryUI/jquery-ui.js"></script>
@@ -155,6 +156,10 @@
                                    href="{{ path('manga') }}">Liste</a>
                             </li>
                             <li>
+                                <a id="manga_add" class="nav-links-child"
+                                   href="{{ path('manga_add') }}">Ajouter un manga</a>
+                            </li>
+                            <li>
                                 <a id="manga_tome" class="nav-links-child"
                                    href="{{ path('manga_tome_add') }}">Ajouter tome</a>
                             </li>
@@ -165,6 +170,10 @@
                             <li>
                                 <a id="manga_editor" class="nav-links-child"
                                    href="{{ path('manga_editor_add') }}">Ajouter éditeur</a>
+                            </li>
+                            <li>
+                                <a id="manga_designer" class="nav-links-child"
+                                   href="{{ path('manga_designer_add') }}">Ajouter dessinateur</a>
                             </li>
                         </ul>
                     </div>

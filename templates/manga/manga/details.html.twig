@@ -7,7 +7,12 @@
 
     <ul>
         <li><strong>Date de sortie</strong> : {{ manga.releaseDate|dateFNoDay }}</li>
-        <li><strong>Auteur</strong> : {{ manga.author.name }}</li>
+        {% if manga.designer %}
+            <li><strong>Scénariste</strong> : {{ manga.author.name }}</li>
+            <li><strong>Dessinateur</strong> : {{ manga.designer.name }}</li>
+        {% else %}
+            <li><strong>Auteur</strong> : {{ manga.author.name }}</li>
+        {% endif %}
         <li><strong>Editeur</strong> : {{ manga.editor.name }}</li>
         <li><strong>Type</strong> : {{ manga.type.name }}</li>
     </ul>
@@ -46,7 +51,9 @@
         {% set checkRead = "ok" %}
         {% for tome in manga.mangaTomes %}
             <tr class="col-12">
-                <td class="col-2"><a class="text-decoration-none text-black" href="{{ path('manga_tome_edit', {'id': tome.id}) }}">Tome {{ tome.tomeNumber }}</a></td>
+                <td class="col-2"><a class="text-decoration-none text-black"
+                                     href="{{ path('manga_tome_edit', {'id': tome.id}) }}">Tome {{ tome.tomeNumber }}</a>
+                </td>
                 <td class="d-lg-table-cell d-none">{{ tome.page }} pages</td>
                 <td>{{ tome.releaseDate|dateFNoDay }}</td>
                 {% if tome.readingStartDate %}
@@ -55,7 +62,7 @@
                         {% if tome.readingEndDate %}
                             {{ tome.readingEndDate|dateF }}
                         {% else %}
-                        {% set checkRead = null %}
+                            {% set checkRead = null %}
                             <p>En cours</p>
                             <a href="{{ path('manga_tome_read', {'id': tome.id}) }}"
                                class="position-absolute bottom-0 mb-2 btn btn-primary littleBtn">Terminer</a>
