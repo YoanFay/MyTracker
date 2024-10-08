@@ -531,6 +531,8 @@ class GameController extends AbstractController
         $sort = $request->request->get('sort', 'name');
         $order = $request->request->get('order', 'DESC');
 
+        $choice = intval($choice);
+
         $games = match ($choice) {
             2 => $gameRepository->findGameNotStart(),
             3 => $gameRepository->findGameProgress(),
@@ -538,6 +540,8 @@ class GameController extends AbstractController
             5 => $gameRepository->findGameFullEnd(),
             default => $gameRepository->findAllFilter($sort, $order),
         };
+
+        dump($games);
 
         return $this->render(
             'game/game/list.html.twig',
