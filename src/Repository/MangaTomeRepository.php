@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\MangaTome;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -91,6 +92,10 @@ class MangaTomeRepository extends ServiceEntityRepository
             ;
     }
 
+
+    /**
+     * @throws NonUniqueResultException
+     */
     public function getFirstCover($manga)
     {
         return $this->createQueryBuilder('mt')
@@ -101,6 +106,24 @@ class MangaTomeRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult()
             ;
+    }
+
+
+    /**
+     * @throws NonUniqueResultException
+     */
+    public function getCurrentTome($manga){
+
+        return $this->createQueryBuilder('mt')
+            ->andWhere('mt.manga = :manga')
+            ->setParameter('manga', $manga)
+            ->andWhere('mt.readingEndDate IS NULL')
+            ->orderBy('mt.tomeNumber')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
+
     }
 
     /*public function getTomeTheme()

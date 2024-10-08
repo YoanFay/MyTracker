@@ -3,10 +3,13 @@
 namespace App\Controller\Manga;
 
 use App\Entity\Manga;
+use App\Entity\MangaTome;
 use App\Form\MangaFormType;
 use App\Repository\MangaRepository;
 use App\Repository\MangaTomeRepository;
 use App\Service\TimeService;
+use DateTime;
+use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
@@ -37,13 +40,13 @@ class MangaController extends AbstractController
             $startDate = $timeService->frenchFormatDateNoDay($manga->getReleaseDate());
             $endDate = "En cours";
 
-            if ($manga->getEndDate()){
+            if ($manga->getEndDate()) {
                 $endDate = $timeService->frenchFormatDateNoDay($manga->getEndDate());
             }
 
             $staff = "<li>Auteur : ".$manga->getAuthor()->getName()." </li>";
 
-            if ($manga->getDesigner()){
+            if ($manga->getDesigner()) {
 
                 $staff = "<li>Scénariste : ".$manga->getAuthor()->getName()." </li><li>Dessinateur : ".$manga->getDesigner()->getName()." </li>";
 
@@ -74,15 +77,45 @@ class MangaController extends AbstractController
     }
 
 
+    /**
+     * @throws NonUniqueResultException
+     */
     #[Route('/manga/details/{id}', name: 'manga_details')]
-    public function details(MangaRepository $mangaRepository, $id): Response
+    public function details(MangaRepository $mangaRepository, MangaTomeRepository $mangaTomeRepository, $id): Response
     {
 
         $manga = $mangaRepository->findOneBy(['id' => $id]);
 
+        $tome = $mangaTomeRepository->getCurrentTome($manga);
+
+        $currentTome = null;
+
+        if ($tome) {
+            $started = false;
+
+            if ($tome->getReadingStartDate()) {
+                $started = true;
+            }
+
+            $release = false;
+
+            if ($tome->getReleaseDate() <= new DateTime()) {
+                $release = true;
+            }
+
+            $currentTome = [
+                'tomeNumber' => $tome->getTomeNumber(),
+                'tomeId' => $tome->getId(),
+                'started' => $started,
+                'release' => $release,
+                'releaseDate' => $tome->getReleaseDate(),
+            ];
+        }
+
         return $this->render('manga/manga/details.html.twig', [
             'controller_name' => 'MangaController',
             'manga' => $manga,
+            'currentTome' => $currentTome,
             'navLinkId' => 'manga',
         ]);
     }
