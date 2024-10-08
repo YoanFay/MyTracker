@@ -49,7 +49,7 @@
         </thead>
         <tbody>
         {% set checkRead = "ok" %}
-        {% for tome in manga.mangaTomes %}
+        {% for tome in manga.mangaTomes|sort((a, b) => a.tomeNumber <=> b.tomeNumber) %}
             <tr class="col-12">
                 <td class="col-2"><a class="text-decoration-none text-black"
                                      href="{{ path('manga_tome_edit', {'id': tome.id}) }}">Tome {{ tome.tomeNumber }}</a>
@@ -81,12 +81,10 @@
                     </td>
                 {% endif %}
                 <td>
-                    {% if tome.cover %}
-                        <img {% if tome.cover %} src="{% if app.environment == "dev" %}{{ tome.cover|replace({'/public': ''}) }}{% else %}{{ tome.cover }}{% endif %}" alt="{{ tome.tomeNumber }} poster" {% else %} src="/image/visuel-a-venir.jpg" alt="Visuel à venir" {% endif %}
-                                width="150px" data-bs-toggle="modal" data-bs-target="#imageModal"
-                                class="cursor-click img-modal-trigger"
-                                data-img-url="{% if app.environment == "dev" %}{{ tome.cover|replace({'/public': ''}) }}{% else %}{{ tome.cover }}{% endif %}">
-                    {% endif %}
+                    {% set image = infoImageMangaTome(tome, app.environment) %}
+                    <img class="cursor-click img-modal-trigger" src="{{ image.path }}" width="150px"
+                         alt="{{ image.alt }} poster" data-bs-toggle="modal" data-bs-target="#imageModal"
+                         data-img-url="{{ image.path }}">
                 </td>
             </tr>
             {% if tome.readingEndDate is null %}

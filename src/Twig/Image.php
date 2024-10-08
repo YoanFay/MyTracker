@@ -3,6 +3,7 @@
 namespace App\Twig;
 
 use App\Entity\Manga;
+use App\Entity\MangaTome;
 use App\Entity\Serie;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Twig\Extension\AbstractExtension;
@@ -24,6 +25,7 @@ class Image extends AbstractExtension
             new TwigFunction('infoImage', [$this, 'infoImage']),
             new TwigFunction('infoImageMovie', [$this, 'infoImageMovie']),
             new TwigFunction('infoImageManga', [$this, 'infoImageManga']),
+            new TwigFunction('infoImageMangaTome', [$this, 'infoImageMangaTome']),
         ];
     }
 
@@ -113,6 +115,31 @@ class Image extends AbstractExtension
             return [
                 'path' => $path,
                 'alt' => $manga->getName()." poster"
+            ];
+
+        }
+
+        return [
+            'path' => "/image/visuel-a-venir.jpg",
+            'alt' => "Visuel à venir"
+        ];
+
+    }
+
+    public function infoImageMangaTome(MangaTome $mangaTome, $env): array
+    {
+
+        $path = $mangaTome->getCover();
+
+        if ($path && file_exists($this->kernel->getProjectDir().$path)){
+
+            if ($env === "dev"){
+                $path = str_replace('public/', '',$path);
+            }
+
+            return [
+                'path' => $path,
+                'alt' => $mangaTome->getTomeNumber()." poster"
             ];
 
         }
