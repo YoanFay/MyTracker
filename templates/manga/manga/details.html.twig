@@ -18,26 +18,6 @@
         <li><strong>Type</strong> : {{ manga.type.name }}</li>
     </ul>
     <br>
-    {% if currentTome %}
-        {% if currentTome.started %}
-            <a class="btn btn-primary ms-2" href="{{ path('manga_tome_read', {'id' : currentTome.tomeId}) }}">Terminer
-                le
-                tome {{ currentTome.tomeNumber }}</a>
-        {% elseif currentTome.release %}
-            <a class="btn btn-primary ms-2
-           href="{{ path('manga_tome_start', {'id' : currentTome.tomeId}) }}">Commencer le tome {{ currentTome.tomeNumber }}</a>
-        {% else %}
-            <button
-                    class="btn btn-secondary ms-2"
-                    data-bs-toggle="tooltip"
-                    data-bs-placement="bottom" data-bs-html="true"
-                    title="Le tome {{ currentTome.tomeNumber }} sort le {{ currentTome.releaseDate|dateFNoDay }}">
-                Commencer
-                le
-                tome {{ currentTome.tomeNumber }}</button>
-        {% endif %}
-    {% endif %}
-    <br>
     <div class="d-flex flex-row flex-wrap">
         <div class="m-2">
             <strong>Genres : </strong>
@@ -56,6 +36,28 @@
             </ul>
         </div>
     </div>
+    <br>
+    <div class="col-12 d-flex justify-content-center mb-5">
+    {% if currentTome %}
+        {% if currentTome.started %}
+            <a class="btn btn-primary ms-2" href="{{ path('manga_tome_read', {'id' : currentTome.tomeId}) }}">Terminer
+                le
+                tome {{ currentTome.tomeNumber }}</a>
+        {% elseif currentTome.release %}
+            <a class="btn btn-primary ms-2
+           href="{{ path('manga_tome_start', {'id' : currentTome.tomeId}) }}">Commencer le tome {{ currentTome.tomeNumber }}</a>
+        {% else %}
+                <button
+                        class="btn btn-secondary"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="bottom" data-bs-html="true"
+                        title="Le tome {{ currentTome.tomeNumber }} sort le {{ currentTome.releaseDate|dateFNoDay }}">
+                    Commencer
+                    le
+                    tome {{ currentTome.tomeNumber }}</button>
+        {% endif %}
+    {% endif %}
+    </div>
 
     <div class="col-12 d-flex justify-content-around align-content-center">
         <hr class="col-5">
@@ -69,10 +71,10 @@
             <div class="cursor-click container col-lg-2 col-4 px-3 my-4 d-flex flex-column"
                  data-bs-toggle="tooltip"
                  data-bs-placement="bottom" data-bs-html="true"
-                 title="<ul><li>Nombre de pages : {{ tome.page }}</li><li>Date de sortie : {{ tome.releaseDate|dateFNoDay }}</li>{% if tome.readingStartDate %}<li>Commencer le : {{ tome.readingStartDate|dateFNoDay }}</li>{% endif %}{% if tome.readingEndDate %}<li>Commencer le : {{ tome.readingEndDate|dateFNoDay }}</li>{% endif %}</ul>">
+                 title="<ul><li>Nombre de pages : {{ tome.page }}</li><li>Date de sortie : {{ tome.releaseDate|dateFNoDay }}</li>{% if tome.readingStartDate %}<li>Commencer le : {{ tome.readingStartDate|dateFNoDay }}</li>{% endif %}{% if tome.readingEndDate %}<li>Terminer le : {{ tome.readingEndDate|dateFNoDay }}</li>{% endif %}</ul>">
                 <img class="rounded mx-auto d-block" src="{{ image.path }}" width="150px" height="225px"
                      alt="{{ image.alt }}">
-                <p class="text-center">Tome {{ tome.tomeNumber }}</p>
+                <p class="text-center"><a class="text-decoration-none text-black" href="{{ path('manga_tome_edit', {'id': tome.id}) }}">Tome {{ tome.tomeNumber }}</a></p>
             </div>
         {% endfor %}
     </div>

@@ -541,8 +541,6 @@ class GameController extends AbstractController
             default => $gameRepository->findAllFilter($sort, $order),
         };
 
-        dump($games);
-
         return $this->render(
             'game/game/list.html.twig',
             [
