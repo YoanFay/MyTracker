@@ -23,7 +23,7 @@ class MangaController extends AbstractController
     public function index(MangaRepository $mangaRepository, MangaTomeRepository $mangaTomeRepository, TimeService $timeService): Response
     {
 
-        $mangas = $mangaRepository->findAll();
+        $mangas = $mangaRepository->findBy([], ['name' => 'ASC']);
 
         $mangasInfo = [];
 
