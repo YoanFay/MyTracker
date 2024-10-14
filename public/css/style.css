@@ -73,6 +73,10 @@ li a[role=button]{
   max-width: 1000px !important;
 }
 
+.img-manga{
+  height: 225px;
+}
+
 /* 
 --------------------------------------------------------
 openbtn
@@ -177,5 +181,9 @@ openbtn
 
   .searchDiv{
     width: 50%;
+  }
+
+  .img-manga{
+    height: initial;
   }
 }

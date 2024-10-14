@@ -9,7 +9,7 @@
             <div class="cursor-click container col-lg-2 col-4 px-3 my-4 d-flex flex-column"
                  onclick="openDetail('{{ path('manga_details', {'id': manga.info.id}) }}')" data-bs-toggle="tooltip"
                  data-bs-placement="bottom" data-bs-html="true" title="{{ manga.tooltip }}">
-                <img class="rounded mx-auto d-block" src="{{ image.path }}" width="150px" height="225px"
+                <img class="rounded mx-auto d-block img-manga" src="{{ image.path }}" width="150px"
                      alt="{{ image.alt }}">
                 <p class="text-center">{{ manga.info.name }}<br>({{ manga.tomeRead }} / {{ manga.tomeRelease }})</p>
             </div>
