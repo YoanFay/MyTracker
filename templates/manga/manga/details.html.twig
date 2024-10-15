@@ -139,7 +139,7 @@
         });
 
         function safeDelete() {
-            if (confirm('test')) {
+            if (confirm('Supprimer le manga : {{manga.name}} ?')) {
                 window.location = "{{ path('manga_delete', {'id': manga.id}) }}";
             }
 
