@@ -18,10 +18,11 @@
                    title="Modifier un tome">
                     <i class="material-icons text-warning">edit_note</i>
                 </a>
-                <i class="material-icons text-danger d-inline text-decoration-none cursor-click" onclick="safeDelete()" data-bs-toggle="tooltip"
-                       data-bs-placement="bottom" data-bs-html="true"
-                       title="Supprimer un tome">delete</i>
-                </h1>
+                <i class="material-icons text-danger d-inline text-decoration-none cursor-click" onclick="safeDelete()"
+                   data-bs-toggle="tooltip"
+                   data-bs-placement="bottom" data-bs-html="true"
+                   title="Supprimer un tome">delete</i>
+            </h1>
             <ul>
                 <li><strong>Date de sortie</strong> : {{ manga.releaseDate|dateFNoDay }}</li>
                 {% if manga.designer %}
@@ -93,11 +94,13 @@
         {% for tome in manga.mangaTomes|sort((a, b) => a.tomeNumber <=> b.tomeNumber) %}
             {% set image = infoImageMangaTome(tome, app.environment) %}
             <div class="cursor-click container col-lg-2 col-4 px-3 my-4 d-flex flex-column"
+                    {% if not ("Android" in app.request.headers.get('User-Agent') or "Mobile" in app.request.headers.get('User-Agent')) %}
                  data-bs-toggle="tooltip"
                  data-bs-placement="bottom" data-bs-html="true"
-                 title="<ul><li>Nombre de pages : {{ tome.page }}</li><li>Date de sortie : {{ tome.releaseDate|dateFNoDay }}</li>{% if tome.readingStartDate %}<li>Commencer le : {{ tome.readingStartDate|dateFNoDay }}</li>{% endif %}{% if tome.readingEndDate %}<li>Terminer le : {{ tome.readingEndDate|dateFNoDay }}</li>{% endif %}</ul>">
-                <img class="rounded mx-auto d-block img-manga" src="{{ image.path }}" width="150px"
-                     alt="{{ image.alt }}">
+                 title="<ul><li>Nombre de pages : {{ tome.page }}</li><li>Date de sortie : {{ tome.releaseDate|dateFNoDay }}</li>{% if tome.readingStartDate %}<li>Commencer le : {{ tome.readingStartDate|dateFNoDay }}</li>{% endif %}{% if tome.readingEndDate %}<li>Terminer le : {{ tome.readingEndDate|dateFNoDay }}</li>{% endif %}</ul>" {%endif%}>
+                <img class="rounded mx-auto d-block img-manga img-modal-trigger" src="{{ image.path }}" width="150px"
+                     alt="{{ image.alt }}" data-bs-toggle="modal" data-bs-target="#imageModal"
+                     onclick="dataModal('{{ image.path }}', '<li>Nombre de pages : {{ tome.page }}</li><li>Date de sortie : {{ tome.releaseDate|dateFNoDay }}</li>{% if tome.readingStartDate %}<li>Commencer le : {{ tome.readingStartDate|dateFNoDay }}</li>{% endif %}{% if tome.readingEndDate %}<li>Terminer le : {{ tome.readingEndDate|dateFNoDay }}</li>{% endif %}')">
                 <p class="text-center"><a class="text-decoration-none text-black"
                                           href="{{ path('manga_tome_edit', {'id': tome.id}) }}">Tome {{ tome.tomeNumber }}</a>
                 </p>
@@ -117,6 +120,10 @@
                 <div id="imageModal" class="modal-body text-center" style="overflow: hidden;">
                     <img src="" style="max-height: calc(100vh - 50px); width: auto; max-width: 100%;">
                 </div>
+                <div>
+                    <ul id="modalInfoTome">
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
@@ -131,15 +138,14 @@
             return new bootstrap.Tooltip(tooltipTriggerEl)
         })
 
-        $(document).ready(function () {
-            $('.img-modal-trigger').click(function () {
-                var imgUrl = $(this).data('img-url');
-                $('#imageModal img').attr('src', imgUrl);
-            });
-        });
+        function dataModal(imgUrl, data) {
+            $('#imageModal img').attr('src', imgUrl);
+
+            $('#modalInfoTome').append(data);
+        }
 
         function safeDelete() {
-            if (confirm('Supprimer le manga : {{manga.name}} ?')) {
+            if (confirm('Supprimer le manga : {{ manga.name }} ?')) {
                 window.location = "{{ path('manga_delete', {'id': manga.id}) }}";
             }
 
