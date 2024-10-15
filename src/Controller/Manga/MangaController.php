@@ -137,12 +137,80 @@ class MangaController extends AbstractController
             $managerRegistry->getManager()->persist($manga);
             $managerRegistry->getManager()->flush();
 
-            return $this->redirectToRoute('manga');
+            return $this->redirectToRoute('manga_details', [
+                'id' => $manga->getId()
+            ]);
         }
+
         return $this->render('manga/manga/add.html.twig', [
+            'form_title' => 'Modifier un manga',
             'form' => $form->createView(),
             'controller_name' => 'MangaController',
             'navLinkId' => 'manga',
         ]);
     }
+
+
+    #[Route('/manga/edit/{id}', name: 'manga_edit')]
+    public function edit(MangaRepository $mangaRepository, ManagerRegistry $managerRegistry, Request $request, StrSpecialCharsLower $strSpecialCharsLower, $id): Response
+    {
+
+        $manga = $mangaRepository->find($id);
+
+        if (!$manga) {
+            return $this->redirectToRoute('manga_add');
+        }
+
+        $form = $this->createForm(MangaFormType::class, $manga);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $manga->setSlug($strSpecialCharsLower->main($manga->getName()));
+
+            $managerRegistry->getManager()->persist($manga);
+            $managerRegistry->getManager()->flush();
+
+            return $this->redirectToRoute('manga_details', [
+                'id' => $manga->getId()
+            ]);
+        }
+
+        return $this->render('manga/manga/add.html.twig', [
+            'form_title' => 'Modifier un manga',
+            'form' => $form->createView(),
+            'controller_name' => 'MangaController',
+            'navLinkId' => 'manga',
+        ]);
+    }
+
+
+    #[Route('/manga/delete/{id}', name: 'manga_delete')]
+    public function delete(MangaRepository $mangaRepository, ManagerRegistry $managerRegistry, Request $request, StrSpecialCharsLower $strSpecialCharsLower, $id): Response
+    {
+
+        $em = $managerRegistry->getManager();
+
+        $manga = $mangaRepository->find($id);
+
+        if (!$manga) {
+            return $this->redirectToRoute('manga');
+        }
+
+        $tomes = $manga->getMangaTomes();
+
+        foreach ($tomes as $tome) {
+            $em->remove($tome);
+        }
+
+        $em->remove($manga);
+        $em->flush();
+
+        $this->addFlash('success', 'Manga suprimé');
+
+        return $this->redirectToRoute('manga');
+    }
+
+
 }

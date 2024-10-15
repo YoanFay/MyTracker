@@ -44,20 +44,19 @@ class MangaFormType extends AbstractType
                 'attr' => ['class' => 'form-control'],
             ])
             ->add('genres', EntityType::class, [
-                'class' => MangaGenre::class, // Entité source
-                'choice_label' => 'name', // Propriété de l'entité à afficher dans la liste déroulante
-                'attr' => ['class' => 'mx-2 text-red'],
-                'multiple' => true, // Permet la sélection multiple
-                'expanded' => true, // Affiche les options sous forme de cases à cocher
+                'class' => MangaGenre::class,
+                'choice_label' => 'name',
+                'attr' => ['class' => 'select2 w-100'],
+                'multiple' => true,
+                'expanded' => false,
                 'required' => false
             ])
             ->add('themes', EntityType::class, [
-                'class' => MangaTheme::class, // Entité source
-                'choice_label' => 'name', // Propriété de l'entité à afficher dans la liste déroulante
-                'choice_attr' => ['class' => 'mx-2'],
-                'attr' => ['class' => 'mx-2'],
-                'multiple' => true, // Permet la sélection multiple
-                'expanded' => true, // Affiche les options sous forme de cases à cocher
+                'class' => MangaTheme::class,
+                'choice_label' => 'name',
+                'attr' => ['class' => 'select2 w-100'],
+                'multiple' => true,
+                'expanded' => false,
                 'required' => false
             ])
             ->add('author', EntityType::class, [
@@ -78,7 +77,7 @@ class MangaFormType extends AbstractType
             ])
             ->add('submit', SubmitType::class, [
                 'label' => "Valider",
-                'attr' => ['class' => 'btn btn-primary mt-1'],
+                'attr' => ['class' => 'btn btn-primary mt-2'],
             ]);
     }
 
