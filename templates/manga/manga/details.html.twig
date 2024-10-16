@@ -97,10 +97,10 @@
                     {% if not ("Android" in app.request.headers.get('User-Agent') or "Mobile" in app.request.headers.get('User-Agent')) %}
                 data-bs-toggle="tooltip"
                 data-bs-placement="bottom" data-bs-html="true"
-                title="<ul><li>Nombre de pages : {{ tome.page }}</li><li>Date de sortie : {{ tome.releaseDate|dateFNoDay }}</li>{% if tome.readingStartDate %}<li>Commencer le : {{ tome.readingStartDate|dateFNoDay }}</li>{% endif %}{% if tome.readingEndDate %}<li>Terminer le : {{ tome.readingEndDate|dateFNoDay }}</li>{% endif %}</ul>" {% endif %}>
+                title="<ul>{%if tome.page > 0%}<li>Nombre de pages : {{ tome.page }}</li>{%endif%}<li>Date de sortie : {{ tome.releaseDate|dateFNoDay }}</li>{% if tome.readingStartDate %}<li>Commencer le : {{ tome.readingStartDate|dateFNoDay }}</li>{% endif %}{% if tome.readingEndDate %}<li>Terminer le : {{ tome.readingEndDate|dateFNoDay }}</li>{% endif %}</ul>" {% endif %}>
                 <img class="rounded mx-auto d-block img-manga img-modal-trigger" src="{{ image.path }}" width="150px"
                      alt="{{ image.alt }}" data-bs-toggle="modal" data-bs-target="#imageModal"
-                     onclick="dataModal('{{ image.path }}', '<li>Nombre de pages : {{ tome.page }}</li><li>Date de sortie : {{ tome.releaseDate|dateFNoDay }}</li>{% if tome.readingStartDate %}<li>Commencer le : {{ tome.readingStartDate|dateFNoDay }}</li>{% endif %}{% if tome.readingEndDate %}<li>Terminer le : {{ tome.readingEndDate|dateFNoDay }}</li>{% endif %}', {{ tome.id }}, {{ tome.tomeNumber }})">
+                     onclick="dataModal('{{ image.path }}', '{%if tome.page > 0%}<li>Nombre de pages : {{ tome.page }}</li>{%endif%}<li>Date de sortie : {{ tome.releaseDate|dateFNoDay }}</li>{% if tome.readingStartDate %}<li>Commencer le : {{ tome.readingStartDate|dateFNoDay }}</li>{% endif %}{% if tome.readingEndDate %}<li>Terminer le : {{ tome.readingEndDate|dateFNoDay }}</li>{% endif %}', {{ tome.id }}, {{ tome.tomeNumber }})">
                 <p class="text-center"><a class="text-decoration-none text-black"
                                           href="{{ path('manga_tome_edit', {'id': tome.id}) }}">Tome {{ tome.tomeNumber }}</a>
                 </p>
