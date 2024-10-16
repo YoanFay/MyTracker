@@ -74,7 +74,9 @@ class GameTrackerController extends AbstractController
             $entityManager->persist($gameTracker);
             $entityManager->flush();
             
-            return $this->redirectToRoute('game_index');
+            return $this->redirectToRoute('game_details', [
+                'id' => $id
+            ]);
         }
         
         if($gameTracker->getEndTime()){

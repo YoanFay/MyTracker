@@ -46,12 +46,12 @@ class GameController extends AbstractController
 
 
     #[Route('/{id}/details', name: 'game_details', methods: ['GET'])]
-    public function show(GameRepository $gameRepository, $id): Response
+    public function show(GameRepository $gameRepository, TimeService $timeService, $id): Response
     {
 
         $game = $gameRepository->find($id);
 
-        return $this->render('game/game/show.html.twig', [
+        return $this->render('game/game/details.html.twig', [
             'game' => $game,
             'navLinkId' => 'game'
         ]);
@@ -83,16 +83,23 @@ class GameController extends AbstractController
     */
 
 
-    #[Route('/{id}/delete', name: 'game_delete', methods: ['POST'])]
+    #[Route('/{id}/delete', name: 'game_delete')]
     public function delete(Request $request, EntityManagerInterface $entityManager, GameRepository $gameRepository, $id): Response
     {
 
         $game = $gameRepository->find($id);
 
-        if ($this->isCsrfTokenValid('delete'.$game->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($game);
-            $entityManager->flush();
+        $gameTrackers = $game->getGameTrackers();
+
+        foreach ($gameTrackers as $gameTracker){
+
+            $entityManager->remove($gameTracker);
+
         }
+
+        $entityManager->remove($game);
+
+        $entityManager->flush();
 
         return $this->redirectToRoute('game_index', [], Response::HTTP_SEE_OTHER);
     }

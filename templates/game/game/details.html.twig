@@ -1,0 +1,141 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ game.name }}{% endblock %}
+
+{% block body %}
+
+    <div class="d-flex flex-lg-row flex-column-reverse justify-content-between p-3">
+        <div>
+            <h1>
+                {{ game.name }} - {{ game.platforms[0].name }}
+                <a class="d-inline text-decoration-none" href="{{ path('game_tracker_edit', {'id': game.id}) }}"
+                   data-bs-toggle="tooltip"
+                   data-bs-placement="bottom" data-bs-html="true"
+                   title="">
+                    <i class="material-icons text-primary">visibility</i>
+                </a>
+                <i class="material-icons text-danger d-inline text-decoration-none cursor-click" onclick="safeDelete()"
+                   data-bs-toggle="tooltip"
+                   data-bs-placement="bottom" data-bs-html="true"
+                   title="Supprimer le jeu">delete</i>
+            </h1>
+            <br>
+            <div class="d-flex flex-column flex-wrap">
+                <div class="m-2">
+                    <strong>Information : </strong>
+                    <ul>
+                        <li data-toggle="tooltip" data-placement="top" title="{{ game.releaseDate|age }}">
+                            Date de sortie : {{ game.releaseDate|dateFNoDay }}
+                        </li>
+                        {% if game.gameTrackers and game.gameTrackers.values %}
+
+                            {% set gameTracker = game.gameTrackers.values[0] %}
+
+                            {% if gameTracker.startDate %}
+                                <li data-toggle="tooltip" data-placement="top" title="{{ gameTracker.startDate|age }}">
+                                    Commencer le : {{ gameTracker.startDate|dateFNoDay }}
+                                </li>
+                            {% endif %}
+
+                            {% if gameTracker.endDate %}
+                                <li data-toggle="tooltip" data-placement="top" title="{{ gameTracker.endDate|age }}">
+                                    Fini le : {{ gameTracker.endDate|dateFNoDay }}
+                                </li>
+                            {% endif %}
+
+                            {% if gameTracker.endTime %}
+                                <li>
+                                    Fini en : {{ gameTracker.endTime|SToHM }}
+                                </li>
+                            {% endif %}
+
+                            {% if gameTracker.completeDate %}
+                                <li data-toggle="tooltip" data-placement="top" title="{{ gameTracker.completeDate|age }}">
+                                    Fini à 100% le : {{ gameTracker.completeDate|dateFNoDay }}
+                                </li>
+                            {% endif %}
+
+                            {% if gameTracker.completeTime %}
+                                <li>
+                                    Fini à 100% en : {{ gameTracker.completeTime|SToHM }}
+                                </li>
+                            {% endif %}
+
+                        {% endif %}
+                    </ul>
+                </div>
+                {% if game.serie %}
+                    <div class="m-2">
+                        <strong>Série : </strong>
+                        <ul>
+                            <li>{{ game.serie.name }}</li>
+                        </ul>
+                    </div>
+                {% endif %}
+                <div class="m-2">
+                    <strong>Développer par : </strong>
+                    <ul>
+                        {% for developer in game.developers %}
+                            <li>{{ developer.name }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="m-2">
+                    <strong>Éditer par : </strong>
+                    <ul>
+                        {% for publisher in game.publishers %}
+                            <li>{{ publisher.name }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="m-2">
+                    <strong>Mode de jeux : </strong>
+                    <ul>
+                        {% for mode in game.modes %}
+                            <li>{{ mode.name }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="m-2">
+                    <strong>Genres : </strong>
+                    <ul>
+                        {% for genre in game.genre %}
+                            <li>{{ genre.name }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="m-2">
+                    <strong>Thèmes : </strong>
+                    <ul>
+                        {% for theme in game.themes %}
+                            <li>{{ theme.name }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% set image = infoGame(game, app.environment) %}
+        <img src="{{ image.path }}" alt="{{ image.alt }}"
+             width="auto" height="500px">
+    </div>
+{% endblock %}
+
+
+{% block javascript %}
+    <script>
+
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+
+        function safeDelete() {
+            if (confirm("Supprimer le jeu : {{ game.name|raw }} ?")) {
+                window.location = "{{ path('game_delete', {'id': game.id}) }}";
+            }
+
+
+        }
+
+    </script>
+{% endblock %}
