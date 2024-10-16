@@ -5,35 +5,30 @@
 {% block body %}
     <h1 class="d-inline">Liste des jeux</h1><a class="d-inline" href="{{ path('game_add') }}"><i class="material-icons">add_circle</i></a>
 
-    <div class="mt-3">
-        <button class="btn btn-primary littleBtn my-1" onclick="gameList('name', 'ASC', 1)">Tout</button>
-        <button class="btn btn-primary littleBtn my-1" onclick="gameList('name', 'ASC', 2)">Jeux pas commencé</button>
-        <button class="btn btn-primary littleBtn my-1" onclick="gameList('name', 'ASC', 3)">Jeux en cours</button>
-        <button class="btn btn-primary littleBtn my-1" onclick="gameList('name', 'ASC', 4)">Jeux terminé</button>
-        <button class="btn btn-primary littleBtn my-1" onclick="gameList('name', 'ASC', 5)">Jeux terminés à 100%</button>
+    <div id="searchDiv" class="mt-4 ms-2">
+        <label class="col-12">Recherche</label>
+        <div class="d-flex flex-row">
+            <input id="search" type="text" class="form-control me-2" onkeyup="search()">
+            <select id="gameStatus" onchange="search()" class="form-control">
+                <option value="1">Tout</option>
+                <option value="2">Jeux pas commencé</option>
+                <option value="3">Jeux en cours</option>
+                <option value="4">Jeux terminé</option>
+                <option value="5">Jeux terminés à 100%</option>
+            </select>
+        </div>
     </div>
 
-    <table id="tableGame" class="table table-hover table-striped table-bordered tablesorter littleFont">
-        <thead>
-        <tr class="col-12">
-            <th class="col-1"></th>
-            <th class="col-1">Nom</th>
-            <th class="col-1">Série</th>
-            <th class="col-1">Sortie le :</th>
-            <th class="col-1">Commencer le :</th>
-            <th class="col-1">Fini le :</th>
-            <th class="col-1">Fini en :</th>
-            <th class="col-1">Fini à 100% le :</th>
-            <th class="col-1">Fini à 100% en :</th>
-        </tr>
-        </thead>
-        <tbody id="gameList" data-list="1">
-        </tbody>
-    </table>
-    <div id="loadSpin" class="card-body py-1 py-lg-0">
-        <div class="d-flex justify-content-center align-items-center">
-            <div class="spinner-border" role="status">
-                <span class="sr-only"></span>
+
+    <div id="gameList" class="col-12 d-flex flex-row justify-content-between flex-wrap">
+
+    </div>
+    <div id="loadSpin" class="col-12 d-flex flex-row h-75">
+        <div class="card-body py-1 py-lg-0 h-100">
+            <div class="d-flex justify-content-center align-items-center h-100">
+                <div class="spinner-border" role="status">
+                    <span class="sr-only"></span>
+                </div>
             </div>
         </div>
     </div>
@@ -44,30 +39,31 @@
 
         $(document).ready(function () {
 
-            gameList('name', 'ASC');
+            search();
+
         })
 
-        function gameList(sort = 'name', order = 'ASC', choice = null) {
+        function openDetail(href) {
+            window.location = href;
+        }
 
-            if (choice == null) {
-                $('#gameList').attr('data-list');
-            }
+        function search() {
+
+            const choice = $('#gameStatus').find(":selected").val();
+            const text = $('#search').val();
 
             $('#loadSpin').removeClass('d-none');
-            $("#gameList").html('').attr('data-list', choice);
+            $("#gameList").html('');
             $.ajax({
                 url: "{{ path('game_list') }}",
                 method: "POST",
                 data: {
                     'choice': choice,
-                    'sort': sort,
-                    'order': order
+                    'text': text
                 },
                 success: function (data) {
                     $("#gameList").html(data);
                     $('#loadSpin').addClass('d-none');
-
-                    $("#tableGame").trigger('update').tablesorter({'resort': true});
                 }
             })
         }

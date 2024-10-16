@@ -36,6 +36,12 @@ class TimeService
         
         // Reste des minutes après la conversion en heures
         $minutes %= 60;
+
+        if ($minutes === 0){
+            return $heures.'h';
+        }elseif ($minutes < 10){
+            return $heures.'h0'.$minutes;
+        }
         
         return $heures.'h'.$minutes;
     }

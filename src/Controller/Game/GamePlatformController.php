@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/game/game/platform')]
+#[Route('/game/platform')]
 class GamePlatformController extends AbstractController
 {
     #[Route('/', name: 'game_platform_index', methods: ['GET'])]

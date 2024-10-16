@@ -18,88 +18,135 @@ class GameRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
+
         parent::__construct($registry, Game::class);
     }
 
+
     /**
      * @return Game[] Returns an array of Game
      */
-    public function findAllFilter($sort, $order): array
+    public function findAllFilter($text): array
     {
 
-        return $this->createQueryBuilder('g')
-            ->orderBy('g.'.$sort, $order)
+        $qb = $this->createQueryBuilder('g');
+
+
+        if ($text) {
+            $qb
+                ->andWhere('g.name LIKE :text')
+                ->setParameter('text', '%'.$text.'%');
+        }
+
+        return $qb
+            ->orderBy('g.name')
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
 
     }
 
+
     /**
      * @return Game[] Returns an array of Game
      */
-    public function findGameProgress(): array
+    public function findGameProgress($text): array
     {
 
-        return $this->createQueryBuilder('g')
-            ->leftJoin('g.gameTrackers', 't')
+        $qb = $this->createQueryBuilder('g')
+            ->leftJoin('g.gameTrackers', 't');
+
+
+        if ($text) {
+            $qb
+                ->andWhere('g.name LIKE :text')
+                ->setParameter('text', '%'.$text.'%');
+        }
+
+        return $qb
             ->andWhere('t.startDate IS NOT NULL')
             ->andWhere('t.endDate IS NULL')
             ->orderBy('g.name')
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
 
     }
+
 
     /**
      * @return Game[] Returns an array of Game
      */
-    public function findGameEnd(): array
+    public function findGameEnd($text): array
     {
 
-        return $this->createQueryBuilder('g')
-            ->leftJoin('g.gameTrackers', 't')
+        $qb = $this->createQueryBuilder('g')
+            ->leftJoin('g.gameTrackers', 't');
+
+
+        if ($text) {
+            $qb
+                ->andWhere('g.name LIKE :text')
+                ->setParameter('text', '%'.$text.'%');
+        }
+
+        return $qb
             ->andWhere('t.endDate IS NOT NULL')
             ->andWhere('t.completeDate IS NULL')
             ->orderBy('g.name')
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
 
     }
+
 
     /**
      * @return Game[] Returns an array of Game
      */
-    public function findGameFullEnd(): array
+    public function findGameFullEnd($text): array
     {
 
-        return $this->createQueryBuilder('g')
-            ->leftJoin('g.gameTrackers', 't')
+        $qb = $this->createQueryBuilder('g')
+            ->leftJoin('g.gameTrackers', 't');
+
+
+        if ($text) {
+            $qb
+                ->andWhere('g.name LIKE :text')
+                ->setParameter('text', '%'.$text.'%');
+        }
+
+        return $qb
             ->andWhere('t.completeDate IS NOT NULL')
             ->orderBy('g.name')
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
 
     }
+
 
     /**
      * @return Game[] Returns an array of Game
      */
-    public function findGameNotStart(): array
+    public function findGameNotStart($text): array
     {
 
-        return $this->createQueryBuilder('g')
-            ->leftJoin('g.gameTrackers', 't')
+        $qb = $this->createQueryBuilder('g')
+            ->leftJoin('g.gameTrackers', 't');
+
+
+        if ($text) {
+            $qb
+                ->andWhere('g.name LIKE :text')
+                ->setParameter('text', '%'.$text.'%');
+        }
+
+        return $qb
             ->andWhere('t.startDate IS NULL')
             ->orderBy('g.name')
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
 
     }
+
 
     /**
      * @return Game[] Returns an array of Game
@@ -110,10 +157,10 @@ class GameRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('g')
             ->andWhere('g.serie IS NULL')
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
 
     }
+
 
     /**
      * @return Game[] Returns an array of Game
@@ -125,10 +172,10 @@ class GameRepository extends ServiceEntityRepository
             ->select('COUNT(t.endDate) AS COUNT')
             ->leftJoin('g.gameTrackers', 't')
             ->getQuery()
-            ->getOneOrNullResult()
-            ;
+            ->getOneOrNullResult();
 
     }
+
 
     /**
      * @return Game[] Returns an array of Game
@@ -144,10 +191,10 @@ class GameRepository extends ServiceEntityRepository
             ->andWhere('t.endDate <= :end')
             ->setParameter('end', $year.'-12-31')
             ->getQuery()
-            ->getOneOrNullResult()
-            ;
+            ->getOneOrNullResult();
 
     }
+
 
     /**
      * @return Game[] Returns an array of Game
@@ -159,10 +206,10 @@ class GameRepository extends ServiceEntityRepository
             ->select('COUNT(t.completeDate) AS COUNT')
             ->leftJoin('g.gameTrackers', 't')
             ->getQuery()
-            ->getOneOrNullResult()
-            ;
+            ->getOneOrNullResult();
 
     }
+
 
     /**
      * @return Game[] Returns an array of Game
@@ -178,8 +225,7 @@ class GameRepository extends ServiceEntityRepository
             ->andWhere('t.completeDate <= :end')
             ->setParameter('end', $year.'-12-31')
             ->getQuery()
-            ->getOneOrNullResult()
-            ;
+            ->getOneOrNullResult();
 
     }
 

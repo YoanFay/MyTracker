@@ -21,6 +21,7 @@ use App\Repository\GameModeRepository;
 use App\Repository\GameSerieRepository;
 use App\Repository\GameThemeRepository;
 use App\Service\StrSpecialCharsLower;
+use App\Service\TimeService;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use GuzzleHttp\Client;
@@ -31,7 +32,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/game/game')]
+#[Route('/game')]
 class GameController extends AbstractController
 {
     #[Route('/', name: 'game_index', methods: ['GET'])]
@@ -44,30 +45,7 @@ class GameController extends AbstractController
     }
 
 
-    #[Route('/new', name: 'game_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
-    {
-
-        $game = new Game();
-        $form = $this->createForm(GameType::class, $game);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($game);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('game_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->renderForm('game/game/new.html.twig', [
-            'game' => $game,
-            'form' => $form,
-            'navLinkId' => 'game'
-        ]);
-    }
-
-
-    #[Route('/{id}/details', name: 'game_show', methods: ['GET'])]
+    #[Route('/{id}/details', name: 'game_details', methods: ['GET'])]
     public function show(GameRepository $gameRepository, $id): Response
     {
 
@@ -79,29 +57,30 @@ class GameController extends AbstractController
         ]);
     }
 
-/*
-    #[Route('/{id}/edit', name: 'game_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, EntityManagerInterface $entityManager, GameRepository $gameRepository, $id): Response
-    {
 
-        $game = $gameRepository->find($id);
+    /*
+        #[Route('/{id}/edit', name: 'game_edit', methods: ['GET', 'POST'])]
+        public function edit(Request $request, EntityManagerInterface $entityManager, GameRepository $gameRepository, $id): Response
+        {
 
-        $form = $this->createForm(GameType::class, $game);
-        $form->handleRequest($request);
+            $game = $gameRepository->find($id);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
+            $form = $this->createForm(GameType::class, $game);
+            $form->handleRequest($request);
 
-            return $this->redirectToRoute('game_index', [], Response::HTTP_SEE_OTHER);
+            if ($form->isSubmitted() && $form->isValid()) {
+                $entityManager->flush();
+
+                return $this->redirectToRoute('game_index', [], Response::HTTP_SEE_OTHER);
+            }
+
+            return $this->renderForm('game/game/edit.html.twig', [
+                'game' => $game,
+                'form' => $form,
+                'navLinkId' => 'game'
+            ]);
         }
-
-        return $this->renderForm('game/game/edit.html.twig', [
-            'game' => $game,
-            'form' => $form,
-            'navLinkId' => 'game'
-        ]);
-    }
-*/
+    */
 
 
     #[Route('/{id}/delete', name: 'game_delete', methods: ['POST'])]
@@ -183,7 +162,7 @@ class GameController extends AbstractController
 
             $idParent = null;
 
-            if (isset($data['version_parent'])){
+            if (isset($data['version_parent'])) {
                 $idParent = $data['version_parent'];
             }
 
@@ -405,7 +384,7 @@ class GameController extends AbstractController
 
             $dataSeries = json_decode($response->getBody(), true);
 
-            if (empty($dataSerie) && $idParent){
+            if (empty($dataSerie) && $idParent) {
 
                 $response = $client->post("https://api.igdb.com/v4/collections", [
                     'headers' => [
@@ -523,28 +502,76 @@ class GameController extends AbstractController
 
     #[Route('/list', name: 'game_list', methods: ['POST'])]
     public function list(
-        Request $request,
-        GameRepository $gameRepository
-    ):Response{
+        Request        $request,
+        GameRepository $gameRepository,
+        TimeService    $timeService
+    ): Response
+    {
 
         $choice = $request->request->get('choice', 1);
-        $sort = $request->request->get('sort', 'name');
-        $order = $request->request->get('order', 'DESC');
+        $text = $request->request->get('text');
 
         $choice = intval($choice);
 
         $games = match ($choice) {
-            2 => $gameRepository->findGameNotStart(),
-            3 => $gameRepository->findGameProgress(),
-            4 => $gameRepository->findGameEnd(),
-            5 => $gameRepository->findGameFullEnd(),
-            default => $gameRepository->findAllFilter($sort, $order),
+            2 => $gameRepository->findGameNotStart($text),
+            3 => $gameRepository->findGameProgress($text),
+            4 => $gameRepository->findGameEnd($text),
+            5 => $gameRepository->findGameFullEnd($text),
+            default => $gameRepository->findAllFilter($text),
         };
+
+        $gamesInfo = [];
+
+        foreach ($games as $game) {
+
+            $tooltip = "<ul>";
+
+            if ($game->getSerie()) {
+                $tooltip .= "<li>Série : ".$game->getSerie()->getName()."</li>";
+            }
+
+            $tooltip .= "<li>Date de sortie : ".$timeService->frenchFormatDateNoDay($game->getReleaseDate())."</li>";
+
+            if ($game->getGameTrackers() && $game->getGameTrackers()->getValues()){
+
+                $gameTracker = $game->getGameTrackers()->getValues()[0];
+
+                if ($gameTracker->getStartDate()){
+                    $tooltip .= "<li>Commencer le : ".$timeService->frenchFormatDateNoDay($gameTracker->getStartDate())."</li>";
+                }
+
+                if ($gameTracker->getEndDate()){
+                    $tooltip .= "<li>Fini le : ".$timeService->frenchFormatDateNoDay($gameTracker->getEndDate())."</li>";
+                }
+
+                if ($gameTracker->getEndTime()){
+                    $tooltip .= "<li>Fini en : ".$timeService->convertirSecondes($gameTracker->getEndTime())."</li>";
+                }
+
+                if ($gameTracker->getCompleteDate()){
+                    $tooltip .= "<li>Fini à 100% le : ".$timeService->frenchFormatDateNoDay($gameTracker->getCompleteDate())."</li>";
+                }
+
+                if ($gameTracker->getCompleteTime()){
+                    $tooltip .= "<li>Fini à 100% en : ".$timeService->convertirSecondes($gameTracker->getCompleteTime())."</li>";
+                }
+
+            }
+
+            $tooltip .= "</ul>";
+
+            $gamesInfo[] = [
+                "entity" => $game,
+                "tooltip" => $tooltip,
+            ];
+
+        }
 
         return $this->render(
             'game/game/list.html.twig',
             [
-                'games' => $games
+                'gamesInfo' => $gamesInfo
             ]
         );
     }

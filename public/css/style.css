@@ -147,6 +147,10 @@ openbtn
   width: 25%;
 }
 
+#search, #gameStatus{
+  width: 25%;
+}
+
 @media only screen and (max-width: 600px) {
 
   .body-menu{
@@ -185,5 +189,9 @@ openbtn
 
   .img-manga{
     height: initial;
+  }
+
+  #search, #gameStatus{
+    width: 50%;
   }
 }

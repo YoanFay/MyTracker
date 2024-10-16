@@ -2,6 +2,7 @@
 
 namespace App\Twig;
 
+use App\Entity\Game;
 use App\Entity\Manga;
 use App\Entity\MangaTome;
 use App\Entity\Serie;
@@ -26,6 +27,7 @@ class Image extends AbstractExtension
             new TwigFunction('infoImageMovie', [$this, 'infoImageMovie']),
             new TwigFunction('infoImageManga', [$this, 'infoImageManga']),
             new TwigFunction('infoImageMangaTome', [$this, 'infoImageMangaTome']),
+            new TwigFunction('infoGame', [$this, 'infoGame']),
         ];
     }
 
@@ -140,6 +142,31 @@ class Image extends AbstractExtension
             return [
                 'path' => $path,
                 'alt' => $mangaTome->getTomeNumber()." poster"
+            ];
+
+        }
+
+        return [
+            'path' => "/image/visuel-a-venir.jpg",
+            'alt' => "Visuel à venir"
+        ];
+
+    }
+
+    public function infoGame(Game $game, $env): array
+    {
+
+        $path = $game->getCover();
+
+        if ($path && file_exists($this->kernel->getProjectDir().$path)){
+
+            if ($env === "dev"){
+                $path = str_replace('public/', '',$path);
+            }
+
+            return [
+                'path' => $path,
+                'alt' => $game->getName()." poster"
             ];
 
         }
