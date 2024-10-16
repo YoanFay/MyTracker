@@ -15,13 +15,13 @@
                 <a class="d-inline text-decoration-none" href="{{ path('manga_edit', {'id': manga.id}) }}"
                    data-bs-toggle="tooltip"
                    data-bs-placement="bottom" data-bs-html="true"
-                   title="Modifier un tome">
+                   title="Modifier le manga">
                     <i class="material-icons text-warning">edit_note</i>
                 </a>
                 <i class="material-icons text-danger d-inline text-decoration-none cursor-click" onclick="safeDelete()"
                    data-bs-toggle="tooltip"
                    data-bs-placement="bottom" data-bs-html="true"
-                   title="Supprimer un tome">delete</i>
+                   title="Supprimer le manga">delete</i>
             </h1>
             <ul>
                 <li><strong>Date de sortie</strong> : {{ manga.releaseDate|dateFNoDay }}</li>
@@ -95,12 +95,12 @@
             {% set image = infoImageMangaTome(tome, app.environment) %}
             <div class="cursor-click container col-lg-2 col-4 px-3 my-4 d-flex flex-column"
                     {% if not ("Android" in app.request.headers.get('User-Agent') or "Mobile" in app.request.headers.get('User-Agent')) %}
-                 data-bs-toggle="tooltip"
-                 data-bs-placement="bottom" data-bs-html="true"
-                 title="<ul><li>Nombre de pages : {{ tome.page }}</li><li>Date de sortie : {{ tome.releaseDate|dateFNoDay }}</li>{% if tome.readingStartDate %}<li>Commencer le : {{ tome.readingStartDate|dateFNoDay }}</li>{% endif %}{% if tome.readingEndDate %}<li>Terminer le : {{ tome.readingEndDate|dateFNoDay }}</li>{% endif %}</ul>" {%endif%}>
+                data-bs-toggle="tooltip"
+                data-bs-placement="bottom" data-bs-html="true"
+                title="<ul><li>Nombre de pages : {{ tome.page }}</li><li>Date de sortie : {{ tome.releaseDate|dateFNoDay }}</li>{% if tome.readingStartDate %}<li>Commencer le : {{ tome.readingStartDate|dateFNoDay }}</li>{% endif %}{% if tome.readingEndDate %}<li>Terminer le : {{ tome.readingEndDate|dateFNoDay }}</li>{% endif %}</ul>" {% endif %}>
                 <img class="rounded mx-auto d-block img-manga img-modal-trigger" src="{{ image.path }}" width="150px"
                      alt="{{ image.alt }}" data-bs-toggle="modal" data-bs-target="#imageModal"
-                     onclick="dataModal('{{ image.path }}', '<li>Nombre de pages : {{ tome.page }}</li><li>Date de sortie : {{ tome.releaseDate|dateFNoDay }}</li>{% if tome.readingStartDate %}<li>Commencer le : {{ tome.readingStartDate|dateFNoDay }}</li>{% endif %}{% if tome.readingEndDate %}<li>Terminer le : {{ tome.readingEndDate|dateFNoDay }}</li>{% endif %}')">
+                     onclick="dataModal('{{ image.path }}', '<li>Nombre de pages : {{ tome.page }}</li><li>Date de sortie : {{ tome.releaseDate|dateFNoDay }}</li>{% if tome.readingStartDate %}<li>Commencer le : {{ tome.readingStartDate|dateFNoDay }}</li>{% endif %}{% if tome.readingEndDate %}<li>Terminer le : {{ tome.readingEndDate|dateFNoDay }}</li>{% endif %}', {{ tome.id }}, {{ tome.tomeNumber }})">
                 <p class="text-center"><a class="text-decoration-none text-black"
                                           href="{{ path('manga_tome_edit', {'id': tome.id}) }}">Tome {{ tome.tomeNumber }}</a>
                 </p>
@@ -114,7 +114,18 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="imageModalLabel">Image en Plein Écran</h5>
+                    <h5 class="modal-title" id="imageModalLabel">
+                        Détails du Tome
+                        <i class="material-icons text-warning d-inline text-decoration-none cursor-click" id="editTome" data-tome-id="" data-tome-number="" onclick="editTome()"
+                           data-bs-toggle="tooltip"
+                           data-bs-placement="bottom" data-bs-html="true"
+                           title="Modifier le tome">edit_note
+                        </i>
+                        <i class="material-icons text-danger d-inline text-decoration-none cursor-click"
+                           onclick="safeTomeDelete()"
+                           data-bs-toggle="tooltip"
+                           data-bs-placement="bottom" data-bs-html="true"
+                           title="Supprimer le tome">delete</i></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div id="imageModal" class="modal-body text-center" style="overflow: hidden;">
@@ -138,8 +149,9 @@
             return new bootstrap.Tooltip(tooltipTriggerEl)
         })
 
-        function dataModal(imgUrl, data) {
+        function dataModal(imgUrl, data, id, number) {
             $('#imageModal img').attr('src', imgUrl);
+            $('#editTome').attr('data-tome-id', id).attr('data-tome-number', number);
 
             $('#modalInfoTome').append(data);
         }
@@ -150,6 +162,28 @@
             }
 
 
+        }
+
+        function safeTomeDelete() {
+
+
+            var tomeNumber = $('#editTome').attr('data-tome-number');
+
+            if (confirm('Supprimer le tome ' + tomeNumber + ' ?')) {
+                var idTome = $('#editTome').attr('data-tome-id');
+
+                var baseUrl = "{{ path('manga_tome_delete', {'id': 'ID_PLACEHOLDER'}) }}";
+                window.location.href = baseUrl.replace('ID_PLACEHOLDER', idTome);
+            }
+
+
+        }
+
+        function editTome(){
+            var idTome = $('#editTome').attr('data-tome-id');
+
+            var baseUrl = "{{ path('manga_tome_edit', {'id': 'ID_PLACEHOLDER'}) }}";
+            window.location.href = baseUrl.replace('ID_PLACEHOLDER', idTome);
         }
 
     </script>

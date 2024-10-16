@@ -210,4 +210,17 @@ class MangaTomeController extends AbstractController
             'id' => $tome->getManga()->getId(),
         ]);
     }
+
+    #[Route('manga/tome/delete/{id}', name: 'manga_tome_delete')]
+    public function delete(ManagerRegistry $managerRegistry, MangaTomeRepository $mangaTomeRepository, $id): Response
+    {
+        $tome = $mangaTomeRepository->findOneBy(['id' => $id]);
+
+        $managerRegistry->getManager()->remove($tome);
+        $managerRegistry->getManager()->flush();
+
+        return $this->redirectToRoute('manga_details', [
+            'id' => $tome->getManga()->getId(),
+        ]);
+    }
 }
