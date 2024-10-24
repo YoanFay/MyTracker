@@ -180,7 +180,7 @@ class StatsController extends AbstractController
 
         $aujourdHui = new DateTime();
 
-        $debutAnnee = new DateTime($aujourdHui->format('Y-01-01'));
+        $debutSite = new DateTime($aujourdHui->format('2024-01-01'));
 
         $joursCount = [
             'Monday' => 0,
@@ -192,11 +192,31 @@ class StatsController extends AbstractController
             'Sunday' => 0
         ];
 
-        // Boucler à travers chaque jour depuis le début de l'année
-        while ($debutAnnee <= $aujourdHui) {
-            $jourSemaine = $debutAnnee->format('l');
+        $moisCount = [
+            'January' => 0,
+            'February' => 0,
+            'March' => 0,
+            'April' => 0,
+            'May' => 0,
+            'June' => 0,
+            'July' => 0,
+            'August' => 0,
+            'September' => 0,
+            'October' => 0,
+            'November' => 0,
+            'December' => 0,
+        ];
+
+        $saveMonth = null;
+        while ($debutSite <= $aujourdHui) {
+            $jourSemaine = $debutSite->format('l');
+            $moisAnnee = $debutSite->format('F');
             $joursCount[$jourSemaine]++;
-            $debutAnnee->modify('+1 day');
+            if($saveMonth !== $moisAnnee){
+                $moisCount[$moisAnnee]++;
+                $saveMonth = $moisAnnee;
+            }
+            $debutSite->modify('+1 day');
         }
 
         foreach ($animeByDay as $key => $time) {
@@ -213,6 +233,30 @@ class StatsController extends AbstractController
 
         foreach ($movieByDay as $key => $time) {
             $movieByDay[$key] = $time / $joursCount[$key];
+        }
+
+        foreach ($animeByMonth as $key => $time) {
+            if ($moisCount[$key] > 0) {
+                $animeByMonth[$key] = $time / $moisCount[$key];
+            }
+        }
+
+        foreach ($serieByMonth as $key => $time) {
+            if ($moisCount[$key] > 0) {
+                $serieByMonth[$key] = $time / $moisCount[$key];
+            }
+        }
+
+        foreach ($replayByMonth as $key => $time) {
+            if ($moisCount[$key] > 0) {
+                $replayByMonth[$key] = $time / $moisCount[$key];
+            }
+        }
+
+        foreach ($movieByMonth as $key => $time) {
+            if ($moisCount[$key] > 0) {
+                $movieByMonth[$key] = $time / $moisCount[$key];
+            }
         }
 
         $timeChart = "[".$animeDuration.", ".$serieDuration.", ".$replayDuration.", ".$movieDuration['SUM']."]";
