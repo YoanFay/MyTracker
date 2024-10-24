@@ -85,30 +85,6 @@ class EpisodeRepository extends ServiceEntityRepository
     }
 
 
-    public function getDutation()
-    {
-
-        return $this->createQueryBuilder('e')
-            ->select('SUM(e.duration) AS SUM')
-            ->getQuery()
-            ->getOneOrNullResult();
-    }
-
-
-    public function getDutationByYear($year)
-    {
-
-        return $this->createQueryBuilder('e')
-            ->select('SUM(e.duration) AS SUM')
-            ->andWhere('e.showDate >= :start')
-            ->setParameter('start', $year.'-01-01')
-            ->andWhere('e.showDate <= :end')
-            ->setParameter('end', $year.'-12-31')
-            ->getQuery()
-            ->getOneOrNullResult();
-    }
-
-
     public function getCountBySerie($id)
     {
 

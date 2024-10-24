@@ -39,29 +39,6 @@ class MovieRepository extends ServiceEntityRepository
         }
     }
 
-    public function getDuration()
-    {
-        return $this->createQueryBuilder('m')
-            ->select('SUM(m.duration) AS SUM')
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-
-
-    public function getDutationByYear($year)
-    {
-
-        return $this->createQueryBuilder('m')
-            ->select('SUM(m.duration) AS SUM')
-            ->andWhere('m.showDate >= :start')
-            ->setParameter('start', $year.'-01-01')
-            ->andWhere('m.showDate <= :end')
-            ->setParameter('end', $year.'-12-31')
-            ->getQuery()
-            ->getOneOrNullResult();
-    }
-
     public function getNoArtwork(){
 
         return $this->createQueryBuilder('m')

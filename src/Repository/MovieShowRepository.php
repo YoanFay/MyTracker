@@ -80,6 +80,21 @@ class MovieShowRepository extends ServiceEntityRepository
             ;
     }
 
+
+    public function getDutationByYear($year)
+    {
+
+        return $this->createQueryBuilder('ms')
+            ->leftJoin('ms.movie', 'm')
+            ->select('SUM(m.duration) AS SUM')
+            ->andWhere('ms.showDate >= :start')
+            ->setParameter('start', $year.'-01-01')
+            ->andWhere('ms.showDate <= :end')
+            ->setParameter('end', $year.'-12-31')
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
 //    /**
 //     * @return MovieShow[] Returns an array of MovieShow objects
 //     */

@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Repository\EpisodeShowRepository;
 use App\Repository\GameRepository;
 use App\Repository\MangaTomeRepository;
+use App\Repository\MovieShowRepository;
 use App\Repository\SerieUpdateRepository;
 use DateTime;
 use Exception;
@@ -22,17 +24,17 @@ class HomepageController extends AbstractController
      * @throws Exception
      */
     #[Route('/', name: 'home')]
-    public function index(MovieRepository $movieRepository, EpisodeRepository $episodeRepository, MangaTomeRepository $mangaTomeRepository, GameRepository $gameRepository): Response
+    public function index(MovieShowRepository $movieShowRepository, EpisodeShowRepository $episodeShowRepository, MangaTomeRepository $mangaTomeRepository, GameRepository $gameRepository): Response
     {
 
         $now = new DateTime();
         $year = $now->format("Y");
 
-        $globalTime = $episodeRepository->getDutation()['SUM'];
-        $yearTime = $episodeRepository->getDutationByYear($year)['SUM'];
+        $globalTime = $episodeShowRepository->getDutation()['SUM'];
+        $yearTime = $episodeShowRepository->getDutationByYear($year)['SUM'];
 
-        $globalTime += $movieRepository->getDuration()['SUM'];
-        $yearTime += $movieRepository->getDutationByYear($year)['SUM'];
+        $globalTime += $movieShowRepository->getDuration()['SUM'];
+        $yearTime += $movieShowRepository->getDutationByYear($year)['SUM'];
 
         $countReadingTome = $mangaTomeRepository->getTomeRead()['COUNT'];
         $countReadingTomeYear = $mangaTomeRepository->getTomeReadByYear($year)['COUNT'];

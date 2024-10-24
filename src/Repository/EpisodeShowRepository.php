@@ -106,6 +106,32 @@ class EpisodeShowRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+
+    public function getDutation()
+    {
+
+        return $this->createQueryBuilder('es')
+            ->leftJoin('es.episode', 'e')
+            ->select('SUM(e.duration) AS SUM')
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+
+    public function getDutationByYear($year)
+    {
+
+        return $this->createQueryBuilder('es')
+            ->leftJoin('es.episode', 'e')
+            ->select('SUM(e.duration) AS SUM')
+            ->andWhere('es.showDate >= :start')
+            ->setParameter('start', $year.'-01-01')
+            ->andWhere('es.showDate <= :end')
+            ->setParameter('end', $year.'-12-31')
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
 //    /**
 //     * @return EpisodeShow[] Returns an array of EpisodeShow objects
 //     */
