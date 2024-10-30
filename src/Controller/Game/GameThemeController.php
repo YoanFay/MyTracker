@@ -11,10 +11,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/game/game/theme')]
+#[Route('/game/theme')]
 class GameThemeController extends AbstractController
 {
-    #[Route('/', name: 'game_theme_index', methods: ['GET'])]
+    #[Route('/', name: 'game_theme', methods: ['GET'])]
     public function index(GameThemeRepository $gameThemeRepository): Response
     {
         return $this->render('game/game_theme/index.html.twig', [
@@ -34,7 +34,7 @@ class GameThemeController extends AbstractController
             $entityManager->persist($gameTheme);
             $entityManager->flush();
 
-            return $this->redirectToRoute('game_theme_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('game_theme', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('game/game_theme/new.html.twig', [
@@ -66,7 +66,7 @@ class GameThemeController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('game_theme_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('game_theme', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('game/game_theme/edit.html.twig', [
@@ -86,6 +86,6 @@ class GameThemeController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('game_theme_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('game_theme', [], Response::HTTP_SEE_OTHER);
     }
 }

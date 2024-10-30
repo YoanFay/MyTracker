@@ -11,10 +11,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/game/game/mode')]
+#[Route('/game/mode')]
 class GameModeController extends AbstractController
 {
-    #[Route('/', name: 'game_mode_index', methods: ['GET'])]
+    #[Route('/', name: 'game_mode', methods: ['GET'])]
     public function index(GameModeRepository $gameModeRepository): Response
     {
         return $this->render('game/game_mode/index.html.twig', [
@@ -34,7 +34,7 @@ class GameModeController extends AbstractController
             $entityManager->persist($gameMode);
             $entityManager->flush();
 
-            return $this->redirectToRoute('game_mode_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('game_mode', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('game/game_mode/new.html.twig', [
@@ -66,7 +66,7 @@ class GameModeController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('game_mode_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('game_mode', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('game/game_mode/edit.html.twig', [
@@ -86,6 +86,6 @@ class GameModeController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('game_mode_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('game_mode', [], Response::HTTP_SEE_OTHER);
     }
 }

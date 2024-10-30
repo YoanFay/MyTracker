@@ -11,10 +11,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/game/game/publishers')]
+#[Route('/game/publishers')]
 class GamePublishersController extends AbstractController
 {
-    #[Route('/', name: 'game_publishers_index', methods: ['GET'])]
+    #[Route('/', name: 'game_publishers', methods: ['GET'])]
     public function index(GamePublishersRepository $gamePublishersRepository): Response
     {
         return $this->render('game/game_publishers/index.html.twig', [
@@ -34,7 +34,7 @@ class GamePublishersController extends AbstractController
             $entityManager->persist($gamePublisher);
             $entityManager->flush();
 
-            return $this->redirectToRoute('game_publishers_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('game_publishers', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('game/game_publishers/new.html.twig', [
@@ -66,7 +66,7 @@ class GamePublishersController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('game_publishers_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('game_publishers', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('game/game_publishers/edit.html.twig', [
@@ -86,6 +86,6 @@ class GamePublishersController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('game_publishers_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('game_publishers', [], Response::HTTP_SEE_OTHER);
     }
 }

@@ -11,10 +11,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/game/game/serie')]
+#[Route('/game/serie')]
 class GameSerieController extends AbstractController
 {
-    #[Route('/', name: 'game_serie_index', methods: ['GET'])]
+    #[Route('/', name: 'game_serie', methods: ['GET'])]
     public function index(GameSerieRepository $gameSerieRepository): Response
     {
         return $this->render('game/game_serie/index.html.twig', [
@@ -34,7 +34,7 @@ class GameSerieController extends AbstractController
             $entityManager->persist($gameSerie);
             $entityManager->flush();
 
-            return $this->redirectToRoute('game_serie_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('game_serie', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('game/game_serie/new.html.twig', [
@@ -66,7 +66,7 @@ class GameSerieController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('game_serie_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('game_serie', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('game/game_serie/edit.html.twig', [
@@ -86,6 +86,6 @@ class GameSerieController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('game_serie_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('game_serie', [], Response::HTTP_SEE_OTHER);
     }
 }

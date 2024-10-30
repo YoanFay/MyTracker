@@ -35,7 +35,7 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/game')]
 class GameController extends AbstractController
 {
-    #[Route('/', name: 'game_index', methods: ['GET'])]
+    #[Route('/', name: 'game', methods: ['GET'])]
     public function index(): Response
     {
 
@@ -45,7 +45,7 @@ class GameController extends AbstractController
     }
 
 
-    #[Route('/{id}/details', name: 'game_details', methods: ['GET'])]
+    #[Route('/details/{id}', name: 'game_details', methods: ['GET'])]
     public function show(GameRepository $gameRepository, TimeService $timeService, $id): Response
     {
 
@@ -83,7 +83,7 @@ class GameController extends AbstractController
     */
 
 
-    #[Route('/{id}/delete', name: 'game_delete')]
+    #[Route('/delete/{id}', name: 'game_delete')]
     public function delete(Request $request, EntityManagerInterface $entityManager, GameRepository $gameRepository, $id): Response
     {
 
@@ -101,7 +101,7 @@ class GameController extends AbstractController
 
         $entityManager->flush();
 
-        return $this->redirectToRoute('game_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('game', [], Response::HTTP_SEE_OTHER);
     }
 
 
@@ -496,7 +496,7 @@ class GameController extends AbstractController
             $entityManager->persist($game);
             $entityManager->flush();
 
-            return $this->redirectToRoute('game_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('game_details', ['id' => $game->getId()], Response::HTTP_SEE_OTHER);
 
         }
 

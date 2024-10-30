@@ -11,10 +11,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/game/game/developer')]
+#[Route('/game/developer')]
 class GameDeveloperController extends AbstractController
 {
-    #[Route('/', name: 'game_developer_index', methods: ['GET'])]
+    #[Route('/', name: 'game_developer', methods: ['GET'])]
     public function index(GameDeveloperRepository $gameDeveloperRepository): Response
     {
         return $this->render('game/game_developer/index.html.twig', [
@@ -34,7 +34,7 @@ class GameDeveloperController extends AbstractController
             $entityManager->persist($gameDeveloper);
             $entityManager->flush();
 
-            return $this->redirectToRoute('game_developer_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('game_developer', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('game/game_developer/new.html.twig', [
@@ -66,7 +66,7 @@ class GameDeveloperController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('game_developer_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('game_developer', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('game/game_developer/edit.html.twig', [
@@ -86,6 +86,6 @@ class GameDeveloperController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('game_developer_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('game_developer', [], Response::HTTP_SEE_OTHER);
     }
 }

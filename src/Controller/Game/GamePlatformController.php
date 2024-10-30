@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/game/platform')]
 class GamePlatformController extends AbstractController
 {
-    #[Route('/', name: 'game_platform_index', methods: ['GET'])]
+    #[Route('/', name: 'game_platform', methods: ['GET'])]
     public function index(GamePlatformRepository $gamePlatformRepository): Response
     {
         return $this->render('game/game_platform/index.html.twig', [
@@ -37,7 +37,7 @@ class GamePlatformController extends AbstractController
             $entityManager->persist($gamePlatform);
             $entityManager->flush();
 
-            return $this->redirectToRoute('game_platform_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('game_platform', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('game/game_platform/new.html.twig', [
@@ -69,7 +69,7 @@ class GamePlatformController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('game_platform_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('game_platform', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('game/game_platform/edit.html.twig', [
@@ -89,7 +89,7 @@ class GamePlatformController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('game_platform_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('game_platform', [], Response::HTTP_SEE_OTHER);
     }
 
 
@@ -141,7 +141,7 @@ class GamePlatformController extends AbstractController
             $entityManager->persist($gamePlatform);
             $entityManager->flush();
 
-            return $this->redirectToRoute('game_platform_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('game_platform', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('game/game_platform/new.html.twig', [
