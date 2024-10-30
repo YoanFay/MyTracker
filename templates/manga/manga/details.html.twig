@@ -24,7 +24,11 @@
                    title="Supprimer le manga">delete</i>
             </h1>
             <ul>
-                <li><strong>Date de sortie</strong> : {{ manga.releaseDate|dateFNoDay }}</li>
+                <li><strong>Date de sortie du premier tome</strong> : {{ firstTomeDate|dateFNoDay }}</li>
+                {% if lastTomeDate %}
+                    <li><strong>Date de sortie du dernier tome</strong> : {{ lastTomeDate|dateFNoDay }}</li>
+                {% endif %}
+                <li><strong>Nombre de tome sortie</strong> : {{ nbTome }}</li>
                 {% if manga.designer %}
                     <li><strong>Scénariste</strong> : {{ manga.author.name }}</li>
                     <li><strong>Dessinateur</strong> : {{ manga.designer.name }}</li>

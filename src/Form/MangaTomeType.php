@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Manga;
 use App\Entity\MangaTome;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -21,6 +22,11 @@ class MangaTomeType extends AbstractType
             ->add('tomeNumber', IntegerType::class, [
                 'label' => "Numéro du tome",
                 'attr' => ['class' => 'form-control'],
+            ])
+            ->add('lastTome', CheckboxType::class, [
+                'label' => "Dernier tome du manga ?",
+                'attr' => ['class' => 'form-check-input ms-2 mt-3'],
+                'label_attr' => ['class' => 'my-2']
             ])
             ->add('page', IntegerType::class, [
                 'label' => "Nombre de page",

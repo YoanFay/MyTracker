@@ -35,9 +35,6 @@ class MangaFormType extends AbstractType
                 'attr' => ['class' => 'form-control'],
                 'required' => false
             ])
-            ->add('nbTomes', IntegerType::class, [
-                'attr' => ['class' => 'form-control'],
-            ])
             ->add('type', EntityType::class, [
                 'class' => MangaType::class,
                 'choice_label' => 'name',

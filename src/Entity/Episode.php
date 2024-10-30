@@ -19,9 +19,6 @@ class Episode
     #[ORM\Column(type: "string", length: 255, nullable: true)]
     private $plexId;
 
-    #[ORM\Column(type: "datetime", nullable: true)]
-    private $showDate;
-
     #[ORM\ManyToOne(targetEntity: Serie::class, inversedBy: "episodes")]
     #[ORM\JoinColumn(nullable: false)]
     private $serie;
@@ -56,7 +53,6 @@ class Episode
 
     public function __construct()
     {
-        $this->setShowDate(new \DateTime());
         $this->name = "TBA";
         $this->episodeShows = new ArrayCollection();
     }
@@ -74,18 +70,6 @@ class Episode
     public function setPlexId(?string $plexId): self
     {
         $this->plexId = $plexId;
-
-        return $this;
-    }
-
-    public function getShowDate(): ?\DateTimeInterface
-    {
-        return $this->showDate;
-    }
-
-    public function setShowDate(?\DateTimeInterface $showDate): self
-    {
-        $this->showDate = $showDate;
 
         return $this;
     }

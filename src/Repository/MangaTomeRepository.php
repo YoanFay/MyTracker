@@ -112,6 +112,68 @@ class MangaTomeRepository extends ServiceEntityRepository
     /**
      * @throws NonUniqueResultException
      */
+    public function getFirstTomeDate($manga)
+    {
+        return $this->createQueryBuilder('mt')
+            ->select('mt.releaseDate AS DATE')
+            ->andWhere('mt.manga = :manga')
+            ->andWhere('mt.tomeNumber = 1')
+            ->setParameter('manga', $manga)
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
+    }
+
+
+    /**
+     * @throws NonUniqueResultException
+     */
+    public function getLastTomeDate($manga)
+    {
+        return $this->createQueryBuilder('mt')
+            ->select('mt.releaseDate AS DATE')
+            ->andWhere('mt.manga = :manga')
+            ->andWhere('mt.lastTome = true')
+            ->setParameter('manga', $manga)
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
+    }
+
+
+    /**
+     * @throws NonUniqueResultException
+     */
+    public function getFirstTome($manga)
+    {
+        return $this->createQueryBuilder('mt')
+            ->andWhere('mt.manga = :manga')
+            ->andWhere('mt.tomeNumber = 1')
+            ->setParameter('manga', $manga)
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
+    }
+
+
+    /**
+     * @throws NonUniqueResultException
+     */
+    public function getLastTome($manga)
+    {
+        return $this->createQueryBuilder('mt')
+            ->andWhere('mt.manga = :manga')
+            ->andWhere('mt.lastTome = true')
+            ->setParameter('manga', $manga)
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
+    }
+
+
+    /**
+     * @throws NonUniqueResultException
+     */
     public function getCurrentTome($manga){
 
         return $this->createQueryBuilder('mt')
@@ -120,6 +182,24 @@ class MangaTomeRepository extends ServiceEntityRepository
             ->andWhere('mt.readingEndDate IS NULL')
             ->orderBy('mt.tomeNumber')
             ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
+
+    }
+
+
+    /**
+     * @throws NonUniqueResultException
+     */
+    public function getTomeCountByManga($manga){
+
+        return $this->createQueryBuilder('mt')
+            ->select('COUNT(mt.id) AS COUNT')
+            ->andWhere('mt.manga = :manga')
+            ->setParameter('manga', $manga)
+            ->andWhere('mt.releaseDate <= :now')
+            ->setParameter('now', new \DateTime())
             ->getQuery()
             ->getOneOrNullResult()
             ;

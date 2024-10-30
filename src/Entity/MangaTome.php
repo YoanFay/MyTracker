@@ -36,6 +36,9 @@ class MangaTome
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $cover = null;
 
+    #[ORM\Column]
+    private bool $lastTome = false;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -121,6 +124,18 @@ class MangaTome
     public function setCover(?string $cover): static
     {
         $this->cover = $cover;
+
+        return $this;
+    }
+
+    public function isLastTome(): ?bool
+    {
+        return $this->lastTome;
+    }
+
+    public function setLastTome(bool $lastTome): static
+    {
+        $this->lastTome = $lastTome;
 
         return $this;
     }

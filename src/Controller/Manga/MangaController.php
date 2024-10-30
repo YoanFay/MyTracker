@@ -90,6 +90,10 @@ class MangaController extends AbstractController
 
         $currentTome = null;
 
+        $firstTomeDate = $mangaTomeRepository->getFirstTomeDate($manga)['DATE'] ?? null;
+        $lastTomeDate = $mangaTomeRepository->getLastTomeDate($manga)['DATE'] ?? null;
+        $nbTome = $mangaTomeRepository->getTomeCountByManga($manga)['COUNT'] ?? 0;
+
         if ($tome) {
             $started = false;
 
@@ -116,6 +120,9 @@ class MangaController extends AbstractController
             'controller_name' => 'MangaController',
             'manga' => $manga,
             'currentTome' => $currentTome,
+            'firstTomeDate' => $firstTomeDate,
+            'lastTomeDate' => $lastTomeDate,
+            'nbTome' => $nbTome,
             'navLinkId' => 'manga',
         ]);
     }
@@ -177,7 +184,8 @@ class MangaController extends AbstractController
             ]);
         }
 
-        return $this->render('manga/manga/add.html.twig', [
+        return $this->render('manga/manga/edit.html.twig', [
+            'id' => $manga->getId(),
             'form_title' => 'Modifier un manga',
             'form' => $form->createView(),
             'controller_name' => 'MangaController',

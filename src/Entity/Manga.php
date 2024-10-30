@@ -19,14 +19,11 @@ class Manga
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $releaseDate = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $endDate = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $nbTomes = null;
 
     #[ORM\ManyToOne(inversedBy: 'mangas')]
     #[ORM\JoinColumn(nullable: false)]
@@ -88,18 +85,6 @@ class Manga
     public function setReleaseDate(\DateTimeInterface $releaseDate): static
     {
         $this->releaseDate = $releaseDate;
-
-        return $this;
-    }
-
-    public function getNbTomes(): ?int
-    {
-        return $this->nbTomes;
-    }
-
-    public function setNbTomes(?int $nbTomes): static
-    {
-        $this->nbTomes = $nbTomes;
 
         return $this;
     }
