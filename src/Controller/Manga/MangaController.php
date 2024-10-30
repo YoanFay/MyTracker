@@ -143,7 +143,7 @@ class MangaController extends AbstractController
         }
 
         return $this->render('manga/manga/add.html.twig', [
-            'form_title' => 'Modifier un manga',
+            'form_title' => 'Ajouter un manga',
             'form' => $form->createView(),
             'controller_name' => 'MangaController',
             'navLinkId' => 'manga',

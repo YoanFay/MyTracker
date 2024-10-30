@@ -35,7 +35,7 @@ class MangaDesignerController extends AbstractController
             $managerRegistry->getManager()->persist($author);
             $managerRegistry->getManager()->flush();
 
-            return $this->redirectToRoute('manga_designer');
+            return $this->redirectToRoute('manga');
         }
         return $this->render('manga/manga_designer/add.html.twig', [
             'form' => $form->createView(),

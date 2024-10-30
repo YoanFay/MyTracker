@@ -35,7 +35,7 @@ class MangaEditorController extends AbstractController
             $managerRegistry->getManager()->persist($editor);
             $managerRegistry->getManager()->flush();
 
-            return $this->redirectToRoute('manga_editor');
+            return $this->redirectToRoute('manga');
         }
         return $this->render('manga/manga_editor/add.html.twig', [
             'form' => $form->createView(),
