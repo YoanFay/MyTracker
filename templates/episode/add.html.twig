@@ -12,7 +12,11 @@
             <div class="card-body">
                 {{ form_start(form) }}
                 {{ form_end(form) }}
-                <a class="btn btn-secondary mt-1" href="{{ path('episode') }}">Retour</a>
+                {% if id %}
+                    <a class="btn btn-secondary mt-1" href="{{ path('serie_detail', {'id': id}) }}">Retour</a>
+                {% else %}
+                    <a class="btn btn-secondary mt-1" href="{{ path('historique') }}">Retour</a>
+                {% endif %}
             </div>
         </div>
     </div>

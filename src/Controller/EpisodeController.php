@@ -23,11 +23,19 @@ use DateTime;
 class EpisodeController extends AbstractController
 {
 
-    #[Route('/episode/add', name: 'episode_add')]
-    public function addEpisode(ManagerRegistry $managerRegistry, UsersRepository $usersRepository, EpisodeRepository $episodeRepository, Request $request): Response
+    #[Route('/episode/add/{id}', name: 'episode_add')]
+    public function addEpisode(ManagerRegistry $managerRegistry, UsersRepository $usersRepository, EpisodeRepository $episodeRepository, SerieRepository $serieRepository, Request $request, $id = null): Response
     {
 
         $episode = new Episode();
+
+        if ($id){
+
+            $serie = $serieRepository->find($id);
+
+            $episode->setSerie($serie);
+
+        }
 
         $form = $this->createForm(EpisodeType::class, $episode);
         $form->handleRequest($request);
@@ -43,8 +51,6 @@ class EpisodeController extends AbstractController
                 $episode = $checkEpisode;
 
             } else {
-
-                $episode->setShowDate(null);
 
                 $user = $usersRepository->findOneBy(['plexName' => 'yoan.f8']);
 
@@ -63,10 +69,17 @@ class EpisodeController extends AbstractController
             $managerRegistry->getManager()->persist($episodeShow);
             $managerRegistry->getManager()->flush();
 
-            return $this->redirectToRoute('episode');
+            if ($id){
+                return $this->redirectToRoute('serie_detail', [
+                    'id' => $id
+                ]);
+            }
+
+            return $this->redirectToRoute('historique');
         }
 
         return $this->render('episode/add.html.twig', [
+            'id' => $id,
             'controller_name' => 'EpisodeController',
             'form' => $form->createView(),
             'navLinkId' => 'episode_add',

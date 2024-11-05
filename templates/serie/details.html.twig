@@ -6,9 +6,19 @@
 
     <div class="d-flex flex-lg-row flex-column-reverse justify-content-between p-3">
         <div>
-            <h1 class="d-inline">{{ serie.name }}</h1> <a class="d-inline"
-                                                          href="{{ path('serie_edit', {'id': serie.id}) }}"><i
-                        class="material-icons">edit</i></a>
+            <h1 class="d-inline">{{ serie.name }}</h1>
+            <a class="d-inline text-decoration-none" href="{{ path('episode_add', {'id': serie.id}) }}"
+               data-bs-toggle="tooltip"
+               data-bs-placement="bottom" data-bs-html="true"
+               title="Ajouter un épisode">
+                <i class="material-icons text-primary">add_circle</i>
+            </a>
+            <a class="d-inline text-decoration-none" href="{{ path('serie_edit', {'id': serie.id}) }}"
+               data-bs-toggle="tooltip"
+               data-bs-placement="bottom" data-bs-html="true"
+               title="Modifier la série">
+                <i class="material-icons text-warning">edit_note</i>
+            </a>
             <h2>{{ countEpisode }} épisodes vus - {{ totalDuration|MsToHM }} de visionnage total</h2>
             {% if studios != [] %}
                 <h3>
