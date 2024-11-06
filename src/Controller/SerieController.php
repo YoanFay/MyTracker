@@ -23,11 +23,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Service\StrSpecialCharsLower;
 
+#[Route('/serie')]
 class SerieController extends AbstractController
 {
 
 
-    #[Route('/serie/detail/{id}', name: 'serie_detail')]
+    #[Route('/detail/{id}', name: 'serie_detail')]
     public function detail(Request $request, RequestStack $requestStack, SerieRepository $serieRepository, EpisodeRepository $episodeRepository, EpisodeShowRepository $episodeShowRepository, $id): Response
     {
 
@@ -98,7 +99,7 @@ class SerieController extends AbstractController
     }
 
 
-    #[Route('/serie/add', name: 'serie_add')]
+    #[Route('/add', name: 'serie_add')]
     public function addSerie(ManagerRegistry $managerRegistry, Request $request, StrSpecialCharsLower $strSpecialCharsLower, TVDBService $TVDBService): Response
     {
 
@@ -133,7 +134,7 @@ class SerieController extends AbstractController
     }
 
 
-    #[Route('/serie/edit/{id}', name: 'serie_edit')]
+    #[Route('/edit/{id}', name: 'serie_edit')]
     public function editSerie(ManagerRegistry $managerRegistry, SerieRepository $serieRepository, Request $request, $id): Response
     {
 
@@ -164,7 +165,7 @@ class SerieController extends AbstractController
     }
 
 
-    #[Route('/serie/editAnime/{id}', name: 'serie_edit_anime')]
+    #[Route('/editAnime/{id}', name: 'serie_edit_anime')]
     public function editSerieAnime(ManagerRegistry $managerRegistry, SerieRepository $serieRepository, Request $request, $id): Response
     {
 
@@ -230,7 +231,7 @@ class SerieController extends AbstractController
     /**
      * @throws NonUniqueResultException
      */
-    #[Route('/serie/genre/{name}', name: 'serie_genre')]
+    #[Route('/genre/{name}', name: 'serie_genre')]
     public function animeByGenre( EpisodeRepository $episodeRepository, AnimeGenreRepository $animeGenreRepository, $name): Response
     {
 
@@ -276,7 +277,7 @@ class SerieController extends AbstractController
     /**
      * @throws NonUniqueResultException
      */
-    #[Route('/serie/theme/{name}', name: 'serie_theme')]
+    #[Route('/theme/{name}', name: 'serie_theme')]
     public function animeByTheme(EpisodeRepository $episodeRepository, AnimeThemeRepository $animeThemeRepository, $name): Response
     {
 
@@ -322,7 +323,7 @@ class SerieController extends AbstractController
     /**
      * @throws NonUniqueResultException
      */
-    #[Route('/serie/company/{id}', name: 'serie_company')]
+    #[Route('/company/{id}', name: 'serie_company')]
     public function serieByCompany(EpisodeRepository $episodeRepository, CompanyRepository $companyRepository, $id): Response
     {
 
@@ -368,7 +369,7 @@ class SerieController extends AbstractController
     /**
      * @throws NonUniqueResultException
      */
-    #[Route('/serie/list', name: 'serie_list')]
+    #[Route('/list', name: 'serie_list')]
     public function serieList(SerieRepository $serieRepository, SerieTypeRepository $serieTypeRepository, EpisodeShowRepository $episodeShowRepository, CompanyRepository $companyRepository, Request $request): Response
     {
 
@@ -433,7 +434,7 @@ class SerieController extends AbstractController
     }
 
 
-    #[Route('/serie/{search}', name: 'serie')]
+    #[Route('/{search}', name: 'serie')]
     public function index($search = null): Response
     {
 

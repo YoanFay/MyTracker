@@ -20,10 +20,11 @@ use Bugsnag\BugsnagBundle\DependencyInjection\ClientFactory;
 use Bugsnag\Client;
 use DateTime;
 
+#[Route('/episode')]
 class EpisodeController extends AbstractController
 {
 
-    #[Route('/episode/add/{id}', name: 'episode_add')]
+    #[Route('/add/{id}', name: 'episode_add')]
     public function addEpisode(ManagerRegistry $managerRegistry, UsersRepository $usersRepository, EpisodeRepository $episodeRepository, SerieRepository $serieRepository, Request $request, $id = null): Response
     {
 

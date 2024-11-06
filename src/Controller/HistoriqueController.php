@@ -11,9 +11,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use DateTime;
 
+#[Route('/historique')]
 class HistoriqueController extends AbstractController
 {
-    #[Route('/historique', name: 'historique')]
+    #[Route('/', name: 'historique')]
     public function index(EpisodeShowRepository $episodeShowRepository, MovieShowRepository $movieShowRepository): Response
     {
 
@@ -161,7 +162,7 @@ class HistoriqueController extends AbstractController
     /**
      * @throws Exception
      */
-    #[Route('/historique/all', name: 'historique_all')]
+    #[Route('/all', name: 'historique_all')]
     public function allHistorique(EpisodeShowRepository $episodeShowRepository, MovieShowRepository $movieShowRepository): Response
     {
 
@@ -297,7 +298,7 @@ class HistoriqueController extends AbstractController
     /**
      * @throws Exception
      */
-    #[Route('/historique/categorie/{categorie}', name: 'historique_categories')]
+    #[Route('/categorie/{categorie}', name: 'historique_categories')]
     public function historiqueCategories(EpisodeShowRepository $episodeShowRepository, SerieTypeRepository $serieTypeRepository, MovieShowRepository $movieShowRepository, $categorie): Response
     {
 
@@ -420,7 +421,7 @@ class HistoriqueController extends AbstractController
     /**
      * @throws Exception
      */
-    #[Route('/historique/{year}/{month}', name: 'historique_date')]
+    #[Route('/{year}/{month}', name: 'historique_date')]
     public function historiqueDate(EpisodeShowRepository $episodeShowRepository, MovieShowRepository $movieShowRepository, $year = 0, $month = 0): Response
     {
 

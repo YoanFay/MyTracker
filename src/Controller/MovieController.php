@@ -17,9 +17,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\MovieRepository;
 
+#[Route('/movie')]
 class MovieController extends AbstractController
 {
-    #[Route('/movie', name: 'movie')]
+    #[Route('/', name: 'movie')]
     public function index(): Response
     {
         return $this->render('movie/index.html.twig', [
@@ -32,7 +33,7 @@ class MovieController extends AbstractController
     /**
      * @throws NonUniqueResultException
      */
-    #[Route('/movie/list', name: 'movie_list')]
+    #[Route('/list', name: 'movie_list')]
     public function movieList(MovieRepository $movieRepository, MovieShowRepository $movieShowRepository, Request $request): Response
     {
 
@@ -73,7 +74,7 @@ class MovieController extends AbstractController
         ]);
     }
 
-    #[Route('/movie/add', name: 'movie_add')]
+    #[Route('/add', name: 'movie_add')]
     public function addMovie(ManagerRegistry $managerRegistry, Request $request, TMDBService $TMDBService): Response
     {
 
@@ -110,7 +111,7 @@ class MovieController extends AbstractController
         ]);
     }
 
-    #[Route('/movie/detail/{id}', name: 'movie_detail')]
+    #[Route('/detail/{id}', name: 'movie_detail')]
     public function detail(MovieRepository $movieRepository, $id): Response
     {
 

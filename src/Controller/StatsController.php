@@ -12,13 +12,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+#[Route('/stat')]
 class StatsController extends AbstractController
 {
 
     /**
      * @throws Exception
      */
-    #[Route('/stat/episode', name: 'episode_stat')]
+    #[Route('/historique', name: 'historique_stat')]
     public function episodeStat(MovieShowRepository $movieShowRepository, EpisodeRepository $episodeRepository, EpisodeShowRepository $episodeShowRepository): Response
     {
 
@@ -317,12 +318,12 @@ class StatsController extends AbstractController
             'genreChart' => $genreChart,
             'labelThemeChart' => $labelThemeChart,
             'themeChart' => $themeChart,
-            'navLinkId' => 'episode_stat',
+            'navLinkId' => 'historique_stat',
         ]);
     }
 
 
-    #[Route('/stat/manga', name: 'manga_stat')]
+    #[Route('/manga', name: 'manga_stat')]
     public function mangaStat(MangaRepository $mangaRepository): Response
     {
 
@@ -364,7 +365,7 @@ class StatsController extends AbstractController
     }
 
 
-    #[Route('/stat/anime', name: 'anime_stat')]
+    #[Route('/anime', name: 'anime_stat')]
     public function animeStat(EpisodeRepository $episodeRepository): Response
     {
 
