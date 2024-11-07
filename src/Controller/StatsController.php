@@ -52,7 +52,8 @@ class StatsController extends AbstractController
             'countGameEnd' => $countGameEnd,
             'countGameEndYear' => $countGameEndYear,
             'countGameFullEnd' => $countGameFullEnd,
-            'countGameFullEndYear' => $countGameFullEndYear
+            'countGameFullEndYear' => $countGameFullEndYear,
+            'navLinkId' => 'general_stat',
         ]);
     }
 
