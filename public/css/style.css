@@ -1,3 +1,13 @@
+@font-face {
+  font-family: Zarbi;
+  src: url(../font/Unown.ttf);
+}
+
+.title{
+  font-family: Zarbi, serif;
+  font-size: 400%;
+}
+
 .text-error{
   color: #ff0000ff;
 }

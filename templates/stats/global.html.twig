@@ -1,0 +1,81 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Statistique{% endblock %}
+
+{% block body %}
+
+    <div class="d-lg-flex flex-lg-row justify-content-lg-around mt-lg-12 mt-3">
+        <div class="card col-12 col-lg-3">
+            <div class="card-header">
+                <p>Temps passé sur Plex</p>
+            </div>
+            <div class="col-12 d-flex flex-row">
+                <div class="card col-6">
+                    <div class="card-header">
+                        <p>Cette année</p>
+                    </div>
+                    <div class="card-body">
+                        <p>{{ yearTime|MsToHM }}</p>
+                    </div>
+                </div>
+                <div class="card col-6">
+                    <div class="card-header">
+                        <p>Au total</p>
+                    </div>
+                    <div class="card-body">
+                        <p>{{ globalTime|MsToHM }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card col-12 col-lg-3 mt-4 mt-lg-0">
+            <div class="card-header">
+                <p>Nombre de tome lu</p>
+            </div>
+            <div class="col-12 d-flex flex-row">
+                <div class="card col-6">
+                    <div class="card-header">
+                        <p>Cette année</p>
+                    </div>
+                    <div class="card-body">
+                        <p>{{ countReadingTomeYear }}</p>
+                    </div>
+                </div>
+                <div class="card col-6">
+                    <div class="card-header">
+                        <p>Au total</p>
+                    </div>
+                    <div class="card-body">
+                        <p>{{ countReadingTome }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card col-12 col-lg-3 mt-4 mt-lg-0">
+            <div class="card-header">
+                <p>Nombre de jeux finit / Nombre de jeux finit à 100%</p>
+            </div>
+            <div class="col-12 d-flex flex-row">
+                <div class="card col-6">
+                    <div class="card-header">
+                        <p>Cette année</p>
+                    </div>
+                    <div class="card-body">
+                        <p>{{ countGameEndYear }} / {{ countGameFullEndYear }}</p>
+                    </div>
+                </div>
+                <div class="card col-6">
+                    <div class="card-header">
+                        <p>Au total</p>
+                    </div>
+                    <div class="card-body">
+                        <p>{{ countGameEnd }} / {{ countGameFullEnd }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

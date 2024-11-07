@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Repository\EpisodeRepository;
 use App\Repository\EpisodeShowRepository;
+use App\Repository\GameRepository;
 use App\Repository\MangaRepository;
 use App\Repository\MangaTomeRepository;
 use App\Repository\MovieShowRepository;
@@ -17,6 +18,43 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/stat')]
 class StatsController extends AbstractController
 {
+
+    /**
+     * @throws Exception
+     */
+    #[Route('/global', name: 'global_stat')]
+    public function generalStat(MovieShowRepository $movieShowRepository, EpisodeShowRepository $episodeShowRepository, MangaTomeRepository $mangaTomeRepository, GameRepository $gameRepository){
+
+        $now = new DateTime();
+        $year = $now->format("Y");
+
+        $globalTime = $episodeShowRepository->getDutation()['SUM'];
+        $yearTime = $episodeShowRepository->getDutationByYear($year)['SUM'];
+
+        $globalTime += $movieShowRepository->getDuration()['SUM'];
+        $yearTime += $movieShowRepository->getDutationByYear($year)['SUM'];
+
+        $countReadingTome = $mangaTomeRepository->getTomeRead()['COUNT'];
+        $countReadingTomeYear = $mangaTomeRepository->getTomeReadByYear($year)['COUNT'];
+
+        $countGameEnd = $gameRepository->countGameEnd()['COUNT'];
+        $countGameEndYear = $gameRepository->countGameEndByYear($year)['COUNT'];
+
+        $countGameFullEnd = $gameRepository->countGameFullEnd()['COUNT'];
+        $countGameFullEndYear = $gameRepository->countGameFullEndByYear($year)['COUNT'];
+
+        return $this->render("stats/global.html.twig", [
+            'year' => $year,
+            'globalTime' => $globalTime,
+            'yearTime' => $yearTime,
+            'countReadingTome' => $countReadingTome,
+            'countReadingTomeYear' => $countReadingTomeYear,
+            'countGameEnd' => $countGameEnd,
+            'countGameEndYear' => $countGameEndYear,
+            'countGameFullEnd' => $countGameFullEnd,
+            'countGameFullEndYear' => $countGameFullEndYear
+        ]);
+    }
 
     /**
      * @throws Exception
@@ -129,7 +167,7 @@ class StatsController extends AbstractController
         $genreChartData = $statService->buildLabelAndDataChart($durationByGenre);
         $themeChartData = $statService->buildLabelAndDataChart($durationByTheme);
 
-        return $this->render('stats/episode.html.twig', [
+        return $this->render('stats/historique.html.twig', [
             'timeChart' => $timeChart,
             'animeByDayChart' => $animeByDayChart,
             'serieByDayChart' => $serieByDayChart,

@@ -6,6 +6,7 @@ use App\Repository\EpisodeShowRepository;
 use App\Repository\GameRepository;
 use App\Repository\MangaTomeRepository;
 use App\Repository\MovieShowRepository;
+use App\Repository\SerieRepository;
 use App\Repository\SerieUpdateRepository;
 use DateTime;
 use Exception;
@@ -24,37 +25,13 @@ class HomepageController extends AbstractController
      * @throws Exception
      */
     #[Route('/', name: 'home')]
-    public function index(MovieShowRepository $movieShowRepository, EpisodeShowRepository $episodeShowRepository, MangaTomeRepository $mangaTomeRepository, GameRepository $gameRepository): Response
+    public function index(SerieRepository $serieRepository): Response
     {
 
-        $now = new DateTime();
-        $year = $now->format("Y");
-
-        $globalTime = $episodeShowRepository->getDutation()['SUM'];
-        $yearTime = $episodeShowRepository->getDutationByYear($year)['SUM'];
-
-        $globalTime += $movieShowRepository->getDuration()['SUM'];
-        $yearTime += $movieShowRepository->getDutationByYear($year)['SUM'];
-
-        $countReadingTome = $mangaTomeRepository->getTomeRead()['COUNT'];
-        $countReadingTomeYear = $mangaTomeRepository->getTomeReadByYear($year)['COUNT'];
-
-        $countGameEnd = $gameRepository->countGameEnd()['COUNT'];
-        $countGameEndYear = $gameRepository->countGameEndByYear($year)['COUNT'];
-
-        $countGameFullEnd = $gameRepository->countGameFullEnd()['COUNT'];
-        $countGameFullEndYear = $gameRepository->countGameFullEndByYear($year)['COUNT'];
+        $releaseToday = $serieRepository->findBy(['nextAired' => new DateTime()]);
 
         return $this->render("homepage/index.html.twig", [
-            'year' => $year,
-            'globalTime' => $globalTime,
-            'yearTime' => $yearTime,
-            'countReadingTome' => $countReadingTome,
-            'countReadingTomeYear' => $countReadingTomeYear,
-            'countGameEnd' => $countGameEnd,
-            'countGameEndYear' => $countGameEndYear,
-            'countGameFullEnd' => $countGameFullEnd,
-            'countGameFullEndYear' => $countGameFullEndYear
+            'releaseToday' => $releaseToday
         ]);
     }
 

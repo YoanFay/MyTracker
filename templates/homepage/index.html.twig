@@ -4,79 +4,7 @@
 
 {% block body %}
 
-    <div class="d-lg-flex flex-lg-row justify-content-lg-around mt-lg-12 mt-3">
-        <div class="card col-12 col-lg-3">
-            <div class="card-header">
-                <p>Temps passé sur Plex</p>
-            </div>
-            <div class="col-12 d-flex flex-row">
-                <div class="card col-6">
-                    <div class="card-header">
-                        <p>Cette année</p>
-                    </div>
-                    <div class="card-body">
-                        <p>{{ yearTime|MsToHM }}</p>
-                    </div>
-                </div>
-                <div class="card col-6">
-                    <div class="card-header">
-                        <p>Au total</p>
-                    </div>
-                    <div class="card-body">
-                        <p>{{ globalTime|MsToHM }}</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="card col-12 col-lg-3 mt-4 mt-lg-0">
-            <div class="card-header">
-                <p>Nombre de tome lu</p>
-            </div>
-            <div class="col-12 d-flex flex-row">
-                <div class="card col-6">
-                    <div class="card-header">
-                        <p>Cette année</p>
-                    </div>
-                    <div class="card-body">
-                        <p>{{ countReadingTomeYear }}</p>
-                    </div>
-                </div>
-                <div class="card col-6">
-                    <div class="card-header">
-                        <p>Au total</p>
-                    </div>
-                    <div class="card-body">
-                        <p>{{ countReadingTome }}</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="card col-12 col-lg-3 mt-4 mt-lg-0">
-            <div class="card-header">
-                <p>Nombre de jeux finit / Nombre de jeux finit à 100%</p>
-            </div>
-            <div class="col-12 d-flex flex-row">
-                <div class="card col-6">
-                    <div class="card-header">
-                        <p>Cette année</p>
-                    </div>
-                    <div class="card-body">
-                        <p>{{ countGameEndYear }} / {{ countGameFullEndYear }}</p>
-                    </div>
-                </div>
-                <div class="card col-6">
-                    <div class="card-header">
-                        <p>Au total</p>
-                    </div>
-                    <div class="card-body">
-                        <p>{{ countGameEnd }} / {{ countGameFullEnd }}</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <h1 class="text-center mt-4 title">MyTracker</h1>
 
     <div id="divInfo" class="d-lg-flex flex-lg-row justify-content-lg-around mt-lg-12 mt-5">
     </div>
@@ -85,6 +13,27 @@
             <div class="d-flex justify-content-center align-items-center">
                 <div class="spinner-border" role="status">
                     <span class="sr-only"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-lg-flex flex-lg-row justify-content-lg-around mt-lg-12 mt-5">
+        <div class="card col-12 col-lg-11">
+            <div class="card-header d-flex justify-content-center">
+                <p class="my-2">Sortie du jour</p>
+            </div>
+            <div class="card col-12">
+                <div class="card-body p-0 col-12 d-flex flex-row justify-content-between flex-wrap">
+                    {% for serie in releaseToday %}
+                        {% set image = infoImage(serie, app.environment) %}
+                        <div class="cursor-click container col-lg-2 col-4 px-3 my-4 d-flex flex-column"
+                             onclick="openDetail('{{ path('serie_detail', {'id': serie.id}) }}')">
+                            <img class="rounded mx-auto d-block" src="{{ image.path }}" width="150px"
+                                 alt="{{ image.alt }}">
+                            <p class="text-center">{{ serie.name }}</p>
+                        </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
@@ -105,7 +54,7 @@
             }
         })
 
-        function changeDate(count){
+        function changeDate(count) {
 
             $("#divInfo").html('');
             $('#loadSpin').removeClass('d-none');
@@ -121,6 +70,10 @@
                     $('#loadSpin').addClass('d-none');
                 }
             })
+        }
+
+        function openDetail(href) {
+            window.location = href;
         }
 
     </script>
