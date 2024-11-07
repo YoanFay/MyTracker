@@ -5,7 +5,9 @@ namespace App\Controller;
 use App\Repository\EpisodeRepository;
 use App\Repository\EpisodeShowRepository;
 use App\Repository\MangaRepository;
+use App\Repository\MangaTomeRepository;
 use App\Repository\MovieShowRepository;
+use App\Service\StatService;
 use DateTime;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,289 +22,112 @@ class StatsController extends AbstractController
      * @throws Exception
      */
     #[Route('/historique', name: 'historique_stat')]
-    public function episodeStat(MovieShowRepository $movieShowRepository, EpisodeRepository $episodeRepository, EpisodeShowRepository $episodeShowRepository): Response
+    public function historiqueStat(StatService $statService, MovieShowRepository $movieShowRepository, EpisodeRepository $episodeRepository, EpisodeShowRepository $episodeShowRepository): Response
     {
 
-        $movieDuration = $movieShowRepository->getDuration();
-        $animeDuration = 0;
-        $serieDuration = 0;
-        $replayDuration = 0;
+        $daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+        $monthsOfYear = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
+        $movieDuration = $movieShowRepository->getDuration();
         $durations = $episodeRepository->getDurationByType();
 
+        $durationsByType = [
+            'Anime' => 0,
+            'Séries' => 0,
+            'Replay' => 0
+        ];
+
         foreach ($durations as $duration) {
-            switch ($duration['TYPE']) {
-            case 'Anime':
-                $animeDuration = $duration['COUNT'];
-                break;
-            case 'Séries':
-                $serieDuration = $duration['COUNT'];
-                break;
-            case 'Replay':
-                $replayDuration = $duration['COUNT'];
-                break;
-            }
+            $durationsByType[$duration['TYPE']] = $duration['COUNT'];
         }
 
         $durationByGenre = $episodeRepository->getDurationGenre();
         $durationByTheme = $episodeRepository->getDurationTheme();
-
         $allEpisodesShow = $episodeShowRepository->findAll();
         $allMovies = $movieShowRepository->findAll();
 
-        $animeByDay = [
-            'Monday' => 0,
-            'Tuesday' => 0,
-            'Wednesday' => 0,
-            'Thursday' => 0,
-            'Friday' => 0,
-            'Saturday' => 0,
-            'Sunday' => 0
-        ];
+        $animeByDay = $statService->initializeByPeriod($daysOfWeek);
+        $serieByDay = $statService->initializeByPeriod($daysOfWeek);
+        $replayByDay = $statService->initializeByPeriod($daysOfWeek);
+        $movieByDay = $statService->initializeByPeriod($daysOfWeek);
 
-        $serieByDay = [
-            'Monday' => 0,
-            'Tuesday' => 0,
-            'Wednesday' => 0,
-            'Thursday' => 0,
-            'Friday' => 0,
-            'Saturday' => 0,
-            'Sunday' => 0
-        ];
-
-        $replayByDay = [
-            'Monday' => 0,
-            'Tuesday' => 0,
-            'Wednesday' => 0,
-            'Thursday' => 0,
-            'Friday' => 0,
-            'Saturday' => 0,
-            'Sunday' => 0
-        ];
-
-        $movieByDay = [
-            'Monday' => 0,
-            'Tuesday' => 0,
-            'Wednesday' => 0,
-            'Thursday' => 0,
-            'Friday' => 0,
-            'Saturday' => 0,
-            'Sunday' => 0
-        ];
-
-        $animeByMonth = [
-            'January' => 0,
-            'February' => 0,
-            'March' => 0,
-            'April' => 0,
-            'May' => 0,
-            'June' => 0,
-            'July' => 0,
-            'August' => 0,
-            'September' => 0,
-            'October' => 0,
-            'November' => 0,
-            'December' => 0
-        ];
-
-        $serieByMonth = [
-            'January' => 0,
-            'February' => 0,
-            'March' => 0,
-            'April' => 0,
-            'May' => 0,
-            'June' => 0,
-            'July' => 0,
-            'August' => 0,
-            'September' => 0,
-            'October' => 0,
-            'November' => 0,
-            'December' => 0
-        ];
-
-        $replayByMonth = [
-            'January' => 0,
-            'February' => 0,
-            'March' => 0,
-            'April' => 0,
-            'May' => 0,
-            'June' => 0,
-            'July' => 0,
-            'August' => 0,
-            'September' => 0,
-            'October' => 0,
-            'November' => 0,
-            'December' => 0
-        ];
-
-        $movieByMonth = [
-            'January' => 0,
-            'February' => 0,
-            'March' => 0,
-            'April' => 0,
-            'May' => 0,
-            'June' => 0,
-            'July' => 0,
-            'August' => 0,
-            'September' => 0,
-            'October' => 0,
-            'November' => 0,
-            'December' => 0
-        ];
-
+        $animeByMonth = $statService->initializeByPeriod($monthsOfYear);
+        $serieByMonth = $statService->initializeByPeriod($monthsOfYear);
+        $replayByMonth = $statService->initializeByPeriod($monthsOfYear);
+        $movieByMonth = $statService->initializeByPeriod($monthsOfYear);
 
         foreach ($allEpisodesShow as $episodeShow) {
 
             $episode = $episodeShow->getEpisode();
+            $day = $episodeShow->getShowDate()->format('l');
+            $month = $episodeShow->getShowDate()->format('F');
+            $duration = $episode->getDuration();
 
             switch ($episode->getSerie()->getSerieType()->getName()) {
             case "Anime":
-                $animeByDay[$episodeShow->getShowDate()->format('l')] += $episode->getDuration();
-                $animeByMonth[$episodeShow->getShowDate()->format('F')] += $episode->getDuration();
+                $animeByDay[$day] += $duration;
+                $animeByMonth[$month] += $duration;
                 break;
             case "Séries":
-                $serieByDay[$episodeShow->getShowDate()->format('l')] += $episode->getDuration();
-                $serieByMonth[$episodeShow->getShowDate()->format('F')] += $episode->getDuration();
+                $serieByDay[$day] += $duration;
+                $serieByMonth[$month] += $duration;
                 break;
             case "Replay":
-                $replayByDay[$episodeShow->getShowDate()->format('l')] += $episode->getDuration();
-                $replayByMonth[$episodeShow->getShowDate()->format('F')] += $episode->getDuration();
+                $replayByDay[$day] += $duration;
+                $replayByMonth[$month] += $duration;
                 break;
             }
-
         }
 
         foreach ($allMovies as $movie) {
-
-            $movieByDay[$movie->getShowDate()->format('l')] += $movie->getMovie()->getDuration();
-            $movieByMonth[$movie->getShowDate()->format('F')] += $movie->getMovie()->getDuration();
-
+            $day = $movie->getShowDate()->format('l');
+            $month = $movie->getShowDate()->format('F');
+            $duration = $movie->getMovie()->getDuration();
+            $movieByDay[$day] += $duration;
+            $movieByMonth[$month] += $duration;
         }
 
         $aujourdHui = new DateTime();
-
         $debutSite = new DateTime($aujourdHui->format('2024-01-01'));
 
-        $joursCount = [
-            'Monday' => 0,
-            'Tuesday' => 0,
-            'Wednesday' => 0,
-            'Thursday' => 0,
-            'Friday' => 0,
-            'Saturday' => 0,
-            'Sunday' => 0
-        ];
-
-        $moisCount = [
-            'January' => 0,
-            'February' => 0,
-            'March' => 0,
-            'April' => 0,
-            'May' => 0,
-            'June' => 0,
-            'July' => 0,
-            'August' => 0,
-            'September' => 0,
-            'October' => 0,
-            'November' => 0,
-            'December' => 0,
-        ];
-
+        $joursCount = $statService->initializeByPeriod($daysOfWeek);
+        $moisCount = $statService->initializeByPeriod($monthsOfYear);
         $saveMonth = null;
+
         while ($debutSite <= $aujourdHui) {
             $jourSemaine = $debutSite->format('l');
             $moisAnnee = $debutSite->format('F');
             $joursCount[$jourSemaine]++;
-            if($saveMonth !== $moisAnnee){
+            if ($saveMonth !== $moisAnnee) {
                 $moisCount[$moisAnnee]++;
                 $saveMonth = $moisAnnee;
             }
             $debutSite->modify('+1 day');
         }
 
-        foreach ($animeByDay as $key => $time) {
-            $animeByDay[$key] = $time / $joursCount[$key];
-        }
+        $statService->divideByPeriod($animeByDay, $joursCount);
+        $statService->divideByPeriod($serieByDay, $joursCount);
+        $statService->divideByPeriod($replayByDay, $joursCount);
+        $statService->divideByPeriod($movieByDay, $joursCount);
 
-        foreach ($serieByDay as $key => $time) {
-            $serieByDay[$key] = $time / $joursCount[$key];
-        }
+        $statService->divideByPeriod($animeByMonth, $moisCount);
+        $statService->divideByPeriod($serieByMonth, $moisCount);
+        $statService->divideByPeriod($replayByMonth, $moisCount);
+        $statService->divideByPeriod($movieByMonth, $moisCount);
 
-        foreach ($replayByDay as $key => $time) {
-            $replayByDay[$key] = $time / $joursCount[$key];
-        }
+        $timeChart = $statService->buildChart([$durationsByType['Anime'], $durationsByType['Séries'], $durationsByType['Replay'], $movieDuration['SUM']]);
+        $animeByDayChart = $statService->buildChart($animeByDay);
+        $serieByDayChart = $statService->buildChart($serieByDay);
+        $replayByDayChart = $statService->buildChart($replayByDay);
+        $movieByDayChart = $statService->buildChart($movieByDay);
 
-        foreach ($movieByDay as $key => $time) {
-            $movieByDay[$key] = $time / $joursCount[$key];
-        }
+        $animeByMonthChart = $statService->buildChart($animeByMonth);
+        $serieByMonthChart = $statService->buildChart($serieByMonth);
+        $replayByMonthChart = $statService->buildChart($replayByMonth);
+        $movieByMonthChart = $statService->buildChart($movieByMonth);
 
-        foreach ($animeByMonth as $key => $time) {
-            if ($moisCount[$key] > 0) {
-                $animeByMonth[$key] = $time / $moisCount[$key];
-            }
-        }
-
-        foreach ($serieByMonth as $key => $time) {
-            if ($moisCount[$key] > 0) {
-                $serieByMonth[$key] = $time / $moisCount[$key];
-            }
-        }
-
-        foreach ($replayByMonth as $key => $time) {
-            if ($moisCount[$key] > 0) {
-                $replayByMonth[$key] = $time / $moisCount[$key];
-            }
-        }
-
-        foreach ($movieByMonth as $key => $time) {
-            if ($moisCount[$key] > 0) {
-                $movieByMonth[$key] = $time / $moisCount[$key];
-            }
-        }
-
-        $timeChart = "[".$animeDuration.", ".$serieDuration.", ".$replayDuration.", ".$movieDuration['SUM']."]";
-
-        $animeByDayChart = "[".$animeByDay['Monday'].", ".$animeByDay['Tuesday'].", ".$animeByDay['Wednesday'].", ".$animeByDay['Thursday'].", ".$animeByDay['Friday'].", ".$animeByDay['Saturday'].", ".$animeByDay['Sunday']."]";
-
-        $serieByDayChart = "[".$serieByDay['Monday'].", ".$serieByDay['Tuesday'].", ".$serieByDay['Wednesday'].", ".$serieByDay['Thursday'].", ".$serieByDay['Friday'].", ".$serieByDay['Saturday'].", ".$serieByDay['Sunday']."]";
-
-        $replayByDayChart = "[".$replayByDay['Monday'].", ".$replayByDay['Tuesday'].", ".$replayByDay['Wednesday'].", ".$replayByDay['Thursday'].", ".$replayByDay['Friday'].", ".$replayByDay['Saturday'].", ".$replayByDay['Sunday']."]";
-
-        $movieByDayChart = "[".$movieByDay['Monday'].", ".$movieByDay['Tuesday'].", ".$movieByDay['Wednesday'].", ".$movieByDay['Thursday'].", ".$movieByDay['Friday'].", ".$movieByDay['Saturday'].", ".$movieByDay['Sunday']."]";
-
-        $animeByMonthChart = "[".$animeByMonth['January'].", ".$animeByMonth['February'].", ".$animeByMonth['March'].", ".$animeByMonth['April'].", ".$animeByMonth['May'].", ".$animeByMonth['June'].", ".$animeByMonth['July'].", ".$animeByMonth['August'].", ".$animeByMonth['September'].", ".$animeByMonth['October'].", ".$animeByMonth['November'].", ".$animeByMonth['December']."]";
-
-        $serieByMonthChart = "[".$serieByMonth['January'].", ".$serieByMonth['February'].", ".$serieByMonth['March'].", ".$serieByMonth['April'].", ".$serieByMonth['May'].", ".$serieByMonth['June'].", ".$serieByMonth['July'].", ".$serieByMonth['August'].", ".$serieByMonth['September'].", ".$serieByMonth['October'].", ".$serieByMonth['November'].", ".$serieByMonth['December']."]";
-
-        $replayByMonthChart = "[".$replayByMonth['January'].", ".$replayByMonth['February'].", ".$replayByMonth['March'].", ".$replayByMonth['April'].", ".$replayByMonth['May'].", ".$replayByMonth['June'].", ".$replayByMonth['July'].", ".$replayByMonth['August'].", ".$replayByMonth['September'].", ".$replayByMonth['October'].", ".$replayByMonth['November'].", ".$replayByMonth['December']."]";
-
-        $movieByMonthChart = "[".$movieByMonth['January'].", ".$movieByMonth['February'].", ".$movieByMonth['March'].", ".$movieByMonth['April'].", ".$movieByMonth['May'].", ".$movieByMonth['June'].", ".$movieByMonth['July'].", ".$movieByMonth['August'].", ".$movieByMonth['September'].", ".$movieByMonth['October'].", ".$movieByMonth['November'].", ".$movieByMonth['December']."]";
-
-
-        $labelGenreChart = "[";
-        $genreChart = "[";
-
-        foreach ($durationByGenre as $duration) {
-
-            $labelGenreChart .= '"'.$duration['name'].'", ';
-            $genreChart .= $duration['COUNT'].", ";
-        }
-
-        $labelGenreChart = rtrim($labelGenreChart, ", ")."]";
-        $genreChart = rtrim($genreChart, ", ")."]";
-
-        $labelThemeChart = "[";
-        $themeChart = "[";
-
-        foreach ($durationByTheme as $duration) {
-
-            $labelThemeChart .= '"'.$duration['name'].'", ';
-            $themeChart .= $duration['COUNT'].", ";
-        }
-
-
-        $labelThemeChart = rtrim($labelThemeChart, ", ")."]";
-        $themeChart = rtrim($themeChart, ", ")."]";
+        $genreChartData = $statService->buildLabelAndDataChart($durationByGenre);
+        $themeChartData = $statService->buildLabelAndDataChart($durationByTheme);
 
         return $this->render('stats/episode.html.twig', [
             'timeChart' => $timeChart,
@@ -314,94 +139,110 @@ class StatsController extends AbstractController
             'serieByMonthChart' => $serieByMonthChart,
             'replayByMonthChart' => $replayByMonthChart,
             'movieByMonthChart' => $movieByMonthChart,
-            'labelGenreChart' => $labelGenreChart,
-            'genreChart' => $genreChart,
-            'labelThemeChart' => $labelThemeChart,
-            'themeChart' => $themeChart,
+            'labelGenreChart' => $genreChartData['labels'],
+            'genreChart' => $genreChartData['values'],
+            'labelThemeChart' => $themeChartData['labels'],
+            'themeChart' => $themeChartData['values'],
             'navLinkId' => 'historique_stat',
         ]);
     }
 
 
+    /**
+     * @throws Exception
+     */
     #[Route('/manga', name: 'manga_stat')]
-    public function mangaStat(MangaRepository $mangaRepository): Response
+    public function mangaStat(StatService $statService, MangaRepository $mangaRepository, MangaTomeRepository $mangaTomeRepository): Response
     {
+
+        $daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+        $monthsOfYear = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+        $allMangaTome = $mangaTomeRepository->findAll();
+
+        $tomeStartByDay = $statService->initializeByPeriod($daysOfWeek);
+        $tomeStartByMonth = $statService->initializeByPeriod($monthsOfYear);
+        $tomeEndByDay = $statService->initializeByPeriod($daysOfWeek);
+        $tomeEndByMonth = $statService->initializeByPeriod($monthsOfYear);
+
+        foreach ($allMangaTome as $tome) {
+            if ($tome->getReadingStartDate()) {
+                $day = $tome->getReadingStartDate()->format('l');
+                $month = $tome->getReadingStartDate()->format('F');
+                $tomeStartByDay[$day]++;
+                $tomeStartByMonth[$month]++;
+                if ($tome->getReadingEndDate()) {
+                    $day = $tome->getReadingEndDate()->format('l');
+                    $month = $tome->getReadingEndDate()->format('F');
+                    $tomeEndByDay[$day]++;
+                    $tomeEndByMonth[$month]++;
+                }
+            }
+        }
+
+        $aujourdHui = new DateTime();
+        $debutSite = new DateTime($aujourdHui->format('2024-01-01'));
+
+        $joursCount = $statService->initializeByPeriod($daysOfWeek);
+        $moisCount = $statService->initializeByPeriod($monthsOfYear);
+        $saveMonth = null;
+
+        while ($debutSite <= $aujourdHui) {
+            $jourSemaine = $debutSite->format('l');
+            $moisAnnee = $debutSite->format('F');
+            $joursCount[$jourSemaine]++;
+            if ($saveMonth !== $moisAnnee) {
+                $moisCount[$moisAnnee]++;
+                $saveMonth = $moisAnnee;
+            }
+            $debutSite->modify('+1 day');
+        }
+
+        $statService->divideByPeriod($tomeStartByDay, $joursCount);
+        $statService->divideByPeriod($tomeStartByMonth, $moisCount);
+        $statService->divideByPeriod($tomeEndByDay, $joursCount);
+        $statService->divideByPeriod($tomeEndByMonth, $moisCount);
+
+        $tomeStartByDayChart = $statService->buildChart($tomeStartByDay);
+        $tomeStartByMonthChart = $statService->buildChart($tomeStartByMonth);
+        $tomeEndByDayChart = $statService->buildChart($tomeEndByDay);
+        $tomeEndByMonthChart = $statService->buildChart($tomeEndByMonth);
 
         $mangaTomesByGenre = $mangaRepository->getMangaTomeByGenre();
         $mangaTomesByTheme = $mangaRepository->getMangaTomeByTheme();
 
-        $labelGenreChart = "[";
-        $genreChart = "[";
-
-        foreach ($mangaTomesByGenre as $count) {
-
-            $labelGenreChart .= '"'.$count['name'].'", ';
-            $genreChart .= $count['COUNT'].", ";
-        }
-
-        $labelGenreChart = rtrim($labelGenreChart, ", ")."]";
-        $genreChart = rtrim($genreChart, ", ")."]";
-
-        $labelThemeChart = "[";
-        $themeChart = "[";
-
-        foreach ($mangaTomesByTheme as $count) {
-
-            $labelThemeChart .= '"'.$count['name'].'", ';
-            $themeChart .= $count['COUNT'].", ";
-        }
-
-
-        $labelThemeChart = rtrim($labelThemeChart, ", ")."]";
-        $themeChart = rtrim($themeChart, ", ")."]";
+        $genreChartData = $statService->buildLabelAndDataChart($mangaTomesByGenre);
+        $themeChartData = $statService->buildLabelAndDataChart($mangaTomesByTheme);
 
         return $this->render('stats/manga.html.twig', [
-            'labelGenreChart' => $labelGenreChart,
-            'genreChart' => $genreChart,
-            'labelThemeChart' => $labelThemeChart,
-            'themeChart' => $themeChart,
+            'tomeStartByDayChart' => $tomeStartByDayChart,
+            'tomeStartByMonthChart' => $tomeStartByMonthChart,
+            'tomeEndByDayChart' => $tomeEndByDayChart,
+            'tomeEndByMonthChart' => $tomeEndByMonthChart,
+            'labelGenreChart' => $genreChartData['labels'],
+            'genreChart' => $genreChartData['values'],
+            'labelThemeChart' => $themeChartData['labels'],
+            'themeChart' => $themeChartData['values'],
             'navLinkId' => 'manga_stat',
         ]);
     }
 
 
     #[Route('/anime', name: 'anime_stat')]
-    public function animeStat(EpisodeRepository $episodeRepository): Response
+    public function animeStat(StatService $statService, EpisodeRepository $episodeRepository): Response
     {
 
         $durationByGenre = $episodeRepository->getDurationGenre();
         $durationByTheme = $episodeRepository->getDurationTheme();
 
-        $labelGenreChart = "[";
-        $genreChart = "[";
-
-        foreach ($durationByGenre as $duration) {
-
-            $labelGenreChart .= '"'.$duration['name'].'", ';
-            $genreChart .= $duration['COUNT'].", ";
-        }
-
-        $labelGenreChart = rtrim($labelGenreChart, ", ")."]";
-        $genreChart = rtrim($genreChart, ", ")."]";
-
-        $labelThemeChart = "[";
-        $themeChart = "[";
-
-        foreach ($durationByTheme as $duration) {
-
-            $labelThemeChart .= '"'.$duration['name'].'", ';
-            $themeChart .= $duration['COUNT'].", ";
-        }
-
-
-        $labelThemeChart = rtrim($labelThemeChart, ", ")."]";
-        $themeChart = rtrim($themeChart, ", ")."]";
+        $genreChartData = $statService->buildLabelAndDataChart($durationByGenre);
+        $themeChartData = $statService->buildLabelAndDataChart($durationByTheme);
 
         return $this->render('stats/anime.html.twig', [
-            'labelGenreChart' => $labelGenreChart,
-            'genreChart' => $genreChart,
-            'labelThemeChart' => $labelThemeChart,
-            'themeChart' => $themeChart,
+            'labelGenreChart' => $genreChartData['labels'],
+            'genreChart' => $genreChartData['values'],
+            'labelThemeChart' => $themeChartData['labels'],
+            'themeChart' => $themeChartData['values'],
             'navLinkId' => 'anime_stat',
         ]);
     }
