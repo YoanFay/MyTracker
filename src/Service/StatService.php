@@ -62,8 +62,6 @@ class StatService
     function buildLabelAndDataChart($data): array
     {
 
-        dump($data);
-
         $labels = array_map(fn($item) => '"'.$item['name'].'"', $data);
         $values = array_column($data, 'COUNT');
         return [
