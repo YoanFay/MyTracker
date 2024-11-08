@@ -248,23 +248,6 @@ class EpisodeRepository extends ServiceEntityRepository
 
     /**
      * @return float|int|mixed|string|null
-     * @throws NonUniqueResultException
-     */
-    public function findLastEpisode(Serie $serie)
-    {
-
-        return $this->createQueryBuilder('e')
-            ->andWhere('e.serie = :serie')
-            ->setParameter('serie', $serie)
-            ->orderBy('e.showDate', 'DESC')
-            ->setMaxResults(1)
-            ->getQuery()
-            ->getOneOrNullResult();
-    }
-
-
-    /**
-     * @return float|int|mixed|string|null
      */
     public function findByDateNotNull()
     {

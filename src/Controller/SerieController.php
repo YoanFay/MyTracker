@@ -324,7 +324,7 @@ class SerieController extends AbstractController
      * @throws NonUniqueResultException
      */
     #[Route('/company/{id}', name: 'serie_company')]
-    public function serieByCompany(EpisodeRepository $episodeRepository, CompanyRepository $companyRepository, $id): Response
+    public function serieByCompany(EpisodeShowRepository $episodeShowRepository, CompanyRepository $companyRepository, $id): Response
     {
 
         $company = $companyRepository->find($id);
@@ -333,7 +333,7 @@ class SerieController extends AbstractController
 
         foreach ($company->getSeries() as $serie) {
 
-            $lastEpisode = $episodeRepository->findLastEpisode($serie);
+            $lastEpisode = $episodeShowRepository->findLastEpisodeBySerie($serie);
 
             $serieTab[] = [
                 'id' => $serie->getId(),
