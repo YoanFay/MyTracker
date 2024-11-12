@@ -51,7 +51,7 @@ class SerieController extends AbstractController
         $idSerie = str_replace('detail/', '', $idSerie);
 
         $serie = $serieRepository->findOneBy(['id' => $id]);
-        $totalDuration = $episodeRepository->getDurationBySerie($id);
+        $totalDuration = $episodeShowRepository->getDurationBySerie($id);
         $countEpisode = $episodeRepository->getCountBySerie($id);
         $episodesShow = $episodeShowRepository->getEpisodesBySerie($serie);
 

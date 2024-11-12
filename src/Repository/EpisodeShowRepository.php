@@ -132,6 +132,20 @@ class EpisodeShowRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
+
+    public function getDurationBySerie($id)
+    {
+
+        return $this->createQueryBuilder('es')
+            ->select('SUM(e.duration) AS COUNT')
+            ->leftJoin('es.episode', 'e')
+            ->leftJoin('e.serie', 's')
+            ->andWhere('s.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
 //    /**
 //     * @return EpisodeShow[] Returns an array of EpisodeShow objects
 //     */
