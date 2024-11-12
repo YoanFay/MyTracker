@@ -72,19 +72,6 @@ class EpisodeRepository extends ServiceEntityRepository
     }
 
 
-    public function getCountBySerie($id)
-    {
-
-        return $this->createQueryBuilder('e')
-            ->select('count(e.name) AS COUNT')
-            ->leftJoin('e.serie', 's')
-            ->andWhere('s.id = :id')
-            ->setParameter('id', $id)
-            ->getQuery()
-            ->getOneOrNullResult();
-    }
-
-
     /**
      * @param $serie
      *

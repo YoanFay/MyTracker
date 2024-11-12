@@ -29,7 +29,7 @@ class SerieController extends AbstractController
 
 
     #[Route('/detail/{id}', name: 'serie_detail')]
-    public function detail(Request $request, RequestStack $requestStack, SerieRepository $serieRepository, EpisodeRepository $episodeRepository, EpisodeShowRepository $episodeShowRepository, $id): Response
+    public function detail(Request $request, RequestStack $requestStack, SerieRepository $serieRepository, EpisodeShowRepository $episodeShowRepository, $id): Response
     {
 
         $referer = $request->headers->get('referer');
@@ -52,7 +52,7 @@ class SerieController extends AbstractController
 
         $serie = $serieRepository->findOneBy(['id' => $id]);
         $totalDuration = $episodeShowRepository->getDurationBySerie($id);
-        $countEpisode = $episodeRepository->getCountBySerie($id);
+        $countEpisode = $episodeShowRepository->getCountBySerie($id);
         $episodesShow = $episodeShowRepository->getEpisodesBySerie($serie);
 
         $studios = [];
