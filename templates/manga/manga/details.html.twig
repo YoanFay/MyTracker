@@ -157,7 +157,7 @@
             $('#imageModal img').attr('src', imgUrl);
             $('#editTome').attr('data-tome-id', id).attr('data-tome-number', number);
 
-            $('#modalInfoTome').append(data);
+            $('#modalInfoTome').html(data);
         }
 
         function safeDelete() {
