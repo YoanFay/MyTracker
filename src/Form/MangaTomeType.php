@@ -26,7 +26,8 @@ class MangaTomeType extends AbstractType
             ->add('lastTome', CheckboxType::class, [
                 'label' => "Dernier tome du manga ?",
                 'attr' => ['class' => 'form-check-input ms-2 mt-3'],
-                'label_attr' => ['class' => 'my-2']
+                'label_attr' => ['class' => 'my-2'],
+                'required' => false
             ])
             ->add('page', IntegerType::class, [
                 'label' => "Nombre de page",
