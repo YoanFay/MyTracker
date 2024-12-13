@@ -225,6 +225,7 @@ class UpdateDateService
             $serieUpdate->setNewNextAired($nextAired);
             $anime->setNextAired($nextAired);
 
+            $serieUpdate->setOldAiredType($serieUpdate->getNextAiredType());
             $serieUpdate->setNextAiredType($typeDate);
             $anime->setNextAiredType($typeDate);
 

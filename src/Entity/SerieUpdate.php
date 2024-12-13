@@ -36,6 +36,9 @@ class SerieUpdate
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nextAiredType = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $oldAiredType = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -121,6 +124,18 @@ class SerieUpdate
     public function setNextAiredType(?string $nextAiredType): static
     {
         $this->nextAiredType = $nextAiredType;
+
+        return $this;
+    }
+
+    public function getOldAiredType(): ?string
+    {
+        return $this->oldAiredType;
+    }
+
+    public function setOldAiredType(?string $oldAiredType): static
+    {
+        $this->oldAiredType = $oldAiredType;
 
         return $this;
     }
