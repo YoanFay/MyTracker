@@ -11,7 +11,7 @@
                     {% set serie_link = '<a class="text-decoration-none text-black" href="' ~ path('serie_detail', {id: update.serie.id}) ~ '">' ~ update.serie.name ~ '</a>&nbsp;' %}
 
                     {% if update.newStatus == "Ended" %}
-                        {{ serie_link|raw }}est terminé<i class="material-icons ms-1 text-danger">block</i>
+                        {{ serie_link|raw }}est terminé<i class="material-icons ms-1 text-danger text-nowrap">block</i>
 
                     {% elseif update.newStatus == "Continuing" and update.oldStatus == "Ended" %}
                         Reprise de {{ serie_link|raw }}<i class="material-icons ms-1 text-success">check_circle</i>
@@ -23,7 +23,7 @@
                         {% endif %}
 
                     {% elseif update.newNextAired == null and update.serie.status == "Continuing" and update.oldStatus not in ["Ended", null] %}
-                        {{ serie_link|raw }}est en pause
+                        {{ serie_link|raw }}est en pause<i class="material-icons ms-1 text-warning">hourglass_pause</i>
 
                     {% elseif update.newStatus == "Upcoming" %}
                         La prochaine saison de {{ serie_link|raw }}a été annoncée
