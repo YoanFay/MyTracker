@@ -8,29 +8,29 @@
         <div class="card-body p-0">
             {% for update in updateByDate %}
                 <p class="border-bottom m-0 p-2 d-flex align-items-center">
-                    {% set serie_link = '<a class="text-decoration-none text-black" href="' ~ path('serie_detail', {id: update.serie.id}) ~ '">' ~ update.serie.name ~ '</a>&nbsp;' %}
+                    {% set serie_link = '<a class="text-decoration-none text-black text-nowrap" href="' ~ path('serie_detail', {id: update.serie.id}) ~ '">' ~ update.serie.name ~ '</a>&nbsp;' %}
 
                     {% if update.newStatus == "Ended" %}
-                        {{ serie_link|raw }}est terminé<i class="material-icons ms-1 text-danger text-nowrap">block</i>
+                        <span>{{ serie_link|raw }}est terminé</span><i class="material-icons ms-1 text-danger">block</i>
 
                     {% elseif update.newStatus == "Continuing" and update.oldStatus == "Ended" %}
-                        Reprise de {{ serie_link|raw }}<i class="material-icons ms-1 text-success">check_circle</i>
+                        <span>Reprise de {{ serie_link|raw }}</span><i class="material-icons ms-1 text-success">check_circle</i>
 
                     {% elseif update.newNextAired and update.newStatus != "Upcoming" %}
-                        {{ serie_link|raw }}- Le prochain épisode sera {{ dateUpcoming(update.newNextAired, update.nextAiredType) }}
+                        <span>{{ serie_link|raw }}- Le prochain épisode sera {{ dateUpcoming(update.newNextAired, update.nextAiredType) }}
                         {% if update.oldNextAired == null or update.nextAiredType == "year" or update.nextAiredType == "month" or ( update.nextAiredType == null and (update.oldAiredType == "month" or update.oldAiredType == "year") ) %}
                             <i class="material-icons ms-1 text-success">check_circle</i>
-                        {% endif %}
+                        {% endif %}</span>
 
                     {% elseif update.newNextAired == null and update.serie.status == "Continuing" and update.oldStatus not in ["Ended", null] %}
-                        {{ serie_link|raw }}est en pause<i class="material-icons ms-1 text-warning">hourglass_pause</i>
+                        <span>{{ serie_link|raw }}est en pause</span><i class="material-icons ms-1 text-warning">hourglass_pause</i>
 
                     {% elseif update.newStatus == "Upcoming" %}
-                        La prochaine saison de {{ serie_link|raw }}a été annoncée
-                        {% if update.newNextAired %} pour {{ dateUpcoming(update.newNextAired, update.nextAiredType)|replace({'en ': ''}) }}{% endif %}
+                    <span>La prochaine saison de {{ serie_link|raw }}a été annoncée
+                        {% if update.newNextAired %} pour {{ dateUpcoming(update.newNextAired, update.nextAiredType)|replace({'en ': ''}) }}{% endif %}</span><i class="material-icons ms-1 text-success">check_circle</i>
 
                     {% elseif update.newStatus == null and update.oldStatus == null and update.oldNextAired and update.newNextAired == null %}
-                        {{ serie_link|raw }}est terminé pour l'instant
+                        <span>{{ serie_link|raw }}est terminé pour l'instant</span>
                     {% endif %}
                 </p>
             {% endfor %}
