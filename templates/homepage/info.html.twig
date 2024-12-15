@@ -8,7 +8,7 @@
         <div class="card-body p-0">
             {% for update in updateByDate %}
                 <p class="border-bottom m-0 p-2 d-flex align-items-center">
-                    {% set serie_link = '<a class="text-decoration-none text-black text-nowrap" href="' ~ path('serie_detail', {id: update.serie.id}) ~ '">' ~ update.serie.name ~ '</a>&nbsp;' %}
+                    {% set serie_link = '<a class="text-decoration-none text-black" href="' ~ path('serie_detail', {id: update.serie.id}) ~ '">' ~ update.serie.name ~ '</a>&nbsp;' %}
 
                     {% if update.newStatus == "Ended" %}
                         <span>{{ serie_link|raw }}est terminé</span><i class="material-icons ms-1 text-danger">block</i>
