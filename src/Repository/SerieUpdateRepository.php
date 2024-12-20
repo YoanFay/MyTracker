@@ -42,8 +42,8 @@ class SerieUpdateRepository extends ServiceEntityRepository
     public function lastWeekUpdate()
     {
         return $this->createQueryBuilder('s')
-            ->where('su.updatedAt >= :lundiSemaineDerniere')
-            ->andWhere('su.updatedAt <= :dimancheSemaineDerniere')
+            ->where('s.updatedAt >= :lundiSemaineDerniere')
+            ->andWhere('s.updatedAt <= :dimancheSemaineDerniere')
             ->setParameter('lundiSemaineDerniere', (new \DateTime())->modify('last week monday')->format('Y-m-d 00:00:00'))
             ->setParameter('dimancheSemaineDerniere', (new \DateTime())->modify('last week sunday')->format('Y-m-d 23:59:59'))
             ->getQuery()
