@@ -58,13 +58,13 @@ class SendMailCommand extends Command
                 $text = $name." - Le prochain épisode sera ".$this->timeService->dateUpcoming($update->getSerie()->getNextAired(), $update->getNextAiredType());
 
                 if($update->getOldNextAired() === null or $update->getNextAiredType() === "year" or $update->getNextAiredType() === "month" or ($update->getNextAiredType() == null and ($update->getOldAiredType() === "month" or $update->getOldAiredType() === "year"))){
-                    $green[] = ['info', $text];
+                    $green[] = ['info' => $text];
                 }else{
-                    $white[] = ['info', $text];
+                    $white[] = ['info' => $text];
                 }
             }
             elseif($update->getNewNextAired() === null and $update->getSerie()->getStatus() === "Continuing" and $update->getOldStatus() !== "Ended" and $update->getOldStatus() !== null){
-                $orange = ['info', $name." est en pause"];
+                $orange = ['info' => $name." est en pause"];
             }
             elseif($update->getNewStatus() === "Upcoming"){
                 $text = "La prochaine saison de ".$name." a été annoncée";
@@ -73,7 +73,7 @@ class SendMailCommand extends Command
                     $text .= " pour ".str_replace("en ", "", $this->timeService->dateUpcoming($update->getNewNextAired(), $update->getNextAiredType()));
                 }
 
-                $green[] = ['info', $text];
+                $green[] = ['info' => $text];
             }
             elseif($update->getNewStatus() === null and $update->getOldStatus() === null and $update->getOldNextAired() and $update->getNewNextAired() === null){
                 $red[] = ['info' => $name." est terminé pour l'instant"];
@@ -88,8 +88,6 @@ class SendMailCommand extends Command
             'red' => $red,
             'white' => $white,
         ];
-
-        dump($updates);
 
         $this->mailService->sendEmail($updates);
 
