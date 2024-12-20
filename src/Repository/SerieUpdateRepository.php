@@ -46,7 +46,7 @@ class SerieUpdateRepository extends ServiceEntityRepository
             ->andWhere('s.updatedAt <= :dimancheSemaineDerniere')
             ->setParameter('lundiSemaineDerniere', (new \DateTime())->modify('last week monday')->format('Y-m-d 00:00:00'))
             ->setParameter('dimancheSemaineDerniere', (new \DateTime())->modify('last week sunday')->format('Y-m-d 23:59:59'))
-            ->orderBy('s.newNextAired')
+            ->orderBy('s.newNextAired', 'ASC')
             ->getQuery()
             ->getResult()
             ;
