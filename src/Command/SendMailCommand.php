@@ -55,7 +55,7 @@ class SendMailCommand extends Command
                 $green[] = ['info' => "Reprise de ".$name];
             }
             elseif($update->getNewNextAired() and $update->getNewStatus() !== "Upcoming"){
-                $text = $name." - Le prochain épisode sera ".$this->timeService->dateUpcoming($update->getSerie()->getNextAired(), $update->getNextAiredType());
+                $text = $name." - Le prochain épisode sera ".$this->timeService->dateUpcoming($update->getNewNextAired(), $update->getNextAiredType());
 
                 if($update->getOldNextAired() === null or $update->getNextAiredType() === "year" or $update->getNextAiredType() === "month" or ($update->getNextAiredType() == null and ($update->getOldAiredType() === "month" or $update->getOldAiredType() === "year"))){
                     $green[] = ['info' => $text];
