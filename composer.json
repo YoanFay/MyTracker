@@ -8,6 +8,7 @@
     "require": {
         "php": "^8.1.0",
         "ext-ctype": "*",
+        "ext-curl": "*",
         "ext-gd": "*",
         "ext-iconv": "*",
         "ext-json": "*",
@@ -17,6 +18,7 @@
         "doctrine/doctrine-bundle": "^2.10",
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "^2.17",
+        "getbrevo/brevo-php": "2.0.3",
         "phpdocumentor/reflection-docblock": "^5.3",
         "phpstan/phpdoc-parser": "^1.23",
         "symfony/asset": "5.4.*",
@@ -47,8 +49,7 @@
         "symfony/yaml": "5.4.*",
         "twbs/bootstrap": "^5.3",
         "twig/extra-bundle": "^2.12|^3.0",
-        "twig/twig": "^2.12|^3.0",
-      "ext-curl": "*"
+        "twig/twig": "^2.12|^3.0"
     },
     "require-dev": {
         "phpstan/phpstan": "^1.11",
