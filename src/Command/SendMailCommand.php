@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Entity\SerieUpdate;
 use App\Repository\SerieUpdateRepository;
 use App\Service\MailService;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -35,22 +36,31 @@ class SendMailCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
 
-        $serieUpdate = $this->serieUpdateRepository->lastWeekUpdate();
-
         $green = [];
         $yellow = [];
         $red = [];
         $white = [];
 
+        $serieUpdate = $this->serieUpdateRepository->lastWeekUpdate();
 
-        $update = [
+        /** @var SerieUpdate $update */
+        foreach ($serieUpdate as $update){
+
+            if ($update->getNewStatus() === "Continuing" and $update->getOldStatus() == "Ended"){
+                $green[] = ['info' => "Reprise de ".$update->getSerie()->getName()];
+            }
+
+        }
+
+
+        $updates = [
             'green' => $green,
             'yellow' => $yellow,
             'red' => $red,
             'white' => $white,
         ];
 
-        $this->mailService->sendEmail($update);
+        $this->mailService->sendEmail($updates);
 
         return Command::SUCCESS;
     }
