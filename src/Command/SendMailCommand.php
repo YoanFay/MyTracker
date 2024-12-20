@@ -89,6 +89,8 @@ class SendMailCommand extends Command
             'white' => $white,
         ];
 
+        dump($updates);
+
         $this->mailService->sendEmail($updates);
 
         return Command::SUCCESS;
