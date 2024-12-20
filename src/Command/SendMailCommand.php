@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Repository\SerieUpdateRepository;
 use App\Service\MailService;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -13,12 +14,15 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class SendMailCommand extends Command
 {
-    private $mailService;
+    private MailService $mailService;
 
-    public function __construct(MailService $mailService)
+    private SerieUpdateRepository $serieUpdateRepository;
+
+    public function __construct(MailService $mailService, SerieUpdateRepository $serieUpdateRepository)
     {
         parent::__construct();
         $this->mailService = $mailService;
+        $this->serieUpdateRepository = $serieUpdateRepository;
     }
 
     protected function configure(): void
@@ -31,18 +35,22 @@ class SendMailCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
 
-        $test = [
-            'green' => [
-                ['info' => 'ligne 1'],
-                ['info' => 'ligne 2'],
-                ['info' => 'ligne 3'],
-                ['info' => 'ligne 4'],
-                ['info' => 'ligne 5'],
-                ['info' => 'ligne 6'],
-            ],
+        $serieUpdate = $this->serieUpdateRepository->lastWeekUpdate();
+
+        $green = [];
+        $yellow = [];
+        $red = [];
+        $white = [];
+
+
+        $update = [
+            'green' => $green,
+            'yellow' => $yellow,
+            'red' => $red,
+            'white' => $white,
         ];
 
-        $this->mailService->sendEmail($test);
+        $this->mailService->sendEmail($update);
 
         return Command::SUCCESS;
     }
