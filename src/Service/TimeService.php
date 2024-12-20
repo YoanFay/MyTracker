@@ -114,4 +114,44 @@ class TimeService
         // Affichage de la date
         return $numeroJour.$suffixe." ".$mois." ".$annee;
     }
+
+
+    public function dateUpcoming($date, $type)
+    {
+
+        if (!$type) {
+            $type = "day";
+        }
+
+        if (is_string($date)) {
+            $date = new DateTime($date);
+        }
+
+        // Jour de la semaine
+        $joursSemaine = array('Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi');
+        $day = $joursSemaine[$date->format('w')];
+
+        // Mois
+        $moisEnFrancais = array(
+            'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet',
+            'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'
+        );
+
+        $month = $moisEnFrancais[$date->format('n') - 1];
+
+        $year = $date->format('Y');
+
+        // Numéro du jour avec suffixe (1er, 2e, etc.)
+        $numDay = $date->format('j');
+        $suffixe = ($numDay == 1) ?
+            'er' :
+            '';
+
+        return match ($type) {
+            'year' => 'en '.$year,
+            'month' => 'en '.$month." ".$year,
+            'day' => 'le '.$day." ".$numDay.$suffixe." ".$month." ".$year
+        };
+
+    }
 }
