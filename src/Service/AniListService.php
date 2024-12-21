@@ -132,10 +132,6 @@ class AniListService
                 if ($relation && ($status === "Ended" || $status === "Upcoming")) {
                     $name = $data['relations']['nodes'][$relationKey]['title']['english'];
 
-                    if (!$name){
-                        $name = $data['relations']['nodes'][$relationKey]['title']['romaji'];
-                    }
-
                 } else {
                     $ok = false;
                 }
