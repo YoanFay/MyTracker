@@ -39,30 +39,34 @@ class UpdateDateCommand extends Command
     {
 
         $animes = $this->serieRepository->noFirstAiredAnime();
+        dump("------------------------------------------------ updateFirstAiredAnime ------------------------------------------------");
 
         foreach ($animes as $anime) {
-            
+
             $this->updateDateService->updateFirstAiredAnime($anime);
             
         }
 
         $animes = $this->serieRepository->endedAnime();
+        dump("------------------------------------------------ updateEndedAnime ------------------------------------------------");
 
         foreach ($animes as $anime) {
-            
+
             $this->updateDateService->updateEndedAnime($anime);
             
         }
 
         $animes = $this->serieRepository->updateAiredAnime();
+        dump("------------------------------------------------ updateAiredAnime ------------------------------------------------");
 
         foreach ($animes as $anime) {
-            
+
             $this->updateDateService->updateAiredAnime($anime);
             
         }
 
         $animes = $this->serieRepository->getAnimeWithoutLastDate();
+        dump("------------------------------------------------ updateLastAiredAnime ------------------------------------------------");
 
         foreach ($animes as $anime) {
 
@@ -71,6 +75,7 @@ class UpdateDateCommand extends Command
         }
 
         $series = $this->serieRepository->noFirstAired();
+        dump("------------------------------------------------ updateFirstAired ------------------------------------------------");
 
         foreach ($series as $serie){
 
@@ -79,6 +84,7 @@ class UpdateDateCommand extends Command
         }
 
         $series = $this->serieRepository->ended();
+        dump("------------------------------------------------ updateEnded ------------------------------------------------");
 
         foreach ($series as $serie){
 
@@ -87,6 +93,7 @@ class UpdateDateCommand extends Command
         }
 
         $series = $this->serieRepository->updateAired();
+        dump("------------------------------------------------ updateAired ------------------------------------------------");
 
         foreach ($series as $serie){
 
