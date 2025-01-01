@@ -28,7 +28,7 @@ class HomepageController extends AbstractController
     public function index(SerieRepository $serieRepository): Response
     {
 
-        $releaseToday = $serieRepository->findBy(['nextAired' => new DateTime()]);
+        $releaseToday = $serieRepository->findBy(['nextAired' => new DateTime(), 'nextAiredType' => null]);
 
         return $this->render("homepage/index.html.twig", [
             'releaseToday' => $releaseToday
