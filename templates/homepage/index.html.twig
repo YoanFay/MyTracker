@@ -33,6 +33,8 @@
                                  alt="{{ image.alt }}">
                             <p class="text-center">{{ serie.name }}</p>
                         </div>
+                    {% else %}
+                        <p>Aucune sortie aujourd'hui</p>
                     {% endfor %}
                 </div>
             </div>
