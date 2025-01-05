@@ -18,7 +18,7 @@
 
                     {% elseif update.newNextAired and update.newStatus != "Upcoming" %}
                         <span>{{ serie_link|raw }}- Le prochain épisode sera {{ dateUpcoming(update.newNextAired, update.nextAiredType) }}
-                        {% if update.oldNextAired == null or update.nextAiredType == "year" or update.nextAiredType == "month" or ( update.nextAiredType == null and (update.oldAiredType == "month" or update.oldAiredType == "year") ) %}
+                        {% if (update.oldNextAired == null and update.oldStatus != null ) or update.nextAiredType == "year" or update.nextAiredType == "month" or ( update.nextAiredType == null and (update.oldAiredType == "month" or update.oldAiredType == "year") ) %}
                             <i class="material-icons ms-1 text-success">check_circle</i>
                         {% endif %}</span>
 

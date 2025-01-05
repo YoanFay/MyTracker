@@ -57,10 +57,8 @@ class SendMailCommand extends Command
             elseif($update->getNewNextAired() and $update->getNewStatus() !== "Upcoming"){
                 $text = $name." - Le prochain épisode sera ".$this->timeService->dateUpcoming($update->getNewNextAired(), $update->getNextAiredType());
 
-                if($update->getOldNextAired() === null or $update->getNextAiredType() === "year" or $update->getNextAiredType() === "month" or ($update->getNextAiredType() == null and ($update->getOldAiredType() === "month" or $update->getOldAiredType() === "year"))){
+                if(($update->getOldNextAired() === null and $update->getOldStatus() !== null) or $update->getNextAiredType() === "year" or $update->getNextAiredType() === "month" or ($update->getNextAiredType() == null and ($update->getOldAiredType() === "month" or $update->getOldAiredType() === "year"))){
                     $green[] = ['info' => $text];
-                }else{
-                    $white[] = ['info' => $text];
                 }
             }
             elseif($update->getNewNextAired() === null and $update->getSerie()->getStatus() === "Continuing" and $update->getOldStatus() !== "Ended" and $update->getOldStatus() !== null){
@@ -79,6 +77,12 @@ class SendMailCommand extends Command
                 $red[] = ['info' => $name." est terminé pour l'instant"];
             }
 
+        }
+
+        $serieUpdate = $this->serieUpdateRepository->nextWeekAired();
+
+        foreach ($serieUpdate as $update){
+            $white[] = $update->getSerie()->getName()." - Le prochain épisode sera ".$this->timeService->dateUpcoming($update->getNewNextAired(), $update->getNextAiredType());
         }
 
 

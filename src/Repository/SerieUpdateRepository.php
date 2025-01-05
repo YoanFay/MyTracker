@@ -53,6 +53,23 @@ class SerieUpdateRepository extends ServiceEntityRepository
             ;
     }
 
+
+    public function nextWeekAired()
+    {
+
+        return $this->createQueryBuilder('s')
+            ->where('s.newNextAired >= :aujourdhui')
+            ->andWhere('s.newNextAired <= :dimanche')
+            ->andWhere('s.newStatus <> :status OR s.newStatus IS NULL')
+            ->setParameter('aujourdhui', (new \DateTime())->format('Y-m-d 00:00:00'))
+            ->setParameter('dimanche', (new \DateTime())->modify('next sunday')->format('Y-m-d 23:59:59'))
+            ->setParameter('status', 'Upcoming')
+            ->orderBy('s.newNextAired', 'ASC')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
 //    /**
 //     * @return SerieUpdate[] Returns an array of SerieUpdate objects
 //     */
