@@ -82,7 +82,17 @@ class SendMailCommand extends Command
         $serieUpdate = $this->serieUpdateRepository->nextWeekAired();
 
         foreach ($serieUpdate as $update){
-            $white[] = $update->getSerie()->getName()." - Le prochain épisode sera ".$this->timeService->dateUpcoming($update->getNewNextAired(), $update->getNextAiredType());
+            
+            $key = $update->getNewNextAired()->format('Y-m-d');
+            
+            if(!array_key_exists($key, $white)){
+                $white[$key] = [
+                    'title' => str_replace("le ", "", $this->timeService->dateUpcoming($update->getNewNextAired(), $update->getNextAiredType())),
+                    'value' => [],
+                    ];
+            }
+            
+            $white[$key]['value'][] = $update->getSerie()->getName();
         }
 
 
@@ -92,6 +102,10 @@ class SendMailCommand extends Command
             'red' => $red,
             'white' => $white,
         ];
+        
+        $updates['white'] = array_map(function ($key, $value) {
+    return ['key' => $key, 'values' => $value];
+}, array_keys($updates['white']), $updates['white']);
 
         $this->mailService->sendEmail($updates);
 
