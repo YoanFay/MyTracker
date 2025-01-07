@@ -151,6 +151,8 @@ class HistoriqueController extends AbstractController
 
         }
 
+        krsort($listDate);
+
         return $this->render('historique\index.html.twig', [
             'list' => $listDate,
             'navLinkId' => 'historique',

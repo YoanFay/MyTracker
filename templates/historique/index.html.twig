@@ -32,7 +32,7 @@
             {% for monthName, month in year %}
             {% if 'total' not in monthName and month != [] %}
             <tr>
-                <td><a class="text-decoration-none text-black" href='{{path("historique_date", {"year": yearName, "month": month.id})}}'>{{ monthName|capitalize }}</a></td>
+                <td><a class="text-decoration-none text-black" href='{{path("historique_date", {"year": yearName, "month": month.id})}}'>{{ monthName|capitalize|replace({"Fevrier": "Février", "Aout": "Août", "Decembre": "Décembre"}) }}</a></td>
                 <td>{{ month.anime|MsToHM }}</td>
                 <td>{{ month.series|MsToHM }}</td>
                 <td>{{ month.replay|MsToHM }}</td>
