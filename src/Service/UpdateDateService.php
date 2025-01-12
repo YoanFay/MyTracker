@@ -39,8 +39,6 @@ class UpdateDateService
     public function updateFirstAiredAnime($anime): void
     {
 
-        dump($anime->getName());
-
         $query = 'query ($search: String) { Media (search: $search, type: ANIME) { startDate{day, month, year} }}';
 
         $data = $this->aniListService->getData($query, $anime, false);

@@ -40,7 +40,7 @@ class AniListService
         }
 
         $variables = [
-            "search" => $name
+            "search" => str_replace('＜', '<', $name)
         ];
 
         return $this->request($query, $variables);
