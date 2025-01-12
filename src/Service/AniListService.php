@@ -39,6 +39,8 @@ class AniListService
             $name = $serie->getNameEng();
         }
 
+        dump($name);
+
         $variables = [
             "search" => str_replace('＜', '<', $name)
         ];
