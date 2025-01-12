@@ -112,6 +112,10 @@ class AniListService
 
         do {
 
+            if ($name === null){
+                continue;
+            }
+
             $name = mb_convert_kana($name, 'a', 'UTF-8');
 
             dump($name);
