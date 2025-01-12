@@ -39,7 +39,7 @@ class AniListService
             $name = $serie->getNameEng();
         }
 
-        $name = str_replace('＜', '<', $name);
+        $name = mb_convert_kana($name, 'a', 'UTF-8');
 
         dump($name);
 
