@@ -114,8 +114,6 @@ class AniListService
 
             $name = mb_convert_kana($name, 'a', 'UTF-8');
 
-            dump($name);
-
             $variables = [
                 "search" => $name
             ];
