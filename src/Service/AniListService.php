@@ -39,10 +39,12 @@ class AniListService
             $name = $serie->getNameEng();
         }
 
+        $name = str_replace('＜', '<', $name);
+
         dump($name);
 
         $variables = [
-            "search" => str_replace('＜', '<', $name)
+            "search" => $name
         ];
 
         return $this->request($query, $variables);
