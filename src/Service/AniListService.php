@@ -112,10 +112,6 @@ class AniListService
 
         do {
 
-            if ($name === null){
-                continue;
-            }
-
             $name = mb_convert_kana($name, 'a', 'UTF-8');
 
             dump($name);
@@ -141,6 +137,10 @@ class AniListService
 
                 if ($relation && ($status === "Ended" || $status === "Upcoming")) {
                     $name = $data['relations']['nodes'][$relationKey]['title']['english'];
+
+                    if ($name === null){
+                        $name = $data['relations']['nodes'][$relationKey]['title']['romaji'];
+                    }
 
                 } else {
                     $ok = false;
