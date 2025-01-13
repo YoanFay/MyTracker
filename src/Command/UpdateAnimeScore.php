@@ -43,6 +43,10 @@ class UpdateAnimeScore extends Command
 
         foreach ($animes as $anime){
 
+            if ($anime->getName() === "Pokémon"){
+                continue;
+            }
+
             $result = $this->aniListService->getData($query, $anime);
 
             dd($result);
