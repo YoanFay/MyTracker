@@ -37,19 +37,11 @@ class UpdateAnimeScore extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
 
-        $query = 'query ($search: String) { Media (search: $search, type: ANIME) { stats { scoreDistribution {score, amount}}}}';
-
         $animes = $this->serieRepository->findAnime();
 
         foreach ($animes as $anime){
 
-            if ($anime->getName() === "Pokémon"){
-                continue;
-            }
-
-            $result = $this->aniListService->getData($query, $anime);
-
-            dd($result);
+            $this->aniListService->setScore($anime);
 
         }
 

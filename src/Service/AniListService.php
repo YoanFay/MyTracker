@@ -208,4 +208,24 @@ class AniListService
 
     }
 
+
+    public function setScore(Serie $anime): void
+    {
+
+        $query = 'query ($search: String) { Media (search: $search, type: ANIME) { stats { scoreDistribution {score, amount}}}}';
+
+        $name = mb_convert_kana($anime->getName(), 'a', 'UTF-8');
+
+        dump($name);
+
+        $variables = [
+            "search" => $name
+        ];
+
+        $data = $this->request($query, $variables);
+
+        dd($data);
+
+    }
+
 }
