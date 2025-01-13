@@ -241,8 +241,9 @@ class AniListService
 
         $query = 'query ($search: String) { Media (search: $search, type: ANIME) { title{english} stats { scoreDistribution {score, amount}}}}';
 
+        $name = mb_convert_kana($anime->getName(), 'a', 'UTF-8');
+
         do {
-            $name = mb_convert_kana($anime->getName(), 'a', 'UTF-8');
 
             dump($name);
 
