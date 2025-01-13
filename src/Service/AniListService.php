@@ -209,10 +209,37 @@ class AniListService
     }
 
 
+    public function getSequel($name)
+    {
+
+        $query = 'query ($search: String) { Media (search: $search, type: ANIME) { title{english} stats { scoreDistribution {score, amount}}}}';
+
+        $variables = [
+            "search" => $name
+        ];
+
+        $data = $this->request($query, $variables);
+
+        $relation = null;
+        $relationKey = null;
+
+        foreach ($data['relations']['edges'] as $key => $relationType) {
+            if ($relationType['relationType'] === "SEQUEL") {
+                $relation = $relationType['relationType'];
+                $relationKey = $key;
+            }
+        }
+
+        dump($relation);
+        dd($relationKey);
+
+    }
+
+
     public function setScore(Serie $anime): void
     {
 
-        $query = 'query ($search: String) { Media (search: $search, type: ANIME) { stats { scoreDistribution {score, amount}}}}';
+        $query = 'query ($search: String) { Media (search: $search, type: ANIME) { title{english} stats { scoreDistribution {score, amount}}}}';
 
         $name = mb_convert_kana($anime->getName(), 'a', 'UTF-8');
 
@@ -236,7 +263,11 @@ class AniListService
 
         }
 
-        dd(round($score / $vote, 0, PHP_ROUND_HALF_DOWN) - 1);
+        $sequel = $this->getSequel();
+
+        dd();
+
+        $finalScore = round($score / $vote, 0, PHP_ROUND_HALF_DOWN);
 
     }
 
