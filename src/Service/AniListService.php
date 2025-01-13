@@ -212,7 +212,9 @@ class AniListService
     public function getSequel($name)
     {
 
-        $query = 'query ($search: String) { Media (search: $search, type: ANIME) { title{english}, stats { scoreDistribution {score, amount}}}}';
+        $query = 'query ($search: String) { Media (search: $search, type: ANIME) { title{english}, relation{edges{relationType}, nodes{title{english}}}}}';
+
+
 
         $variables = [
             "search" => $name
