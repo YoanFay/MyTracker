@@ -220,6 +220,8 @@ class AniListService
 
         $data = $this->request($query, $variables);
 
+        dump($data);
+
         if(!$data){
             return null;
         }
@@ -258,8 +260,6 @@ class AniListService
 
             foreach ($data['stats']['scoreDistribution'] as $stat) {
 
-                dump('score : '.$stat['score'].' / vote : '.$stat['amount']);
-
                 $score += $stat['score'] * $stat['amount'];
                 $vote += $stat['amount'];
 
@@ -271,7 +271,7 @@ class AniListService
 
         $finalScore = round($score / $vote, 0, PHP_ROUND_HALF_DOWN);
 
-        dd('name : '.$finalScore.'%');
+        dd($anime->getName().' : '.$finalScore.'%');
 
     }
 
