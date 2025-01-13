@@ -220,6 +220,8 @@ class AniListService
 
         $data = $this->request($query, $variables);
 
+        dump($data);
+
         if(!$data){
             return null;
         }
