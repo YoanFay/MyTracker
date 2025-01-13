@@ -232,9 +232,11 @@ class AniListService
             }
         }
 
-        if(!$relationKey){
+        if($relationKey === null){
             return null;
         }
+
+        dump($relationKey);
 
         return $data['relations']['nodes'][$relationKey]['title']['romaji'];
 
