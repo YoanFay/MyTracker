@@ -263,7 +263,7 @@ class AniListService
 
         }
 
-        $sequel = $this->getSequel();
+        $sequel = $this->getSequel($data['title']['english']);
 
         dd();
 
