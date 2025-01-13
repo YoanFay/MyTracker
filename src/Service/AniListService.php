@@ -236,8 +236,6 @@ class AniListService
             return null;
         }
 
-        dump($relationKey);
-
         return $data['relations']['nodes'][$relationKey]['title']['romaji'];
 
     }
@@ -251,8 +249,6 @@ class AniListService
         $name = mb_convert_kana($anime->getName(), 'a', 'UTF-8');
 
         do {
-
-            dump($name);
 
             $variables = [
                 "search" => $name
@@ -276,7 +272,7 @@ class AniListService
 
         $finalScore = round($score / $vote, 0, PHP_ROUND_HALF_DOWN);
 
-        dd($anime->getName().' : '.$finalScore.'%');
+        dump($anime->getName().' : '.$finalScore.'%');
 
     }
 
