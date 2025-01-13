@@ -259,7 +259,11 @@ class AniListService
             $data = $this->request($query, $variables);
 
             if ($data === null){
-                dd($data);
+                $data = $this->request($query, $variables);
+
+                if ($data === null){
+                    continue;
+                }
             }
 
             $score = 0;
