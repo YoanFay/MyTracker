@@ -212,7 +212,7 @@ class AniListService
     public function getSequel($name)
     {
 
-        $query = 'query ($search: String) { Media (search: $search, type: ANIME) { title{english} stats { scoreDistribution {score, amount}}}}';
+        $query = 'query ($search: String) { Media (search: $search, type: ANIME) { title{english}, stats { scoreDistribution {score, amount}}}}';
 
         $variables = [
             "search" => $name
@@ -262,6 +262,8 @@ class AniListService
             $vote += $stat['amount'];
 
         }
+
+        dump($data['title']['english']);
 
         $sequel = $this->getSequel($data['title']['english']);
 
