@@ -220,8 +220,6 @@ class AniListService
 
         $data = $this->request($query, $variables);
 
-        dump($data);
-
         if(!$data){
             return null;
         }
@@ -232,6 +230,10 @@ class AniListService
                 $relationKey = $key;
                 break;
             }
+        }
+
+        if(!$relationKey){
+            return null;
         }
 
         return $data['relations']['nodes'][$relationKey]['title']['romaji'];
