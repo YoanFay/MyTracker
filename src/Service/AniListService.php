@@ -248,6 +248,8 @@ class AniListService
 
         $name = mb_convert_kana($anime->getName(), 'a', 'UTF-8');
 
+        dump($name);
+
         do {
 
             $variables = [
