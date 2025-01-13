@@ -224,7 +224,19 @@ class AniListService
 
         $data = $this->request($query, $variables);
 
-        dd($data['stats']['scoreDistribution']);
+        $score = 0;
+        $vote = 0;
+
+        foreach ($data['stats']['scoreDistribution'] as $stat){
+
+            dump('score : '.$stat['score'].' / vote : '.$stat['amount']);
+
+            $score += $stat['score'] * $stat['amount'];
+            $vote += $stat['amount'];
+
+        }
+
+        dd(round($score / $vote, 0, PHP_ROUND_HALF_DOWN) - 1);
 
     }
 
