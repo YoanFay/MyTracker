@@ -29,7 +29,7 @@ class UpdateAnimeScore extends Command
     protected function configure(): void
     {
 
-        $this->setName('app:update-date');
+        $this->setName('app:update-score');
         $this->setDescription('Pour les date des épisodes et des séries');
     }
 
