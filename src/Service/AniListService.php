@@ -241,35 +241,36 @@ class AniListService
 
         $query = 'query ($search: String) { Media (search: $search, type: ANIME) { title{english} stats { scoreDistribution {score, amount}}}}';
 
-        $name = mb_convert_kana($anime->getName(), 'a', 'UTF-8');
+        do {
+            $name = mb_convert_kana($anime->getName(), 'a', 'UTF-8');
 
-        dump($name);
+            dump($name);
 
-        $variables = [
-            "search" => $name
-        ];
+            $variables = [
+                "search" => $name
+            ];
 
-        $data = $this->request($query, $variables);
+            $data = $this->request($query, $variables);
 
-        $score = 0;
-        $vote = 0;
+            $score = 0;
+            $vote = 0;
 
-        foreach ($data['stats']['scoreDistribution'] as $stat){
+            foreach ($data['stats']['scoreDistribution'] as $stat) {
 
-            dump('score : '.$stat['score'].' / vote : '.$stat['amount']);
+                dump('score : '.$stat['score'].' / vote : '.$stat['amount']);
 
-            $score += $stat['score'] * $stat['amount'];
-            $vote += $stat['amount'];
+                $score += $stat['score'] * $stat['amount'];
+                $vote += $stat['amount'];
 
-        }
+            }
 
-        dump($data['title']['english']);
+            $name = $this->getSequel($data['title']['english']);
 
-        $sequel = $this->getSequel($data['title']['english']);
-
-        dd($sequel);
+        }while($name);
 
         $finalScore = round($score / $vote, 0, PHP_ROUND_HALF_DOWN);
+
+        dd('name : '.$finalScore.'%');
 
     }
 
