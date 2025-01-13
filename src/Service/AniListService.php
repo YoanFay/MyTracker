@@ -224,7 +224,7 @@ class AniListService
 
         $data = $this->request($query, $variables);
 
-        dd($data);
+        dd($data['stats']['scoreDistribution']);
 
     }
 
