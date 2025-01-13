@@ -212,7 +212,7 @@ class AniListService
     public function getSequel($name)
     {
 
-        $query = 'query ($search: String) { Media (search: $search, type: ANIME) { title{english}, relations{edges{relationType}, nodes{title{english}}}}}';
+        $query = 'query ($search: String) { Media (search: $search, type: ANIME) { relations{edges{relationType}, nodes{title{romaji}}}}}';
 
         $variables = [
             "search" => $name
@@ -232,7 +232,7 @@ class AniListService
             }
         }
 
-        return $data['relations']['nodes'][$relationKey]['title']['english'];
+        return $data['relations']['nodes'][$relationKey]['title']['romaji'];
 
     }
 
@@ -240,7 +240,7 @@ class AniListService
     public function setScore(Serie $anime): void
     {
 
-        $query = 'query ($search: String) { Media (search: $search, type: ANIME) { title{english} stats { scoreDistribution {score, amount}}}}';
+        $query = 'query ($search: String) { Media (search: $search, type: ANIME) { title{romaji}, stats { scoreDistribution {score, amount}}}}';
 
         $name = mb_convert_kana($anime->getName(), 'a', 'UTF-8');
 
@@ -264,7 +264,7 @@ class AniListService
 
             }
 
-            $name = $this->getSequel($data['title']['english']);
+            $name = $this->getSequel($data['title']['romaji']);
 
         }while($name);
 
