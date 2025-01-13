@@ -79,6 +79,9 @@ class Serie
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nextAiredType = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $score = null;
+
     public function __construct()
     {
         $this->name = "TBA";
@@ -449,6 +452,18 @@ class Serie
     public function setNextAiredType(?string $nextAiredType): static
     {
         $this->nextAiredType = $nextAiredType;
+
+        return $this;
+    }
+
+    public function getScore(): ?int
+    {
+        return $this->score;
+    }
+
+    public function setScore(?int $score): static
+    {
+        $this->score = $score;
 
         return $this;
     }
