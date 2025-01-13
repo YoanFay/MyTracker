@@ -220,8 +220,6 @@ class AniListService
 
         $data = $this->request($query, $variables);
 
-        dump($data);
-
         if(!$data){
             return null;
         }
@@ -230,6 +228,7 @@ class AniListService
         foreach ($data['relations']['edges'] as $key => $relationType) {
             if ($relationType['relationType'] === "SEQUEL") {
                 $relationKey = $key;
+                break;
             }
         }
 
