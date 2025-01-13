@@ -212,9 +212,7 @@ class AniListService
     public function getSequel($name)
     {
 
-        $query = 'query ($search: String) { Media (search: $search, type: ANIME) { title{english}, relation{edges{relationType}, nodes{title{english}}}}}';
-
-
+        $query = 'query ($search: String) { Media (search: $search, type: ANIME) { title{english}, relations{edges{relationType}, nodes{title{english}}}}}';
 
         $variables = [
             "search" => $name
@@ -222,18 +220,18 @@ class AniListService
 
         $data = $this->request($query, $variables);
 
-        $relation = null;
-        $relationKey = null;
+        if(!$data){
+            return null;
+        }
 
+        $relationKey = null;
         foreach ($data['relations']['edges'] as $key => $relationType) {
             if ($relationType['relationType'] === "SEQUEL") {
-                $relation = $relationType['relationType'];
                 $relationKey = $key;
             }
         }
 
-        dump($relation);
-        dd($relationKey);
+        return $data['relations']['nodes'][$relationKey]['title']['english'];
 
     }
 
@@ -269,7 +267,7 @@ class AniListService
 
         $sequel = $this->getSequel($data['title']['english']);
 
-        dd();
+        dd($sequel);
 
         $finalScore = round($score / $vote, 0, PHP_ROUND_HALF_DOWN);
 
