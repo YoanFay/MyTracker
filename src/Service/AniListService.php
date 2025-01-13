@@ -258,6 +258,10 @@ class AniListService
 
             $data = $this->request($query, $variables);
 
+            if ($data === null){
+                dd($data);
+            }
+
             $score = 0;
             $vote = 0;
 
