@@ -260,19 +260,25 @@ class AniListService
 
             $data = $this->request($query, $variables);
 
+            dump("test");
+
             if ($data === null){
                 $data = $this->request($query, $variables);
 
-                dump("test");
+                dump("test2");
 
                 if ($data === null){
 
-                    dump("test2");
+                    dump("test3");
                     $ok = false;
                 }
             }
 
             dump("ok : ".$ok);
+
+            if (!$ok){
+                continue;
+            }
 
             $score = 0;
             $vote = 0;
