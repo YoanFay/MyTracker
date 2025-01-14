@@ -255,7 +255,7 @@ class AniListService
             $ok = true;
 
             $variables = [
-                "search" => $name
+                "search" => "L'ange insensé danse avec le diable"
             ];
 
             $data = $this->request($query, $variables);
@@ -279,6 +279,9 @@ class AniListService
             }
 
             $name = $this->getSequel($data['title']['romaji']);
+
+            dump($name);
+            dump($ok);
 
         }while($name and $ok);
 
