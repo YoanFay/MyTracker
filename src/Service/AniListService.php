@@ -257,8 +257,6 @@ class AniListService
 
         do {
 
-            dump($name);
-
             $ok = true;
 
             $variables = [
@@ -294,6 +292,11 @@ class AniListService
 
         if ($vote > 0) {
             $finalScore = round($score / $vote, 0, PHP_ROUND_HALF_DOWN);
+
+            $anime->setScore($finalScore);
+
+            $this->manager->persist($anime);
+            $this->manager->flush();
 
             dump($anime->getName().' : '.$finalScore.'%');
         }else{
