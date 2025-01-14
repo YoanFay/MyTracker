@@ -248,40 +248,38 @@ class AniListService
 
         $name = mb_convert_kana($anime->getName(), 'a', 'UTF-8');
 
+        if ($anime->getNameEng()){
+            $name = mb_convert_kana($anime->getNameEng(), 'a', 'UTF-8');
+        }
+
         dump($name);
+
+        $score = 0;
+        $vote = 0;
 
         do {
 
             $ok = true;
 
             $variables = [
-                "search" => "L'ange insensé danse avec le diable"
+                "search" => $name
             ];
 
             $data = $this->request($query, $variables);
 
-            dump("test");
-
             if ($data === null){
                 $data = $this->request($query, $variables);
 
-                dump("test2");
 
                 if ($data === null){
 
-                    dump("test3");
                     $ok = false;
                 }
             }
 
-            dump("ok : ".$ok);
-
             if (!$ok){
                 continue;
             }
-
-            $score = 0;
-            $vote = 0;
 
             foreach ($data['stats']['scoreDistribution'] as $stat) {
 
@@ -292,14 +290,15 @@ class AniListService
 
             $name = $this->getSequel($data['title']['romaji']);
 
-            dump($name);
-            dump($ok);
-
         }while($name and $ok);
 
-        $finalScore = round($score / $vote, 0, PHP_ROUND_HALF_DOWN);
+        if ($vote > 0) {
+            $finalScore = round($score / $vote, 0, PHP_ROUND_HALF_DOWN);
 
-        dump($anime->getName().' : '.$finalScore.'%');
+            dump($anime->getName().' : '.$finalScore.'%');
+        }else{
+            dump($anime->getName().' : échec');
+        }
 
     }
 
