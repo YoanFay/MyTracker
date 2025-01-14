@@ -252,12 +252,12 @@ class AniListService
             $name = mb_convert_kana($anime->getNameEng(), 'a', 'UTF-8');
         }
 
-        dump($name);
-
         $score = 0;
         $vote = 0;
 
         do {
+
+            dump($name);
 
             $ok = true;
 
