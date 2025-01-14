@@ -252,6 +252,8 @@ class AniListService
 
         do {
 
+            $ok = true;
+
             $variables = [
                 "search" => $name
             ];
@@ -262,8 +264,12 @@ class AniListService
                 $data = $this->request($query, $variables);
 
                 if ($data === null){
-                    continue;
+                    $ok = false;
                 }
+            }
+
+            if ($ok === false){
+                continue;
             }
 
             $score = 0;
