@@ -268,10 +268,6 @@ class AniListService
                 }
             }
 
-            if ($ok === false){
-                continue;
-            }
-
             $score = 0;
             $vote = 0;
 
@@ -284,7 +280,7 @@ class AniListService
 
             $name = $this->getSequel($data['title']['romaji']);
 
-        }while($name);
+        }while($name and $ok);
 
         $finalScore = round($score / $vote, 0, PHP_ROUND_HALF_DOWN);
 
