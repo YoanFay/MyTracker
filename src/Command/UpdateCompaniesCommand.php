@@ -87,7 +87,7 @@ class UpdateCompaniesCommand extends Command
         foreach ($series as $serie) {
 
             $variables = [
-                "search" => $serie->getNameEng()
+                "search" => mb_convert_kana($serie->getNameEng(), 'a', 'UTF-8')
             ];
 
             $http = new Client();

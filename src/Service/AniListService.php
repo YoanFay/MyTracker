@@ -39,12 +39,10 @@ class AniListService
             $name = $serie->getNameEng();
         }
 
-        $name = mb_convert_kana($name, 'a', 'UTF-8');
-
         dump($name);
 
         $variables = [
-            "search" => $name
+            "search" => mb_convert_kana($name, 'a', 'UTF-8')
         ];
 
         return $this->request($query, $variables);
@@ -56,7 +54,7 @@ class AniListService
     {
 
         $variables = [
-            "search" => $name
+            "search" => mb_convert_kana($name, 'a', 'UTF-8')
         ];
 
         return $this->request($query, $variables);
@@ -70,7 +68,7 @@ class AniListService
         $query = 'query ($search: String) { Media (search: $search, type: ANIME) { status, relations{ edges{relationType}, nodes{title{english}} }}}';
 
             $variables = [
-                "search" => $name
+                "search" => mb_convert_kana($name, 'a', 'UTF-8')
             ];
 
             $data = $this->request($query, $variables);
@@ -112,12 +110,10 @@ class AniListService
 
         do {
 
-            $name = mb_convert_kana($name, 'a', 'UTF-8');
-
             dump($name);
 
             $variables = [
-                "search" => $name
+                "search" => mb_convert_kana($name, 'a', 'UTF-8')
             ];
 
             $data = $this->request($query, $variables);
@@ -215,7 +211,7 @@ class AniListService
         $query = 'query ($search: String) { Media (search: $search, type: ANIME) { relations{edges{relationType}, nodes{title{romaji}}}}}';
 
         $variables = [
-            "search" => $name
+            "search" => mb_convert_kana($name, 'a', 'UTF-8')
         ];
 
         $data = $this->request($query, $variables);
