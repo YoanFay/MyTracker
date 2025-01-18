@@ -8,6 +8,7 @@ use App\Entity\MovieShow;
 use App\Entity\SerieType;
 use App\Repository\MovieRepository;
 use App\Repository\SerieTypeRepository;
+use App\Service\AniListService;
 use App\Service\StrSpecialCharsLower;
 use App\Service\TMDBService;
 use App\Service\TVDBService;
@@ -35,6 +36,7 @@ class WebHook extends AbstractController
         SerieTypeRepository  $serieTypeRepository,
         TMDBService          $TMDBService,
         TVDBService          $TVDBService,
+        AniListService       $aniListService,
         ManagerRegistry      $managerRegistry
     ): Response
     {
@@ -145,6 +147,10 @@ class WebHook extends AbstractController
 
                     $em->persist($serie);
                     $em->flush();
+
+                    if ($serie->getSerieType()->getName() === "Anime") {
+                        $aniListService->setScore($serie);
+                    }
                 }
 
                 if ($jsonData['event'] === "media.scrobble") {
