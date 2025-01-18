@@ -37,6 +37,11 @@
                     {% endfor %}
                 </h3>
             {% endif %}
+            {% if serie.score != null %}
+            <h5>
+                Score AniList : {{ serie.score }}%
+            </h5>
+            {% endif %}
             <br>
             <div class="d-flex flex-column flex-wrap">
                 <div class="m-2">
