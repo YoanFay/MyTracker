@@ -125,6 +125,22 @@ class SerieRepository extends ServiceEntityRepository
     /**
      * @return Serie[] Returns an array of Serie objects
      */
+    public function findAnimeWithoutScore(): array
+    {
+
+        return $this->createQueryBuilder('s')
+            ->leftJoin('s.serieType', 't')
+            ->andWhere('t.name = :type')
+            ->andWhere('s.score IS NULL')
+            ->setParameter('type', 'Anime')
+            ->getQuery()
+            ->getResult();
+    }
+
+
+    /**
+     * @return Serie[] Returns an array of Serie objects
+     */
     public function noFirstAired(): array
     {
 

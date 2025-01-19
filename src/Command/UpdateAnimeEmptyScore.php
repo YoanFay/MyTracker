@@ -37,7 +37,7 @@ class UpdateAnimeEmptyScore extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
 
-        $animes = $this->serieRepository->findAnime();
+        $animes = $this->serieRepository->findAnimeWithoutScore();
 
         foreach ($animes as $anime){
 
