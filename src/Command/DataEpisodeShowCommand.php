@@ -13,7 +13,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 #[AsCommand(
     name: 'app:data-episode-show',
-    description: 'Update episode to episode show',
+    description: 'Update episode vers episode show',
 )]
 class DataEpisodeShowCommand extends Command
 {

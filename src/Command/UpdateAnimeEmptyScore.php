@@ -9,7 +9,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 
-class UpdateAnimeScore extends Command
+class UpdateAnimeEmptyScore extends Command
 {
 
     private SerieRepository $serieRepository;
@@ -29,8 +29,8 @@ class UpdateAnimeScore extends Command
     protected function configure(): void
     {
 
-        $this->setName('app:update-score');
-        $this->setDescription('Update le score des animes');
+        $this->setName('app:update-empty-score');
+        $this->setDescription('Update le score des animes sans score');
     }
 
 

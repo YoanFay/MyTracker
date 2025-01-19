@@ -13,7 +13,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 #[AsCommand(
     name: 'app:data-movie-show',
-    description: 'Update movie to movie show',
+    description: 'Update movie vers movie show',
 )]
 class DataMovieShowCommand extends Command
 {
