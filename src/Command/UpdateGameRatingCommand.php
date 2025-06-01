@@ -72,12 +72,12 @@ class UpdateGameRatingCommand extends Command
 
             $data = json_decode($response->getBody(), true)[0];
 
-            if (array_key_exists('aggregated_rating', $data)) {
+            if (array_key_exists('aggregated_rating', $data) && $data['aggregated_rating_count'] > 0) {
                 $game->setAggregatedRating(round($data['aggregated_rating'], 2));
                 $game->setAggregatedRatingCount($data['aggregated_rating_count']);
             }
 
-            if (array_key_exists('rating', $data)) {
+            if (array_key_exists('rating', $data) && $data['rating_count'] > 0) {
                 $game->setRating(round($data['rating'], 2));
                 $game->setRatingCount($data['rating_count']);
             }
