@@ -56,7 +56,7 @@ class UpdateGameRatingCommand extends Command
 
         $token = "Bearer ".$data['access_token'];
 
-        $games = $this->gameRepository->findGameNotSerie();
+        $games = $this->gameRepository->findAll();
 
         foreach ($games as $game) {
 
@@ -72,11 +72,15 @@ class UpdateGameRatingCommand extends Command
 
             $data = json_decode($response->getBody(), true)[0];
 
-            $game->setRating(round($data['rating'], 2));
-            $game->setAggregatedRating(round($data['aggregated_rating'], 2));
+            if (array_key_exists('aggregated_rating', $data)) {
+                $game->setAggregatedRating(round($data['aggregated_rating'], 2));
+                $game->setAggregatedRatingCount($data['aggregated_rating_count']);
+            }
 
-            $game->setRatingCount($data['rating_count']);
-            $game->setAggregatedRatingCount($data['aggregated_rating_count']);
+            if (array_key_exists('rating', $data)) {
+                $game->setRating(round($data['rating'], 2));
+                $game->setRatingCount($data['rating_count']);
+            }
 
             $this->manager->persist($game);
 
