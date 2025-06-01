@@ -55,6 +55,18 @@ class Game
     #[ORM\Column(length: 255)]
     private ?string $slug = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?float $rating = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $ratingCount = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?float $aggregatedRating = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $aggregatedRatingCount = null;
+
     public function __construct()
     {
         $this->developer = new ArrayCollection();
@@ -313,6 +325,54 @@ class Game
     public function setSlug(string $slug): static
     {
         $this->slug = $slug;
+
+        return $this;
+    }
+
+    public function getRating(): ?float
+    {
+        return $this->rating;
+    }
+
+    public function setRating(?float $rating): static
+    {
+        $this->rating = $rating;
+
+        return $this;
+    }
+
+    public function getRatingCount(): ?int
+    {
+        return $this->ratingCount;
+    }
+
+    public function setRatingCount(?int $ratingCount): static
+    {
+        $this->ratingCount = $ratingCount;
+
+        return $this;
+    }
+
+    public function getAggregatedRating(): ?float
+    {
+        return $this->aggregatedRating;
+    }
+
+    public function setAggregatedRating(?float $aggregatedRating): static
+    {
+        $this->aggregatedRating = $aggregatedRating;
+
+        return $this;
+    }
+
+    public function getAggregatedRatingCount(): ?int
+    {
+        return $this->aggregatedRatingCount;
+    }
+
+    public function setAggregatedRatingCount(?int $aggregatedRatingCount): static
+    {
+        $this->aggregatedRatingCount = $aggregatedRatingCount;
 
         return $this;
     }
