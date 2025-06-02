@@ -93,7 +93,7 @@ class UpdateGamePlatformLogoCommand extends Command
             $data = json_decode($response->getBody(), true)[0];
 
             if(array_key_exists('platform_logo', $data)) {
-                $response = $client->post("https://api.igdb.com/v4/platform_versions", [
+                $response = $client->post("https://api.igdb.com/v4/platform_logos", [
                     'headers' => [
                         'Content-Type' => 'application/json',
                         'Accept' => 'application/json',
