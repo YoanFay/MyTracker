@@ -109,13 +109,6 @@ class UpdateGamePlatformLogoCommand extends Command
 
                 $data = json_decode($response->getBody(), true)[0];
 
-                $destinationFolder = '/public/image/game/platform/';
-
-                if (!is_dir($destinationFolder)) {
-                    mkdir($destinationFolder, 0755, true);
-                }
-
-
                 // Lien de l'image à télécharger
                 $lienImage = "https://images.igdb.com/igdb/image/upload/t_logo_med/".$data['image_id'].".png";
 
@@ -124,7 +117,7 @@ class UpdateGamePlatformLogoCommand extends Command
                 $projectDir = $this->kernel->getProjectDir();
 
                 // Chemin où enregistrer l'image
-                $cheminImageDestination = $destinationFolder . $this->strSpecialCharsLower->serie($platform->getName()).'.png';
+                $cheminImageDestination = "/public/image/game/platform/" . $this->strSpecialCharsLower->serie($platform->getName()).'.png';
 
                 // Téléchargement et enregistrement de l'image
                 if (imagejpeg($cover, $projectDir . $cheminImageDestination, 100)) {
