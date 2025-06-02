@@ -72,6 +72,19 @@
                         </ul>
                     </div>
                 {% endif %}
+                {% if game.rating or game.aggregatedRating %}
+                    <div class="m-2">
+                        <strong>Note : </strong>
+                        <ul>
+                            {% if game.rating %}
+                                <li>Note joueur : {{ game.rating }}% ({{ game.ratingCount }} votes)</li>
+                            {% endif %}
+                            {% if game.aggregatedRating %}
+                                <li>Note presse : {{ game.aggregatedRating }}% ({{ game.aggregatedRatingCount }} votes)</li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                {% endif %}
                 <div class="m-2">
                     <strong>Développer par : </strong>
                     <ul>
