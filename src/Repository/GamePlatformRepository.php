@@ -21,6 +21,15 @@ class GamePlatformRepository extends ServiceEntityRepository
         parent::__construct($registry, GamePlatform::class);
     }
 
+    public function findNoLogo(): array{
+
+        return $this->createQueryBuilder('g')
+            ->andWhere('g.logo = false')
+            ->getQuery()
+            ->getResult();
+
+    }
+
 //    /**
 //     * @return GamePlatform[] Returns an array of GamePlatform objects
 //     */

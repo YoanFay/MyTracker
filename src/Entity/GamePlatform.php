@@ -24,6 +24,9 @@ class GamePlatform
     #[ORM\Column]
     private ?int $igdbId = null;
 
+    #[ORM\Column]
+    private ?bool $logo = false;
+
     public function __construct()
     {
         $this->games = new ArrayCollection();
@@ -81,6 +84,18 @@ class GamePlatform
     public function setIgdbId(int $igdbId): static
     {
         $this->igdbId = $igdbId;
+
+        return $this;
+    }
+
+    public function isLogo(): ?bool
+    {
+        return $this->logo;
+    }
+
+    public function setLogo(bool $logo): static
+    {
+        $this->logo = $logo;
 
         return $this;
     }
