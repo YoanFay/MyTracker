@@ -44,7 +44,9 @@
 
         function search() {
 
-            const text = $('#search').val();
+            const text = $('#searchBar').val();
+
+            console.log(text);
 
             $.ajax({
                 url: "{{ path('serie_list') }}",
