@@ -3,36 +3,15 @@
 namespace App\Service;
 
 use DateTime;
-use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Exception;
 
 class TimeService
 {
     
-    public function convertirMillisecondes($millisecondes) {
-        // Calcul des heures, minutes et secondes
-        $secondes = floor($millisecondes / 1000);
+    public function convertirSecondes($secondes): string
+    {
         $minutes = floor($secondes / 60);
         $heures = floor($minutes / 60);
-        
-        // Reste des secondes après la conversion en minutes
-        $secondes %= 60;
-        
-        // Reste des minutes après la conversion en heures
-        $minutes %= 60;
-        
-        return $heures.'h'.$minutes.'min';
-    }
-    
-    public function convertirSecondes($secondes) {
-        $minutes = floor($secondes / 60);
-        $heures = floor($minutes / 60);
-        
-        // Reste des secondes après la conversion en minutes
-        $secondes %= 60;
         
         // Reste des minutes après la conversion en heures
         $minutes %= 60;
@@ -46,7 +25,8 @@ class TimeService
         return $heures.'h'.$minutes;
     }
     
-    public function convertirHeureMinute(?int $heures = 0, ?int $minutes = 0) {
+    public function convertirHeureMinute(?int $heures = 0, ?int $minutes = 0): float|int|null
+    {
         $minutes += $heures * 60;
 
         $secondes = $minutes * 60;
@@ -58,6 +38,10 @@ class TimeService
         return $secondes;
     }
 
+
+    /**
+     * @throws Exception
+     */
     public function frenchFormatDate($date): string
     {
 
@@ -88,6 +72,9 @@ class TimeService
     }
 
 
+    /**
+     * @throws Exception
+     */
     public function frenchFormatDateNoDay($date): string
     {
 
@@ -116,7 +103,10 @@ class TimeService
     }
 
 
-    public function dateUpcoming($date, $type)
+    /**
+     * @throws Exception
+     */
+    public function dateUpcoming($date, $type): string
     {
 
         if (!$type) {

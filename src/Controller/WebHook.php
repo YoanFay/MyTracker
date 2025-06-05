@@ -72,7 +72,7 @@ class WebHook extends AbstractController
                         if (isset($jsonData['Metadata']['Guid'])) {
                             foreach ($jsonData['Metadata']['Guid'] as $guid) {
                                 if (isset($guid['id']) && str_starts_with($guid['id'], 'tmdb://')) {
-                                    $tvdbMovieId = str_replace(["tmdb://"], [""], $guid['id']);
+                                    $tvdbMovieId = intval(str_replace(["tmdb://"], [""], $guid['id']));
                                     break;
                                 }
                             }
@@ -171,7 +171,7 @@ class WebHook extends AbstractController
                         if (isset($jsonData['Metadata']['Guid'])) {
                             foreach ($jsonData['Metadata']['Guid'] as $guid) {
                                 if (isset($guid['id']) && str_starts_with($guid['id'], 'tvdb://')) {
-                                    $tvdbId = str_replace(["tvdb://"], [""], $guid['id']);
+                                    $tvdbId = intval(str_replace(["tvdb://"], [""], $guid['id']));
                                     break;
                                 }
                             }

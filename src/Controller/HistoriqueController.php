@@ -541,7 +541,7 @@ class HistoriqueController extends AbstractController
         $endDate = new DateTime('now');
 
         if (!($month === $endDate->format('m') && $year === $endDate->format('Y'))) {
-            $endDate->setDate($year, $month, '1');
+            $endDate->setDate($year, $month, 1);
             $endDate = $endDate->modify('last day of this month');
             $endDate->setTime(23, 59, 59, 999999);
         }

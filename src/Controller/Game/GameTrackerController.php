@@ -52,8 +52,8 @@ class GameTrackerController extends AbstractController
 
                 $explode = explode("h", $data["endTime"]);
 
-                $heures = $explode[0] !== "" ? $explode[0] : null;
-                $minutes = $explode[1] !== "" ? $explode[1] : null;
+                $heures = $explode[0] !== "" ? intval($explode[0]) : null;
+                $minutes = $explode[1] !== "" ? intval($explode[1]) : null;
 
                 $gameTracker->setEndTime($timeService->convertirHeureMinute($heures, $minutes));
             }else{
@@ -64,8 +64,8 @@ class GameTrackerController extends AbstractController
 
                 $explode = explode("h", $data["completeTime"]);
 
-                $heures = $explode[0] !== "" ? $explode[0] : null;
-                $minutes = $explode[1] !== "" ? $explode[1] : null;
+                $heures = $explode[0] !== "" ? intval($explode[0]) : null;
+                $minutes = $explode[1] !== "" ? intval($explode[1]) : null;
 
                 $gameTracker->setCompleteTime($timeService->convertirHeureMinute($heures, $minutes));
             }else{
