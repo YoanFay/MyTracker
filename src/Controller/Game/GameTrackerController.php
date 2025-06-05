@@ -45,6 +45,7 @@ class GameTrackerController extends AbstractController
         
         if ($form->isSubmitted() && $form->isValid()) {
 
+            /** @var array $data */
             $data = $request->request->get('game_tracker');
             
             if($data['endTime'] !== "" && $data['endTime'] !== "0h0"){

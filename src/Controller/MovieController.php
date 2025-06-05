@@ -85,6 +85,9 @@ class MovieController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()){
 
+            /** @var array $movieData */
+            $movieData = $request->request->get('movie');
+
             $TMDBService->updateInfo($movie);
 
             /** @var Users $user */
@@ -96,7 +99,7 @@ class MovieController extends AbstractController
 
             $movieShow = new MovieShow();
             $movieShow->setMovie($movie);
-            $movieShow->setShowDate(DateTime::createFromFormat('d/m/Y H:i', $request->request->get('movie')['showDate']));
+            $movieShow->setShowDate(DateTime::createFromFormat('d/m/Y H:i', $movieData['showDate']));
 
             $managerRegistry->getManager()->persist($movieShow);
             $managerRegistry->getManager()->flush();
