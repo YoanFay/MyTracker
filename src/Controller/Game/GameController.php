@@ -20,6 +20,7 @@ use App\Repository\GameRepository;
 use App\Repository\GameModeRepository;
 use App\Repository\GameSerieRepository;
 use App\Repository\GameThemeRepository;
+use App\Service\ApiService;
 use App\Service\StrSpecialCharsLower;
 use App\Service\TimeService;
 use DateTime;
@@ -46,7 +47,7 @@ class GameController extends AbstractController
 
 
     #[Route('/details/{id}', name: 'game_details', methods: ['GET'])]
-    public function show(GameRepository $gameRepository, TimeService $timeService, $id): Response
+    public function show(GameRepository $gameRepository, $id): Response
     {
 
         $game = $gameRepository->find($id);
@@ -91,7 +92,7 @@ class GameController extends AbstractController
 
         $gameTrackers = $game->getGameTrackers();
 
-        foreach ($gameTrackers as $gameTracker){
+        foreach ($gameTrackers as $gameTracker) {
 
             $entityManager->remove($gameTracker);
 
@@ -120,6 +121,7 @@ class GameController extends AbstractController
         GamePlatformRepository   $gamePlatformRepository,
         GameSerieRepository      $gameSerieRepository,
         StrSpecialCharsLower     $strSpecialCharsLower,
+        ApiService               $apiService,
         KernelInterface          $kernel
     ): Response
     {
@@ -134,56 +136,27 @@ class GameController extends AbstractController
             $platformId = $formData['platforms']->getIgdbID();
             $idGame = $formData['igdbId'];
 
-            // AUTHENTIFICATION
-
-            $client = new Client();
-
-            $response = $client->post("https://id.twitch.tv/oauth2/token?client_id=sd5xdt5w2lkjr7ws92fxjdlicvb5u2&client_secret=tymefepntjuva1n9ipa3lkjts2pmdh&grant_type=client_credentials", [
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                    'Accept' => 'application/json',
-                ]
-            ]);
-
-            $data = json_decode($response->getBody(), true);
-
-            $token = "Bearer ".$data['access_token'];
-
             $game = new Game();
 
             // NAME
 
-            $response = $client->post("https://api.igdb.com/v4/games", [
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                    'Accept' => 'application/json',
-                    'Client-ID' => 'sd5xdt5w2lkjr7ws92fxjdlicvb5u2',
-                    'Authorization' => $token
-                ],
-                'body' => 'fields name,game_modes,genres,themes; where id = '.$idGame.';'
-            ]);
+            $body = 'fields name,game_modes,genres,themes; where id = '.$idGame.';';
 
-            $dataGame = json_decode($response->getBody(), true)[0];
+            $dataGame = $apiService->igdbCall('games', $body);
 
             $game->setName($dataGame['name']);
 
             $idParent = null;
 
-            if (isset($data['version_parent'])) {
-                $idParent = $data['version_parent'];
+            if (isset($dataGame['version_parent'])) {
+                $idParent = $dataGame['version_parent'];
             }
 
-            $response = $client->post("https://api.igdb.com/v4/alternative_names", [
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                    'Accept' => 'application/json',
-                    'Client-ID' => 'sd5xdt5w2lkjr7ws92fxjdlicvb5u2',
-                    'Authorization' => $token
-                ],
-                'body' => 'fields *;where game = '.$idGame.' & comment = "French title";'
-            ]);
+            // ALTERNATIVE NAMES
 
-            $dataName = json_decode($response->getBody(), true);
+            $body = 'fields *;where game = '.$idGame.' & comment = "French title";';
+
+            $dataName = $apiService->igdbCall('alternative_names', $body);
 
             if ($dataName !== []) {
                 $game->setName($dataName[0]['name']);
@@ -198,18 +171,9 @@ class GameController extends AbstractController
 
                 if (!$gameMode) {
 
+                    $body = 'fields name;where id = '.$gameModeId.';';
 
-                    $response = $client->post("https://api.igdb.com/v4/game_modes", [
-                        'headers' => [
-                            'Content-Type' => 'application/json',
-                            'Accept' => 'application/json',
-                            'Client-ID' => 'sd5xdt5w2lkjr7ws92fxjdlicvb5u2',
-                            'Authorization' => $token
-                        ],
-                        'body' => 'fields name;where id = '.$gameModeId.';'
-                    ]);
-
-                    $dataGameMode = json_decode($response->getBody(), true)[0];
+                    $dataGameMode = $apiService->igdbCall('game_modes', $body);
 
                     $gameMode = new GameMode();
 
@@ -224,25 +188,16 @@ class GameController extends AbstractController
                 $game->addMode($gameMode);
             }
 
-            // GENRE
+            // GENRES
 
             foreach ($dataGame['genres'] as $genreId) {
                 $genre = $gameGenreRepository->findOneBy(['igdbId' => $genreId]);
 
                 if (!$genre) {
 
+                    $body = 'fields name;where id = '.$genreId.';';
 
-                    $response = $client->post("https://api.igdb.com/v4/genres", [
-                        'headers' => [
-                            'Content-Type' => 'application/json',
-                            'Accept' => 'application/json',
-                            'Client-ID' => 'sd5xdt5w2lkjr7ws92fxjdlicvb5u2',
-                            'Authorization' => $token
-                        ],
-                        'body' => 'fields name;where id = '.$genreId.';'
-                    ]);
-
-                    $dataGenre = json_decode($response->getBody(), true)[0];
+                    $dataGenre = $apiService->igdbCall('genres', $body);
 
                     $genre = new GameGenre();
 
@@ -265,17 +220,9 @@ class GameController extends AbstractController
 
                 if (!$theme) {
 
-                    $response = $client->post("https://api.igdb.com/v4/themes", [
-                        'headers' => [
-                            'Content-Type' => 'application/json',
-                            'Accept' => 'application/json',
-                            'Client-ID' => 'sd5xdt5w2lkjr7ws92fxjdlicvb5u2',
-                            'Authorization' => $token
-                        ],
-                        'body' => 'fields name;where id = '.$themeId.';'
-                    ]);
+                    $body = 'fields name;where id = '.$themeId.';';
 
-                    $dataTheme = json_decode($response->getBody(), true)[0];
+                    $dataTheme = $apiService->igdbCall('themes', $body);
 
                     $theme = new GameTheme();
 
@@ -293,17 +240,9 @@ class GameController extends AbstractController
 
             // RELEASE DATE
 
-            $response = $client->post("https://api.igdb.com/v4/release_dates", [
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                    'Accept' => 'application/json',
-                    'Client-ID' => 'sd5xdt5w2lkjr7ws92fxjdlicvb5u2',
-                    'Authorization' => $token
-                ],
-                'body' => 'fields *;where game = '.$idGame.' & platform = '.$platformId.' & (status=6 | status = null) & (region=1 | region=8);'
-            ]);
+            $body = 'fields *;where game = '.$idGame.' & platform = '.$platformId.' & (status=6 | status = null) & (region=1 | region=8);';
 
-            $dataReleaseDate = json_decode($response->getBody(), true)[0];
+            $dataReleaseDate = $apiService->igdbCall('release_dates', $body);
             $date = new DateTime();
             $date->setTimestamp($dataReleaseDate['date']);
 
@@ -311,17 +250,9 @@ class GameController extends AbstractController
 
             // PUBLISHER
 
-            $response = $client->post("https://api.igdb.com/v4/companies", [
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                    'Accept' => 'application/json',
-                    'Client-ID' => 'sd5xdt5w2lkjr7ws92fxjdlicvb5u2',
-                    'Authorization' => $token
-                ],
-                'body' => 'fields name;where published = ['.$idGame.'];'
-            ]);
+            $body = 'fields name;where published = ['.$idGame.'];';
 
-            $dataPublisher = json_decode($response->getBody(), true);
+            $dataPublisher = $apiService->igdbCall('companies', $body);
 
             foreach ($dataPublisher as $onePublisher) {
 
@@ -345,17 +276,9 @@ class GameController extends AbstractController
 
             // DEVELOPER
 
-            $response = $client->post("https://api.igdb.com/v4/companies", [
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                    'Accept' => 'application/json',
-                    'Client-ID' => 'sd5xdt5w2lkjr7ws92fxjdlicvb5u2',
-                    'Authorization' => $token
-                ],
-                'body' => 'fields name;where developed = ['.$idGame.'];'
-            ]);
+            $body = 'fields name;where developed = ['.$idGame.'];';
 
-            $dataDeveloper = json_decode($response->getBody(), true);
+            $dataDeveloper = $apiService->igdbCall('companies', $body);
 
             foreach ($dataDeveloper as $oneDeveloper) {
 
@@ -379,31 +302,14 @@ class GameController extends AbstractController
 
             // SERIES
 
-            $response = $client->post("https://api.igdb.com/v4/collections", [
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                    'Accept' => 'application/json',
-                    'Client-ID' => 'sd5xdt5w2lkjr7ws92fxjdlicvb5u2',
-                    'Authorization' => $token
-                ],
-                'body' => 'fields id,name,games;where games = ['.$idGame.'];'
-            ]);
+            $body = 'fields id,name,games;where games = ['.$idGame.'];';
 
-            $dataSeries = json_decode($response->getBody(), true);
+            $dataSeries = $apiService->igdbCall('collections', $body);
 
-            if (empty($dataSerie) && $idParent) {
+            if (empty($dataSeries) && $idParent) {
+                $body = 'fields id,name,games;where games = ['.$idParent.'];';
 
-                $response = $client->post("https://api.igdb.com/v4/collections", [
-                    'headers' => [
-                        'Content-Type' => 'application/json',
-                        'Accept' => 'application/json',
-                        'Client-ID' => 'sd5xdt5w2lkjr7ws92fxjdlicvb5u2',
-                        'Authorization' => $token
-                    ],
-                    'body' => 'fields id,name,games;where games = ['.$idParent.'];'
-                ]);
-
-                $dataSeries = json_decode($response->getBody(), true);
+                $dataSeries = $apiService->igdbCall('collections', $body);
             }
 
             $saveSeries = null;
@@ -441,17 +347,9 @@ class GameController extends AbstractController
 
             if (!$platform) {
 
-                $response = $client->post("https://api.igdb.com/v4/platforms", [
-                    'headers' => [
-                        'Content-Type' => 'application/json',
-                        'Accept' => 'application/json',
-                        'Client-ID' => 'sd5xdt5w2lkjr7ws92fxjdlicvb5u2',
-                        'Authorization' => $token
-                    ],
-                    'body' => 'fields name;where id = '.$platformId.';'
-                ]);
+                $body = 'fields name;where id = '.$platformId.';';
 
-                $dataPlatform = json_decode($response->getBody(), true)[0];
+                $dataPlatform = $apiService->igdbCall('platforms', $body);
 
                 $platform = new GamePlatform();
 
@@ -464,17 +362,9 @@ class GameController extends AbstractController
 
             // COVER
 
-            $response = $client->post("https://api.igdb.com/v4/covers", [
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                    'Accept' => 'application/json',
-                    'Client-ID' => 'sd5xdt5w2lkjr7ws92fxjdlicvb5u2',
-                    'Authorization' => $token
-                ],
-                'body' => 'fields *;where game = '.$idGame.';'
-            ]);
+            $body = 'fields *;where game = '.$idGame.';';
 
-            $dataGameCover = json_decode($response->getBody(), true)[0];
+            $dataGameCover = $apiService->igdbCall('covers', $body);
 
             $lienImage = 'https:'.str_replace('/t_thumb/', '/t_cover_big/', $dataGameCover['url']);
 
@@ -540,27 +430,27 @@ class GameController extends AbstractController
 
             $tooltip .= "<li>Date de sortie : ".$timeService->frenchFormatDateNoDay($game->getReleaseDate())."</li>";
 
-            if ($game->getGameTrackers() && $game->getGameTrackers()->getValues()){
+            if ($game->getGameTrackers() && $game->getGameTrackers()->getValues()) {
 
                 $gameTracker = $game->getGameTrackers()->getValues()[0];
 
-                if ($gameTracker->getStartDate()){
+                if ($gameTracker->getStartDate()) {
                     $tooltip .= "<li>Commencer le : ".$timeService->frenchFormatDateNoDay($gameTracker->getStartDate())."</li>";
                 }
 
-                if ($gameTracker->getEndDate()){
+                if ($gameTracker->getEndDate()) {
                     $tooltip .= "<li>Fini le : ".$timeService->frenchFormatDateNoDay($gameTracker->getEndDate())."</li>";
                 }
 
-                if ($gameTracker->getEndTime()){
+                if ($gameTracker->getEndTime()) {
                     $tooltip .= "<li>Fini en : ".$timeService->convertirSecondes($gameTracker->getEndTime())."</li>";
                 }
 
-                if ($gameTracker->getCompleteDate()){
+                if ($gameTracker->getCompleteDate()) {
                     $tooltip .= "<li>Fini à 100% le : ".$timeService->frenchFormatDateNoDay($gameTracker->getCompleteDate())."</li>";
                 }
 
-                if ($gameTracker->getCompleteTime()){
+                if ($gameTracker->getCompleteTime()) {
                     $tooltip .= "<li>Fini à 100% en : ".$timeService->convertirSecondes($gameTracker->getCompleteTime())."</li>";
                 }
 
