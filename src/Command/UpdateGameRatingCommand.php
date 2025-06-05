@@ -27,12 +27,11 @@ class UpdateGameRatingCommand extends Command
     private GameRepository $gameRepository;
 
 
-    public function __construct(GameRepository $gameRepository, GameSerieRepository $gameSerieRepository, ManagerRegistry $managerRegistry)
+    public function __construct(GameRepository $gameRepository, ManagerRegistry $managerRegistry)
     {
 
         parent::__construct();
         $this->gameRepository = $gameRepository;
-        $this->gameSerieRepository = $gameSerieRepository;
         $this->manager = $managerRegistry->getManager();
     }
 
