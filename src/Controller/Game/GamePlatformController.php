@@ -47,7 +47,7 @@ class GamePlatformController extends AbstractController
     }
 
     #[Route('/{id}/details', name: 'game_platform_show', methods: ['GET'])]
-    public function show(GamePlatformRepository $gamePlatformRepository, $id): Response
+    public function show(GamePlatformRepository $gamePlatformRepository, int $id): Response
     {
         $gamePlatform = $gamePlatformRepository->find($id);
 
@@ -58,7 +58,7 @@ class GamePlatformController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'game_platform_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, EntityManagerInterface $entityManager, GamePlatformRepository $gamePlatformRepository, $id): Response
+    public function edit(Request $request, EntityManagerInterface $entityManager, GamePlatformRepository $gamePlatformRepository, int $id): Response
     {
         $gamePlatform = $gamePlatformRepository->find($id);
 
@@ -79,7 +79,7 @@ class GamePlatformController extends AbstractController
     }
 
     #[Route('/{id}/delete', name: 'game_platform_delete', methods: ['POST'])]
-    public function delete(Request $request, EntityManagerInterface $entityManager, GamePlatformRepository $gamePlatformRepository, $id): Response
+    public function delete(Request $request, EntityManagerInterface $entityManager, GamePlatformRepository $gamePlatformRepository, int $id): Response
     {
         $gamePlatform = $gamePlatformRepository->find($id);
 

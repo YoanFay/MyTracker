@@ -45,7 +45,7 @@ class GamePublishersController extends AbstractController
     }
 
     #[Route('/{id}/details', name: 'game_publishers_show', methods: ['GET'])]
-    public function show(GamePublishersRepository $gamePublishersRepository, $id): Response
+    public function show(GamePublishersRepository $gamePublishersRepository, int $id): Response
     {
         $gamePublisher = $gamePublishersRepository->find($id);
 
@@ -56,7 +56,7 @@ class GamePublishersController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'game_publishers_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, EntityManagerInterface $entityManager, GamePublishersRepository $gamePublishersRepository, $id): Response
+    public function edit(Request $request, EntityManagerInterface $entityManager, GamePublishersRepository $gamePublishersRepository, int $id): Response
     {
         $gamePublisher = $gamePublishersRepository->find($id);
 
@@ -77,7 +77,7 @@ class GamePublishersController extends AbstractController
     }
 
     #[Route('/{id}/delete', name: 'game_publishers_delete', methods: ['POST'])]
-    public function delete(Request $request, EntityManagerInterface $entityManager, GamePublishersRepository $gamePublishersRepository, $id): Response
+    public function delete(Request $request, EntityManagerInterface $entityManager, GamePublishersRepository $gamePublishersRepository, int $id): Response
     {
         $gamePublisher = $gamePublishersRepository->find($id);
 

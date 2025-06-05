@@ -81,7 +81,7 @@ class MangaController extends AbstractController
      * @throws NonUniqueResultException
      */
     #[Route('/manga/details/{id}', name: 'manga_details')]
-    public function details(MangaRepository $mangaRepository, MangaTomeRepository $mangaTomeRepository, $id): Response
+    public function details(MangaRepository $mangaRepository, MangaTomeRepository $mangaTomeRepository, int $id): Response
     {
 
         $manga = $mangaRepository->findOneBy(['id' => $id]);
@@ -159,7 +159,7 @@ class MangaController extends AbstractController
 
 
     #[Route('/manga/edit/{id}', name: 'manga_edit')]
-    public function edit(MangaRepository $mangaRepository, ManagerRegistry $managerRegistry, Request $request, StrSpecialCharsLower $strSpecialCharsLower, $id): Response
+    public function edit(MangaRepository $mangaRepository, ManagerRegistry $managerRegistry, Request $request, StrSpecialCharsLower $strSpecialCharsLower, int $id): Response
     {
 
         $manga = $mangaRepository->find($id);
@@ -195,7 +195,7 @@ class MangaController extends AbstractController
 
 
     #[Route('/manga/delete/{id}', name: 'manga_delete')]
-    public function delete(MangaRepository $mangaRepository, ManagerRegistry $managerRegistry, Request $request, StrSpecialCharsLower $strSpecialCharsLower, $id): Response
+    public function delete(MangaRepository $mangaRepository, ManagerRegistry $managerRegistry, Request $request, StrSpecialCharsLower $strSpecialCharsLower, int $id): Response
     {
 
         $em = $managerRegistry->getManager();

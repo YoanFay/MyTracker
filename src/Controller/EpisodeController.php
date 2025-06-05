@@ -20,7 +20,7 @@ class EpisodeController extends AbstractController
 {
 
     #[Route('/add/{id}', name: 'episode_add')]
-    public function addEpisode(ManagerRegistry $managerRegistry, UsersRepository $usersRepository, EpisodeRepository $episodeRepository, SerieRepository $serieRepository, Request $request, $id = null): Response
+    public function addEpisode(ManagerRegistry $managerRegistry, UsersRepository $usersRepository, EpisodeRepository $episodeRepository, SerieRepository $serieRepository, Request $request, int $id = null): Response
     {
 
         $episode = new Episode();
@@ -38,7 +38,7 @@ class EpisodeController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            /** @var array $episodeData */
+            /** @var array<string, mixed> $episodeData */
             $episodeData = $request->request->get('episode');
 
             $date = DateTime::createFromFormat('d/m/Y H:i', $episodeData['showDate']);

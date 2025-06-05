@@ -301,7 +301,7 @@ class HistoriqueController extends AbstractController
      * @throws Exception
      */
     #[Route('/categorie/{categorie}', name: 'historique_categories')]
-    public function historiqueCategories(EpisodeShowRepository $episodeShowRepository, SerieTypeRepository $serieTypeRepository, MovieShowRepository $movieShowRepository, $categorie): Response
+    public function historiqueCategories(EpisodeShowRepository $episodeShowRepository, SerieTypeRepository $serieTypeRepository, MovieShowRepository $movieShowRepository, string $categorie): Response
     {
 
         if ($categorie !== 'movie') {
@@ -424,7 +424,7 @@ class HistoriqueController extends AbstractController
      * @throws Exception
      */
     #[Route('/{year}/{month}', name: 'historique_date')]
-    public function historiqueDate(EpisodeShowRepository $episodeShowRepository, MovieShowRepository $movieShowRepository, $year = 0, $month = 0): Response
+    public function historiqueDate(EpisodeShowRepository $episodeShowRepository, MovieShowRepository $movieShowRepository, string $year = '0', string $month = '0'): Response
     {
 
         $globalDuration = [
@@ -541,7 +541,7 @@ class HistoriqueController extends AbstractController
         $endDate = new DateTime('now');
 
         if (!($month === $endDate->format('m') && $year === $endDate->format('Y'))) {
-            $endDate->setDate($year, $month, 1);
+            $endDate->setDate(intval($year), intval($month), 1);
             $endDate = $endDate->modify('last day of this month');
             $endDate->setTime(23, 59, 59, 999999);
         }

@@ -45,7 +45,7 @@ class GameGenreController extends AbstractController
     }
 
     #[Route('/{id}/details', name: 'game_genre_show', methods: ['GET'])]
-    public function show(GameGenreRepository $gameGenreRepository, $id): Response
+    public function show(GameGenreRepository $gameGenreRepository, int $id): Response
     {
         $gameGenre = $gameGenreRepository->find($id);
 
@@ -56,7 +56,7 @@ class GameGenreController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'game_genre_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, EntityManagerInterface $entityManager, GameGenreRepository $gameGenreRepository, $id): Response
+    public function edit(Request $request, EntityManagerInterface $entityManager, GameGenreRepository $gameGenreRepository, int $id): Response
     {
         $gameGenre = $gameGenreRepository->find($id);
 
@@ -77,7 +77,7 @@ class GameGenreController extends AbstractController
     }
 
     #[Route('/{id}/delete', name: 'game_genre_delete', methods: ['POST'])]
-    public function delete(Request $request, EntityManagerInterface $entityManager, GameGenreRepository $gameGenreRepository, $id): Response
+    public function delete(Request $request, EntityManagerInterface $entityManager, GameGenreRepository $gameGenreRepository, int $id): Response
     {
         $gameGenre = $gameGenreRepository->find($id);
 

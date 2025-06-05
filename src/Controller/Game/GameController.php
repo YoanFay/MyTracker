@@ -24,6 +24,7 @@ use App\Service\StrSpecialCharsLower;
 use App\Service\TimeService;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -45,7 +46,7 @@ class GameController extends AbstractController
 
 
     #[Route('/details/{id}', name: 'game_details', methods: ['GET'])]
-    public function show(GameRepository $gameRepository, $id): Response
+    public function show(GameRepository $gameRepository, int $id): Response
     {
 
         $game = $gameRepository->find($id);
@@ -83,7 +84,7 @@ class GameController extends AbstractController
 
 
     #[Route('/delete/{id}', name: 'game_delete')]
-    public function delete(EntityManagerInterface $entityManager, GameRepository $gameRepository, $id): Response
+    public function delete(EntityManagerInterface $entityManager, GameRepository $gameRepository, int $id): Response
     {
 
         $game = $gameRepository->find($id);
@@ -395,6 +396,9 @@ class GameController extends AbstractController
     }
 
 
+    /**
+     * @throws Exception
+     */
     #[Route('/list', name: 'game_list', methods: ['POST'])]
     public function list(
         Request        $request,

@@ -85,7 +85,7 @@ class MovieController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()){
 
-            /** @var array $movieData */
+            /** @var array<string, mixed> $movieData */
             $movieData = $request->request->get('movie');
 
             $TMDBService->updateInfo($movie);
@@ -115,7 +115,7 @@ class MovieController extends AbstractController
     }
 
     #[Route('/detail/{id}', name: 'movie_detail')]
-    public function detail(MovieRepository $movieRepository, $id): Response
+    public function detail(MovieRepository $movieRepository, int $id): Response
     {
 
         $movie = $movieRepository->findOneBy(['id' => $id]);

@@ -45,7 +45,7 @@ class GameSerieController extends AbstractController
     }
 
     #[Route('/{id}/details', name: 'game_serie_show', methods: ['GET'])]
-    public function show(GameSerieRepository $gameSerieRepository, $id): Response
+    public function show(GameSerieRepository $gameSerieRepository, int $id): Response
     {
         $gameSerie = $gameSerieRepository->find($id);
 
@@ -56,7 +56,7 @@ class GameSerieController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'game_serie_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, EntityManagerInterface $entityManager, GameSerieRepository $gameSerieRepository, $id): Response
+    public function edit(Request $request, EntityManagerInterface $entityManager, GameSerieRepository $gameSerieRepository, int $id): Response
     {
         $gameSerie = $gameSerieRepository->find($id);
 
@@ -77,7 +77,7 @@ class GameSerieController extends AbstractController
     }
 
     #[Route('/{id}/delete', name: 'game_serie_delete', methods: ['POST'])]
-    public function delete(Request $request, EntityManagerInterface $entityManager, GameSerieRepository $gameSerieRepository, $id): Response
+    public function delete(Request $request, EntityManagerInterface $entityManager, GameSerieRepository $gameSerieRepository, int $id): Response
     {
         $gameSerie = $gameSerieRepository->find($id);
 

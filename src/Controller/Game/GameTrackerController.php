@@ -26,7 +26,7 @@ class GameTrackerController extends AbstractController
     }
     
     #[Route('/{id}/edit', name: 'game_tracker_edit')]
-    public function edit(Request $request, EntityManagerInterface $entityManager, GameTrackerRepository $gameTrackerRepository, GameRepository $gameRepository, TimeService $timeService, $id): Response
+    public function edit(Request $request, EntityManagerInterface $entityManager, GameTrackerRepository $gameTrackerRepository, GameRepository $gameRepository, TimeService $timeService, int $id): Response
     {
         $gameTracker = $gameTrackerRepository->find($id);
         
@@ -45,7 +45,7 @@ class GameTrackerController extends AbstractController
         
         if ($form->isSubmitted() && $form->isValid()) {
 
-            /** @var array $data */
+            /** @var array<string, mixed> $data */
             $data = $request->request->get('game_tracker');
             
             if($data['endTime'] !== "" && $data['endTime'] !== "0h0"){

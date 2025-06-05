@@ -45,7 +45,7 @@ class GameThemeController extends AbstractController
     }
 
     #[Route('/{id}/details', name: 'game_theme_show', methods: ['GET'])]
-    public function show(GameThemeRepository $gameThemeRepository, $id): Response
+    public function show(GameThemeRepository $gameThemeRepository, int $id): Response
     {
         $gameTheme = $gameThemeRepository->find($id);
 
@@ -56,7 +56,7 @@ class GameThemeController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'game_theme_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, EntityManagerInterface $entityManager, GameThemeRepository $gameThemeRepository, $id): Response
+    public function edit(Request $request, EntityManagerInterface $entityManager, GameThemeRepository $gameThemeRepository, int $id): Response
     {
         $gameTheme = $gameThemeRepository->find($id);
 
@@ -77,7 +77,7 @@ class GameThemeController extends AbstractController
     }
 
     #[Route('/{id}/delete', name: 'game_theme_delete', methods: ['POST'])]
-    public function delete(Request $request, EntityManagerInterface $entityManager, GameThemeRepository $gameThemeRepository, $id): Response
+    public function delete(Request $request, EntityManagerInterface $entityManager, GameThemeRepository $gameThemeRepository, int $id): Response
     {
         $gameTheme = $gameThemeRepository->find($id);
 

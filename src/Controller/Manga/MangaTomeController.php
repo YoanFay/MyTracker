@@ -25,7 +25,7 @@ class MangaTomeController extends AbstractController
     }
 
     #[Route('manga/tome/add/{id}', name: 'manga_tome_add')]
-    public function add(ManagerRegistry $managerRegistry, Request $request, MangaRepository $mangaRepository, $id = null): Response
+    public function add(ManagerRegistry $managerRegistry, Request $request, MangaRepository $mangaRepository, int $id = null): Response
     {
 
         $mangaTome = new MangaTome();
@@ -88,7 +88,7 @@ class MangaTomeController extends AbstractController
     }
 
     #[Route('manga/tome/edit/{id}', name: 'manga_tome_edit')]
-    public function edit(ManagerRegistry $managerRegistry, Request $request, MangaTomeRepository $mangaTomeRepository, $id): Response
+    public function edit(ManagerRegistry $managerRegistry, Request $request, MangaTomeRepository $mangaTomeRepository, int $id): Response
     {
 
         $mangaTome = $mangaTomeRepository->findOneBy(['id' => $id]);
@@ -160,7 +160,7 @@ class MangaTomeController extends AbstractController
     }
 
     #[Route('manga/tome/start/{id}', name: 'manga_tome_start')]
-    public function start(ManagerRegistry $managerRegistry, MangaTomeRepository $mangaTomeRepository, $id): Response
+    public function start(ManagerRegistry $managerRegistry, MangaTomeRepository $mangaTomeRepository, int $id): Response
     {
         $tome = $mangaTomeRepository->findOneBy(['id' => $id]);
 
@@ -186,7 +186,7 @@ class MangaTomeController extends AbstractController
     }
 
     #[Route('manga/tome/read/{id}', name: 'manga_tome_read')]
-    public function read(ManagerRegistry $managerRegistry, MangaTomeRepository $mangaTomeRepository, $id): Response
+    public function read(ManagerRegistry $managerRegistry, MangaTomeRepository $mangaTomeRepository, int $id): Response
     {
         $tome = $mangaTomeRepository->findOneBy(['id' => $id]);
 
@@ -212,7 +212,7 @@ class MangaTomeController extends AbstractController
     }
 
     #[Route('manga/tome/delete/{id}', name: 'manga_tome_delete')]
-    public function delete(ManagerRegistry $managerRegistry, MangaTomeRepository $mangaTomeRepository, $id): Response
+    public function delete(ManagerRegistry $managerRegistry, MangaTomeRepository $mangaTomeRepository, int $id): Response
     {
         $tome = $mangaTomeRepository->findOneBy(['id' => $id]);
 
