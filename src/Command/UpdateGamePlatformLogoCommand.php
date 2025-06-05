@@ -3,10 +3,8 @@
 namespace App\Command;
 
 use App\Entity\GamePlatform;
-use App\Entity\GameSerie;
 use App\Repository\GamePlatformRepository;
-use App\Repository\GameRepository;
-use App\Repository\GameSerieRepository;
+use App\Service\FileService;
 use App\Service\StrSpecialCharsLower;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
@@ -16,7 +14,6 @@ use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 #[AsCommand(
     name: 'app:update-game-platform-logo',
@@ -32,17 +29,17 @@ class UpdateGamePlatformLogoCommand extends Command
 
     private StrSpecialCharsLower $strSpecialCharsLower;
 
-    private KernelInterface $kernel;
+    private FileService $fileService;
 
 
-    public function __construct(GamePlatformRepository $gamePlatformRepository, StrSpecialCharsLower $strSpecialCharsLower, KernelInterface $kernel, ManagerRegistry $managerRegistry)
+    public function __construct(GamePlatformRepository $gamePlatformRepository, StrSpecialCharsLower $strSpecialCharsLower, ManagerRegistry $managerRegistry, FileService $fileService)
     {
 
         parent::__construct();
         $this->gamePlatformRepository = $gamePlatformRepository;
         $this->strSpecialCharsLower = $strSpecialCharsLower;
-        $this->kernel = $kernel;
         $this->manager = $managerRegistry->getManager();
+        $this->fileService = $fileService;
     }
 
 
@@ -96,7 +93,7 @@ class UpdateGamePlatformLogoCommand extends Command
 
             $data = json_decode($response->getBody(), true)[0];
 
-            if(array_key_exists('platform_logo', $data)) {
+            if (array_key_exists('platform_logo', $data)) {
                 $response = $client->post("https://api.igdb.com/v4/platform_logos", [
                     'headers' => [
                         'Content-Type' => 'application/json',
@@ -109,20 +106,11 @@ class UpdateGamePlatformLogoCommand extends Command
 
                 $data = json_decode($response->getBody(), true)[0];
 
-                // Lien de l'image à télécharger
-                $lienImage = "https://images.igdb.com/igdb/image/upload/t_logo_med/".$data['image_id'].".png";
+                $link = "https://images.igdb.com/igdb/image/upload/t_logo_med/".$data['image_id'].".png";
 
-                $cover = imagecreatefromstring(file_get_contents($lienImage));
+                $destinationFolder = "/public/image/game/platform/".$this->strSpecialCharsLower->serie($platform->getName()).'.png';
 
-                $projectDir = $this->kernel->getProjectDir();
-
-                // Chemin où enregistrer l'image
-                $cheminImageDestination = "/public/image/game/platform/" . $this->strSpecialCharsLower->serie($platform->getName()).'.png';
-
-                // Téléchargement et enregistrement de l'image
-                if (imagejpeg($cover, $projectDir . $cheminImageDestination, 100)) {
-                    $platform->setLogo(true);
-                }
+                $platform->setLogo($this->fileService->addFile($link, $destinationFolder));
 
             }
 
