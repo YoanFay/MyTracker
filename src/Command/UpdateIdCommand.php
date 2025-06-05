@@ -57,7 +57,7 @@ class UpdateIdCommand extends Command
         foreach ($series as $serie) {
             $data = null;
             $episode = null;
-            /** @var Episode $episode */
+            /** @var ?Episode $episode */
             $episode = $this->episodeRepository->findBySerie($serie);
 
             if ($episode && $episode->getTvdbId()) {
