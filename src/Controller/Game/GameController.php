@@ -20,13 +20,11 @@ use App\Repository\GameRepository;
 use App\Repository\GameModeRepository;
 use App\Repository\GameSerieRepository;
 use App\Repository\GameThemeRepository;
-use App\Service\ApiService;
+use App\Service\IGDBService;
 use App\Service\StrSpecialCharsLower;
 use App\Service\TimeService;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -105,10 +103,6 @@ class GameController extends AbstractController
         return $this->redirectToRoute('game', [], Response::HTTP_SEE_OTHER);
     }
 
-
-    /**
-     * @throws GuzzleException
-     */
     #[Route('/add', name: 'game_add', methods: ['GET', 'POST'])]
     public function add(
         Request                  $request,
@@ -121,7 +115,7 @@ class GameController extends AbstractController
         GamePlatformRepository   $gamePlatformRepository,
         GameSerieRepository      $gameSerieRepository,
         StrSpecialCharsLower     $strSpecialCharsLower,
-        ApiService               $apiService,
+        IGDBService              $IGDBService,
         KernelInterface          $kernel
     ): Response
     {
@@ -142,7 +136,7 @@ class GameController extends AbstractController
 
             $body = 'fields name,game_modes,genres,themes; where id = '.$idGame.';';
 
-            $dataGame = $apiService->igdbCall('games', $body);
+            $dataGame = $IGDBService->getData('games', $body);
 
             $game->setName($dataGame['name']);
 
@@ -156,7 +150,7 @@ class GameController extends AbstractController
 
             $body = 'fields *;where game = '.$idGame.' & comment = "French title";';
 
-            $dataName = $apiService->igdbCall('alternative_names', $body);
+            $dataName = $IGDBService->getData('alternative_names', $body);
 
             if ($dataName !== []) {
                 $game->setName($dataName[0]['name']);
@@ -173,7 +167,7 @@ class GameController extends AbstractController
 
                     $body = 'fields name;where id = '.$gameModeId.';';
 
-                    $dataGameMode = $apiService->igdbCall('game_modes', $body);
+                    $dataGameMode = $IGDBService->getData('game_modes', $body);
 
                     $gameMode = new GameMode();
 
@@ -197,7 +191,7 @@ class GameController extends AbstractController
 
                     $body = 'fields name;where id = '.$genreId.';';
 
-                    $dataGenre = $apiService->igdbCall('genres', $body);
+                    $dataGenre = $IGDBService->getData('genres', $body);
 
                     $genre = new GameGenre();
 
@@ -222,7 +216,7 @@ class GameController extends AbstractController
 
                     $body = 'fields name;where id = '.$themeId.';';
 
-                    $dataTheme = $apiService->igdbCall('themes', $body);
+                    $dataTheme = $IGDBService->getData('themes', $body);
 
                     $theme = new GameTheme();
 
@@ -242,7 +236,7 @@ class GameController extends AbstractController
 
             $body = 'fields *;where game = '.$idGame.' & platform = '.$platformId.' & (status=6 | status = null) & (region=1 | region=8);';
 
-            $dataReleaseDate = $apiService->igdbCall('release_dates', $body);
+            $dataReleaseDate = $IGDBService->getData('release_dates', $body);
             $date = new DateTime();
             $date->setTimestamp($dataReleaseDate['date']);
 
@@ -252,7 +246,7 @@ class GameController extends AbstractController
 
             $body = 'fields name;where published = ['.$idGame.'];';
 
-            $dataPublisher = $apiService->igdbCall('companies', $body);
+            $dataPublisher = $IGDBService->getData('companies', $body);
 
             foreach ($dataPublisher as $onePublisher) {
 
@@ -278,7 +272,7 @@ class GameController extends AbstractController
 
             $body = 'fields name;where developed = ['.$idGame.'];';
 
-            $dataDeveloper = $apiService->igdbCall('companies', $body);
+            $dataDeveloper = $IGDBService->getData('companies', $body);
 
             foreach ($dataDeveloper as $oneDeveloper) {
 
@@ -304,12 +298,12 @@ class GameController extends AbstractController
 
             $body = 'fields id,name,games;where games = ['.$idGame.'];';
 
-            $dataSeries = $apiService->igdbCall('collections', $body);
+            $dataSeries = $IGDBService->getData('collections', $body);
 
             if (empty($dataSeries) && $idParent) {
                 $body = 'fields id,name,games;where games = ['.$idParent.'];';
 
-                $dataSeries = $apiService->igdbCall('collections', $body);
+                $dataSeries = $IGDBService->getData('collections', $body);
             }
 
             $saveSeries = null;
@@ -349,7 +343,7 @@ class GameController extends AbstractController
 
                 $body = 'fields name;where id = '.$platformId.';';
 
-                $dataPlatform = $apiService->igdbCall('platforms', $body);
+                $dataPlatform = $IGDBService->getData('platforms', $body);
 
                 $platform = new GamePlatform();
 
@@ -364,7 +358,7 @@ class GameController extends AbstractController
 
             $body = 'fields *;where game = '.$idGame.';';
 
-            $dataGameCover = $apiService->igdbCall('covers', $body);
+            $dataGameCover = $IGDBService->getData('covers', $body);
 
             $lienImage = 'https:'.str_replace('/t_thumb/', '/t_cover_big/', $dataGameCover['url']);
 

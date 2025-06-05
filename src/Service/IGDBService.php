@@ -3,9 +3,10 @@
 namespace App\Service;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Component\HttpKernel\KernelInterface;
 
-class ApiService
+class IGDBService
 {
 
     private KernelInterface $kernel;
@@ -17,7 +18,8 @@ class ApiService
         $this->kernel = $kernel;
     }
 
-    public function igdbAuth(){
+    public function auth(): string
+    {
 
         $client = new Client();
 
@@ -34,11 +36,15 @@ class ApiService
 
     }
 
-    public function igdbCall($category, $body){
+
+    /**
+     * @throws GuzzleException
+     */
+    public function getData($category, $body){
 
         $client = new Client();
 
-        $token = $this->igdbAuth();
+        $token = $this->auth();
 
         $response = $client->post("https://api.igdb.com/v4/".$category, [
             'headers' => [

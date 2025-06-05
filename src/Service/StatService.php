@@ -2,21 +2,9 @@
 
 namespace App\Service;
 
-use App\Entity\Artwork;
-use App\Entity\Company;
-use App\Entity\Episode;
-use App\Entity\Serie;
-use App\Repository\CompanyRepository;
-use DateTime;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\GuzzleException;
 use JetBrains\PhpStorm\ArrayShape;
-use Psr\Cache\InvalidArgumentException;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Contracts\Cache\ItemInterface;
 
 class StatService
 {

@@ -3,16 +3,10 @@
 namespace App\Service;
 
 use App\Entity\Movie;
-use App\Entity\MovieGenre;
-use App\Entity\Serie;
 use App\Repository\MovieGenreRepository;
 use DateTime;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\GuzzleException;
-use Psr\Cache\InvalidArgumentException;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Contracts\Cache\ItemInterface;
 
 class TMDBService
 {
@@ -20,6 +14,8 @@ class TMDBService
     private MovieGenreRepository $movieGenreRepository;
 
     private KernelInterface $kernel;
+
+    private const TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhZmI1ZDg4MTM3ZTM4OWU2M2M4YjVmNDVmNWRhMTg2ZSIsInN1YiI6IjY1NzcwNmEyNTY0ZWM3MDBmZWI1NDA3NiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.B8eXCk-bwC32V5dHtwmtIXl1urYEfCYR0LCeOnckGos';
 
     public function __construct(MovieGenreRepository $movieGenreRepository, KernelInterface $kernel)
     {
@@ -99,12 +95,10 @@ class TMDBService
 
         $client = new Client();
 
-        $token = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhZmI1ZDg4MTM3ZTM4OWU2M2M4YjVmNDVmNWRhMTg2ZSIsInN1YiI6IjY1NzcwNmEyNTY0ZWM3MDBmZWI1NDA3NiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.B8eXCk-bwC32V5dHtwmtIXl1urYEfCYR0LCeOnckGos';
-
         try {
             $response = $client->get("https://api.themoviedb.org/3".$url, [
                 'headers' => [
-                    'Authorization' => 'Bearer '.$token,
+                    'Authorization' => 'Bearer '.self::TOKEN,
                     'Accept' => 'application/json',
                 ],
             ]);

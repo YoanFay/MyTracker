@@ -6,10 +6,8 @@ use App\Entity\GamePlatform;
 use App\Form\GamePlatformAddType;
 use App\Form\GamePlatformType;
 use App\Repository\GamePlatformRepository;
-use App\Service\ApiService;
+use App\Service\IGDBService;
 use Doctrine\ORM\EntityManagerInterface;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -93,12 +91,8 @@ class GamePlatformController extends AbstractController
         return $this->redirectToRoute('game_platform', [], Response::HTTP_SEE_OTHER);
     }
 
-
-    /**
-     * @throws GuzzleException
-     */
     #[Route('/add', name: 'game_platform_add', methods: ['GET', 'POST'])]
-    public function add(Request $request, EntityManagerInterface $entityManager, ApiService $apiService): Response
+    public function add(Request $request, EntityManagerInterface $entityManager, IGDBService $IGDBService): Response
     {
         $form = $this->createForm(GamePlatformAddType::class);
         $form->handleRequest($request);
@@ -109,7 +103,7 @@ class GamePlatformController extends AbstractController
 
             $body = 'fields *;where name = "'.$formData['name'].'";';
 
-            $dataPlatform = $apiService->igdbCall('platforms', $body);
+            $dataPlatform = $IGDBService->getData('platforms', $body);
 
             $gamePlatform = new GamePlatform();
 

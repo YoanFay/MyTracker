@@ -4,12 +4,11 @@ namespace App\Command;
 
 use App\Entity\GamePlatform;
 use App\Repository\GamePlatformRepository;
+use App\Service\IGDBService;
 use App\Service\FileService;
 use App\Service\StrSpecialCharsLower;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -31,8 +30,10 @@ class UpdateGamePlatformLogoCommand extends Command
 
     private FileService $fileService;
 
+    private IGDBService $IGDBService;
 
-    public function __construct(GamePlatformRepository $gamePlatformRepository, StrSpecialCharsLower $strSpecialCharsLower, ManagerRegistry $managerRegistry, FileService $fileService)
+
+    public function __construct(GamePlatformRepository $gamePlatformRepository, StrSpecialCharsLower $strSpecialCharsLower, ManagerRegistry $managerRegistry, FileService $fileService, IGDBService $IGDBService)
     {
 
         parent::__construct();
@@ -40,71 +41,32 @@ class UpdateGamePlatformLogoCommand extends Command
         $this->strSpecialCharsLower = $strSpecialCharsLower;
         $this->manager = $managerRegistry->getManager();
         $this->fileService = $fileService;
+        $this->apiService = $IGDBService;
     }
 
-
-    /**
-     * @throws GuzzleException
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-
-        $client = new Client();
-
-        $response = $client->post("https://id.twitch.tv/oauth2/token?client_id=sd5xdt5w2lkjr7ws92fxjdlicvb5u2&client_secret=tymefepntjuva1n9ipa3lkjts2pmdh&grant_type=client_credentials", [
-            'headers' => [
-                'Content-Type' => 'application/json',
-                'Accept' => 'application/json',
-            ]
-        ]);
-
-        $data = json_decode($response->getBody(), true);
-
-        $token = "Bearer ".$data['access_token'];
 
         $platforms = $this->gamePlatformRepository->findNoLogo();
 
         /** @var GamePlatform $platform */
         foreach ($platforms as $platform) {
 
-            $response = $client->post("https://api.igdb.com/v4/platforms", [
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                    'Accept' => 'application/json',
-                    'Client-ID' => 'sd5xdt5w2lkjr7ws92fxjdlicvb5u2',
-                    'Authorization' => $token
-                ],
-                'body' => 'fields versions; where id = '.$platform->getIgdbId().';'
-            ]);
+            $body = 'fields versions; where id = '.$platform->getIgdbId().';';
 
-            $data = json_decode($response->getBody(), true)[0];
+            $data = $this->apiService->getData('platforms', $body);
 
             $version = min($data['versions']);
 
-            $response = $client->post("https://api.igdb.com/v4/platform_versions", [
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                    'Accept' => 'application/json',
-                    'Client-ID' => 'sd5xdt5w2lkjr7ws92fxjdlicvb5u2',
-                    'Authorization' => $token
-                ],
-                'body' => 'fields platform_logo; where id = '.$version.';'
-            ]);
+            $body = 'fields platform_logo; where id = '.$version.';';
 
-            $data = json_decode($response->getBody(), true)[0];
+            $data = $this->apiService->getData('platform_versions', $body);
 
             if (array_key_exists('platform_logo', $data)) {
-                $response = $client->post("https://api.igdb.com/v4/platform_logos", [
-                    'headers' => [
-                        'Content-Type' => 'application/json',
-                        'Accept' => 'application/json',
-                        'Client-ID' => 'sd5xdt5w2lkjr7ws92fxjdlicvb5u2',
-                        'Authorization' => $token
-                    ],
-                    'body' => 'fields image_id; where id = '.$data['platform_logo'].';'
-                ]);
 
-                $data = json_decode($response->getBody(), true)[0];
+                $body = 'fields image_id; where id = '.$data['platform_logo'].';';
+
+                $data = $this->apiService->getData('platform_logos', $body);
 
                 $link = "https://images.igdb.com/igdb/image/upload/t_logo_med/".$data['image_id'].".png";
 

@@ -227,10 +227,6 @@ class SerieController extends AbstractController
         ]);
     }
 
-
-    /**
-     * @throws NonUniqueResultException
-     */
     #[Route('/genre/{name}', name: 'serie_genre')]
     public function animeByGenre( EpisodeRepository $episodeRepository, AnimeGenreRepository $animeGenreRepository, $name): Response
     {
@@ -239,32 +235,7 @@ class SerieController extends AbstractController
 
         $series = $animeGenre->getSerie();
 
-        $serieTab = [];
-
-        foreach ($series as $serie) {
-
-            $lastEpisode = $episodeRepository->findLastEpisode($serie);
-
-            $serieTab[] = [
-                'id' => $serie->getId(),
-                'name' => $serie->getName(),
-                'serieType' => $serie->getSerieType()->getName(),
-                'artwork' => $serie->getArtwork(),
-                'lastDate' => $lastEpisode?->getShowDate(),
-                'entity' => $serie,
-            ];
-
-        }
-
-        uasort($serieTab, function ($a, $b) {
-
-            // Utilise strtotime pour convertir les dates en timestamps pour une comparaison facile
-            $dateA = $a['lastDate'];
-            $dateB = $b['lastDate'];
-
-            // Retourne -1 si $dateA est inférieur à $dateB, 1 si supérieur, 0 si égal
-            return $dateB <=> $dateA;
-        });
+        $serieTab = $this->serieTab($series, $episodeRepository);
 
         return $this->render('serie/index.html.twig', [
             'controller_name' => 'SerieController',
@@ -273,10 +244,6 @@ class SerieController extends AbstractController
         ]);
     }
 
-
-    /**
-     * @throws NonUniqueResultException
-     */
     #[Route('/theme/{name}', name: 'serie_theme')]
     public function animeByTheme(EpisodeRepository $episodeRepository, AnimeThemeRepository $animeThemeRepository, $name): Response
     {
@@ -285,32 +252,7 @@ class SerieController extends AbstractController
 
         $series = $animeTheme->getSerie();
 
-        $serieTab = [];
-
-        foreach ($series as $serie) {
-
-            $lastEpisode = $episodeRepository->findLastEpisode($serie);
-
-            $serieTab[] = [
-                'id' => $serie->getId(),
-                'name' => $serie->getName(),
-                'serieType' => $serie->getSerieType()->getName(),
-                'artwork' => $serie->getArtwork(),
-                'lastDate' => $lastEpisode?->getShowDate(),
-                'entity' => $serie,
-            ];
-
-        }
-
-        uasort($serieTab, function ($a, $b) {
-
-            // Utilise strtotime pour convertir les dates en timestamps pour une comparaison facile
-            $dateA = $a['lastDate'];
-            $dateB = $b['lastDate'];
-
-            // Retourne -1 si $dateA est inférieur à $dateB, 1 si supérieur, 0 si égal
-            return $dateB <=> $dateA;
-        });
+        $serieTab = $this->serieTab($series, $episodeRepository);
 
         return $this->render('serie/index.html.twig', [
             'controller_name' => 'SerieController',
@@ -452,6 +394,40 @@ class SerieController extends AbstractController
             'id' => $id,
             'navLinkId' => 'serie_list',
         ]);
+
+    }
+
+    private function serieTab($series, $episodeRepository): array
+    {
+
+        $serieTab = [];
+
+        foreach ($series as $serie) {
+
+            $lastEpisode = $episodeRepository->findLastEpisode($serie);
+
+            $serieTab[] = [
+                'id' => $serie->getId(),
+                'name' => $serie->getName(),
+                'serieType' => $serie->getSerieType()->getName(),
+                'artwork' => $serie->getArtwork(),
+                'lastDate' => $lastEpisode?->getShowDate(),
+                'entity' => $serie,
+            ];
+
+        }
+
+        uasort($serieTab, function ($a, $b) {
+
+            // Utilise strtotime pour convertir les dates en timestamps pour une comparaison facile
+            $dateA = $a['lastDate'];
+            $dateB = $b['lastDate'];
+
+            // Retourne -1 si $dateA est inférieur à $dateB, 1 si supérieur, 0 si égal
+            return $dateB <=> $dateA;
+        });
+
+        return $serieTab;
 
     }
 }

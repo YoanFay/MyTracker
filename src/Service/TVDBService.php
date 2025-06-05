@@ -11,7 +11,6 @@ use DateTime;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\GuzzleException;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -46,6 +45,10 @@ class TVDBService
     }
 
 
+    /**
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws InvalidArgumentException
+     */
     public function getData($url)
     {
 
