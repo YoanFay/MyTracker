@@ -11,7 +11,6 @@ use App\Entity\GamePublishers;
 use App\Entity\GameTheme;
 use App\Entity\GameSerie;
 use App\Form\GameAddType;
-use App\Form\GameType;
 use App\Repository\GameDeveloperRepository;
 use App\Repository\GameGenreRepository;
 use App\Repository\GamePlatformRepository;
@@ -25,6 +24,7 @@ use App\Service\StrSpecialCharsLower;
 use App\Service\TimeService;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -83,7 +83,7 @@ class GameController extends AbstractController
 
 
     #[Route('/delete/{id}', name: 'game_delete')]
-    public function delete(Request $request, EntityManagerInterface $entityManager, GameRepository $gameRepository, $id): Response
+    public function delete(EntityManagerInterface $entityManager, GameRepository $gameRepository, $id): Response
     {
 
         $game = $gameRepository->find($id);
@@ -103,6 +103,10 @@ class GameController extends AbstractController
         return $this->redirectToRoute('game', [], Response::HTTP_SEE_OTHER);
     }
 
+
+    /**
+     * @throws GuzzleException
+     */
     #[Route('/add', name: 'game_add', methods: ['GET', 'POST'])]
     public function add(
         Request                  $request,
@@ -424,7 +428,7 @@ class GameController extends AbstractController
 
             $tooltip .= "<li>Date de sortie : ".$timeService->frenchFormatDateNoDay($game->getReleaseDate())."</li>";
 
-            if ($game->getGameTrackers() && $game->getGameTrackers()->getValues()) {
+            if (count($game->getGameTrackers()) > 0 && $game->getGameTrackers()->getValues()) {
 
                 $gameTracker = $game->getGameTrackers()->getValues()[0];
 
