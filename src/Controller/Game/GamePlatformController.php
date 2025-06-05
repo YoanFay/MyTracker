@@ -6,6 +6,7 @@ use App\Entity\GamePlatform;
 use App\Form\GamePlatformAddType;
 use App\Form\GamePlatformType;
 use App\Repository\GamePlatformRepository;
+use App\Service\ApiService;
 use Doctrine\ORM\EntityManagerInterface;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
@@ -97,7 +98,7 @@ class GamePlatformController extends AbstractController
      * @throws GuzzleException
      */
     #[Route('/add', name: 'game_platform_add', methods: ['GET', 'POST'])]
-    public function add(Request $request, EntityManagerInterface $entityManager): Response
+    public function add(Request $request, EntityManagerInterface $entityManager, ApiService $apiService): Response
     {
         $form = $this->createForm(GamePlatformAddType::class);
         $form->handleRequest($request);
@@ -106,32 +107,9 @@ class GamePlatformController extends AbstractController
 
             $formData = $form->getData();
 
-            // AUTHENTIFICATION
+            $body = 'fields *;where name = "'.$formData['name'].'";';
 
-            $client = new Client();
-
-            $response = $client->post("https://id.twitch.tv/oauth2/token?client_id=sd5xdt5w2lkjr7ws92fxjdlicvb5u2&client_secret=tymefepntjuva1n9ipa3lkjts2pmdh&grant_type=client_credentials", [
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                    'Accept' => 'application/json',
-                ]
-            ]);
-
-            $data = json_decode($response->getBody(), true);
-
-            $token = "Bearer ".$data['access_token'];
-
-            $response = $client->post("https://api.igdb.com/v4/platforms", [
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                    'Accept' => 'application/json',
-                    'Client-ID' => 'sd5xdt5w2lkjr7ws92fxjdlicvb5u2',
-                    'Authorization' => $token
-                ],
-                'body' => 'fields *;where name = "'.$formData['name'].'";'
-            ]);
-
-            $dataPlatform = json_decode($response->getBody(), true)[0];
+            $dataPlatform = $apiService->igdbCall('platforms', $body);
 
             $gamePlatform = new GamePlatform();
 
