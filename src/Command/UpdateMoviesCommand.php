@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Entity\MovieGenre;
 use App\Repository\MovieGenreRepository;
 use App\Repository\MovieRepository;
 use App\Service\FileService;
@@ -65,10 +66,14 @@ class UpdateMoviesCommand extends Command
                 $movie->setReleaseDate($releaseDate);
             }
 
-            $movie->setSlug($this->strSpecialCharsLower->serie($movie->getName()));
+            /** @var string $name */
+            $name = $movie->getName();
+
+            $movie->setSlug($this->strSpecialCharsLower->serie($name));
 
             foreach ($data['genres'] as $genre){
 
+                /** @var MovieGenre $addGenre */
                 $addGenre = $this->movieGenreRepository->findOneBy(['name' => $genre['name']]);
 
                 $movie->addMovieGenre($addGenre);

@@ -15,8 +15,8 @@ class GamePlatform
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $name = null;
+    #[ORM\Column(length: 255, nullable: false)]
+    private string $name;
 
     #[ORM\ManyToMany(targetEntity: Game::class, mappedBy: 'platforms')]
     private Collection $games;
@@ -37,7 +37,7 @@ class GamePlatform
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }

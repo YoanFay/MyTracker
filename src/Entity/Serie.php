@@ -20,7 +20,7 @@ class Serie
     private $plexId;
 
     #[ORM\Column(type: "string", length: 255)]
-    private $name;
+    private string $name;
 
     #[ORM\OneToMany(targetEntity: Episode::class, mappedBy: "serie")]
     private $episodes;
@@ -111,7 +111,7 @@ class Serie
         return $this;
     }
 
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }

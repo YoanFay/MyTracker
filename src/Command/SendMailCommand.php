@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Entity\Serie;
 use App\Entity\SerieUpdate;
 use App\Repository\SerieUpdateRepository;
 use App\Service\MailService;
@@ -46,7 +47,10 @@ class SendMailCommand extends Command
         /** @var SerieUpdate $update */
         foreach ($serieUpdate as $update){
 
-            $name = $update->getSerie()->getName();
+            /** @var Serie $serie */
+            $serie = $update->getSerie();
+
+            $name = $serie->getName();
 
             if($update->getNewStatus() === "Ended"){
                 $red[] = ['info' => $name." est terminé"];
@@ -61,7 +65,7 @@ class SendMailCommand extends Command
                     $green[] = ['info' => $text];
                 }
             }
-            elseif($update->getNewNextAired() === null and $update->getSerie()->getStatus() === "Continuing" and $update->getOldStatus() !== "Ended" and $update->getOldStatus() !== null){
+            elseif($update->getNewNextAired() === null and $serie->getStatus() === "Continuing" and $update->getOldStatus() !== "Ended" and $update->getOldStatus() !== null){
                 $orange = ['info' => $name." est en pause"];
             }
             elseif($update->getNewStatus() === "Upcoming"){

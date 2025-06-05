@@ -108,7 +108,10 @@ class UpdateGamePlatformLogoCommand extends Command
 
                 $link = "https://images.igdb.com/igdb/image/upload/t_logo_med/".$data['image_id'].".png";
 
-                $destinationFolder = "/public/image/game/platform/".$this->strSpecialCharsLower->serie($platform->getName()).'.png';
+                /** @var string $name */
+                $name = $platform->getName();
+
+                $destinationFolder = "/public/image/game/platform/".$this->strSpecialCharsLower->serie($name).'.png';
 
                 $platform->setLogo($this->fileService->addFile($link, $destinationFolder));
 
