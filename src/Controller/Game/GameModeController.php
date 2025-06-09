@@ -81,7 +81,10 @@ class GameModeController extends AbstractController
     {
         $gameMode = $gameModeRepository->find($id);
 
-        if ($this->isCsrfTokenValid('delete'.$gameMode->getId(), $request->request->get('_token'))) {
+        /** @var ?string $token */
+        $token = $request->request->get('_token');
+
+        if ($this->isCsrfTokenValid('delete'.$gameMode->getId(), $token)) {
             $entityManager->remove($gameMode);
             $entityManager->flush();
         }

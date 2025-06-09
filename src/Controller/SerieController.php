@@ -365,7 +365,10 @@ class SerieController extends AbstractController
 
         if ($id < -1) {
 
-            $companyName = html_entity_decode($request->request->get('company'));
+            /** @var string $companyName */
+            $companyName = $request->request->get('company');
+
+            $companyName = html_entity_decode($companyName);
 
             $company = $companyRepository->findOneBy(['name' => $companyName]);
 

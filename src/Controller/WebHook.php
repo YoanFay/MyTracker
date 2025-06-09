@@ -159,6 +159,7 @@ class WebHook extends AbstractController
                     $episode = null;
 
                     if (isset($jsonData['Metadata']['guid'])) {
+                        /** @var ?string $episodeId */
                         $episodeId = str_replace(["plex://episode/", "local://"], ["", ""], $jsonData['Metadata']['guid']);
 
                         $episode = $episodeRepository->findOneBy(['serie' => $serie, 'saisonNumber' => $jsonData['Metadata']['parentIndex'], 'episodeNumber' => $jsonData['Metadata']['index']]);

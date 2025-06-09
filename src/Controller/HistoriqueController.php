@@ -35,6 +35,7 @@ class HistoriqueController extends AbstractController
 
         $dates = $episodeShowRepository->findMonth();
 
+        /** @var array<string, mixed> $listDate */
         $listDate = [];
 
         foreach ($dates as $date) {
@@ -402,7 +403,10 @@ class HistoriqueController extends AbstractController
 
         krsort($dataByDate);
 
-        $startDate = new DateTime(array_key_last($dataByDate));
+        /** @var string $lastKey */
+        $lastKey = array_key_last($dataByDate);
+
+        $startDate = new DateTime($lastKey);
         $endDate = new DateTime('now');
         $daysSinceStartOfYear = $endDate->diff($startDate)->days + 1;
 

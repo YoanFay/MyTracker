@@ -6,6 +6,7 @@ use App\Entity\Episode;
 use App\Entity\EpisodeShow;
 use App\Form\EpisodeType;
 use App\Repository\UsersRepository;
+use Bugsnag\DateTime\Date;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -41,6 +42,7 @@ class EpisodeController extends AbstractController
             /** @var array<string, mixed> $episodeData */
             $episodeData = $request->request->get('episode');
 
+            /** @var DateTime $date */
             $date = DateTime::createFromFormat('d/m/Y H:i', $episodeData['showDate']);
 
             $checkEpisode = $episodeRepository->findOneBy(['serie' => $episode->getSerie(), 'saisonNumber' => $episode->getSaisonNumber(), 'episodeNumber' => $episode->getEpisodeNumber()]);

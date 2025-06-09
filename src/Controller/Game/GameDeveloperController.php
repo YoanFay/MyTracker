@@ -81,7 +81,10 @@ class GameDeveloperController extends AbstractController
     {
         $gameDeveloper = $gameDeveloperRepository->find($id);
 
-        if ($this->isCsrfTokenValid('delete'.$gameDeveloper->getId(), $request->request->get('_token'))) {
+        /** @var ?string $token */
+        $token = $request->request->get('_token');
+
+        if ($this->isCsrfTokenValid('delete'.$gameDeveloper->getId(), $token)) {
             $entityManager->remove($gameDeveloper);
             $entityManager->flush();
         }

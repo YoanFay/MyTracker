@@ -19,6 +19,7 @@ use App\Repository\GameRepository;
 use App\Repository\GameModeRepository;
 use App\Repository\GameSerieRepository;
 use App\Repository\GameThemeRepository;
+use App\Service\FileService;
 use App\Service\IGDBService;
 use App\Service\StrSpecialCharsLower;
 use App\Service\TimeService;
@@ -120,6 +121,7 @@ class GameController extends AbstractController
         GamePlatformRepository   $gamePlatformRepository,
         GameSerieRepository      $gameSerieRepository,
         StrSpecialCharsLower     $strSpecialCharsLower,
+        FileService              $fileService,
         IGDBService              $IGDBService,
         KernelInterface          $kernel
     ): Response
@@ -365,16 +367,12 @@ class GameController extends AbstractController
 
             $dataGameCover = $IGDBService->getData('covers', $body);
 
-            $lienImage = 'https:'.str_replace('/t_thumb/', '/t_cover_big/', $dataGameCover['url']);
+            $link = 'https:'.str_replace('/t_thumb/', '/t_cover_big/', $dataGameCover['url']);
 
-            $cover = imagecreatefromstring(file_get_contents($lienImage));
+            $destination = "/public/image/game/cover/".$game->getSlug().'.jpeg';
 
-            $projectDir = $kernel->getProjectDir();
-
-            $cheminImageDestination = "/public/image/game/cover/".$game->getSlug().'.jpeg';
-
-            if (imagejpeg($cover, $projectDir.$cheminImageDestination, 100)) {
-                $game->setCover($cheminImageDestination);
+            if ($fileService->addFile($link, $destination)) {
+                $game->setCover($destination);
             } else {
                 $game->setCover(null);
             }

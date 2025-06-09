@@ -42,6 +42,7 @@ class HomepageController extends AbstractController
     #[Route('/homeInfo', name: 'home_info')]
     public function homeInfo(SerieUpdateRepository $serieUpdateRepository, TimeService $timeService, Request $request): Response
     {
+        /** @var int $count */
         $count = $request->request->get('count', 0);
 
         $date = new DateTime($count.' days');

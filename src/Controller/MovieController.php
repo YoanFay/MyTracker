@@ -99,7 +99,11 @@ class MovieController extends AbstractController
 
             $movieShow = new MovieShow();
             $movieShow->setMovie($movie);
-            $movieShow->setShowDate(DateTime::createFromFormat('d/m/Y H:i', $movieData['showDate']));
+
+            /** @var DateTime $showDate */
+            $showDate = DateTime::createFromFormat('d/m/Y H:i', $movieData['showDate']);
+
+            $movieShow->setShowDate($showDate);
 
             $managerRegistry->getManager()->persist($movieShow);
             $managerRegistry->getManager()->flush();

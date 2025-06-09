@@ -81,7 +81,10 @@ class GameGenreController extends AbstractController
     {
         $gameGenre = $gameGenreRepository->find($id);
 
-        if ($this->isCsrfTokenValid('delete'.$gameGenre->getId(), $request->request->get('_token'))) {
+        /** @var ?string $token */
+        $token = $request->request->get('_token');
+
+        if ($this->isCsrfTokenValid('delete'.$gameGenre->getId(), $token)) {
             $entityManager->remove($gameGenre);
             $entityManager->flush();
         }

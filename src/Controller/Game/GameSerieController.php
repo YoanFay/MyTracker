@@ -81,7 +81,10 @@ class GameSerieController extends AbstractController
     {
         $gameSerie = $gameSerieRepository->find($id);
 
-        if ($this->isCsrfTokenValid('delete'.$gameSerie->getId(), $request->request->get('_token'))) {
+        /** @var ?string $token */
+        $token = $request->request->get('_token');
+
+        if ($this->isCsrfTokenValid('delete'.$gameSerie->getId(), $token)) {
             $entityManager->remove($gameSerie);
             $entityManager->flush();
         }
