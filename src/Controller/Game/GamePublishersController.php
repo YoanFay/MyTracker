@@ -81,12 +81,14 @@ class GamePublishersController extends AbstractController
     {
         $gamePublisher = $gamePublishersRepository->find($id);
 
-        /** @var ?string $token */
-        $token = $request->request->get('_token');
+        if($gamePublisher) {
+            /** @var ?string $token */
+            $token = $request->request->get('_token');
 
-        if ($this->isCsrfTokenValid('delete'.$gamePublisher->getId(), $token)) {
-            $entityManager->remove($gamePublisher);
-            $entityManager->flush();
+            if ($this->isCsrfTokenValid('delete'.$gamePublisher->getId(), $token)) {
+                $entityManager->remove($gamePublisher);
+                $entityManager->flush();
+            }
         }
 
         return $this->redirectToRoute('game_publishers', [], Response::HTTP_SEE_OTHER);

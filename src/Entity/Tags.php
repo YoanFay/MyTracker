@@ -26,7 +26,7 @@ class Tags
 
     #[ORM\ManyToOne(inversedBy: 'tags')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?TagsType $tagsType = null;
+    private TagsType $tagsType;
 
     public function __construct()
     {
@@ -86,7 +86,7 @@ class Tags
         return $this;
     }
 
-    public function getTagsType(): ?TagsType
+    public function getTagsType(): TagsType
     {
         return $this->tagsType;
     }

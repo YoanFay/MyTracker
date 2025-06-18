@@ -124,6 +124,14 @@ class MovieController extends AbstractController
 
         $movie = $movieRepository->findOneBy(['id' => $id]);
 
+        if (!$movie){
+
+                $this->addFlash('error', 'Film non trouvé');
+
+                return $this->redirectToRoute('movie');
+
+        }
+
         $movieGenres = $movie->getMovieGenres();
 
         return $this->render('movie/details.html.twig', [

@@ -90,17 +90,21 @@ class GameController extends AbstractController
 
         $game = $gameRepository->find($id);
 
-        $gameTrackers = $game->getGameTrackers();
+        if($game){
 
-        foreach ($gameTrackers as $gameTracker) {
+            $gameTrackers = $game->getGameTrackers();
 
-            $entityManager->remove($gameTracker);
+            foreach ($gameTrackers as $gameTracker) {
+
+                $entityManager->remove($gameTracker);
+
+            }
+
+            $entityManager->remove($game);
+
+            $entityManager->flush();
 
         }
-
-        $entityManager->remove($game);
-
-        $entityManager->flush();
 
         return $this->redirectToRoute('game', [], Response::HTTP_SEE_OTHER);
     }

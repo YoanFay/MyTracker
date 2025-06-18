@@ -81,12 +81,14 @@ class GameThemeController extends AbstractController
     {
         $gameTheme = $gameThemeRepository->find($id);
 
-        /** @var ?string $token */
-        $token = $request->request->get('_token');
+        if($gameTheme) {
+            /** @var ?string $token */
+            $token = $request->request->get('_token');
 
-        if ($this->isCsrfTokenValid('delete'.$gameTheme->getId(), $token)) {
-            $entityManager->remove($gameTheme);
-            $entityManager->flush();
+            if ($this->isCsrfTokenValid('delete'.$gameTheme->getId(), $token)) {
+                $entityManager->remove($gameTheme);
+                $entityManager->flush();
+            }
         }
 
         return $this->redirectToRoute('game_theme', [], Response::HTTP_SEE_OTHER);

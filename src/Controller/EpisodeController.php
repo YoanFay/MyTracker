@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Episode;
 use App\Entity\EpisodeShow;
+use App\Entity\Users;
 use App\Form\EpisodeType;
 use App\Repository\UsersRepository;
 use Bugsnag\DateTime\Date;
@@ -30,6 +31,14 @@ class EpisodeController extends AbstractController
 
             $serie = $serieRepository->find($id);
 
+            if(!$serie){
+
+                $this->addFlash('error', 'Série non trouvée');
+
+                return $this->redirectToRoute('serie');
+
+            }
+
             $episode->setSerie($serie);
 
         }
@@ -53,6 +62,7 @@ class EpisodeController extends AbstractController
 
             } else {
 
+                /** @var Users $user */
                 $user = $usersRepository->findOneBy(['plexName' => 'yoan.f8']);
 
                 $episode->setUser($user);

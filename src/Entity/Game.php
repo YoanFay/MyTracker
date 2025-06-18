@@ -16,7 +16,7 @@ class Game
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $name = null;
+    private string $name;
 
     #[ORM\Column(type: "datetime")]
     private $releaseDate = null;
@@ -83,7 +83,7 @@ class Game
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }

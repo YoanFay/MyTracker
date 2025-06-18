@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\MangaTomeRepository;
+use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -12,26 +13,26 @@ class MangaTome
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private int $id;
 
     #[ORM\Column]
-    private ?int $tomeNumber = null;
+    private int $tomeNumber;
 
     #[ORM\Column]
-    private ?int $page = null;
+    private int $page;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $releaseDate = null;
+    private DateTimeInterface $releaseDate;
 
     #[ORM\ManyToOne(inversedBy: 'mangaTomes')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Manga $manga = null;
+    private Manga $manga;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $readingStartDate = null;
+    private ?DateTimeInterface $readingStartDate = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $readingEndDate = null;
+    private ?DateTimeInterface $readingEndDate = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $cover = null;
@@ -39,12 +40,12 @@ class MangaTome
     #[ORM\Column]
     private bool $lastTome = false;
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getTomeNumber(): ?int
+    public function getTomeNumber(): int
     {
         return $this->tomeNumber;
     }
@@ -56,7 +57,7 @@ class MangaTome
         return $this;
     }
 
-    public function getPage(): ?int
+    public function getPage(): int
     {
         return $this->page;
     }
@@ -68,19 +69,19 @@ class MangaTome
         return $this;
     }
 
-    public function getReleaseDate(): ?\DateTimeInterface
+    public function getReleaseDate(): DateTimeInterface
     {
         return $this->releaseDate;
     }
 
-    public function setReleaseDate(\DateTimeInterface $releaseDate): static
+    public function setReleaseDate(DateTimeInterface $releaseDate): static
     {
         $this->releaseDate = $releaseDate;
 
         return $this;
     }
 
-    public function getManga(): ?Manga
+    public function getManga(): Manga
     {
         return $this->manga;
     }
@@ -92,24 +93,24 @@ class MangaTome
         return $this;
     }
 
-    public function getReadingStartDate(): ?\DateTimeInterface
+    public function getReadingStartDate(): ?DateTimeInterface
     {
         return $this->readingStartDate;
     }
 
-    public function setReadingStartDate(?\DateTimeInterface $readingStartDate): static
+    public function setReadingStartDate(?DateTimeInterface $readingStartDate): static
     {
         $this->readingStartDate = $readingStartDate;
 
         return $this;
     }
 
-    public function getReadingEndDate(): ?\DateTimeInterface
+    public function getReadingEndDate(): ?DateTimeInterface
     {
         return $this->readingEndDate;
     }
 
-    public function setReadingEndDate(?\DateTimeInterface $readingEndDate): static
+    public function setReadingEndDate(?DateTimeInterface $readingEndDate): static
     {
         $this->readingEndDate = $readingEndDate;
 
@@ -128,7 +129,7 @@ class MangaTome
         return $this;
     }
 
-    public function isLastTome(): ?bool
+    public function isLastTome(): bool
     {
         return $this->lastTome;
     }

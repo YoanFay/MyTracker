@@ -280,7 +280,7 @@ class HistoriqueController extends AbstractController
 
         krsort($dataByDate);
 
-        $startDate = new DateTime(array_key_last($dataByDate));
+        $startDate = new DateTime(strval(array_key_last($dataByDate)));
         $endDate = new DateTime('now');
         $daysSinceStartOfYear = $endDate->diff($startDate)->days + 1;
 
@@ -310,6 +310,14 @@ class HistoriqueController extends AbstractController
             $voyelle = array('a', 'e', 'i', 'o', 'u');
 
             $serieType = $serieTypeRepository->findOneBy(['slug' => $categorie]);
+
+            if(!$serieType){
+
+                $this->addFlash('error', 'Catégorie inconnue');
+
+                return $this->redirectToRoute('historique');
+
+            }
 
             $title = $serieType->getName();
             $nav = strtolower($title);

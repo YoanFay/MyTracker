@@ -16,7 +16,7 @@ class SerieType
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $name = null;
+    private string $name;
 
     #[ORM\OneToMany(mappedBy: 'serieType', targetEntity: Serie::class)]
     private Collection $series;
@@ -34,7 +34,7 @@ class SerieType
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }

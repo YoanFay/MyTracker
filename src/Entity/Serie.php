@@ -47,7 +47,8 @@ class Serie
     private ?string $slug = null;
 
     #[ORM\ManyToOne(inversedBy: 'series')]
-    private ?SerieType $serieType = null;
+    #[ORM\JoinColumn(nullable: false)]
+    private SerieType $serieType;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $status = null;
@@ -135,7 +136,7 @@ class Serie
         return $this;
     }
 
-    public function isVfName(): ?bool
+    public function isVfName(): bool
     {
         return $this->vfName;
     }
@@ -294,12 +295,12 @@ class Serie
         return $this;
     }
 
-    public function getSerieType(): ?SerieType
+    public function getSerieType(): SerieType
     {
         return $this->serieType;
     }
 
-    public function setSerieType(?SerieType $serieType): static
+    public function setSerieType(SerieType $serieType): static
     {
         $this->serieType = $serieType;
 

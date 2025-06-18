@@ -93,7 +93,7 @@ class MangaTomeController extends AbstractController
 
             $this->addFlash('error', 'Pas de manga');
 
-            $this->redirectToRoute('manga');
+            return $this->redirectToRoute('manga');
 
         }
 
@@ -108,7 +108,7 @@ class MangaTomeController extends AbstractController
             // Lien de l'image à télécharger
             $link = $mangaTome->getCover();
 
-            if (!str_starts_with($link, "http://") || !str_starts_with($link, "https://")) {
+            if ($link && (!str_starts_with($link, "http://") || !str_starts_with($link, "https://"))) {
 
                 // Chemin où enregistrer l'image
                 $cheminDossierManga = "/public/image/manga/cover/" . $mangaTome->getManga()->getSlug();
@@ -156,6 +156,14 @@ class MangaTomeController extends AbstractController
     {
         $tome = $mangaTomeRepository->findOneBy(['id' => $id]);
 
+        if(!$tome){
+
+            $this->addFlash('error', 'Pas de tome');
+
+            return $this->redirectToRoute('manga');
+
+        }
+
         if ($tome->getReadingStartDate()){
 
             $this->addFlash('error', 'Manga déjà commencé');
@@ -182,6 +190,14 @@ class MangaTomeController extends AbstractController
     {
         $tome = $mangaTomeRepository->findOneBy(['id' => $id]);
 
+        if(!$tome){
+
+            $this->addFlash('error', 'Pas de tome');
+
+            return $this->redirectToRoute('manga');
+
+        }
+
         if ($tome->getReadingEndDate()){
 
             $this->addFlash('error', 'Manga déjà terminé');
@@ -207,6 +223,14 @@ class MangaTomeController extends AbstractController
     public function delete(ManagerRegistry $managerRegistry, MangaTomeRepository $mangaTomeRepository, int $id): Response
     {
         $tome = $mangaTomeRepository->findOneBy(['id' => $id]);
+
+        if(!$tome){
+
+            $this->addFlash('error', 'Pas de tome');
+
+            return $this->redirectToRoute('manga');
+
+        }
 
         $managerRegistry->getManager()->remove($tome);
         $managerRegistry->getManager()->flush();

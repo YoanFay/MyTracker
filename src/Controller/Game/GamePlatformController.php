@@ -83,12 +83,14 @@ class GamePlatformController extends AbstractController
     {
         $gamePlatform = $gamePlatformRepository->find($id);
 
-        /** @var ?string $token */
-        $token = $request->request->get('_token');
+        if ($gamePlatform) {
+            /** @var ?string $token */
+            $token = $request->request->get('_token');
 
-        if ($this->isCsrfTokenValid('delete'.$gamePlatform->getId(), $token)) {
-            $entityManager->remove($gamePlatform);
-            $entityManager->flush();
+            if ($this->isCsrfTokenValid('delete'.$gamePlatform->getId(), $token)) {
+                $entityManager->remove($gamePlatform);
+                $entityManager->flush();
+            }
         }
 
         return $this->redirectToRoute('game_platform', [], Response::HTTP_SEE_OTHER);

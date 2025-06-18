@@ -17,7 +17,7 @@ class Manga
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $name = null;
+    private string $name;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $releaseDate = null;
@@ -27,7 +27,7 @@ class Manga
 
     #[ORM\ManyToOne(inversedBy: 'mangas')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?MangaType $type = null;
+    private MangaType $type;
 
     #[ORM\ManyToMany(targetEntity: MangaGenre::class, inversedBy: 'mangas')]
     private Collection $genres;
@@ -37,11 +37,11 @@ class Manga
 
     #[ORM\ManyToOne(inversedBy: 'mangas')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?MangaAuthor $author = null;
+    private MangaAuthor $author;
 
     #[ORM\ManyToOne(inversedBy: 'mangas')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?MangaEditor $editor = null;
+    private MangaEditor $editor;
 
     #[ORM\ManyToOne(inversedBy: 'mangas')]
     #[ORM\JoinColumn(nullable: true)]
@@ -51,7 +51,7 @@ class Manga
     private Collection $mangaTomes;
 
     #[ORM\Column(length: 255)]
-    private ?string $slug = null;
+    private string $slug;
 
     public function __construct()
     {
@@ -65,7 +65,7 @@ class Manga
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }
@@ -101,7 +101,7 @@ class Manga
         return $this;
     }
 
-    public function getType(): ?MangaType
+    public function getType(): MangaType
     {
         return $this->type;
     }
@@ -161,7 +161,7 @@ class Manga
         return $this;
     }
 
-    public function getAuthor(): ?MangaAuthor
+    public function getAuthor(): MangaAuthor
     {
         return $this->author;
     }
@@ -173,7 +173,7 @@ class Manga
         return $this;
     }
 
-    public function getEditor(): ?MangaEditor
+    public function getEditor(): MangaEditor
     {
         return $this->editor;
     }
@@ -227,7 +227,7 @@ class Manga
         return $this;
     }
 
-    public function getSlug(): ?string
+    public function getSlug(): string
     {
         return $this->slug;
     }

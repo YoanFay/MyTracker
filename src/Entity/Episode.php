@@ -74,31 +74,31 @@ class Episode
         return $this;
     }
 
-    public function getSerie(): ?Serie
+    public function getSerie(): Serie
     {
         return $this->serie;
     }
 
-    public function setSerie(?Serie $serie): self
+    public function setSerie(Serie $serie): self
     {
         $this->serie = $serie;
 
         return $this;
     }
 
-    public function getUser(): ?Users
+    public function getUser(): Users
     {
         return $this->user;
     }
 
-    public function setUser(?Users $user): self
+    public function setUser(Users $user): self
     {
         $this->user = $user;
 
         return $this;
     }
 
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }
@@ -134,7 +134,7 @@ class Episode
         return $this;
     }
 
-    public function getSaisonNumber(): ?int
+    public function getSaisonNumber(): int
     {
         return $this->saisonNumber;
     }
@@ -146,7 +146,7 @@ class Episode
         return $this;
     }
 
-    public function getEpisodeNumber(): ?int
+    public function getEpisodeNumber():?int
     {
         return $this->episodeNumber;
     }
@@ -170,7 +170,7 @@ class Episode
         return $this;
     }
 
-    public function isVfName(): ?bool
+    public function isVfName(): bool
     {
         return $this->vfName;
     }

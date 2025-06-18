@@ -89,7 +89,7 @@ class WebHook extends AbstractController
                             $TMDBService->updateInfo($movie);
                         } else {
                             $movie->setName($jsonData['Metadata']['title']);
-                            $movie->setSlug($strSpecialCharsLower->serie($movie->getName()));
+                            $movie->setSlug($strSpecialCharsLower->serie($jsonData['Metadata']['title']));
                         }
 
                         $em->persist($movie);
