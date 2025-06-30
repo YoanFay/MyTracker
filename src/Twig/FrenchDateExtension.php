@@ -2,6 +2,7 @@
 
 namespace App\Twig;
 
+use Exception;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -31,7 +32,7 @@ class FrenchDateExtension extends AbstractExtension
     }
 
 
-    public function dateUpcoming($date, $type)
+    public function dateUpcoming(mixed $date, string $type): string
     {
 
         if (!$type) {
@@ -65,13 +66,17 @@ class FrenchDateExtension extends AbstractExtension
         return match ($type) {
             'year' => 'en '.$year,
             'month' => 'en '.$month." ".$year,
-            'day' => 'le '.$day." ".$numDay.$suffixe." ".$month." ".$year
+            'day' => 'le '.$day." ".$numDay.$suffixe." ".$month." ".$year,
+            default => throw new \InvalidArgumentException(sprintf('Le type "%s" n\'est pas supporté.', $type)),
         };
 
     }
 
 
-    public function frenchFormatDate($date): string
+    /**
+     * @throws Exception
+     */
+    public function frenchFormatDate(mixed $date): string
     {
 
         if (is_string($date)) {
@@ -103,7 +108,10 @@ class FrenchDateExtension extends AbstractExtension
     }
 
 
-    public function frenchFormatDateNoDay($date): string
+    /**
+     * @throws Exception
+     */
+    public function frenchFormatDateNoDay(mixed $date): string
     {
 
         if (is_string($date)) {

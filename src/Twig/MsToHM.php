@@ -20,14 +20,8 @@ class MsToHM extends AbstractExtension
         ];
     }
 
-    public function getFunctions(): array
+    public function convertirMillisecondesEnHeureMinute(int $millisecondes): string
     {
-        return [
-            new TwigFunction('function_name', [$this, 'doSomething']),
-        ];
-    }
-
-    public function convertirMillisecondesEnHeureMinute($millisecondes) {
         // Convertir les millisecondes en secondes
         $secondes = $millisecondes / 1000;
 
@@ -45,7 +39,8 @@ class MsToHM extends AbstractExtension
         return $formatHeureMinute;
     }
 
-    public function convertirSecondesEnHeureMinute($secondes) {
+    public function convertirSecondesEnHeureMinute(int $secondes): string
+    {
 
         // Calculer les heures, minutes et secondes
         $heures = floor($secondes / 3600);

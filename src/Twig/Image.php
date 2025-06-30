@@ -15,13 +15,17 @@ class Image extends AbstractExtension
 
     private KernelInterface $kernel;
 
+
     public function __construct(KernelInterface $kernel)
     {
+
         $this->kernel = $kernel;
     }
 
+
     public function getFunctions(): array
     {
+
         return [
             new TwigFunction('infoImage', [$this, 'infoImage']),
             new TwigFunction('infoImageMovie', [$this, 'infoImageMovie']),
@@ -31,25 +35,33 @@ class Image extends AbstractExtension
         ];
     }
 
-    public function infoImage(Serie $serie, $env): array
+
+    /**
+     * @param Serie  $serie
+     * @param string $env
+     *
+     * @return array<string, mixed>
+     */
+    public function infoImage(Serie $serie, string $env): array
     {
 
         $height = null;
         $width = 400;
 
-        if ($serie->getArtwork() && file_exists($this->kernel->getProjectDir().$serie->getArtwork()->getPath())){
+        if ($serie->getArtwork() && file_exists($this->kernel->getProjectDir().$serie->getArtwork()->getPath())) {
 
+            /** @var string $path */
             $path = $serie->getArtwork()->getPath();
 
-            if ($env === "dev"){
-                $path = str_replace('public/', '',$path);
+            if ($env === "dev") {
+                $path = str_replace('public/', '', $path);
             }
 
             $artwork = $serie->getArtwork();
 
-            if ($artwork && $artwork->getPath() && $artwork->getHeight() && $artwork->getWidth() && $artwork->getWidth() > 0){
+            if ($artwork->getPath() && $artwork->getHeight() && $artwork->getWidth() && $artwork->getWidth() > 0) {
 
-                if($width > $artwork->getWidth()){
+                if ($width > $artwork->getWidth()) {
                     $width = $artwork->getWidth();
                 }
 
@@ -68,10 +80,12 @@ class Image extends AbstractExtension
 
         $size = getimagesize($this->kernel->getProjectDir()."/public".$basePath);
 
-        $artworkHeight = $size[1];
-        $artworkWidth = $size[0];
+        if ($size) {
+            $artworkHeight = $size[1];
+            $artworkWidth = $size[0];
 
-        $height = (400 * $artworkHeight) / $artworkWidth;
+            $height = (400 * $artworkHeight) / $artworkWidth;
+        }
 
         return [
             'path' => $basePath,
@@ -82,13 +96,21 @@ class Image extends AbstractExtension
 
     }
 
-    public function infoImageMovie($path, $name, $env): array
+
+    /**
+     * @param string $path
+     * @param string $name
+     * @param string $env
+     *
+     * @return array<string, string>
+     */
+    public function infoImageMovie(string $path, string $name, string $env): array
     {
 
-        if ($path && file_exists($this->kernel->getProjectDir().$path)){
+        if ($path && file_exists($this->kernel->getProjectDir().$path)) {
 
-            if ($env === "dev"){
-                $path = str_replace('public/', '',$path);
+            if ($env === "dev") {
+                $path = str_replace('public/', '', $path);
             }
 
             return [
@@ -105,13 +127,21 @@ class Image extends AbstractExtension
 
     }
 
-    public function infoImageManga(Manga $manga, $path, $env): array
+
+    /**
+     * @param Manga  $manga
+     * @param string $path
+     * @param string $env
+     *
+     * @return array<string, string>
+     */
+    public function infoImageManga(Manga $manga, string $path, string $env): array
     {
 
-        if ($path && file_exists($this->kernel->getProjectDir().$path)){
+        if ($path && file_exists($this->kernel->getProjectDir().$path)) {
 
-            if ($env === "dev"){
-                $path = str_replace('public/', '',$path);
+            if ($env === "dev") {
+                $path = str_replace('public/', '', $path);
             }
 
             return [
@@ -128,15 +158,22 @@ class Image extends AbstractExtension
 
     }
 
-    public function infoImageMangaTome(MangaTome $mangaTome, $env): array
+
+    /**
+     * @param MangaTome $mangaTome
+     * @param string    $env
+     *
+     * @return array<string, string>
+     */
+    public function infoImageMangaTome(MangaTome $mangaTome, string $env): array
     {
 
         $path = $mangaTome->getCover();
 
-        if ($path && file_exists($this->kernel->getProjectDir().$path)){
+        if ($path && file_exists($this->kernel->getProjectDir().$path)) {
 
-            if ($env === "dev"){
-                $path = str_replace('public/', '',$path);
+            if ($env === "dev") {
+                $path = str_replace('public/', '', $path);
             }
 
             return [
@@ -153,15 +190,22 @@ class Image extends AbstractExtension
 
     }
 
-    public function infoGame(Game $game, $env): array
+
+    /**
+     * @param Game   $game
+     * @param string $env
+     *
+     * @return array<string, string>
+     */
+    public function infoGame(Game $game, string $env): array
     {
 
         $path = $game->getCover();
 
-        if ($path && file_exists($this->kernel->getProjectDir().$path)){
+        if ($path && file_exists($this->kernel->getProjectDir().$path)) {
 
-            if ($env === "dev"){
-                $path = str_replace('public/', '',$path);
+            if ($env === "dev") {
+                $path = str_replace('public/', '', $path);
             }
 
             return [
