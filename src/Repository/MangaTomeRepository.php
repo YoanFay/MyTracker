@@ -2,7 +2,9 @@
 
 namespace App\Repository;
 
+use App\Entity\Manga;
 use App\Entity\MangaTome;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
@@ -19,11 +21,14 @@ class MangaTomeRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
+
         parent::__construct($registry, MangaTome::class);
     }
 
-    public function getTomeGenre()
+
+    public function getTomeGenre(): mixed
     {
+
         return $this->createQueryBuilder('mt')
             ->select('COUNT(mt.id) AS COUNT, g.name AS name')
             ->leftJoin('mt.manga', 'm')
@@ -31,34 +36,37 @@ class MangaTomeRepository extends ServiceEntityRepository
             ->groupBy('g.name')
             ->orderBy('COUNT', 'DESC')
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
     }
 
-    public function getTomeCountInfo($manga)
+
+    public function getTomeCountInfo(Manga $manga): mixed
     {
+
         return $this->createQueryBuilder('mt')
             ->select('COUNT(mt.id) AS tomeRelease, COUNT(mt.readingEndDate) AS tomeRead')
             ->andWhere('mt.manga = :manga')
             ->setParameter('manga', $manga)
             ->andWhere('mt.releaseDate <= :now')
-            ->setParameter('now', new \DateTime())
+            ->setParameter('now', new DateTime())
             ->getQuery()
-            ->getOneOrNullResult()
-            ;
+            ->getOneOrNullResult();
     }
 
-    public function getTomeRead()
+
+    public function getTomeRead(): mixed
     {
+
         return $this->createQueryBuilder('mt')
             ->select('COUNT(mt.readingEndDate) AS COUNT')
             ->getQuery()
-            ->getOneOrNullResult()
-            ;
+            ->getOneOrNullResult();
     }
 
-    public function getTomeReadByYear($year)
+
+    public function getTomeReadByYear(int $year): mixed
     {
+
         return $this->createQueryBuilder('mt')
             ->select('COUNT(mt.readingEndDate) AS COUNT')
             ->andWhere('mt.readingEndDate >= :start')
@@ -66,21 +74,23 @@ class MangaTomeRepository extends ServiceEntityRepository
             ->andWhere('mt.readingEndDate <= :end')
             ->setParameter('end', $year.'-12-31')
             ->getQuery()
-            ->getOneOrNullResult()
-            ;
+            ->getOneOrNullResult();
     }
 
-    public function getTomeStart()
+
+    public function getTomeStart(): mixed
     {
+
         return $this->createQueryBuilder('mt')
             ->select('COUNT(mt.readingStartDate) AS COUNT')
             ->getQuery()
-            ->getOneOrNullResult()
-            ;
+            ->getOneOrNullResult();
     }
 
-    public function getTomeStartByYear($year)
+
+    public function getTomeStartByYear(int $year): mixed
     {
+
         return $this->createQueryBuilder('mt')
             ->select('COUNT(mt.readingStartDate) AS COUNT')
             ->andWhere('mt.readingStartDate >= :start')
@@ -88,93 +98,93 @@ class MangaTomeRepository extends ServiceEntityRepository
             ->andWhere('mt.readingStartDate <= :end')
             ->setParameter('end', $year.'-12-31')
             ->getQuery()
-            ->getOneOrNullResult()
-            ;
+            ->getOneOrNullResult();
     }
 
 
     /**
      * @throws NonUniqueResultException
      */
-    public function getFirstCover($manga)
+    public function getFirstCover(Manga $manga): mixed
     {
+
         return $this->createQueryBuilder('mt')
             ->select('mt.cover AS COVER')
             ->andWhere('mt.manga = :manga')
             ->andWhere('mt.tomeNumber = 1')
             ->setParameter('manga', $manga)
             ->getQuery()
-            ->getOneOrNullResult()
-            ;
+            ->getOneOrNullResult();
     }
 
 
     /**
      * @throws NonUniqueResultException
      */
-    public function getFirstTomeDate($manga)
+    public function getFirstTomeDate(Manga $manga): mixed
     {
+
         return $this->createQueryBuilder('mt')
             ->select('mt.releaseDate AS DATE')
             ->andWhere('mt.manga = :manga')
             ->andWhere('mt.tomeNumber = 1')
             ->setParameter('manga', $manga)
             ->getQuery()
-            ->getOneOrNullResult()
-            ;
+            ->getOneOrNullResult();
     }
 
 
     /**
      * @throws NonUniqueResultException
      */
-    public function getLastTomeDate($manga)
+    public function getLastTomeDate(Manga $manga): mixed
     {
+
         return $this->createQueryBuilder('mt')
             ->select('mt.releaseDate AS DATE')
             ->andWhere('mt.manga = :manga')
             ->andWhere('mt.lastTome = true')
             ->setParameter('manga', $manga)
             ->getQuery()
-            ->getOneOrNullResult()
-            ;
+            ->getOneOrNullResult();
     }
 
 
     /**
      * @throws NonUniqueResultException
      */
-    public function getFirstTome($manga)
+    public function getFirstTome(Manga $manga): mixed
     {
+
         return $this->createQueryBuilder('mt')
             ->andWhere('mt.manga = :manga')
             ->andWhere('mt.tomeNumber = 1')
             ->setParameter('manga', $manga)
             ->getQuery()
-            ->getOneOrNullResult()
-            ;
+            ->getOneOrNullResult();
     }
 
 
     /**
      * @throws NonUniqueResultException
      */
-    public function getLastTome($manga)
+    public function getLastTome(Manga $manga): mixed
     {
+
         return $this->createQueryBuilder('mt')
             ->andWhere('mt.manga = :manga')
             ->andWhere('mt.lastTome = true')
             ->setParameter('manga', $manga)
             ->getQuery()
-            ->getOneOrNullResult()
-            ;
+            ->getOneOrNullResult();
     }
 
 
     /**
      * @throws NonUniqueResultException
      */
-    public function getCurrentTome($manga){
+    public function getCurrentTome(Manga $manga):mixed
+    {
 
         return $this->createQueryBuilder('mt')
             ->andWhere('mt.manga = :manga')
@@ -183,8 +193,7 @@ class MangaTomeRepository extends ServiceEntityRepository
             ->orderBy('mt.tomeNumber')
             ->setMaxResults(1)
             ->getQuery()
-            ->getOneOrNullResult()
-            ;
+            ->getOneOrNullResult();
 
     }
 
@@ -192,17 +201,17 @@ class MangaTomeRepository extends ServiceEntityRepository
     /**
      * @throws NonUniqueResultException
      */
-    public function getTomeCountByManga($manga){
+    public function getTomeCountByManga(Manga $manga):mixed
+    {
 
         return $this->createQueryBuilder('mt')
             ->select('COUNT(mt.id) AS COUNT')
             ->andWhere('mt.manga = :manga')
             ->setParameter('manga', $manga)
             ->andWhere('mt.releaseDate <= :now')
-            ->setParameter('now', new \DateTime())
+            ->setParameter('now', new DateTime())
             ->getQuery()
-            ->getOneOrNullResult()
-            ;
+            ->getOneOrNullResult();
 
     }
 

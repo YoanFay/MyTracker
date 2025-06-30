@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\EpisodeShow;
 use App\Entity\Serie;
+use App\Entity\SerieType;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
@@ -28,7 +29,7 @@ class EpisodeShowRepository extends ServiceEntityRepository
     /**
      * @return float|int|mixed|string|null
      */
-    public function findMonth()
+    public function findMonth(): mixed
     {
 
         return $this->createQueryBuilder('es')
@@ -46,7 +47,7 @@ class EpisodeShowRepository extends ServiceEntityRepository
     /**
      * @return float|int|mixed|string|null
      */
-    public function findBySerieType($type)
+    public function findBySerieType(SerieType $type): mixed
     {
 
         return $this->createQueryBuilder('es')
@@ -62,7 +63,7 @@ class EpisodeShowRepository extends ServiceEntityRepository
     /**
      * @return float|int|mixed|string|null
      */
-    public function findByDate(string $year, string $month)
+    public function findByDate(string $year, string $month): mixed
     {
 
         return $this->createQueryBuilder('es')
@@ -77,7 +78,7 @@ class EpisodeShowRepository extends ServiceEntityRepository
      * @return float|int|mixed|string|null
      * @throws NonUniqueResultException
      */
-    public function findLastEpisodeBySerie(Serie $serie)
+    public function findLastEpisodeBySerie(Serie $serie): mixed
     {
 
         return $this->createQueryBuilder('es')
@@ -107,7 +108,7 @@ class EpisodeShowRepository extends ServiceEntityRepository
     }
 
 
-    public function getDutation()
+    public function getDutation(): mixed
     {
 
         return $this->createQueryBuilder('es')
@@ -118,7 +119,7 @@ class EpisodeShowRepository extends ServiceEntityRepository
     }
 
 
-    public function getDutationByYear($year)
+    public function getDutationByYear(int $year): mixed
     {
 
         return $this->createQueryBuilder('es')
@@ -133,7 +134,7 @@ class EpisodeShowRepository extends ServiceEntityRepository
     }
 
 
-    public function getDurationBySerie($id)
+    public function getDurationBySerie(int $id): mixed
     {
 
         return $this->createQueryBuilder('es')
@@ -147,7 +148,7 @@ class EpisodeShowRepository extends ServiceEntityRepository
     }
 
 
-    public function getCountBySerie($id)
+    public function getCountBySerie(int $id): mixed
     {
 
         return $this->createQueryBuilder('es')

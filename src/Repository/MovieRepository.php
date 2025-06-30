@@ -18,11 +18,14 @@ class MovieRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
+
         parent::__construct($registry, Movie::class);
     }
 
+
     public function add(Movie $entity, bool $flush = false): void
     {
+
         $this->getEntityManager()->persist($entity);
 
         if ($flush) {
@@ -30,8 +33,10 @@ class MovieRepository extends ServiceEntityRepository
         }
     }
 
+
     public function remove(Movie $entity, bool $flush = false): void
     {
+
         $this->getEntityManager()->remove($entity);
 
         if ($flush) {
@@ -39,7 +44,9 @@ class MovieRepository extends ServiceEntityRepository
         }
     }
 
-    public function getNoArtwork(){
+
+    public function getNoArtwork():mixed
+    {
 
         return $this->createQueryBuilder('m')
             ->andWhere('m.artwork IS NULL')
@@ -60,7 +67,9 @@ class MovieRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function getByLikeName($text){
+
+    public function getByLikeName(?string $text):mixed
+    {
 
 
         $qb = $this->createQueryBuilder('m');
