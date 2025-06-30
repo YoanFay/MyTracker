@@ -22,12 +22,12 @@ class AniListService
     }
 
 
-    public function getData($query, Serie $serie, $lastSeason = true)
+    public function getData(string $query, Serie $serie, bool $lastSeason = true): mixed
     {
 
-        if ($lastSeason){
+        if ($lastSeason) {
             $name = $this->getLastSeasonName($serie);
-        }else{
+        } else {
             $name = $serie->getNameEng();
         }
 
@@ -42,52 +42,7 @@ class AniListService
     }
 
 
-    public function getDataByName($query, $name)
-    {
-
-        $variables = [
-            "search" => mb_convert_kana($name, 'a', 'UTF-8')
-        ];
-
-        return $this->request($query, $variables);
-
-    }
-
-
-    public function getPrequelSeasonName($name)
-    {
-
-        $query = 'query ($search: String) { Media (search: $search, type: ANIME) { status, relations{ edges{relationType}, nodes{title{english}} }}}';
-
-            $variables = [
-                "search" => mb_convert_kana($name, 'a', 'UTF-8')
-            ];
-
-            $data = $this->request($query, $variables);
-
-            if ($data) {
-
-                $relationKey = null;
-
-                foreach ($data['relations']['edges'] as $key => $relationType) {
-                    if ($relationType['relationType'] === "PREQUEL") {
-                        $relationKey = $key;
-                    }
-                }
-
-                if ($relationKey !== null) {
-
-                    return $data['relations']['nodes'][$relationKey]['title']['english'];
-
-                }
-            }
-
-        return $name;
-
-    }
-
-
-    public function getLastSeasonName($serie)
+    public function getLastSeasonName(Serie $serie): mixed
     {
 
         $query = 'query ($search: String) { Media (search: $search, type: ANIME) { endDate{day, month, year}, status, relations{ edges{relationType}, nodes{title{english}, title{romaji}} }}}';
@@ -126,7 +81,7 @@ class AniListService
                 if ($relation && ($status === "Ended" || $status === "Upcoming")) {
                     $name = $data['relations']['nodes'][$relationKey]['title']['english'];
 
-                    if ($name === null){
+                    if ($name === null) {
                         $name = $data['relations']['nodes'][$relationKey]['title']['romaji'];
                     }
 
@@ -138,8 +93,12 @@ class AniListService
 
                     $serie->setLastSeasonName($name);
 
-                    if ($data['endDate']['year']){
-                        $serie->setLastAired(DateTime::createFromFormat('Y-m-d', $data['endDate']['year']."-".$data['endDate']['month']."-".$data['endDate']['day']));
+                    if ($data['endDate']['year']) {
+
+                        /** @var DateTime $endDate */
+                        $endDate = DateTime::createFromFormat('Y-m-d', $data['endDate']['year']."-".$data['endDate']['month']."-".$data['endDate']['day']);
+
+                        $serie->setLastAired($endDate);
                     }
 
                     $this->manager->persist($serie);
@@ -155,7 +114,13 @@ class AniListService
     }
 
 
-    public function request($query, $variables)
+    /**
+     * @param string $query
+     * @param array<string, mixed>  $variables
+     *
+     * @return mixed|null
+     */
+    public function request(string $query, array $variables): mixed
     {
 
         $http = new Client();
@@ -185,22 +150,40 @@ class AniListService
     }
 
 
-    public function getStatus($data)
+    /**
+     * @param mixed[] $data
+     *
+     * @return string
+     */
+    public function getStatus(array $data): string
     {
 
         return match ($data['status']) {
             "FINISHED" => "Ended",
             "RELEASING" => "Continuing",
             "NOT_YET_RELEASED" => "Upcoming",
+            default => throw new \InvalidArgumentException(sprintf('Le status "%s" n\'est pas supporté.', $data['status'])),
         };
 
     }
 
 
-    public function getSequel($name)
+    public function getDataByName(string $query, string $name): mixed
     {
 
-        $query = 'query ($search: String) { Media (search: $search, type: ANIME) { relations{edges{relationType}, nodes{title{romaji}}}}}';
+        $variables = [
+            "search" => mb_convert_kana($name, 'a', 'UTF-8')
+        ];
+
+        return $this->request($query, $variables);
+
+    }
+
+
+    public function getPrequelSeasonName(string $name): string
+    {
+
+        $query = 'query ($search: String) { Media (search: $search, type: ANIME) { status, relations{ edges{relationType}, nodes{title{english}} }}}';
 
         $variables = [
             "search" => mb_convert_kana($name, 'a', 'UTF-8')
@@ -208,23 +191,24 @@ class AniListService
 
         $data = $this->request($query, $variables);
 
-        if(!$data){
-            return null;
-        }
+        if ($data) {
 
-        $relationKey = null;
-        foreach ($data['relations']['edges'] as $key => $relationType) {
-            if ($relationType['relationType'] === "SEQUEL") {
-                $relationKey = $key;
-                break;
+            $relationKey = null;
+
+            foreach ($data['relations']['edges'] as $key => $relationType) {
+                if ($relationType['relationType'] === "PREQUEL") {
+                    $relationKey = $key;
+                }
+            }
+
+            if ($relationKey !== null) {
+
+                return $data['relations']['nodes'][$relationKey]['title']['english'];
+
             }
         }
 
-        if($relationKey === null){
-            return null;
-        }
-
-        return $data['relations']['nodes'][$relationKey]['title']['romaji'];
+        return $name;
 
     }
 
@@ -236,7 +220,7 @@ class AniListService
 
         $name = mb_convert_kana($anime->getName(), 'a', 'UTF-8');
 
-        if ($anime->getNameEng()){
+        if ($anime->getNameEng()) {
             $name = mb_convert_kana($anime->getNameEng(), 'a', 'UTF-8');
         }
 
@@ -253,17 +237,17 @@ class AniListService
 
             $data = $this->request($query, $variables);
 
-            if ($data === null){
+            if ($data === null) {
                 $data = $this->request($query, $variables);
 
 
-                if ($data === null){
+                if ($data === null) {
 
                     $ok = false;
                 }
             }
 
-            if (!$ok){
+            if (!$ok) {
                 continue;
             }
 
@@ -276,9 +260,11 @@ class AniListService
 
             $name = $this->getSequel($data['title']['romaji']);
 
-        }while($name and $ok);
+        } while ($name and $ok);
 
         if ($vote > 0) {
+
+            /** @var ?int $finalScore */
             $finalScore = round($score / $vote, 0, PHP_ROUND_HALF_DOWN);
 
             $anime->setScore($finalScore);
@@ -287,9 +273,41 @@ class AniListService
             $this->manager->flush();
 
             dump($anime->getName().' : '.$finalScore.'%');
-        }else{
+        } else {
             dump($anime->getName().' : échec');
         }
+
+    }
+
+
+    public function getSequel(string $name): ?string
+    {
+
+        $query = 'query ($search: String) { Media (search: $search, type: ANIME) { relations{edges{relationType}, nodes{title{romaji}}}}}';
+
+        $variables = [
+            "search" => mb_convert_kana($name, 'a', 'UTF-8')
+        ];
+
+        $data = $this->request($query, $variables);
+
+        if (!$data) {
+            return null;
+        }
+
+        $relationKey = null;
+        foreach ($data['relations']['edges'] as $key => $relationType) {
+            if ($relationType['relationType'] === "SEQUEL") {
+                $relationKey = $key;
+                break;
+            }
+        }
+
+        if ($relationKey === null) {
+            return null;
+        }
+
+        return $data['relations']['nodes'][$relationKey]['title']['romaji'];
 
     }
 

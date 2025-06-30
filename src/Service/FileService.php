@@ -17,7 +17,7 @@ class FileService
     }
 
 
-    public function addFile($link, $destinationFolder): bool
+    public function addFile(string $link, string $destinationFolder): bool
     {
 
         $fileContent = file_get_contents($link);

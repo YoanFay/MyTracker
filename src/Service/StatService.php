@@ -2,23 +2,15 @@
 
 namespace App\Service;
 
-use Doctrine\Persistence\ManagerRegistry;
-use Doctrine\Persistence\ObjectManager;
-use JetBrains\PhpStorm\ArrayShape;
-
 class StatService
 {
 
-    private ObjectManager $manager;
 
-
-    public function __construct(ManagerRegistry $managerRegistry)
-    {
-
-        $this->manager = $managerRegistry->getManager();
-    }
-
-
+    /**
+     * @param array<string, mixed> $periods
+     *
+     * @return array<string, mixed>
+     */
     public function initializeByPeriod(array $periods): array
     {
 
@@ -26,7 +18,13 @@ class StatService
     }
 
 
-    function divideByPeriod(&$data, $counts)
+    /**
+     * @param array<string, mixed> $data
+     * @param array<string, mixed> $counts
+     *
+     * @return array<string, mixed>
+     */
+    function divideByPeriod(array $data, array $counts): array
     {
 
         foreach ($data as $key => $value) {
@@ -39,15 +37,24 @@ class StatService
     }
 
 
-    function buildChart($data): string
+    /**
+     * @param array<int> $data
+     *
+     * @return string
+     */
+    function buildChart(array $data): string
     {
 
         return '['.implode(', ', $data).']';
     }
 
 
-    #[ArrayShape(['labels' => "string", 'values' => "string"])]
-    function buildLabelAndDataChart($data): array
+    /**
+     * @param array<int, mixed> $data
+     *
+     * @return string[]
+     */
+    function buildLabelAndDataChart(array $data): array
     {
 
         $labels = array_map(fn($item) => '"'.$item['name'].'"', $data);
@@ -59,7 +66,7 @@ class StatService
     }
 
 
-    function removeAccent($str): string
+    function removeAccent(string $str): string
     {
 
         $str = strtr($str, 'ÁÀÂÄÃÅÇÉÈÊËÍÏÎÌÑÓÒÔÖÕÚÙÛÜÝ', 'AAAAAACEEEEEIIIINOOOOOUUUUY');

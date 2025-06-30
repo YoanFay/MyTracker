@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Movie;
+use App\Entity\MovieGenre;
 use App\Repository\MovieGenreRepository;
 use DateTime;
 use GuzzleHttp\Client;
@@ -43,6 +44,7 @@ class TMDBService
 
         foreach ($data['genres'] as $genre) {
 
+            /** @var MovieGenre $addGenre */
             $addGenre = $this->movieGenreRepository->findOneBy(['name' => $genre['name']]);
 
             $movie->addMovieGenre($addGenre);
@@ -63,7 +65,7 @@ class TMDBService
 
     }
 
-    public function updateArtwork($movie)
+    public function updateArtwork(Movie $movie): Movie
     {
 
         $data = self::getData('/movie/'.$movie->getTmdbId().'/images?include_image_language=fr');
@@ -71,7 +73,10 @@ class TMDBService
         // Lien de l'image à télécharger
         $lienImage = "https://image.tmdb.org/t/p/w600_and_h900_bestv2".$data['posters'][0]['file_path'];
 
-        $cover = imagecreatefromstring(file_get_contents($lienImage));
+        /** @var string $dataImage */
+        $dataImage = file_get_contents($lienImage);
+
+        $cover = imagecreatefromstring($dataImage);
 
         $projectDir = $this->kernel->getProjectDir();
 
@@ -90,7 +95,7 @@ class TMDBService
     }
 
 
-    public function getData($url)
+    public function getData(string $url): mixed
     {
 
         $client = new Client();

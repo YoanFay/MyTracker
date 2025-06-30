@@ -8,7 +8,7 @@ use Exception;
 class TimeService
 {
     
-    public function convertirSecondes($secondes): string
+    public function convertirSecondes(int $secondes): string
     {
         $minutes = floor($secondes / 60);
         $heures = floor($minutes / 60);
@@ -42,7 +42,7 @@ class TimeService
     /**
      * @throws Exception
      */
-    public function frenchFormatDate($date): string
+    public function frenchFormatDate(mixed $date): string
     {
 
         if (is_string($date)) {
@@ -75,7 +75,7 @@ class TimeService
     /**
      * @throws Exception
      */
-    public function frenchFormatDateNoDay($date): string
+    public function frenchFormatDateNoDay(mixed $date): string
     {
 
         if (is_string($date)) {
@@ -106,7 +106,7 @@ class TimeService
     /**
      * @throws Exception
      */
-    public function dateUpcoming($date, $type): string
+    public function dateUpcoming(mixed $date, string $type): string
     {
 
         if (!$type) {
@@ -140,7 +140,8 @@ class TimeService
         return match ($type) {
             'year' => 'en '.$year,
             'month' => 'en '.$month." ".$year,
-            'day' => 'le '.$day." ".$numDay.$suffixe." ".$month." ".$year
+            'day' => 'le '.$day." ".$numDay.$suffixe." ".$month." ".$year,
+            default => throw new \InvalidArgumentException(sprintf('Le type "%s" n\'est pas supporté.', $type)),
         };
 
     }
