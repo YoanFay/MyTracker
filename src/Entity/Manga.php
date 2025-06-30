@@ -14,7 +14,7 @@ class Manga
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private int $id;
 
     #[ORM\Column(length: 255)]
     private string $name;
@@ -29,9 +29,11 @@ class Manga
     #[ORM\JoinColumn(nullable: false)]
     private MangaType $type;
 
+    /** @var Collection<int, MangaGenre> $genres */
     #[ORM\ManyToMany(targetEntity: MangaGenre::class, inversedBy: 'mangas')]
     private Collection $genres;
 
+    /** @var Collection<int, MangaTheme> $themes */
     #[ORM\ManyToMany(targetEntity: MangaTheme::class, inversedBy: 'mangas')]
     private Collection $themes;
 
@@ -47,6 +49,7 @@ class Manga
     #[ORM\JoinColumn(nullable: true)]
     private ?MangaDesigner $designer = null;
 
+    /** @var Collection<int, MangaTome> $mangaTomes */
     #[ORM\OneToMany(mappedBy: 'manga', targetEntity: MangaTome::class)]
     private Collection $mangaTomes;
 
@@ -64,6 +67,16 @@ class Manga
     {
         return $this->id;
     }
+
+
+    public function setId(int $id): self
+    {
+
+        $this->id = $id;
+
+        return $this;
+    }
+
 
     public function getName(): string
     {
@@ -106,7 +119,7 @@ class Manga
         return $this->type;
     }
 
-    public function setType(?MangaType $type): static
+    public function setType(MangaType $type): static
     {
         $this->type = $type;
 
@@ -166,7 +179,7 @@ class Manga
         return $this->author;
     }
 
-    public function setAuthor(?MangaAuthor $author): static
+    public function setAuthor(MangaAuthor $author): static
     {
         $this->author = $author;
 
@@ -178,7 +191,7 @@ class Manga
         return $this->editor;
     }
 
-    public function setEditor(?MangaEditor $editor): static
+    public function setEditor(MangaEditor $editor): static
     {
         $this->editor = $editor;
 
@@ -210,18 +223,6 @@ class Manga
         if (!$this->mangaTomes->contains($mangaTome)) {
             $this->mangaTomes->add($mangaTome);
             $mangaTome->setManga($this);
-        }
-
-        return $this;
-    }
-
-    public function removeMangaTome(MangaTome $mangaTome): static
-    {
-        if ($this->mangaTomes->removeElement($mangaTome)) {
-            // set the owning side to null (unless already changed)
-            if ($mangaTome->getManga() === $this) {
-                $mangaTome->setManga(null);
-            }
         }
 
         return $this;

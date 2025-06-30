@@ -13,11 +13,12 @@ class SerieType
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private int $id;
 
     #[ORM\Column(length: 255)]
     private string $name;
 
+    /** @var Collection<int, Serie> $series */
     #[ORM\OneToMany(mappedBy: 'serieType', targetEntity: Serie::class)]
     private Collection $series;
 
@@ -33,6 +34,16 @@ class SerieType
     {
         return $this->id;
     }
+
+
+    public function setId(int $id): self
+    {
+
+        $this->id = $id;
+
+        return $this;
+    }
+
 
     public function getName(): string
     {
@@ -59,18 +70,6 @@ class SerieType
         if (!$this->series->contains($series)) {
             $this->series->add($series);
             $series->setSerieType($this);
-        }
-
-        return $this;
-    }
-
-    public function removeSeries(Serie $series): static
-    {
-        if ($this->series->removeElement($series)) {
-            // set the owning side to null (unless already changed)
-            if ($series->getSerieType() === $this) {
-                $series->setSerieType(null);
-            }
         }
 
         return $this;

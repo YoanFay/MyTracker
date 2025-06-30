@@ -11,7 +11,7 @@ class Artwork
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private int $id;
 
     #[ORM\Column(nullable: true)]
     private ?int $apiId = null;
@@ -41,6 +41,16 @@ class Artwork
     {
         return $this->id;
     }
+
+
+    public function setId(int $id): self
+    {
+
+        $this->id = $id;
+
+        return $this;
+    }
+
 
     public function getApiId(): ?int
     {

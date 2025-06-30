@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\GameTrackerRepository;
+use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -11,20 +12,20 @@ class GameTracker
 {
     #[ORM\Id]
     #[ORM\Column]
-    private ?int $id = null;
+    private int $id;
 
     #[ORM\ManyToOne(inversedBy: 'gameTrackers')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Game $game = null;
+    private Game $game;
 
     #[ORM\Column(type: "datetime")]
-    private $startDate = null;
+    private DateTime $startDate;
 
     #[ORM\Column(type: "datetime", nullable: true)]
-    private $endDate = null;
+    private ?DateTime $endDate = null;
 
     #[ORM\Column(type: "datetime", nullable: true)]
-    private $completeDate = null;
+    private ?DateTime $completeDate = null;
 
     #[ORM\Column(nullable: true)]
     private ?int $endTime = null;
@@ -32,90 +33,115 @@ class GameTracker
     #[ORM\Column(nullable: true)]
     private ?int $completeTime = null;
 
+
     public function getId(): ?int
     {
+
         return $this->id;
     }
 
+
+    public function setId(int $id): self
+    {
+
+        $this->id = $id;
+
+        return $this;
+    }
+
+
     public function getGame(): ?Game
     {
+
         return $this->game;
     }
 
-    public function setGame(?Game $game): static
+
+    public function setGame(Game $game): static
     {
+
         $this->game = $game;
 
         return $this;
     }
 
-    public function getStartDate()
+
+    public function getStartDate(): DateTime
     {
+
         return $this->startDate;
     }
 
-    public function setStartDate($startDate): static
+
+    public function setStartDate(DateTime $startDate): static
     {
+
         $this->startDate = $startDate;
 
         return $this;
     }
 
-    public function getEndDate()
+
+    public function getEndDate(): ?DateTime
     {
+
         return $this->endDate;
     }
 
-    public function setEndDate($endDate): static
+
+    public function setEndDate(?DateTime $endDate): static
     {
+
         $this->endDate = $endDate;
 
         return $this;
     }
 
-    public function getCompleteDate()
+
+    public function getCompleteDate(): ?DateTime
     {
+
         return $this->completeDate;
     }
 
-    public function setCompleteDate($completeDate): static
+
+    public function setCompleteDate(?DateTime $completeDate): static
     {
+
         $this->completeDate = $completeDate;
 
         return $this;
     }
 
+
     public function getEndTime(): ?int
     {
+
         return $this->endTime;
     }
 
+
     public function setEndTime(?int $endTime): static
     {
+
         $this->endTime = $endTime;
 
         return $this;
     }
 
+
     public function getCompleteTime(): ?int
     {
+
         return $this->completeTime;
     }
 
+
     public function setCompleteTime(?int $completeTime): static
     {
+
         $this->completeTime = $completeTime;
 
         return $this;
-    }
-
-
-    /**
-     * @param int|null $id
-     */
-    public function setId(?int $id): void
-    {
-
-        $this->id = $id;
     }
 }

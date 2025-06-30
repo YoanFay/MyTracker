@@ -13,11 +13,12 @@ class MovieGenre
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private int $id;
 
     #[ORM\Column(length: 255)]
-    private ?string $name = null;
+    private string $name;
 
+    /** @var Collection<int, Movie> $movies */
     #[ORM\ManyToMany(targetEntity: Movie::class, inversedBy: 'movieGenres')]
     private Collection $movies;
 
@@ -30,6 +31,16 @@ class MovieGenre
     {
         return $this->id;
     }
+
+
+    public function setId(int $id): self
+    {
+
+        $this->id = $id;
+
+        return $this;
+    }
+
 
     public function getName(): ?string
     {

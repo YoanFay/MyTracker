@@ -22,30 +22,50 @@ class EpisodeShow
     #[ORM\JoinColumn(nullable: false)]
     private Episode $episode;
 
+
     public function getId(): int
     {
+
         return $this->id;
     }
 
+
+    public function setId(int $id): self
+    {
+
+        $this->id = $id;
+
+        return $this;
+
+    }
+
+
     public function getShowDate(): DateTimeInterface
     {
+
         return $this->showDate;
     }
 
+
     public function setShowDate(DateTimeInterface $showDate): static
     {
+
         $this->showDate = $showDate;
 
         return $this;
     }
 
+
     public function getEpisode(): Episode
     {
+
         return $this->episode;
     }
 
+
     public function setEpisode(Episode $episode): static
     {
+
         $this->episode = $episode;
 
         return $this;
