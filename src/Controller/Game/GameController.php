@@ -152,7 +152,7 @@ class GameController extends AbstractController
 
             $body = 'fields name,game_modes,genres,themes; where id = '.$idGame.';';
 
-            $dataGame = $IGDBService->getData('games', $body);
+            $dataGame = $IGDBService->getData('games', $body)[0];
 
             $game->setName($dataGame['name']);
 
@@ -166,7 +166,7 @@ class GameController extends AbstractController
 
             $body = 'fields *;where game = '.$idGame.' & comment = "French title";';
 
-            $dataName = $IGDBService->getData('alternative_names', $body);
+            $dataName = $IGDBService->getData('alternative_names', $body)[0];
 
             if ($dataName !== []) {
                 $game->setName($dataName[0]['name']);
@@ -183,7 +183,7 @@ class GameController extends AbstractController
 
                     $body = 'fields name;where id = '.$gameModeId.';';
 
-                    $dataGameMode = $IGDBService->getData('game_modes', $body);
+                    $dataGameMode = $IGDBService->getData('game_modes', $body)[0];
 
                     $gameMode = new GameMode();
 
@@ -207,7 +207,7 @@ class GameController extends AbstractController
 
                     $body = 'fields name;where id = '.$genreId.';';
 
-                    $dataGenre = $IGDBService->getData('genres', $body);
+                    $dataGenre = $IGDBService->getData('genres', $body)[0];
 
                     $genre = new GameGenre();
 
@@ -232,7 +232,7 @@ class GameController extends AbstractController
 
                     $body = 'fields name;where id = '.$themeId.';';
 
-                    $dataTheme = $IGDBService->getData('themes', $body);
+                    $dataTheme = $IGDBService->getData('themes', $body)[0];
 
                     $theme = new GameTheme();
 
@@ -252,7 +252,7 @@ class GameController extends AbstractController
 
             $body = 'fields *;where game = '.$idGame.' & platform = '.$platformId.' & (status=6 | status = null) & (region=1 | region=8);';
 
-            $dataReleaseDate = $IGDBService->getData('release_dates', $body);
+            $dataReleaseDate = $IGDBService->getData('release_dates', $body)[0];
             $date = new DateTime();
             $date->setTimestamp($dataReleaseDate['date']);
 
@@ -262,7 +262,7 @@ class GameController extends AbstractController
 
             $body = 'fields name;where published = ['.$idGame.'];';
 
-            $dataPublisher = $IGDBService->getData('companies', $body);
+            $dataPublisher = $IGDBService->getData('companies', $body)[0];
 
             foreach ($dataPublisher as $onePublisher) {
 
@@ -288,7 +288,7 @@ class GameController extends AbstractController
 
             $body = 'fields name;where developed = ['.$idGame.'];';
 
-            $dataDeveloper = $IGDBService->getData('companies', $body);
+            $dataDeveloper = $IGDBService->getData('companies', $body)[0];
 
             foreach ($dataDeveloper as $oneDeveloper) {
 
@@ -314,12 +314,12 @@ class GameController extends AbstractController
 
             $body = 'fields id,name,games;where games = ['.$idGame.'];';
 
-            $dataSeries = $IGDBService->getData('collections', $body);
+            $dataSeries = $IGDBService->getData('collections', $body)[0];
 
             if (empty($dataSeries) && $idParent) {
                 $body = 'fields id,name,games;where games = ['.$idParent.'];';
 
-                $dataSeries = $IGDBService->getData('collections', $body);
+                $dataSeries = $IGDBService->getData('collections', $body)[0];
             }
 
             $saveSeries = null;
@@ -359,7 +359,7 @@ class GameController extends AbstractController
 
                 $body = 'fields name;where id = '.$platformId.';';
 
-                $dataPlatform = $IGDBService->getData('platforms', $body);
+                $dataPlatform = $IGDBService->getData('platforms', $body)[0];
 
                 $platform = new GamePlatform();
 
@@ -374,7 +374,7 @@ class GameController extends AbstractController
 
             $body = 'fields *;where game = '.$idGame.';';
 
-            $dataGameCover = $IGDBService->getData('covers', $body);
+            $dataGameCover = $IGDBService->getData('covers', $body)[0];
 
             $link = 'https:'.str_replace('/t_thumb/', '/t_cover_big/', $dataGameCover['url']);
 
