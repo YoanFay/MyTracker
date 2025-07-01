@@ -19,12 +19,12 @@ class StatService
 
 
     /**
-     * @param array<string, mixed> $data
-     * @param array<string, mixed> $counts
+     * @param mixed[] $data
+     * @param mixed[] $counts
      *
-     * @return array<string, mixed>
+     * @return mixed[]
      */
-    function divideByPeriod(array $data, array $counts): array
+    function divideByPeriod(array &$data, array $counts): array
     {
 
         foreach ($data as $key => $value) {
