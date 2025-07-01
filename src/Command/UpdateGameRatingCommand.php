@@ -42,6 +42,8 @@ class UpdateGameRatingCommand extends Command
 
         foreach ($games as $game) {
 
+            dump($game->getName());
+
             $body = 'fields name,aggregated_rating,aggregated_rating_count,rating,rating_count; where id = '.$game->getIgdbId().';';
 
             $data = $this->IGDBService->getData('games', $body);
