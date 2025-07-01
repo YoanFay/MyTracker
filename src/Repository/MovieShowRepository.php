@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Movie;
 use App\Entity\MovieShow;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
@@ -42,7 +43,7 @@ class MovieShowRepository extends ServiceEntityRepository
     /**
      * @throws NonUniqueResultException
      */
-    public function findLastShowByMovie($movie)
+    public function findLastShowByMovie(Movie $movie): mixed
     {
 
         return $this->createQueryBuilder('ms')
@@ -60,7 +61,7 @@ class MovieShowRepository extends ServiceEntityRepository
     /**
      * @return float|int|mixed|string|null
      */
-    public function findByDate(string $year, string $month)
+    public function findByDate(string $year, string $month): mixed
     {
 
         return $this->createQueryBuilder('ms')
@@ -70,7 +71,7 @@ class MovieShowRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function getDuration()
+    public function getDuration(): mixed
     {
         return $this->createQueryBuilder('ms')
             ->leftJoin('ms.movie', 'm')
@@ -81,7 +82,7 @@ class MovieShowRepository extends ServiceEntityRepository
     }
 
 
-    public function getDutationByYear($year)
+    public function getDutationByYear(string $year): mixed
     {
 
         return $this->createQueryBuilder('ms')

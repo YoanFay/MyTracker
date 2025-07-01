@@ -6,8 +6,11 @@ use App\Entity\Serie;
 use App\Entity\SerieUpdate;
 use App\Repository\SerieUpdateRepository;
 use DateTime;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
+use GuzzleHttp\Exception\GuzzleException;
+use Psr\Cache\InvalidArgumentException;
 
 class UpdateDateService
 {
@@ -36,7 +39,7 @@ class UpdateDateService
     }
 
 
-    public function updateFirstAiredAnime($anime): void
+    public function updateFirstAiredAnime(Serie $anime): void
     {
 
         $query = 'query ($search: String) { Media (search: $search, type: ANIME) { startDate{day, month, year} }}';
@@ -45,6 +48,7 @@ class UpdateDateService
 
         $firstDate = $data['startDate']['year']."-".$data['startDate']['month']."-".$data['startDate']['day'];
 
+        /** @var DateTime $firstAired */
         $firstAired = DateTime::createFromFormat('Y-m-d', $firstDate);
 
         $anime->setFirstAired($firstAired);
@@ -55,11 +59,16 @@ class UpdateDateService
     }
 
 
-    public function updateFirstAired($serie)
+    /**
+     * @throws GuzzleException
+     * @throws InvalidArgumentException
+     */
+    public function updateFirstAired(Serie $serie): void
     {
 
         $data = $this->TVDBService->getData("/series/".$serie->getTvdbId()."/extended?meta=translations&short=true");
 
+        /** @var DateTime $firstAired */
         $firstAired = DateTime::createFromFormat('Y-m-d', $data['data']['firstAired']);
 
         $serie->setFirstAired($firstAired);
@@ -68,7 +77,8 @@ class UpdateDateService
 
     }
 
-    public function updateLastAiredAnime(Serie $anime)
+
+    public function updateLastAiredAnime(Serie $anime): void
     {
 
 
@@ -82,17 +92,19 @@ class UpdateDateService
                 $data = $this->aniListService->getDataByName($query, $this->aniListService->getPrequelSeasonName($anime->getLastSeasonName()));
             }
 
-        }else{
-
+        } elseif ($anime->getNameEng()) {
             $data = $this->aniListService->getDataByName($query, $anime->getNameEng());
+        }else{
+            return;
         }
 
         if (!$data['endDate']['year']) {
-            return null;
+            return;
         }
 
         $lastDate = $data['endDate']['year']."-".$data['endDate']['month']."-".$data['endDate']['day'];
 
+        /** @var DateTime $lastAired */
         $lastAired = DateTime::createFromFormat('Y-m-d', $lastDate);
 
         $anime->setLastAired($lastAired);
@@ -103,43 +115,12 @@ class UpdateDateService
     }
 
 
-    public function updateEndedAnime($anime)
-    {
-
-        $query = 'query ($search: String) { Media (search: $search, type: ANIME) { status, relations{ edges{relationType}, nodes{title{english}} } }}';
-
-        $data = $this->aniListService->getData($query, $anime);
-
-        if ($data) {
-            $status = $this->aniListService->getStatus($data);
-        } else {
-            return false;
-        }
-
-        if ($anime->getStatus() !== $status) {
-
-            $serieUpdate = $this->serieUpdateRepository->serieDate($anime, $this->today->format('Y-m-d'));
-
-            if (!$serieUpdate) {
-                $serieUpdate = new SerieUpdate();
-                $serieUpdate->setSerie($anime);
-                $serieUpdate->setUpdatedAt($this->today);
-            }
-
-            $serieUpdate->setOldStatus($anime->getStatus());
-            $serieUpdate->setNewStatus($status);
-            $anime->setStatus($status);
-
-            $this->manager->persist($serieUpdate);
-
-        }
-        $this->manager->persist($anime);
-        $this->manager->flush();
-
-    }
-
-
-    public function updateEnded($serie)
+    /**
+     * @throws NonUniqueResultException
+     * @throws GuzzleException
+     * @throws InvalidArgumentException
+     */
+    public function updateEnded(Serie $serie): void
     {
 
         $data = $this->TVDBService->getData("/series/".$serie->getTvdbId()."/extended?meta=translations&short=true");
@@ -165,7 +146,7 @@ class UpdateDateService
     }
 
 
-    public function updateAiredAnime(Serie $anime)
+    public function updateAiredAnime(Serie $anime): void
     {
 
         $query = 'query ($search: String) { Media (search: $search, type: ANIME) { nextAiringEpisode{airingAt}, startDate{day, month, year}, endDate{day, month, year}, status, relations{ edges{relationType}, nodes{title{english}} }}}';
@@ -175,7 +156,7 @@ class UpdateDateService
         if ($data) {
             $status = $this->aniListService->getStatus($data);
         } else {
-            return false;
+            return;
         }
 
         $serieUpdate = $this->serieUpdateRepository->serieDate($anime, $this->today->format('Y-m-d'));
@@ -210,6 +191,7 @@ class UpdateDateService
 
             $firstDate = $year."-".$month."-".$day;
 
+            /** @var DateTime $nextAired */
             $nextAired = DateTime::createFromFormat('Y-m-d', $firstDate);
 
         } else {
@@ -241,6 +223,7 @@ class UpdateDateService
 
             $lastDate = $year."-".$month."-".$day;
 
+            /** @var DateTime $lastAired */
             $lastAired = DateTime::createFromFormat('Y-m-d', $lastDate);
 
         } else {
@@ -269,7 +252,43 @@ class UpdateDateService
     }
 
 
-    public function updateAired($serie)
+    public function updateEndedAnime(Serie $anime): void
+    {
+
+        $query = 'query ($search: String) { Media (search: $search, type: ANIME) { status, relations{ edges{relationType}, nodes{title{english}} } }}';
+
+        $data = $this->aniListService->getData($query, $anime);
+
+        if ($data) {
+            $status = $this->aniListService->getStatus($data);
+        } else {
+            return;
+        }
+
+        if ($anime->getStatus() !== $status) {
+
+            $serieUpdate = $this->serieUpdateRepository->serieDate($anime, $this->today->format('Y-m-d'));
+
+            if (!$serieUpdate) {
+                $serieUpdate = new SerieUpdate();
+                $serieUpdate->setSerie($anime);
+                $serieUpdate->setUpdatedAt($this->today);
+            }
+
+            $serieUpdate->setOldStatus($anime->getStatus());
+            $serieUpdate->setNewStatus($status);
+            $anime->setStatus($status);
+
+            $this->manager->persist($serieUpdate);
+
+        }
+        $this->manager->persist($anime);
+        $this->manager->flush();
+
+    }
+
+
+    public function updateAired(Serie $serie): void
     {
 
         $serieUpdate = $this->serieUpdateRepository->serieDate($serie, $this->today->format('Y-m-d'));
@@ -284,6 +303,7 @@ class UpdateDateService
 
         if ($data['data']['nextAired']) {
 
+            /** @var DateTime $nextAired */
             $nextAired = DateTime::createFromFormat('Y-m-d H:i', $data['data']['nextAired']." 00:00");
         } else {
             $nextAired = null;

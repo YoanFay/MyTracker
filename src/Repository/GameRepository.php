@@ -26,7 +26,7 @@ class GameRepository extends ServiceEntityRepository
     /**
      * @return Game[] Returns an array of Game
      */
-    public function findAllFilter($text): array
+    public function findAllFilter(?string $text): array
     {
 
         $qb = $this->createQueryBuilder('g');
@@ -49,7 +49,7 @@ class GameRepository extends ServiceEntityRepository
     /**
      * @return Game[] Returns an array of Game
      */
-    public function findGameProgress($text): array
+    public function findGameProgress(?string $text): array
     {
 
         $qb = $this->createQueryBuilder('g')
@@ -75,7 +75,7 @@ class GameRepository extends ServiceEntityRepository
     /**
      * @return Game[] Returns an array of Game
      */
-    public function findGameEnd($text): array
+    public function findGameEnd(?string $text): array
     {
 
         $qb = $this->createQueryBuilder('g')
@@ -101,7 +101,7 @@ class GameRepository extends ServiceEntityRepository
     /**
      * @return Game[] Returns an array of Game
      */
-    public function findGameFullEnd($text): array
+    public function findGameFullEnd(?string $text): array
     {
 
         $qb = $this->createQueryBuilder('g')
@@ -126,7 +126,7 @@ class GameRepository extends ServiceEntityRepository
     /**
      * @return Game[] Returns an array of Game
      */
-    public function findGameNotStart($text): array
+    public function findGameNotStart(?string $text): array
     {
 
         $qb = $this->createQueryBuilder('g')
@@ -180,7 +180,7 @@ class GameRepository extends ServiceEntityRepository
     /**
      * @return Game[] Returns an array of Game
      */
-    public function countGameEndByYear($year): array
+    public function countGameEndByYear(string $year): array
     {
 
         return $this->createQueryBuilder('g')
@@ -214,7 +214,7 @@ class GameRepository extends ServiceEntityRepository
     /**
      * @return Game[] Returns an array of Game
      */
-    public function countGameFullEndByYear($year): array
+    public function countGameFullEndByYear(string $year): array
     {
 
         return $this->createQueryBuilder('g')

@@ -13,11 +13,12 @@ class MangaAuthor
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private int $id;
 
     #[ORM\Column(length: 255)]
-    private ?string $name = null;
+    private string $name;
 
+    /** @var Collection<int, Manga> $mangas */
     #[ORM\OneToMany(mappedBy: 'author', targetEntity: Manga::class)]
     private Collection $mangas;
 
@@ -30,6 +31,16 @@ class MangaAuthor
     {
         return $this->id;
     }
+
+
+    public function setId(int $id): self
+    {
+
+        $this->id = $id;
+
+        return $this;
+    }
+
 
     public function getName(): ?string
     {
@@ -56,18 +67,6 @@ class MangaAuthor
         if (!$this->mangas->contains($manga)) {
             $this->mangas->add($manga);
             $manga->setAuthor($this);
-        }
-
-        return $this;
-    }
-
-    public function removeManga(Manga $manga): static
-    {
-        if ($this->mangas->removeElement($manga)) {
-            // set the owning side to null (unless already changed)
-            if ($manga->getAuthor() === $this) {
-                $manga->setAuthor(null);
-            }
         }
 
         return $this;

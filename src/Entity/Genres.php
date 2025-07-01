@@ -13,7 +13,7 @@ class Genres
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: "integer")]
-    private ?int $id = null;
+    private int $id;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nameEng = null;
@@ -21,6 +21,7 @@ class Genres
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nameFra = null;
 
+    /** @var Collection<int, Serie> $serie */
     #[ORM\ManyToMany(targetEntity: Serie::class, inversedBy: 'genres')]
     private Collection $serie;
 
@@ -33,6 +34,16 @@ class Genres
     {
         return $this->id;
     }
+
+
+    public function setId(int $id): self
+    {
+
+        $this->id = $id;
+
+        return $this;
+    }
+
 
     public function getNameEng(): ?string
     {

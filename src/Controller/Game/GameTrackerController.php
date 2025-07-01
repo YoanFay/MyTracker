@@ -26,7 +26,7 @@ class GameTrackerController extends AbstractController
     }
     
     #[Route('/{id}/edit', name: 'game_tracker_edit')]
-    public function edit(Request $request, EntityManagerInterface $entityManager, GameTrackerRepository $gameTrackerRepository, GameRepository $gameRepository, TimeService $timeService, $id): Response
+    public function edit(Request $request, EntityManagerInterface $entityManager, GameTrackerRepository $gameTrackerRepository, GameRepository $gameRepository, TimeService $timeService, int $id): Response
     {
         $gameTracker = $gameTrackerRepository->find($id);
         
@@ -34,8 +34,13 @@ class GameTrackerController extends AbstractController
             
             $gameTracker = new GameTracker();
             $gameTracker->setId($id);
-            
+
             $game = $gameRepository->find($id);
+
+            if (!$game){
+                $this->addFlash('error', 'Ce jeu n\'existe pas');
+                return $this->redirectToRoute('game');
+            }
             
             $gameTracker->setGame($game);
         }
@@ -45,16 +50,20 @@ class GameTrackerController extends AbstractController
         
         if ($form->isSubmitted() && $form->isValid()) {
 
+            /** @var array<string, mixed> $data */
             $data = $request->request->get('game_tracker');
             
             if($data['endTime'] !== "" && $data['endTime'] !== "0h0"){
 
                 $explode = explode("h", $data["endTime"]);
 
-                $heures = $explode[0] !== "" ? $explode[0] : null;
-                $minutes = $explode[1] !== "" ? $explode[1] : null;
+                $heures = $explode[0] !== "" ? intval($explode[0]) : null;
+                $minutes = $explode[1] !== "" ? intval($explode[1]) : null;
 
-                $gameTracker->setEndTime($timeService->convertirHeureMinute($heures, $minutes));
+                /** @var int $endTime */
+                $endTime = $timeService->convertirHeureMinute($heures, $minutes);
+
+                $gameTracker->setEndTime($endTime);
             }else{
                 $gameTracker->setEndTime(null);
             }
@@ -63,10 +72,13 @@ class GameTrackerController extends AbstractController
 
                 $explode = explode("h", $data["completeTime"]);
 
-                $heures = $explode[0] !== "" ? $explode[0] : null;
-                $minutes = $explode[1] !== "" ? $explode[1] : null;
+                $heures = $explode[0] !== "" ? intval($explode[0]) : null;
+                $minutes = $explode[1] !== "" ? intval($explode[1]) : null;
 
-                $gameTracker->setCompleteTime($timeService->convertirHeureMinute($heures, $minutes));
+                /** @var int $completeTime */
+                $completeTime = $timeService->convertirHeureMinute($heures, $minutes);
+
+                $gameTracker->setCompleteTime($completeTime);
             }else{
                 $gameTracker->setCompleteTime(null);
             }

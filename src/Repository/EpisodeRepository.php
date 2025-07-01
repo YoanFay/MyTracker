@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Episode;
 use App\Entity\Serie;
+use App\Entity\SerieType;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
@@ -47,7 +48,7 @@ class EpisodeRepository extends ServiceEntityRepository
     }
 
 
-    public function findElementsByDay()
+    public function findElementsByDay(): mixed
     {
 
         return $this->createQueryBuilder('e')
@@ -59,7 +60,7 @@ class EpisodeRepository extends ServiceEntityRepository
     }
 
 
-    public function getDurationByType()
+    public function getDurationByType(): mixed
     {
 
         return $this->createQueryBuilder('e')
@@ -73,12 +74,12 @@ class EpisodeRepository extends ServiceEntityRepository
 
 
     /**
-     * @param $serie
+     * @param Serie $serie
      *
      * @return float|int|mixed|string|null
      * @throws NonUniqueResultException
      */
-    public function findBySerie($serie)
+    public function findBySerie(Serie $serie): mixed
     {
 
         return $this->createQueryBuilder('e')
@@ -92,12 +93,12 @@ class EpisodeRepository extends ServiceEntityRepository
 
 
     /**
-     * @param $serie
+     * @param Serie $serie
      *
      * @return float|int|mixed|string|null
      * @throws NonUniqueResultException
      */
-    public function findBySerieWitoutTVDB($serie)
+    public function findBySerieWitoutTVDB(Serie $serie): mixed
     {
 
         return $this->createQueryBuilder('e')
@@ -112,9 +113,8 @@ class EpisodeRepository extends ServiceEntityRepository
 
     /**
      * @return float|int|mixed|string|null
-     * @throws NonUniqueResultException
      */
-    public function findWitoutTVDB()
+    public function findWitoutTVDB(): mixed
     {
 
         return $this->createQueryBuilder('e')
@@ -128,9 +128,8 @@ class EpisodeRepository extends ServiceEntityRepository
      * @param $serie
      *
      * @return float|int|mixed|string|null
-     * @throws NonUniqueResultException
      */
-    public function findByDurationNull()
+    public function findByDurationNull(): mixed
     {
 
         return $this->createQueryBuilder('e')
@@ -141,12 +140,9 @@ class EpisodeRepository extends ServiceEntityRepository
 
 
     /**
-     * @param $serie
-     *
      * @return float|int|mixed|string|null
-     * @throws NonUniqueResultException
      */
-    public function findBySerieWithTVDB()
+    public function findBySerieWithTVDB(): mixed
     {
 
         return $this->createQueryBuilder('e')
@@ -157,7 +153,7 @@ class EpisodeRepository extends ServiceEntityRepository
     }
 
 
-    public function getDurationGenre()
+    public function getDurationGenre(): mixed
     {
 
         return $this->createQueryBuilder('e')
@@ -174,7 +170,7 @@ class EpisodeRepository extends ServiceEntityRepository
     }
 
 
-    public function getDurationTheme()
+    public function getDurationTheme(): mixed
     {
 
         return $this->createQueryBuilder('e')
@@ -194,7 +190,7 @@ class EpisodeRepository extends ServiceEntityRepository
     /**
      * @return float|int|mixed|string|null
      */
-    public function findByType($type)
+    public function findByType(SerieType $type): mixed
     {
 
         return $this->createQueryBuilder('e')
@@ -209,7 +205,7 @@ class EpisodeRepository extends ServiceEntityRepository
     /**
      * @return float|int|mixed|string|null
      */
-    public function findByDate(string $year, string $month)
+    public function findByDate(string $year, string $month): mixed
     {
 
         return $this->createQueryBuilder('e')
@@ -223,7 +219,7 @@ class EpisodeRepository extends ServiceEntityRepository
     /**
      * @return float|int|mixed|string|null
      */
-    public function findByDateNotNull()
+    public function findByDateNotNull(): mixed
     {
 
         return $this->createQueryBuilder('e')

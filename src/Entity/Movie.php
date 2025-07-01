@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\MovieRepository;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -14,27 +15,28 @@ class Movie
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: "integer")]
-    private $id;
+    private int $id;
 
     #[ORM\Column(type: "string", length: 255)]
-    private $name;
+    private string $name;
 
     #[ORM\Column(type: "datetime", nullable: true)]
-    private $showDate;
+    private ?DateTimeInterface $showDate;
 
     #[ORM\Column(type: "integer", nullable: true)]
-    private $tmdbId;
+    private ?int $tmdbId;
 
     #[ORM\Column(type: "integer", nullable: true)]
-    private $duration;
+    private ?int $duration;
 
     #[ORM\ManyToOne(targetEntity: Users::class, inversedBy: "movies")]
     #[ORM\JoinColumn(nullable: false)]
-    private $user;
+    private Users $user;
 
     #[ORM\Column(type: "string", length: 255, nullable: true)]
-    private $plexId;
+    private ?string $plexId;
 
+    /** @var Collection<int, MovieGenre> $movieGenres */
     #[ORM\ManyToMany(targetEntity: MovieGenre::class, mappedBy: 'movies')]
     private Collection $movieGenres;
 
@@ -42,14 +44,15 @@ class Movie
     private ?string $artwork = null;
 
     #[ORM\Column]
-    private ?bool $updated = false;
+    private bool $updated = false;
 
     #[ORM\Column(length: 255)]
-    private ?string $slug = null;
+    private string $slug;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $releaseDate = null;
+    private ?DateTimeInterface $releaseDate = null;
 
+    /** @var Collection<int, MovieShow> $movieShows */
     #[ORM\OneToMany(mappedBy: 'movie', targetEntity: MovieShow::class)]
     private Collection $movieShows;
 
@@ -59,12 +62,22 @@ class Movie
         $this->movieShows = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getName(): ?string
+
+    public function setId(int $id): self
+    {
+
+        $this->id = $id;
+
+        return $this;
+    }
+
+
+    public function getName(): string
     {
         return $this->name;
     }
@@ -76,12 +89,12 @@ class Movie
         return $this;
     }
 
-    public function getShowDate(): ?\DateTimeInterface
+    public function getShowDate(): ?DateTimeInterface
     {
         return $this->showDate;
     }
 
-    public function setShowDate(?\DateTimeInterface $showDate): self
+    public function setShowDate(?DateTimeInterface $showDate): self
     {
         $this->showDate = $showDate;
 
@@ -112,12 +125,12 @@ class Movie
         return $this;
     }
 
-    public function getUser(): ?Users
+    public function getUser(): Users
     {
         return $this->user;
     }
 
-    public function setUser(?Users $user): self
+    public function setUser(Users $user): self
     {
         $this->user = $user;
 
@@ -199,12 +212,12 @@ class Movie
         return $this;
     }
 
-    public function getReleaseDate(): ?\DateTimeInterface
+    public function getReleaseDate(): ?DateTimeInterface
     {
         return $this->releaseDate;
     }
 
-    public function setReleaseDate(?\DateTimeInterface $releaseDate): static
+    public function setReleaseDate(?DateTimeInterface $releaseDate): static
     {
         $this->releaseDate = $releaseDate;
 
@@ -224,18 +237,6 @@ class Movie
         if (!$this->movieShows->contains($movieShow)) {
             $this->movieShows->add($movieShow);
             $movieShow->setMovie($this);
-        }
-
-        return $this;
-    }
-
-    public function removeMovieShow(MovieShow $movieShow): static
-    {
-        if ($this->movieShows->removeElement($movieShow)) {
-            // set the owning side to null (unless already changed)
-            if ($movieShow->getMovie() === $this) {
-                $movieShow->setMovie(null);
-            }
         }
 
         return $this;

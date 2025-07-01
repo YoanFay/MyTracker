@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\CompanyRepository;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -14,7 +15,7 @@ class Company
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private int $id;
 
     #[ORM\Column(length: 255)]
     private ?string $name = null;
@@ -23,7 +24,7 @@ class Company
     private ?int $tvdbId = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $started_at = null;
+    private ?DateTimeInterface $started_at = null;
 
     #[ORM\Column(length: 255)]
     private ?string $type = null;
@@ -31,12 +32,14 @@ class Company
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $country = null;
 
+    /** @var Collection<int, Serie> $series */
     #[ORM\ManyToMany(targetEntity: Serie::class, mappedBy: 'company')]
     private Collection $series;
 
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'child')]
     private ?self $parent = null;
 
+    /** @var Collection<int, self> $children */
     #[ORM\OneToMany(mappedBy: 'parent', targetEntity: self::class)]
     private Collection $children;
 
@@ -50,6 +53,16 @@ class Company
     {
         return $this->id;
     }
+
+
+    public function setId(int $id): self
+    {
+
+        $this->id = $id;
+
+        return $this;
+    }
+
 
     public function getName(): ?string
     {
@@ -75,12 +88,12 @@ class Company
         return $this;
     }
 
-    public function getStartedAt(): ?\DateTimeInterface
+    public function getStartedAt(): ?DateTimeInterface
     {
         return $this->started_at;
     }
 
-    public function setStartedAt(?\DateTimeInterface $started_at): static
+    public function setStartedAt(?DateTimeInterface $started_at): static
     {
         $this->started_at = $started_at;
 

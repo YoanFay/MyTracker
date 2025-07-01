@@ -13,11 +13,12 @@ class AnimeTheme
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private int $id;
 
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
+    /** @var Collection<int, Serie> $serie */
     #[ORM\ManyToMany(targetEntity: Serie::class, inversedBy: 'animeThemes')]
     private Collection $serie;
 
@@ -30,6 +31,16 @@ class AnimeTheme
     {
         return $this->id;
     }
+
+
+    public function setId(int $id): self
+    {
+
+        $this->id = $id;
+
+        return $this;
+    }
+
 
     public function getName(): ?string
     {

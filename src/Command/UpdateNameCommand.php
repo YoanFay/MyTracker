@@ -10,6 +10,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
 use Exception;
 use GuzzleHttp\Exception\GuzzleException;
+use Psr\Cache\InvalidArgumentException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -47,7 +48,7 @@ class UpdateNameCommand extends Command
 
 
     /**
-     * @throws GuzzleException|NonUniqueResultException
+     * @throws GuzzleException|NonUniqueResultException|InvalidArgumentException
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {

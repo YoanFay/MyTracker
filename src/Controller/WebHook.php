@@ -72,7 +72,7 @@ class WebHook extends AbstractController
                         if (isset($jsonData['Metadata']['Guid'])) {
                             foreach ($jsonData['Metadata']['Guid'] as $guid) {
                                 if (isset($guid['id']) && str_starts_with($guid['id'], 'tmdb://')) {
-                                    $tvdbMovieId = str_replace(["tmdb://"], [""], $guid['id']);
+                                    $tvdbMovieId = intval(str_replace(["tmdb://"], [""], $guid['id']));
                                     break;
                                 }
                             }
@@ -89,7 +89,7 @@ class WebHook extends AbstractController
                             $TMDBService->updateInfo($movie);
                         } else {
                             $movie->setName($jsonData['Metadata']['title']);
-                            $movie->setSlug($strSpecialCharsLower->serie($movie->getName()));
+                            $movie->setSlug($strSpecialCharsLower->serie($jsonData['Metadata']['title']));
                         }
 
                         $em->persist($movie);
@@ -120,7 +120,7 @@ class WebHook extends AbstractController
                 $serie = $serieRepository->findOneBy(['plexId' => $serieId]);
 
                 if (!$serie and isset($episodeId)) {
-                    $tvdbSerieId = $TVDBService->getSerieIdByEpisodeId($episodeId);
+                    $tvdbSerieId = $TVDBService->getSerieIdByEpisodeId(intval($episodeId));
 
                     $serie = $serieRepository->findOneBy(['tvdbId' => $tvdbSerieId]);
                 }
@@ -159,6 +159,7 @@ class WebHook extends AbstractController
                     $episode = null;
 
                     if (isset($jsonData['Metadata']['guid'])) {
+                        /** @var ?string $episodeId */
                         $episodeId = str_replace(["plex://episode/", "local://"], ["", ""], $jsonData['Metadata']['guid']);
 
                         $episode = $episodeRepository->findOneBy(['serie' => $serie, 'saisonNumber' => $jsonData['Metadata']['parentIndex'], 'episodeNumber' => $jsonData['Metadata']['index']]);
@@ -171,7 +172,7 @@ class WebHook extends AbstractController
                         if (isset($jsonData['Metadata']['Guid'])) {
                             foreach ($jsonData['Metadata']['Guid'] as $guid) {
                                 if (isset($guid['id']) && str_starts_with($guid['id'], 'tvdb://')) {
-                                    $tvdbId = str_replace(["tvdb://"], [""], $guid['id']);
+                                    $tvdbId = intval(str_replace(["tvdb://"], [""], $guid['id']));
                                     break;
                                 }
                             }

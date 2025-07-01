@@ -37,6 +37,7 @@ class MovieController extends AbstractController
     public function movieList(MovieRepository $movieRepository, MovieShowRepository $movieShowRepository, Request $request): Response
     {
 
+        /** @var ?string $text */
         $text = $request->request->get('text');
 
         $movies = $movieRepository->getByLikeName($text);
@@ -85,6 +86,9 @@ class MovieController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()){
 
+            /** @var array<string, mixed> $movieData */
+            $movieData = $request->request->get('movie');
+
             $TMDBService->updateInfo($movie);
 
             /** @var Users $user */
@@ -96,7 +100,11 @@ class MovieController extends AbstractController
 
             $movieShow = new MovieShow();
             $movieShow->setMovie($movie);
-            $movieShow->setShowDate(DateTime::createFromFormat('d/m/Y H:i', $request->request->get('movie')['showDate']));
+
+            /** @var DateTime $showDate */
+            $showDate = DateTime::createFromFormat('d/m/Y H:i', $movieData['showDate']);
+
+            $movieShow->setShowDate($showDate);
 
             $managerRegistry->getManager()->persist($movieShow);
             $managerRegistry->getManager()->flush();
@@ -112,10 +120,18 @@ class MovieController extends AbstractController
     }
 
     #[Route('/detail/{id}', name: 'movie_detail')]
-    public function detail(MovieRepository $movieRepository, $id): Response
+    public function detail(MovieRepository $movieRepository, int $id): Response
     {
 
         $movie = $movieRepository->findOneBy(['id' => $id]);
+
+        if (!$movie){
+
+                $this->addFlash('error', 'Film non trouvé');
+
+                return $this->redirectToRoute('movie');
+
+        }
 
         $movieGenres = $movie->getMovieGenres();
 
