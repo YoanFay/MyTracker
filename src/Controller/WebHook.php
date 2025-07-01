@@ -104,7 +104,7 @@ class WebHook extends AbstractController
                     $em->flush();
                 }
 
-            } else {
+            } elseif($type !== "Musique") {
 
                 $serieId = str_replace(["plex://show/"], [""], $jsonData['Metadata']['grandparentGuid']);
 

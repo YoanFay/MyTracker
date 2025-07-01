@@ -148,7 +148,7 @@ class SerieRepository extends ServiceEntityRepository
             ->leftJoin('s.serieType', 't')
             ->andWhere('s.firstAired IS NULL')
             ->andWhere('s.tvdbId IS NOT NULL')
-            ->andWhere('t.name <> :type OR s.tvdbId IN (302218, 155291)')
+            ->andWhere('t.name <> :type OR s.tvdbId IN (302218)')
             ->setParameter('type', 'Anime')
             ->getQuery()
             ->getResult();
@@ -166,7 +166,7 @@ class SerieRepository extends ServiceEntityRepository
             ->andWhere('s.firstAired IS NULL')
             ->andWhere('t.name = :type')
             ->setParameter('type', 'Anime')
-            ->andWhere('s.tvdbId NOT IN (302218, 155291)')
+            ->andWhere('s.tvdbId NOT IN (302218)')
             ->getQuery()
             ->getResult();
     }
@@ -184,8 +184,8 @@ class SerieRepository extends ServiceEntityRepository
             ->andWhere('s.status <> :status OR s.status IS NULL OR s.status = :statusUpcoming')
             ->setParameter('status', "Ended")
             ->setParameter('statusUpcoming', "Upcoming")
-            ->andWhere('s.tvdbId NOT IN (359149)')
-            ->andWhere('t.name <> :type OR s.tvdbId IN (302218, 155291)')
+            ->andWhere('s.tvdbId NOT IN (359149, 155291)')
+            ->andWhere('t.name <> :type OR s.tvdbId IN (302218)')
             ->setParameter('type', 'Anime')
             ->getQuery()
             ->getResult();
@@ -205,7 +205,7 @@ class SerieRepository extends ServiceEntityRepository
             ->setParameter('status', "Ended")
             ->orWhere('s.status = :statusUpcoming')
             ->setParameter('statusUpcoming', "Upcoming")
-            ->andWhere('s.tvdbId NOT IN (76703, 302218, 155291)')
+            ->andWhere('s.tvdbId NOT IN (76703, 302218)')
             ->andWhere('t.name = :type')
             ->setParameter('type', 'Anime')
             ->getQuery()
@@ -223,8 +223,8 @@ class SerieRepository extends ServiceEntityRepository
             ->leftJoin('s.serieType', 't')
             ->andWhere('s.status = :status')
             ->setParameter('status', "Ended")
-            ->andWhere('s.tvdbId NOT IN (359149)')
-            ->andWhere('t.name <> :type OR s.tvdbId IN (302218, 155291)')
+            ->andWhere('s.tvdbId NOT IN (359149, 155291)')
+            ->andWhere('t.name <> :type OR s.tvdbId IN (302218)')
             ->setParameter('type', 'Anime')
             ->getQuery()
             ->getResult();
@@ -243,7 +243,7 @@ class SerieRepository extends ServiceEntityRepository
             ->setParameter('status', "Ended")
             ->andWhere('t.name = :type')
             ->setParameter('type', 'Anime')
-            ->andWhere('s.tvdbId NOT IN (76703, 302218, 155291)')
+            ->andWhere('s.tvdbId NOT IN (76703, 302218)')
             ->getQuery()
             ->getResult();
     }
@@ -260,7 +260,7 @@ class SerieRepository extends ServiceEntityRepository
         return $qb
             ->leftJoin('s.serieType', 't')
             ->where('t.name = :typeName')
-            ->andWhere('s.tvdbId NOT IN (302218, 155291)')
+            ->andWhere('s.tvdbId NOT IN (302218)')
             ->andWhere(
                 $qb->expr()->orX(
                     's.lastAired IS NULL',
