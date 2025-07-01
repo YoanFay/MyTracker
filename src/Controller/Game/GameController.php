@@ -391,9 +391,16 @@ class GameController extends AbstractController
 
             // GAME RATE
 
-            $body = 'fields name,aggregated_rating,aggregated_rating_count,rating,rating_count; where id = '.$idGame.';';
+            $body = 'fields name,aggregated_rating,aggregated_rating_count,rating,rating_count,parent_game; where id = '.$idGame.';';
 
             $data = $IGDBService->getData('games', $body)[0];
+
+            if (!array_key_exists('aggregated_rating', $data) && !array_key_exists('aggregated_rating_count', $data) && !array_key_exists('rating', $data) && !array_key_exists('rating_count', $data) && array_key_exists('parent_game', $data)){
+
+                $body = 'fields name,aggregated_rating,aggregated_rating_count,rating,rating_count; where id = '.$data['parent_game'].';';
+
+                $data = $IGDBService->getData('games', $body)[0];
+            }
 
             if (array_key_exists('aggregated_rating', $data) && $data['aggregated_rating_count'] > 0) {
                 $game->setAggregatedRating(round($data['aggregated_rating'], 2));
