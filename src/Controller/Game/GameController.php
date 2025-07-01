@@ -168,8 +168,8 @@ class GameController extends AbstractController
 
             $dataName = $IGDBService->getData('alternative_names', $body)[0];
 
-            if ($dataName !== []) {
-                $game->setName($dataName[0]['name']);
+            if ($dataName && $dataName !== []) {
+                $game->setName($dataName['name']);
             }
 
             $game->setSlug($strSpecialCharsLower->serie($game->getName()));
@@ -262,7 +262,7 @@ class GameController extends AbstractController
 
             $body = 'fields name;where published = ['.$idGame.'];';
 
-            $dataPublisher = $IGDBService->getData('companies', $body)[0];
+            $dataPublisher = $IGDBService->getData('companies', $body);
 
             foreach ($dataPublisher as $onePublisher) {
 
@@ -288,7 +288,7 @@ class GameController extends AbstractController
 
             $body = 'fields name;where developed = ['.$idGame.'];';
 
-            $dataDeveloper = $IGDBService->getData('companies', $body)[0];
+            $dataDeveloper = $IGDBService->getData('companies', $body);
 
             foreach ($dataDeveloper as $oneDeveloper) {
 
@@ -314,12 +314,12 @@ class GameController extends AbstractController
 
             $body = 'fields id,name,games;where games = ['.$idGame.'];';
 
-            $dataSeries = $IGDBService->getData('collections', $body)[0];
+            $dataSeries = $IGDBService->getData('collections', $body);
 
             if (empty($dataSeries) && $idParent) {
                 $body = 'fields id,name,games;where games = ['.$idParent.'];';
 
-                $dataSeries = $IGDBService->getData('collections', $body)[0];
+                $dataSeries = $IGDBService->getData('collections', $body);
             }
 
             $saveSeries = null;
@@ -370,6 +370,8 @@ class GameController extends AbstractController
                 $entityManager->flush();
             }
 
+            $game->addPlatform($platform);
+
             // COVER
 
             $body = 'fields *;where game = '.$idGame.';';
@@ -385,16 +387,11 @@ class GameController extends AbstractController
             } else {
                 $game->setCover(null);
             }
-
-            $game->addPlatform($platform);
-            $game->setIgdbId($idGame);
-
-            $entityManager->persist($game);
-            $entityManager->flush();
+            
 
             // GAME RATE
 
-            $body = 'fields name,aggregated_rating,aggregated_rating_count,rating,rating_count; where id = '.$game->getIgdbId().';';
+            $body = 'fields name,aggregated_rating,aggregated_rating_count,rating,rating_count; where id = '.$idGame.';';
 
             $data = $IGDBService->getData('games', $body)[0];
 
@@ -408,6 +405,8 @@ class GameController extends AbstractController
                 $game->setRatingCount($data['rating_count']);
             }
 
+            $game->setIgdbId($idGame);
+            
             $entityManager->persist($game);
             $entityManager->flush();
 
