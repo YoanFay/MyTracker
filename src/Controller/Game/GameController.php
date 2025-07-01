@@ -392,6 +392,25 @@ class GameController extends AbstractController
             $entityManager->persist($game);
             $entityManager->flush();
 
+            // GAME RATE
+
+            $body = 'fields name,aggregated_rating,aggregated_rating_count,rating,rating_count; where id = '.$game->getIgdbId().';';
+
+            $data = $IGDBService->getData('games', $body);
+
+            if (array_key_exists('aggregated_rating', $data) && $data['aggregated_rating_count'] > 0) {
+                $game->setAggregatedRating(round($data['aggregated_rating'], 2));
+                $game->setAggregatedRatingCount($data['aggregated_rating_count']);
+            }
+
+            if (array_key_exists('rating', $data) && $data['rating_count'] > 0) {
+                $game->setRating(round($data['rating'], 2));
+                $game->setRatingCount($data['rating_count']);
+            }
+
+            $entityManager->persist($game);
+            $entityManager->flush();
+
             return $this->redirectToRoute('game_details', ['id' => $game->getId()], Response::HTTP_SEE_OTHER);
 
         }
