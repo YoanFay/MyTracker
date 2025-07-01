@@ -41,7 +41,7 @@ class UpdateGamePlatformLogoCommand extends Command
         $this->strSpecialCharsLower = $strSpecialCharsLower;
         $this->manager = $managerRegistry->getManager();
         $this->fileService = $fileService;
-        $this->apiService = $IGDBService;
+        $this->IGDBService = $IGDBService;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -49,28 +49,26 @@ class UpdateGamePlatformLogoCommand extends Command
 
         $platforms = $this->gamePlatformRepository->findNoLogo();
 
-        /** @var GamePlatform $platform */
         foreach ($platforms as $platform) {
 
             $body = 'fields versions; where id = '.$platform->getIgdbId().';';
 
-            $data = $this->apiService->getData('platforms', $body);
+            $data = $this->IGDBService->getData('platforms', $body);
 
             $version = min($data['versions']);
 
             $body = 'fields platform_logo; where id = '.$version.';';
 
-            $data = $this->apiService->getData('platform_versions', $body);
+            $data = $this->IGDBService->getData('platform_versions', $body);
 
             if (array_key_exists('platform_logo', $data)) {
 
                 $body = 'fields image_id; where id = '.$data['platform_logo'].';';
 
-                $data = $this->apiService->getData('platform_logos', $body);
+                $data = $this->IGDBService->getData('platform_logos', $body);
 
                 $link = "https://images.igdb.com/igdb/image/upload/t_logo_med/".$data['image_id'].".png";
 
-                /** @var string $name */
                 $name = $platform->getName();
 
                 $destinationFolder = "/public/image/game/platform/".$this->strSpecialCharsLower->serie($name).'.png';

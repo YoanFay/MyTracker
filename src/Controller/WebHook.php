@@ -120,7 +120,7 @@ class WebHook extends AbstractController
                 $serie = $serieRepository->findOneBy(['plexId' => $serieId]);
 
                 if (!$serie and isset($episodeId)) {
-                    $tvdbSerieId = $TVDBService->getSerieIdByEpisodeId($episodeId);
+                    $tvdbSerieId = $TVDBService->getSerieIdByEpisodeId(intval($episodeId));
 
                     $serie = $serieRepository->findOneBy(['tvdbId' => $tvdbSerieId]);
                 }

@@ -86,6 +86,11 @@ class MangaController extends AbstractController
 
         $manga = $mangaRepository->findOneBy(['id' => $id]);
 
+        if (!$manga){
+            $this->addFlash('error', 'Ce manga n\'existe pas');
+            return $this->redirectToRoute('manga');
+        }
+
         $tome = $mangaTomeRepository->getCurrentTome($manga);
 
         $currentTome = null;
@@ -165,6 +170,7 @@ class MangaController extends AbstractController
         $manga = $mangaRepository->find($id);
 
         if (!$manga) {
+            $this->addFlash('error', 'Ce manga n\'existe pas');
             return $this->redirectToRoute('manga_add');
         }
 
@@ -203,6 +209,7 @@ class MangaController extends AbstractController
         $manga = $mangaRepository->find($id);
 
         if (!$manga) {
+            $this->addFlash('error', 'Ce manga n\'existe pas');
             return $this->redirectToRoute('manga');
         }
 

@@ -180,7 +180,7 @@ class GameRepository extends ServiceEntityRepository
     /**
      * @return Game[] Returns an array of Game
      */
-    public function countGameEndByYear(int $year): array
+    public function countGameEndByYear(string $year): array
     {
 
         return $this->createQueryBuilder('g')
@@ -214,7 +214,7 @@ class GameRepository extends ServiceEntityRepository
     /**
      * @return Game[] Returns an array of Game
      */
-    public function countGameFullEndByYear(int $year): array
+    public function countGameFullEndByYear(string $year): array
     {
 
         return $this->createQueryBuilder('g')

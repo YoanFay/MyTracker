@@ -36,7 +36,7 @@ class UpdateGameSerieCommand extends Command
         parent::__construct();
         $this->gameRepository = $gameRepository;
         $this->gameSerieRepository = $gameSerieRepository;
-        $this->apiService = $IGDBService;
+        $this->IGDBService = $IGDBService;
         $this->manager = $managerRegistry->getManager();
     }
 
@@ -49,7 +49,7 @@ class UpdateGameSerieCommand extends Command
 
             $body = 'fields name,game_modes,genres,themes,version_parent; where id = '.$game->getIgdbId().';';
 
-            $data = $this->apiService->getData('games', $body);
+            $data = $this->IGDBService->getData('games', $body);
 
             $id = $data['id'];
             $idParent = null;
@@ -60,13 +60,13 @@ class UpdateGameSerieCommand extends Command
 
             $body = 'fields id,name,games;where games = ['.$id.'];';
 
-            $dataSerie = $this->apiService->getData('collections', $body);
+            $dataSerie = $this->IGDBService->getData('collections', $body);
 
             if (empty($dataSerie) && $idParent) {
 
                 $body = 'fields id,name,games;where games = ['.$idParent.'];';
 
-                $dataSerie = $this->apiService->getData('collections', $body);
+                $dataSerie = $this->IGDBService->getData('collections', $body);
                 
             }
 

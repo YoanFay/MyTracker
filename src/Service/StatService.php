@@ -7,7 +7,7 @@ class StatService
 
 
     /**
-     * @param array<string, mixed> $periods
+     * @param string[] $periods
      *
      * @return array<string, mixed>
      */

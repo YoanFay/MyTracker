@@ -82,7 +82,7 @@ class MovieShowRepository extends ServiceEntityRepository
     }
 
 
-    public function getDutationByYear(int $year): mixed
+    public function getDutationByYear(string $year): mixed
     {
 
         return $this->createQueryBuilder('ms')

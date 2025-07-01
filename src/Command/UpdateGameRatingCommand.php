@@ -31,7 +31,7 @@ class UpdateGameRatingCommand extends Command
 
         parent::__construct();
         $this->gameRepository = $gameRepository;
-        $this->apiService = $IGDBService;
+        $this->IGDBService = $IGDBService;
         $this->manager = $managerRegistry->getManager();
     }
 
@@ -44,7 +44,7 @@ class UpdateGameRatingCommand extends Command
 
             $body = 'fields name,aggregated_rating,aggregated_rating_count,rating,rating_count; where id = '.$game->getIgdbId().';';
 
-            $data = $this->apiService->getData('games', $body);
+            $data = $this->IGDBService->getData('games', $body);
 
             if (array_key_exists('aggregated_rating', $data) && $data['aggregated_rating_count'] > 0) {
                 $game->setAggregatedRating(round($data['aggregated_rating'], 2));

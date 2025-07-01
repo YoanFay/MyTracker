@@ -37,6 +37,7 @@ class MovieController extends AbstractController
     public function movieList(MovieRepository $movieRepository, MovieShowRepository $movieShowRepository, Request $request): Response
     {
 
+        /** @var ?string $text */
         $text = $request->request->get('text');
 
         $movies = $movieRepository->getByLikeName($text);

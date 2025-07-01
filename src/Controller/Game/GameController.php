@@ -52,6 +52,11 @@ class GameController extends AbstractController
 
         $game = $gameRepository->find($id);
 
+        if (!$game){
+            $this->addFlash('error', 'Ce jeu n\'existe pas');
+            return $this->redirectToRoute('game');
+        }
+
         return $this->render('game/game/details.html.twig', [
             'game' => $game,
             'navLinkId' => 'game'
@@ -410,6 +415,8 @@ class GameController extends AbstractController
     {
 
         $choice = $request->request->get('choice', 1);
+
+        /** @var ?string $text */
         $text = $request->request->get('text');
 
         $choice = intval($choice);
@@ -437,10 +444,6 @@ class GameController extends AbstractController
             if (count($game->getGameTrackers()) > 0 && $game->getGameTrackers()->getValues()) {
 
                 $gameTracker = $game->getGameTrackers()->getValues()[0];
-
-                if ($gameTracker->getStartDate()) {
-                    $tooltip .= "<li>Commencer le : ".$timeService->frenchFormatDateNoDay($gameTracker->getStartDate())."</li>";
-                }
 
                 if ($gameTracker->getEndDate()) {
                     $tooltip .= "<li>Fini le : ".$timeService->frenchFormatDateNoDay($gameTracker->getEndDate())."</li>";

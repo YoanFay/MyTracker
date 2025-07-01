@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Company;
 use App\Entity\Serie;
 use App\Form\SerieType;
 use App\Form\SerieEditType;
@@ -409,6 +410,7 @@ class SerieController extends AbstractController
     {
 
         $id = $request->request->get('id');
+        /** @var ?string $text */
         $text = $request->request->get('text');
 
         if ($id < -1) {
@@ -418,6 +420,7 @@ class SerieController extends AbstractController
 
             $companyName = html_entity_decode($companyName);
 
+            /** @var Company $company */
             $company = $companyRepository->findOneBy(['name' => $companyName]);
 
             $series = $serieRepository->getSeriesByCompany($company, $text);

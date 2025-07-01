@@ -2,6 +2,7 @@
 
 namespace App\Controller\Manga;
 
+use App\Entity\Manga;
 use App\Entity\MangaTome;
 use App\Form\MangaTomeType;
 use App\Repository\MangaRepository;
@@ -32,6 +33,7 @@ class MangaTomeController extends AbstractController
         $mangaTome = new MangaTome();
 
         if($id !== null) {
+            /** @var Manga $manga */
             $manga = $mangaRepository->find($id);
             $mangaTome->setManga($manga);
         }

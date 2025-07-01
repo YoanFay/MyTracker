@@ -64,7 +64,7 @@ class MangaTomeRepository extends ServiceEntityRepository
     }
 
 
-    public function getTomeReadByYear(int $year): mixed
+    public function getTomeReadByYear(string $year): mixed
     {
 
         return $this->createQueryBuilder('mt')
@@ -88,7 +88,7 @@ class MangaTomeRepository extends ServiceEntityRepository
     }
 
 
-    public function getTomeStartByYear(int $year): mixed
+    public function getTomeStartByYear(string $year): mixed
     {
 
         return $this->createQueryBuilder('mt')

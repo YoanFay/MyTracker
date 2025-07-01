@@ -32,7 +32,7 @@ class FrenchDateExtension extends AbstractExtension
     }
 
 
-    public function dateUpcoming(mixed $date, string $type): string
+    public function dateUpcoming(mixed $date, ?string $type): string
     {
 
         if (!$type) {

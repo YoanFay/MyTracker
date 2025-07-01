@@ -106,7 +106,7 @@ class TimeService
     /**
      * @throws Exception
      */
-    public function dateUpcoming(mixed $date, string $type): string
+    public function dateUpcoming(mixed $date, ?string $type): string
     {
 
         if (!$type) {

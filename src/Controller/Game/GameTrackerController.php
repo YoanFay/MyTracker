@@ -34,8 +34,13 @@ class GameTrackerController extends AbstractController
             
             $gameTracker = new GameTracker();
             $gameTracker->setId($id);
-            
+
             $game = $gameRepository->find($id);
+
+            if (!$game){
+                $this->addFlash('error', 'Ce jeu n\'existe pas');
+                return $this->redirectToRoute('game');
+            }
             
             $gameTracker->setGame($game);
         }
