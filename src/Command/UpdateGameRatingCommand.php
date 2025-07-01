@@ -46,7 +46,7 @@ class UpdateGameRatingCommand extends Command
 
             $body = 'fields name,aggregated_rating,aggregated_rating_count,rating,rating_count; where id = '.$game->getIgdbId().';';
 
-            $data = $this->IGDBService->getData('games', $body);
+            $data = $this->IGDBService->getData('games', $body)[0];
 
             if (array_key_exists('aggregated_rating', $data) && $data['aggregated_rating_count'] > 0) {
                 $game->setAggregatedRating(round($data['aggregated_rating'], 2));
