@@ -2,7 +2,10 @@
 
 namespace App\Repository;
 
+use App\Entity\AnimeGenre;
+use App\Entity\Company;
 use App\Entity\Serie;
+use App\Entity\SerieType;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -281,7 +284,7 @@ class SerieRepository extends ServiceEntityRepository
     /**
      * @return Serie[] Returns an array of Serie objects
      */
-    public function noThemeGenre($text): array
+    public function noThemeGenre(?string $text): array
     {
 
         $qb = $this->createQueryBuilder('s')
@@ -305,7 +308,7 @@ class SerieRepository extends ServiceEntityRepository
     /**
      * @return Serie[] Returns an array of Serie objects
      */
-    public function search($type, $text): array
+    public function search(?SerieType $type, ?string $text): array
     {
 
         $qb = $this->createQueryBuilder('s');
@@ -331,7 +334,7 @@ class SerieRepository extends ServiceEntityRepository
     /**
      * @return Serie[] Returns an array of Serie objects
      */
-    public function serieByGenre($animeGenre): array
+    public function serieByGenre(AnimeGenre $animeGenre): array
     {
 
         return $this->createQueryBuilder('s')
@@ -382,7 +385,7 @@ class SerieRepository extends ServiceEntityRepository
     /**
      * @return Serie[] Returns an array of Serie objects
      */
-    public function findAnimeWithLimit($limit): array
+    public function findAnimeWithLimit(int $limit): array
     {
 
         return $this->createQueryBuilder('s')
@@ -398,7 +401,7 @@ class SerieRepository extends ServiceEntityRepository
     /**
      * @return Serie[] Returns an array of Serie objects
      */
-    public function getSeriesByCompany($company, $text): array
+    public function getSeriesByCompany(Company $company, ?string $text): array
     {
 
         $qb = $this->createQueryBuilder('s')

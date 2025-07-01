@@ -13,11 +13,12 @@ class GameMode
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private int $id;
 
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
+    /** @var Collection<int, Game> $games */
     #[ORM\ManyToMany(targetEntity: Game::class, mappedBy: 'modes')]
     private Collection $games;
 
@@ -33,6 +34,16 @@ class GameMode
     {
         return $this->id;
     }
+
+
+    public function setId(int $id): self
+    {
+
+        $this->id = $id;
+
+        return $this;
+    }
+
 
     public function getName(): ?string
     {

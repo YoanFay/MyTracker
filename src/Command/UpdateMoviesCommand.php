@@ -2,8 +2,10 @@
 
 namespace App\Command;
 
+use App\Entity\MovieGenre;
 use App\Repository\MovieGenreRepository;
 use App\Repository\MovieRepository;
+use App\Service\FileService;
 use App\Service\StrSpecialCharsLower;
 use App\Service\TMDBService;
 use DateTime;
@@ -28,23 +30,23 @@ class UpdateMoviesCommand extends Command
 
     private ObjectManager $manager;
 
-    private KernelInterface $kernel;
-
     private StrSpecialCharsLower $strSpecialCharsLower;
 
     private TMDBService $TMDBService;
 
+    private FileService $fileService;
 
-    public function __construct(MovieRepository $movieRepository, MovieGenreRepository $movieGenreRepository, ManagerRegistry $managerRegistry, KernelInterface $kernel, StrSpecialCharsLower $strSpecialCharsLower, TMDBService $TMDBService)
+
+    public function __construct(MovieRepository $movieRepository, MovieGenreRepository $movieGenreRepository, ManagerRegistry $managerRegistry, StrSpecialCharsLower $strSpecialCharsLower, TMDBService $TMDBService, FileService $fileService)
     {
 
         parent::__construct();
         $this->movieRepository = $movieRepository;
         $this->movieGenreRepository = $movieGenreRepository;
         $this->manager = $managerRegistry->getManager();
-        $this->kernel = $kernel;
         $this->strSpecialCharsLower = $strSpecialCharsLower;
         $this->TMDBService = $TMDBService;
+        $this->fileService = $fileService;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -64,10 +66,14 @@ class UpdateMoviesCommand extends Command
                 $movie->setReleaseDate($releaseDate);
             }
 
-            $movie->setSlug($this->strSpecialCharsLower->serie($movie->getName()));
+            /** @var string $name */
+            $name = $movie->getName();
+
+            $movie->setSlug($this->strSpecialCharsLower->serie($name));
 
             foreach ($data['genres'] as $genre){
 
+                /** @var MovieGenre $addGenre */
                 $addGenre = $this->movieGenreRepository->findOneBy(['name' => $genre['name']]);
 
                 $movie->addMovieGenre($addGenre);
@@ -76,19 +82,12 @@ class UpdateMoviesCommand extends Command
 
             $data = $this->TMDBService->getData('/movie/'.$movie->getTmdbId().'/images?include_image_language=fr');
 
-            // Lien de l'image à télécharger
-            $lienImage = "https://image.tmdb.org/t/p/w600_and_h900_bestv2".$data['posters'][0]['file_path'];
+            $link = "https://image.tmdb.org/t/p/w600_and_h900_bestv2".$data['posters'][0]['file_path'];
 
-            $cover = imagecreatefromstring(file_get_contents($lienImage));
+            $destinationFolder = "/public/image/movie/poster/" . $movie->getSlug().'.jpeg';
 
-            $projectDir = $this->kernel->getProjectDir();
-
-            // Chemin où enregistrer l'image
-            $cheminImageDestination = "/public/image/movie/poster/" . $movie->getSlug().'.jpeg';
-
-            // Téléchargement et enregistrement de l'image
-            if (imagejpeg($cover, $projectDir . $cheminImageDestination, 100)) {
-                $movie->setArtwork($cheminImageDestination);
+            if ($this->fileService->addFile($link, $destinationFolder)) {
+                $movie->setArtwork($destinationFolder);
             } else {
                 $movie->setArtwork(null);
             }

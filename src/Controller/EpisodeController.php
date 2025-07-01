@@ -4,10 +4,10 @@ namespace App\Controller;
 
 use App\Entity\Episode;
 use App\Entity\EpisodeShow;
+use App\Entity\Users;
 use App\Form\EpisodeType;
-use App\Repository\EpisodeShowRepository;
-use App\Repository\SerieTypeRepository;
 use App\Repository\UsersRepository;
+use Bugsnag\DateTime\Date;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,9 +15,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\SerieRepository;
 use App\Repository\EpisodeRepository;
-use App\Repository\MovieRepository;
-use Bugsnag\BugsnagBundle\DependencyInjection\ClientFactory;
-use Bugsnag\Client;
 use DateTime;
 
 #[Route('/episode')]
@@ -25,7 +22,7 @@ class EpisodeController extends AbstractController
 {
 
     #[Route('/add/{id}', name: 'episode_add')]
-    public function addEpisode(ManagerRegistry $managerRegistry, UsersRepository $usersRepository, EpisodeRepository $episodeRepository, SerieRepository $serieRepository, Request $request, $id = null): Response
+    public function addEpisode(ManagerRegistry $managerRegistry, UsersRepository $usersRepository, EpisodeRepository $episodeRepository, SerieRepository $serieRepository, Request $request, int $id = null): Response
     {
 
         $episode = new Episode();
@@ -33,6 +30,14 @@ class EpisodeController extends AbstractController
         if ($id){
 
             $serie = $serieRepository->find($id);
+
+            if(!$serie){
+
+                $this->addFlash('error', 'Série non trouvée');
+
+                return $this->redirectToRoute('serie');
+
+            }
 
             $episode->setSerie($serie);
 
@@ -43,7 +48,11 @@ class EpisodeController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $date = DateTime::createFromFormat('d/m/Y H:i', $request->request->get('episode')['showDate']);
+            /** @var array<string, mixed> $episodeData */
+            $episodeData = $request->request->get('episode');
+
+            /** @var DateTime $date */
+            $date = DateTime::createFromFormat('d/m/Y H:i', $episodeData['showDate']);
 
             $checkEpisode = $episodeRepository->findOneBy(['serie' => $episode->getSerie(), 'saisonNumber' => $episode->getSaisonNumber(), 'episodeNumber' => $episode->getEpisodeNumber()]);
 
@@ -53,6 +62,7 @@ class EpisodeController extends AbstractController
 
             } else {
 
+                /** @var Users $user */
                 $user = $usersRepository->findOneBy(['plexName' => 'yoan.f8']);
 
                 $episode->setUser($user);

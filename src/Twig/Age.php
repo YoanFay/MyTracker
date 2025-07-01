@@ -19,14 +19,8 @@ class Age extends AbstractExtension
         ];
     }
 
-    public function getFunctions(): array
+    public function calculAge(DateTime $date): string
     {
-        return [
-            new TwigFunction('function_name', [$this, 'doSomething']),
-        ];
-    }
-
-    public function calculAge($date) {
 
         $today = new DateTime();
 

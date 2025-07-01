@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Company;
 use App\Entity\Serie;
 use App\Form\SerieType;
 use App\Form\SerieEditType;
@@ -14,6 +15,7 @@ use App\Repository\SerieRepository;
 use App\Repository\EpisodeRepository;
 use App\Repository\SerieTypeRepository;
 use App\Service\TVDBService;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -29,8 +31,18 @@ class SerieController extends AbstractController
 
 
     #[Route('/detail/{id}', name: 'serie_detail')]
-    public function detail(Request $request, RequestStack $requestStack, SerieRepository $serieRepository, EpisodeShowRepository $episodeShowRepository, $id): Response
+    public function detail(Request $request, RequestStack $requestStack, SerieRepository $serieRepository, EpisodeShowRepository $episodeShowRepository, int $id): Response
     {
+
+        $serie = $serieRepository->findOneBy(['id' => $id]);
+
+        if(!$serie){
+
+            $this->addFlash('error', 'Série non trouvée');
+
+            return $this->redirectToRoute('serie');
+
+        }
 
         $referer = $request->headers->get('referer');
         $idSerie = null;
@@ -40,7 +52,7 @@ class SerieController extends AbstractController
             $idSerie = $session->get('idSerie');
         }
 
-        if (!$idSerie && str_contains($referer, "http://localhost:8000/serie/") && (!str_contains($referer, "edit") || !str_contains($referer, "detail"))) {
+        if ($referer && !$idSerie && str_contains($referer, "http://localhost:8000/serie/") && (!str_contains($referer, "edit") || !str_contains($referer, "detail"))) {
             $idSerie = str_replace('http://localhost:8000/serie/', '', $referer);
 
             $idSerie = str_replace('detail/', '', $idSerie);
@@ -49,8 +61,6 @@ class SerieController extends AbstractController
         }
 
         $idSerie = str_replace('detail/', '', $idSerie);
-
-        $serie = $serieRepository->findOneBy(['id' => $id]);
         $totalDuration = $episodeShowRepository->getDurationBySerie($id);
         $countEpisode = $episodeShowRepository->getCountBySerie($id);
         $episodesShow = $episodeShowRepository->getEpisodesBySerie($serie);
@@ -74,7 +84,7 @@ class SerieController extends AbstractController
 
         foreach ($serie->getTags() as $tag) {
 
-            if (!array_key_exists($tag->getTagsType()->getNameFra(), $tagTypes)) {
+            if ($tag->getTagsType()->getNameFra() && !array_key_exists($tag->getTagsType()->getNameFra(), $tagTypes)) {
                 $tagTypes[$tag->getTagsType()->getNameFra()] = [];
             }
 
@@ -135,10 +145,18 @@ class SerieController extends AbstractController
 
 
     #[Route('/edit/{id}', name: 'serie_edit')]
-    public function editSerie(ManagerRegistry $managerRegistry, SerieRepository $serieRepository, Request $request, $id): Response
+    public function editSerie(ManagerRegistry $managerRegistry, SerieRepository $serieRepository, Request $request, int $id): Response
     {
 
         $serie = $serieRepository->findOneBy(['id' => $id]);
+
+        if(!$serie){
+
+            $this->addFlash('error', 'Série non trouvée');
+
+            return $this->redirectToRoute('serie');
+
+        }
 
         if ($serie->getSerieType()->getName() === "Anime") {
             return $this->redirectToRoute('serie_edit_anime', ['id' => $id]);
@@ -166,10 +184,18 @@ class SerieController extends AbstractController
 
 
     #[Route('/editAnime/{id}', name: 'serie_edit_anime')]
-    public function editSerieAnime(ManagerRegistry $managerRegistry, SerieRepository $serieRepository, Request $request, $id): Response
+    public function editSerieAnime(ManagerRegistry $managerRegistry, SerieRepository $serieRepository, Request $request, int $id): Response
     {
 
         $serie = $serieRepository->findOneBy(['id' => $id]);
+
+        if(!$serie){
+
+            $this->addFlash('error', 'Série non trouvée');
+
+            return $this->redirectToRoute('serie');
+
+        }
 
         if ($serie->getSerieType()->getName() !== "Anime") {
             return $this->redirectToRoute('serie_edit', ['id' => $id]);
@@ -228,43 +254,23 @@ class SerieController extends AbstractController
     }
 
 
-    /**
-     * @throws NonUniqueResultException
-     */
     #[Route('/genre/{name}', name: 'serie_genre')]
-    public function animeByGenre( EpisodeRepository $episodeRepository, AnimeGenreRepository $animeGenreRepository, $name): Response
+    public function animeByGenre(EpisodeShowRepository $episodeRepository, AnimeGenreRepository $animeGenreRepository, string $name): Response
     {
 
         $animeGenre = $animeGenreRepository->findOneBy(['name' => $name]);
 
-        $series = $animeGenre->getSerie();
+        if(!$animeGenre){
 
-        $serieTab = [];
+            $this->addFlash('error', 'Genre non trouvé');
 
-        foreach ($series as $serie) {
-
-            $lastEpisode = $episodeRepository->findLastEpisode($serie);
-
-            $serieTab[] = [
-                'id' => $serie->getId(),
-                'name' => $serie->getName(),
-                'serieType' => $serie->getSerieType()->getName(),
-                'artwork' => $serie->getArtwork(),
-                'lastDate' => $lastEpisode?->getShowDate(),
-                'entity' => $serie,
-            ];
+            return $this->redirectToRoute('serie');
 
         }
 
-        uasort($serieTab, function ($a, $b) {
+        $series = $animeGenre->getSerie();
 
-            // Utilise strtotime pour convertir les dates en timestamps pour une comparaison facile
-            $dateA = $a['lastDate'];
-            $dateB = $b['lastDate'];
-
-            // Retourne -1 si $dateA est inférieur à $dateB, 1 si supérieur, 0 si égal
-            return $dateB <=> $dateA;
-        });
+        $serieTab = $this->serieTab($series, $episodeRepository);
 
         return $this->render('serie/index.html.twig', [
             'controller_name' => 'SerieController',
@@ -275,21 +281,20 @@ class SerieController extends AbstractController
 
 
     /**
+     * @param Collection<int, Serie> $series
+     * @param EpisodeShowRepository  $episodeRepository
+     *
+     * @return array<int<0, max>, array<string,mixed>>
      * @throws NonUniqueResultException
      */
-    #[Route('/theme/{name}', name: 'serie_theme')]
-    public function animeByTheme(EpisodeRepository $episodeRepository, AnimeThemeRepository $animeThemeRepository, $name): Response
+    private function serieTab(Collection $series, EpisodeShowRepository $episodeRepository): array
     {
-
-        $animeTheme = $animeThemeRepository->findOneBy(['name' => $name]);
-
-        $series = $animeTheme->getSerie();
 
         $serieTab = [];
 
         foreach ($series as $serie) {
 
-            $lastEpisode = $episodeRepository->findLastEpisode($serie);
+            $lastEpisode = $episodeRepository->findLastEpisodeBySerie($serie);
 
             $serieTab[] = [
                 'id' => $serie->getId(),
@@ -311,6 +316,29 @@ class SerieController extends AbstractController
             // Retourne -1 si $dateA est inférieur à $dateB, 1 si supérieur, 0 si égal
             return $dateB <=> $dateA;
         });
+
+        return $serieTab;
+
+    }
+
+
+    #[Route('/theme/{name}', name: 'serie_theme')]
+    public function animeByTheme(EpisodeShowRepository $episodeRepository, AnimeThemeRepository $animeThemeRepository, string $name): Response
+    {
+
+        $animeTheme = $animeThemeRepository->findOneBy(['name' => $name]);
+
+        if(!$animeTheme){
+
+            $this->addFlash('error', 'Thème non trouvé');
+
+            return $this->redirectToRoute('serie');
+
+        }
+
+        $series = $animeTheme->getSerie();
+
+        $serieTab = $this->serieTab($series, $episodeRepository);
 
         return $this->render('serie/index.html.twig', [
             'controller_name' => 'SerieController',
@@ -324,10 +352,18 @@ class SerieController extends AbstractController
      * @throws NonUniqueResultException
      */
     #[Route('/company/{id}', name: 'serie_company')]
-    public function serieByCompany(EpisodeShowRepository $episodeShowRepository, CompanyRepository $companyRepository, $id): Response
+    public function serieByCompany(EpisodeShowRepository $episodeShowRepository, CompanyRepository $companyRepository, int $id): Response
     {
 
         $company = $companyRepository->find($id);
+
+        if(!$company){
+
+            $this->addFlash('error', 'Entreprise non trouvée');
+
+            return $this->redirectToRoute('serie');
+
+        }
 
         $serieTab = [];
 
@@ -374,18 +410,22 @@ class SerieController extends AbstractController
     {
 
         $id = $request->request->get('id');
+        /** @var ?string $text */
         $text = $request->request->get('text');
 
-        if ($id < -1){
+        if ($id < -1) {
 
-            $companyName = html_entity_decode($request->request->get('company'));
+            /** @var string $companyName */
+            $companyName = $request->request->get('company');
 
+            $companyName = html_entity_decode($companyName);
+
+            /** @var Company $company */
             $company = $companyRepository->findOneBy(['name' => $companyName]);
 
             $series = $serieRepository->getSeriesByCompany($company, $text);
 
-        }
-        elseif ($id < 0) {
+        } else if ($id < 0) {
             $series = $serieRepository->search(null, $text);
 
         } else if ($id == 404) {
@@ -435,7 +475,7 @@ class SerieController extends AbstractController
 
 
     #[Route('/{search}', name: 'serie')]
-    public function index($search = null): Response
+    public function index(string $search = null): Response
     {
 
         $id = match ($search) {

@@ -23,7 +23,8 @@ class StatsController extends AbstractController
      * @throws Exception
      */
     #[Route('/global', name: 'global_stat')]
-    public function generalStat(MovieShowRepository $movieShowRepository, EpisodeShowRepository $episodeShowRepository, MangaTomeRepository $mangaTomeRepository, GameRepository $gameRepository){
+    public function generalStat(MovieShowRepository $movieShowRepository, EpisodeShowRepository $episodeShowRepository, MangaTomeRepository $mangaTomeRepository, GameRepository $gameRepository): Response
+    {
 
         $now = new DateTime();
         $year = $now->format("Y");

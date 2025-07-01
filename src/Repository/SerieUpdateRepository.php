@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Serie;
 use App\Entity\SerieUpdate;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
@@ -26,7 +27,7 @@ class SerieUpdateRepository extends ServiceEntityRepository
     /**
      * @throws NonUniqueResultException
      */
-    public function serieDate($serie, $date)
+    public function serieDate(Serie $serie, string $date): mixed
     {
         return $this->createQueryBuilder('s')
             ->andWhere('s.serie = :serie')
@@ -39,7 +40,7 @@ class SerieUpdateRepository extends ServiceEntityRepository
     }
 
 
-    public function lastWeekUpdate()
+    public function lastWeekUpdate(): mixed
     {
 
         return $this->createQueryBuilder('s')
@@ -54,7 +55,7 @@ class SerieUpdateRepository extends ServiceEntityRepository
     }
 
 
-    public function nextWeekAired()
+    public function nextWeekAired(): mixed
     {
 
         return $this->createQueryBuilder('s')

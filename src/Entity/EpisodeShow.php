@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\EpisodeShowRepository;
+use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -12,39 +13,59 @@ class EpisodeShow
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private int $id;
 
     #[ORM\Column(type: "datetime")]
-    private $showDate = null;
+    private DateTimeInterface $showDate;
 
     #[ORM\ManyToOne(inversedBy: 'episodeShows')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Episode $episode = null;
+    private Episode $episode;
 
-    public function getId(): ?int
+
+    public function getId(): int
     {
+
         return $this->id;
     }
 
-    public function getShowDate(): ?\DateTimeInterface
+
+    public function setId(int $id): self
     {
+
+        $this->id = $id;
+
+        return $this;
+
+    }
+
+
+    public function getShowDate(): DateTimeInterface
+    {
+
         return $this->showDate;
     }
 
-    public function setShowDate(\DateTimeInterface $showDate): static
+
+    public function setShowDate(DateTimeInterface $showDate): static
     {
+
         $this->showDate = $showDate;
 
         return $this;
     }
 
-    public function getEpisode(): ?Episode
+
+    public function getEpisode(): Episode
     {
+
         return $this->episode;
     }
 
-    public function setEpisode(?Episode $episode): static
+
+    public function setEpisode(Episode $episode): static
     {
+
         $this->episode = $episode;
 
         return $this;

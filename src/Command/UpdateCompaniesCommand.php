@@ -67,7 +67,11 @@ class UpdateCompaniesCommand extends Command
                     $searchCompany = $this->companyRepository->findOneBy(['tvdbId' => $company['id']]);
 
                     if (!$searchCompany) {
-                        $serie->addCompany($this->TVDBService->createCompany($company['id']));
+
+                        if($newCompany = $this->TVDBService->createCompany($company['id'])){
+                            $serie->addCompany($newCompany);
+                        }
+
                     } else {
                         $serie->addCompany($searchCompany);
                     }
@@ -86,8 +90,14 @@ class UpdateCompaniesCommand extends Command
 
         foreach ($series as $serie) {
 
+            $name = $serie->getNameEng();
+
+            if (!$name){
+                $name = $serie->getName();
+            }
+
             $variables = [
-                "search" => mb_convert_kana($serie->getNameEng(), 'a', 'UTF-8')
+                "search" => mb_convert_kana($name, 'a', 'UTF-8')
             ];
 
             $http = new Client();

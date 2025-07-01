@@ -10,6 +10,7 @@ use App\Repository\CompanyRepository;
 use DateTime;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
+use GdImage;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Psr\Cache\InvalidArgumentException;
@@ -24,19 +25,20 @@ class TVDBService
 
     private ObjectManager $manager;
 
-    private CompanyRepository $companyRepository;
 
-
-    public function __construct(KernelInterface $kernel, ManagerRegistry $managerRegistry, CompanyRepository $companyRepository)
+    public function __construct(KernelInterface $kernel, ManagerRegistry $managerRegistry)
     {
 
         $this->kernel = $kernel;
         $this->manager = $managerRegistry->getManager();
-        $this->companyRepository = $companyRepository;
     }
 
 
-    public function getSerieIdByEpisodeId($episodeId)
+    /**
+     * @throws GuzzleException
+     * @throws InvalidArgumentException
+     */
+    public function getSerieIdByEpisodeId(int $episodeId): int
     {
 
         $data = self::getData("/episodes/".$episodeId);
@@ -46,7 +48,11 @@ class TVDBService
     }
 
 
-    public function getData($url)
+    /**
+     * @throws GuzzleException
+     * @throws InvalidArgumentException
+     */
+    public function getData(string $url): mixed
     {
 
         $client = new Client();
@@ -75,7 +81,7 @@ class TVDBService
     /**
      * @throws InvalidArgumentException
      */
-    public function getKey()
+    public function getKey(): string
     {
 
         $cache = new FilesystemAdapter();
@@ -192,7 +198,11 @@ class TVDBService
             $this->manager->remove($serie->getArtwork());
         }
 
-        $cover = imagecreatefromstring(file_get_contents($image['image']));
+        /** @var string $dataImage */
+        $dataImage = file_get_contents($image['image']);
+
+        /** @var GdImage $cover */
+        $cover = imagecreatefromstring($dataImage);
 
         // Chemin où enregistrer l'image
         $cheminImageDestination = "/public/image/serie/poster/".$serie->getSlug().'.jpeg';
@@ -248,7 +258,7 @@ class TVDBService
         }
     }
 
-    public function createCompany($id): ?Company
+    public function createCompany(int $id): ?Company
     {
 
         $data = self::getData("/companies/".$id);

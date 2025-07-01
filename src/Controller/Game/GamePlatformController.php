@@ -6,9 +6,8 @@ use App\Entity\GamePlatform;
 use App\Form\GamePlatformAddType;
 use App\Form\GamePlatformType;
 use App\Repository\GamePlatformRepository;
+use App\Service\IGDBService;
 use Doctrine\ORM\EntityManagerInterface;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -48,7 +47,7 @@ class GamePlatformController extends AbstractController
     }
 
     #[Route('/{id}/details', name: 'game_platform_show', methods: ['GET'])]
-    public function show(GamePlatformRepository $gamePlatformRepository, $id): Response
+    public function show(GamePlatformRepository $gamePlatformRepository, int $id): Response
     {
         $gamePlatform = $gamePlatformRepository->find($id);
 
@@ -59,7 +58,7 @@ class GamePlatformController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'game_platform_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, EntityManagerInterface $entityManager, GamePlatformRepository $gamePlatformRepository, $id): Response
+    public function edit(Request $request, EntityManagerInterface $entityManager, GamePlatformRepository $gamePlatformRepository, int $id): Response
     {
         $gamePlatform = $gamePlatformRepository->find($id);
 
@@ -80,24 +79,25 @@ class GamePlatformController extends AbstractController
     }
 
     #[Route('/{id}/delete', name: 'game_platform_delete', methods: ['POST'])]
-    public function delete(Request $request, EntityManagerInterface $entityManager, GamePlatformRepository $gamePlatformRepository, $id): Response
+    public function delete(Request $request, EntityManagerInterface $entityManager, GamePlatformRepository $gamePlatformRepository, int $id): Response
     {
         $gamePlatform = $gamePlatformRepository->find($id);
 
-        if ($this->isCsrfTokenValid('delete'.$gamePlatform->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($gamePlatform);
-            $entityManager->flush();
+        if ($gamePlatform) {
+            /** @var ?string $token */
+            $token = $request->request->get('_token');
+
+            if ($this->isCsrfTokenValid('delete'.$gamePlatform->getId(), $token)) {
+                $entityManager->remove($gamePlatform);
+                $entityManager->flush();
+            }
         }
 
         return $this->redirectToRoute('game_platform', [], Response::HTTP_SEE_OTHER);
     }
 
-
-    /**
-     * @throws GuzzleException
-     */
     #[Route('/add', name: 'game_platform_add', methods: ['GET', 'POST'])]
-    public function add(Request $request, EntityManagerInterface $entityManager): Response
+    public function add(Request $request, EntityManagerInterface $entityManager, IGDBService $IGDBService): Response
     {
         $form = $this->createForm(GamePlatformAddType::class);
         $form->handleRequest($request);
@@ -106,32 +106,9 @@ class GamePlatformController extends AbstractController
 
             $formData = $form->getData();
 
-            // AUTHENTIFICATION
+            $body = 'fields *;where name = "'.$formData['name'].'";';
 
-            $client = new Client();
-
-            $response = $client->post("https://id.twitch.tv/oauth2/token?client_id=sd5xdt5w2lkjr7ws92fxjdlicvb5u2&client_secret=tymefepntjuva1n9ipa3lkjts2pmdh&grant_type=client_credentials", [
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                    'Accept' => 'application/json',
-                ]
-            ]);
-
-            $data = json_decode($response->getBody(), true);
-
-            $token = "Bearer ".$data['access_token'];
-
-            $response = $client->post("https://api.igdb.com/v4/platforms", [
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                    'Accept' => 'application/json',
-                    'Client-ID' => 'sd5xdt5w2lkjr7ws92fxjdlicvb5u2',
-                    'Authorization' => $token
-                ],
-                'body' => 'fields *;where name = "'.$formData['name'].'";'
-            ]);
-
-            $dataPlatform = json_decode($response->getBody(), true)[0];
+            $dataPlatform = $IGDBService->getData('platforms', $body);
 
             $gamePlatform = new GamePlatform();
 

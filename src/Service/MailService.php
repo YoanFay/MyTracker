@@ -16,6 +16,15 @@ class MailService
         $this->emailApi = new TransactionalEmailsApi(null, $config);
     }
 
+
+    /**
+     * @param mixed[]  $params
+     * @param string $toEmail
+     * @param string $toName
+     * @param int    $template
+     *
+     * @return void
+     */
     public function sendEmail(array $params, string $toEmail = "nomuas.nf@gmail.com", string $toName = "Nomuas", int $template = 1): void
     {
         $sendSmtpEmail = new SendSmtpEmail([

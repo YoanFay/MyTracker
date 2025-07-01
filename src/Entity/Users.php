@@ -15,40 +15,12 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: "integer")]
-    private $id;
+    private int $id;
 
     #[ORM\Column(type: "string", length: 255)]
-    private $plexName;
+    private string $plexName;
 
-    #[ORM\OneToMany(targetEntity: Episode::class, mappedBy: "user")]
-    private $episodes;
-
-    #[ORM\OneToMany(targetEntity: Movie::class, mappedBy: "user")]
-    private $movies;
-
-    public function __construct()
-    {
-        $this->episodes = new ArrayCollection();
-        $this->movies = new ArrayCollection();
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function getPlexName(): ?string
-    {
-        return $this->plexName;
-    }
-
-    public function setPlexName(string $plexName): self
-    {
-        $this->plexName = $plexName;
-
-        return $this;
-    }
-
+    /** @var array<string> $roles */
     #[ORM\Column]
     private array $roles = [];
 
@@ -56,75 +28,50 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string The hashed password
      */
     #[ORM\Column]
-    private ?string $password = null;
+    private string $password;
 
-    #[ORM\OneToMany(targetEntity: Episode::class, mappedBy: "user")]
-    public function getEpisodes(): Collection
+
+    public function getId(): int
     {
-        return $this->episodes;
+
+        return $this->id;
     }
 
-    #[ORM\OneToMany(targetEntity: Movie::class, mappedBy: "user")]
-    public function getMovies(): Collection
-    {
-        return $this->movies;
-    }
 
-    #[ORM\OneToMany(targetEntity: Episode::class, mappedBy: "user")]
-    public function addEpisode(Episode $episode): self
+    public function setId(int $id): self
     {
-        if (!$this->episodes->contains($episode)) {
-            $this->episodes[] = $episode;
-            $episode->setUser($this);
-        }
+
+        $this->id = $id;
 
         return $this;
     }
 
-    #[ORM\OneToMany(targetEntity: Episode::class, mappedBy: "user")]
-    public function removeEpisode(Episode $episode): self
+
+    public function getPlexName(): string
     {
-        if ($this->episodes->removeElement($episode)) {
-            // set the owning side to null (unless already changed)
-            if ($episode->getUser() === $this) {
-                $episode->setUser(null);
-            }
-        }
+
+        return $this->plexName;
+    }
+
+
+    public function setPlexName(string $plexName): self
+    {
+
+        $this->plexName = $plexName;
 
         return $this;
     }
 
-    #[ORM\OneToMany(targetEntity: Movie::class, mappedBy: "user")]
-    public function addMovie(Movie $movie): self
-    {
-        if (!$this->movies->contains($movie)) {
-            $this->movies[] = $movie;
-            $movie->setUser($this);
-        }
-
-        return $this;
-    }
-
-    #[ORM\OneToMany(targetEntity: Movie::class, mappedBy: "user")]
-    public function removeMovie(Movie $movie): self
-    {
-        if ($this->movies->removeElement($movie)) {
-            // set the owning side to null (unless already changed)
-            if ($movie->getUser() === $this) {
-                $movie->setUser(null);
-            }
-        }
-
-        return $this;
-    }
 
     /**
      * @deprecated since Symfony 5.3, use getUserIdentifier instead
      */
     public function getUsername(): string
     {
-        return (string) $this->plexName;
+
+        return (string)$this->plexName;
     }
+
 
     /**
      * A visual identifier that represents this user.
@@ -133,14 +80,17 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->plexName;
+
+        return (string)$this->plexName;
     }
+
 
     /**
      * @see UserInterface
      */
     public function getRoles(): array
     {
+
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
@@ -148,27 +98,36 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
         return array_unique($roles);
     }
 
+
+
+    /** @param array<string> $roles */
     public function setRoles(array $roles): static
     {
+
         $this->roles = $roles;
 
         return $this;
     }
+
 
     /**
      * @see PasswordAuthenticatedUserInterface
      */
     public function getPassword(): string
     {
+
         return $this->password;
     }
 
+
     public function setPassword(string $password): static
     {
+
         $this->password = $password;
 
         return $this;
     }
+
 
     /**
      * Returning a salt is only needed, if you are not using a modern
@@ -178,14 +137,17 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getSalt(): ?string
     {
+
         return null;
     }
+
 
     /**
      * @see UserInterface
      */
     public function eraseCredentials(): void
     {
+
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
     }
