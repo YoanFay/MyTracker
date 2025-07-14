@@ -27,7 +27,7 @@ class Movie
     private ?int $tmdbId;
 
     #[ORM\Column(type: "integer", nullable: true)]
-    private ?int $duration;
+    private ?int $duration = null;
 
     #[ORM\ManyToOne(targetEntity: Users::class, inversedBy: "movies")]
     #[ORM\JoinColumn(nullable: false)]
