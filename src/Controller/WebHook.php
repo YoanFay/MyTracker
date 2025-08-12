@@ -279,12 +279,14 @@ class WebHook extends AbstractController
 
                 $em->persist($music);
 
-                $musicListen = new MusicListen();
+                if ($jsonData['event'] === "media.scrobble") {
+                    $musicListen = new MusicListen();
 
-                $musicListen->setMusic($music);
-                $musicListen->setListenAt(new DateTime());
+                    $musicListen->setMusic($music);
+                    $musicListen->setListenAt(new DateTime());
 
-                $em->persist($musicListen);
+                    $em->persist($musicListen);
+                }
                 $em->flush();
             }
         }
