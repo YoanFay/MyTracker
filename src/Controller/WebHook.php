@@ -224,6 +224,12 @@ class WebHook extends AbstractController
                     $em->flush();
 
                 }
+            }else{
+                $publicPath = $this->getParameter('kernel.project_dir') . '/public/log/musique';
+
+                $filePath = $publicPath . '/musique-'.$jsonData['event'].'-'.date('Y-m-d_H-i-s').'.json';
+
+                file_put_contents($filePath, $payload);
             }
         }
 
