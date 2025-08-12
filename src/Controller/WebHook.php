@@ -5,8 +5,15 @@ namespace App\Controller;
 use App\Entity\EpisodeShow;
 use App\Entity\Movie;
 use App\Entity\MovieShow;
+use App\Entity\Music;
+use App\Entity\MusicArtist;
+use App\Entity\MusicListen;
+use App\Entity\MusicTags;
 use App\Entity\SerieType;
 use App\Repository\MovieRepository;
+use App\Repository\MusicArtistRepository;
+use App\Repository\MusicRepository;
+use App\Repository\MusicTagsRepository;
 use App\Repository\SerieTypeRepository;
 use App\Service\AniListService;
 use App\Service\StrSpecialCharsLower;
@@ -28,16 +35,19 @@ class WebHook extends AbstractController
 
     #[Route('/webhook', name: 'webhook')]
     public function webhook(
-        UsersRepository      $usersRepository,
-        SerieRepository      $serieRepository,
-        EpisodeRepository    $episodeRepository,
-        MovieRepository      $movieRepository,
-        StrSpecialCharsLower $strSpecialCharsLower,
-        SerieTypeRepository  $serieTypeRepository,
-        TMDBService          $TMDBService,
-        TVDBService          $TVDBService,
-        AniListService       $aniListService,
-        ManagerRegistry      $managerRegistry
+        UsersRepository       $usersRepository,
+        SerieRepository       $serieRepository,
+        EpisodeRepository     $episodeRepository,
+        MovieRepository       $movieRepository,
+        MusicRepository       $musicRepository,
+        MusicArtistRepository $musicArtistRepository,
+        MusicTagsRepository   $musicTagsRepository,
+        StrSpecialCharsLower  $strSpecialCharsLower,
+        SerieTypeRepository   $serieTypeRepository,
+        TMDBService           $TMDBService,
+        TVDBService           $TVDBService,
+        AniListService        $aniListService,
+        ManagerRegistry       $managerRegistry
     ): Response
     {
 
@@ -104,7 +114,7 @@ class WebHook extends AbstractController
                     $em->flush();
                 }
 
-            } elseif($type !== "Musique") {
+            } else if ($type !== "Musique") {
 
                 $serieId = str_replace(["plex://show/"], [""], $jsonData['Metadata']['grandparentGuid']);
 
@@ -224,12 +234,58 @@ class WebHook extends AbstractController
                     $em->flush();
 
                 }
-            }else{
-                $publicPath = $this->getParameter('kernel.project_dir') . '/public/log/musique';
+            } else {
 
-                $filePath = $publicPath . '/musique-'.$jsonData['event'].'-'.date('Y-m-d_H-i-s').'.json';
+                dump($jsonData['Metadata']);
 
-                file_put_contents($filePath, $payload);
+                $music = $musicRepository->findOneBy(['name' => $jsonData['Metadata']['title']]);
+
+                if (!$music) {
+                    $music = new Music();
+
+                    $music->setName($jsonData['Metadata']['title']);
+
+                    $artist = $musicArtistRepository->findOneBy(['name' => $jsonData['Metadata']['grandparentTitle']]);
+
+                    if (!$artist) {
+
+                        $artist = new MusicArtist();
+
+                        $artist->setName($jsonData['Metadata']['grandparentTitle']);
+
+                        $em->persist($artist);
+                    }
+
+                    $music->setMusicArtist($artist);
+
+                    foreach ($jsonData['Metadata']['Genre'] as $genre) {
+
+                        $tag = $musicTagsRepository->findOneBy(['name' => $genre['tag']]);
+
+                        if (!$tag) {
+
+                            $tag = new MusicTags();
+
+                            $tag->setName($genre['tag']);
+                            $tag->setPlexId($genre['id']);
+
+                            $em->persist($tag);
+                        }
+
+                        $music->addMusicTag($tag);
+
+                    }
+                }
+
+                $em->persist($music);
+
+                $musicListen = new MusicListen();
+
+                $musicListen->setMusic($music);
+                $musicListen->setListenAt(new DateTime());
+
+                $em->persist($musicListen);
+                $em->flush();
             }
         }
 
