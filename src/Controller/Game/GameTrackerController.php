@@ -97,12 +97,35 @@ class GameTrackerController extends AbstractController
         if($gameTracker->getCompleteTime()){
             $form->get('completeTime')->setData($timeService->convertirSecondes($gameTracker->getCompleteTime()));
         }
-        
+
         return $this->render('game/game_tracker/edit.html.twig', [
             'controller_name' => 'GameTrackerController',
             'game' => $gameTracker->getGame(),
             'form' => $form->createView(),
             'navLinkId' => 'game',
+        ]);
+    }
+
+    #[Route('/{id}/delete', name: 'game_tracker_delete')]
+    public function delete(EntityManagerInterface $em, GameTrackerRepository $gameTrackerRepository, GameRepository $gameRepository, int $id): Response
+    {
+        $gameTracker = $gameTrackerRepository->find($id);
+
+        if (!$gameTracker){
+
+            $game = $gameRepository->find($id);
+
+            if (!$game){
+                $this->addFlash('error', 'Ce jeu n\'existe pas');
+                return $this->redirectToRoute('game');
+            }
+        }
+
+        $em->remove($gameTracker);
+        $em->flush();
+
+        return $this->redirectToRoute('game_details', [
+            'id' => $id
         ]);
     }
 }

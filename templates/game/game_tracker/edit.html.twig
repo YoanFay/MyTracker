@@ -9,10 +9,16 @@
             <div class="card-header">
                 Suivit de {{ game.name }}
             </div>
-                <div class="card-body">
+            <div class="card-body">
                 {{ form_start(form) }}
                 {{ form_end(form) }}
-                <a class="btn btn-secondary mt-1" href="{{ path('game_details', {'id': game.id}) }}">Retour</a>
+                <div class="d-flex justify-content-between">
+                    <a class="btn btn-secondary mt-1" href="{{ path('game_details', {'id': game.id}) }}">Retour</a>
+                    {% if game.gameTrackers|length > 0 %}
+                    <a class="btn btn-danger mt-1"
+                       href="{{ path('game_tracker_delete', {'id': game.id}) }}">Abandonner</a>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </div>
