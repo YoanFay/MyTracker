@@ -14,6 +14,7 @@ public/.htaccess
 /public/image/movie
 /public/image/game
 /var/
+/public/log/
 /vendor/
 /.idea/
 /templates/base.html copy.twig
