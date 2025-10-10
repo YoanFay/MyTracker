@@ -127,43 +127,43 @@ class WebHook extends AbstractController
                     }
                 }
 
-                $serie = $serieRepository->findOneBy(['plexId' => $serieId]);
-
-                if (!$serie and isset($episodeId)) {
-                    $tvdbSerieId = $TVDBService->getSerieIdByEpisodeId(intval($episodeId));
-
-                    $serie = $serieRepository->findOneBy(['tvdbId' => $tvdbSerieId]);
-                }
-
-                $serieType = $serieTypeRepository->findOneBy(['name' => $type]);
-
-                if (!$serieType) {
-                    $serieType = new SerieType();
-
-                    $serieType->setName($type);
-
-                    $em->persist($serieType);
-                    $em->flush();
-                }
-
-                if (!$serie) {
-                    $serie = new Serie;
-
-                    $serie->setPlexId($serieId);
-                    $serie->setName($jsonData['Metadata']['grandparentTitle']);
-                    $serie->setSerieType($serieType);
-
-                    $serie->setSlug($strSpecialCharsLower->serie($serie->getName()));
-
-                    $em->persist($serie);
-                    $em->flush();
-
-                    if ($serie->getSerieType()->getName() === "Anime") {
-                        $aniListService->setScore($serie);
-                    }
-                }
-
                 if ($jsonData['event'] === "media.scrobble") {
+
+                    $serie = $serieRepository->findOneBy(['plexId' => $serieId]);
+
+                    if (!$serie and isset($episodeId)) {
+                        $tvdbSerieId = $TVDBService->getSerieIdByEpisodeId(intval($episodeId));
+
+                        $serie = $serieRepository->findOneBy(['tvdbId' => $tvdbSerieId]);
+                    }
+
+                    $serieType = $serieTypeRepository->findOneBy(['name' => $type]);
+
+                    if (!$serieType) {
+                        $serieType = new SerieType();
+
+                        $serieType->setName($type);
+
+                        $em->persist($serieType);
+                        $em->flush();
+                    }
+
+                    if (!$serie) {
+                        $serie = new Serie;
+
+                        $serie->setPlexId($serieId);
+                        $serie->setName($jsonData['Metadata']['grandparentTitle']);
+                        $serie->setSerieType($serieType);
+
+                        $serie->setSlug($strSpecialCharsLower->serie($serie->getName()));
+
+                        $em->persist($serie);
+                        $em->flush();
+
+                        if ($serie->getSerieType()->getName() === "Anime") {
+                            $aniListService->setScore($serie);
+                        }
+                    }
 
                     $episodeId = null;
                     $episode = null;
