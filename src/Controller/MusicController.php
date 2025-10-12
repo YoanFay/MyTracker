@@ -132,8 +132,6 @@ class MusicController extends AbstractController
 
             $dataRecording = $MBService->searchRecording($dataRelease['id']);
 
-            dump($dataRecording);
-
             if ($dataRecording['count'] > 0 && isset($dataRecording['recordings'][0]['length'])) {
                 $dataRecording = $dataRecording['recordings'][0];
             } else {
