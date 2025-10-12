@@ -20,8 +20,7 @@ class MBService
         $curl = curl_init($apiUrl);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
-        curl_setopt($curl, CURLOPT_CAINFO, '/etc/ssl/certs/ca-certificates.crt');
-        curl_setopt($curl, CURLOPT_USERAGENT, 'python-musicbrainz/0.7.3');
+        curl_setopt($curl, CURLOPT_USERAGENT, 'MyTracker/1.0 (yoanfayolle.yf@gmail.com)');
 
         $response = curl_exec($curl);
 
