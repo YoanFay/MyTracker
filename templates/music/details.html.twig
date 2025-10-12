@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ music.name }}{% endblock %}
+
+{% block body %}
+
+    <div class="d-flex flex-lg-row flex-column-reverse justify-content-between p-3">
+        <div>
+            <h1 class="d-inline">{{ music.name }}</h1>
+            <br>
+            <div class="d-flex flex-column flex-wrap">
+                <div class="m-2">
+                    <ul>
+                        <li>
+                            <strong>Date d'écoute : </strong>
+                            {% if music.musicListens|length == 1 %}
+                                {{ music.musicListens.0.listenAt|dateFNoDay }}
+                            {% else %}
+                                <ul>
+                                    {% for musicListen in music.musicListens %}
+                                        <li>{{ musicListen.listenAt|dateFNoDay }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </li>
+                        <li>
+                            <strong>Durée : </strong>{#{{ music.duration|MsToHM }}#}
+                        </li>
+                    </ul>
+                </div>
+                <div class="m-2">
+                    <strong>Tags : </strong>
+                    <ul>
+                        {% for tag in musicTags %}
+                            <li>{{ tag.name }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <a class="btn btn-primary" href="{{ path('music') }}">Retour</a>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascript %}
+
+    <script>
+        $(document).ready(function () {
+            if ('ontouchstart' in document.documentElement) {
+                $('[data-toggle="tooltip"]').on('click', function () {
+                    $(this).tooltip('show');
+                });
+            } else {
+                $('[data-toggle="tooltip"]').tooltip();
+            }
+        });
+    </script>
+
+{% endblock %}

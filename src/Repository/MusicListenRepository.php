@@ -21,6 +21,41 @@ class MusicListenRepository extends ServiceEntityRepository
         parent::__construct($registry, MusicListen::class);
     }
 
+
+    /**
+     * @return float|int|mixed|string|null
+     */
+    public function findMonth(): mixed
+    {
+
+        return $this->createQueryBuilder('ml')
+            ->select("DATE_FORMAT(ml.listenAt, '%Y-%m') AS DATE")
+            ->leftJoin('ml.music', 'm')
+            ->addGroupBy("DATE")
+            ->getQuery()
+            ->getResult();
+    }
+
+
+    /**
+     * @return float|int|mixed|string|null
+     */
+    public function findByDate(string $year, string $month): mixed
+    {
+
+        $param = $year.'-%';
+
+        if ($month = 0){
+            $param = $year.'-'.$month.'-%';
+        }
+
+        return $this->createQueryBuilder('ml')
+            ->andWhere('ml.listenAt LIKE :date')
+            ->setParameter('date', $param)
+            ->getQuery()
+            ->getResult();
+    }
+
 //    /**
 //     * @return MusicListen[] Returns an array of MusicListen objects
 //     */

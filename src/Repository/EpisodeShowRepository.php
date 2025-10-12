@@ -66,9 +66,15 @@ class EpisodeShowRepository extends ServiceEntityRepository
     public function findByDate(string $year, string $month): mixed
     {
 
+        $param = $year.'-%';
+
+        if ($month = 0){
+            $param = $year.'-'.$month.'-%';
+        }
+
         return $this->createQueryBuilder('es')
             ->andWhere('es.showDate LIKE :date')
-            ->setParameter('date', $year.'-'.$month.'-%')
+            ->setParameter('date', $param)
             ->getQuery()
             ->getResult();
     }

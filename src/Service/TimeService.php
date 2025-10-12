@@ -7,12 +7,12 @@ use Exception;
 
 class TimeService
 {
-    
+
     public function convertirSecondes(int $secondes): string
     {
         $minutes = floor($secondes / 60);
         $heures = floor($minutes / 60);
-        
+
         // Reste des minutes après la conversion en heures
         $minutes %= 60;
 
@@ -21,8 +21,25 @@ class TimeService
         }elseif ($minutes < 10){
             return $heures.'h0'.$minutes;
         }
-        
+
         return $heures.'h'.$minutes;
+    }
+
+    public function convertirMillisecondeToMinuteSeconde(int $milliseconde): string
+    {
+        $secondes = $milliseconde / 1000;
+        $minutes = floor($secondes / 60);
+
+        // Reste des minutes après la conversion en heures
+        $secondes %= 60;
+
+        if ($secondes === 0){
+            return $minutes.'s';
+        }elseif ($secondes < 10){
+            return $minutes.'min0'.$secondes;
+        }
+
+        return $minutes.'min'.$secondes;
     }
     
     public function convertirHeureMinute(?int $heures = 0, ?int $minutes = 0): float|int|null

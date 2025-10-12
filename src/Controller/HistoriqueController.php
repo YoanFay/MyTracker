@@ -584,7 +584,7 @@ class HistoriqueController extends AbstractController
 
         return $this->render('historique/historiqueDate.html.twig', [
             'year' => $year,
-            'month' => $listMonth[$month],
+            'month' => $listMonth[$month]??null,
             'dataByDate' => $dataByDate,
             'globalDuration' => $globalDuration,
             'daysSinceStartOfYear' => $daysSinceStartOfYear,

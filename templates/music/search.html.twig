@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Recherche musique{% endblock %}
+
+{% block body %}
+
+    <div class="d-flex flex-column justify-content-between p-3">
+
+        {% for music in musicList %}
+
+            <div class="d-flex flex-row align-items-center my-2">
+                <p class="m-0">{{ music.musicArtist.name }} - {{ music.name }}</p>
+                <button id="searchButton-{{music.id}}" class="btn btn-primary ms-2" onclick="search({{music.id}})">Recherche</button>
+                <p class="m-0 mx-2" id="searchResult-{{music.id}}"></p>
+                <button id="registerButton-{{music.id}}" class="btn btn-primary ms-2 d-none" onclick="register({{music.id}})" data-id="">Enregistrer</button>
+                <i id="resultTrue-{{music.id}}" class="material-icons ms-1 text-success d-none">check_circle</i>
+                <i id="resultFalse-{{music.id}}" class="material-icons ms-1 text-danger d-none">cancel</i>
+                <div id="load-{{music.id}}" class="spinner-border d-none" role="status">
+                    <span class="sr-only"></span>
+                </div>
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+{% endblock %}
+
+{% block javascript %}
+
+    <script>
+        function search(id){
+
+            $("#searchButton-"+id).addClass("d-none")
+            $("#load-"+id).removeClass("d-none")
+
+            $.ajax({
+                url: "{{ path('music_search_mbid') }}",
+                method: "POST",
+                data: {
+                    'id': id
+                },
+                success: function (data) {
+                    if (data.result){
+                        $("#searchResult-"+id).html(" /// " + data.result)
+                        $("#registerButton-"+id).removeClass('d-none').attr('data-id', data.mbid)
+
+                    }else{
+                        $("#searchResult-"+id).html(" /// Pas de résultat")
+                    }
+                    $("#load-"+id).addClass("d-none")
+
+                }
+            })
+        }
+        function register(id){
+
+            $("#load-"+id).removeClass("d-none")
+
+            let btn = $("#registerButton-"+id)
+
+            btn.addClass("d-none");
+
+            let mbid = btn.attr('data-id');
+
+            $.ajax({
+                url: "{{ path('music_search_mbid_register') }}",
+                method: "POST",
+                data: {
+                    'id': id,
+                    'mbid': mbid
+                },
+                success: function (data) {
+                    if(data){
+                        $('#resultTrue-'+id).removeClass('d-none')
+                    }else{
+                        $('#resultFalse-'+id).removeClass('d-none')
+                    }
+                    $("#load-"+id).addClass("d-none")
+                }
+            })
+        }
+    </script>
+
+{% endblock %}
