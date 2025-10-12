@@ -41,6 +41,7 @@
                     'id': id
                 },
                 success: function (data) {
+                    console.log(data)
                     if (data.result){
                         $("#searchResult-"+id).html(" /// " + data.result)
                         $("#registerButton-"+id).removeClass('d-none').attr('data-id', data.mbid)
@@ -71,6 +72,7 @@
                     'mbid': mbid
                 },
                 success: function (data) {
+                    console.log(data)
                     if(data){
                         $('#resultTrue-'+id).removeClass('d-none')
                     }else{
