@@ -12,19 +12,19 @@
                 <div class="m-2">
                     <ul>
                         <li>
-                            <strong>Date d'écoute : </strong>
+                            <strong>Heure d'écoute : </strong>
                             {% if music.musicListens|length == 1 %}
-                                {{ music.musicListens.0.listenAt|dateFNoDay }}
+                                {{ music.musicListens.0.listenAt|dateFNoDayWithHour }}
                             {% else %}
                                 <ul>
                                     {% for musicListen in music.musicListens %}
-                                        <li>{{ musicListen.listenAt|dateFNoDay }}</li>
+                                        <li>{{ musicListen.listenAt|dateFNoDayWithHour }}</li>
                                     {% endfor %}
                                 </ul>
                             {% endif %}
                         </li>
                         <li>
-                            <strong>Durée : </strong>{#{{ music.duration|MsToHM }}#}
+                            <strong>Durée : </strong>{%if music.duration%}{{ music.duration|MsToMS }}{%endif%}
                         </li>
                     </ul>
                 </div>

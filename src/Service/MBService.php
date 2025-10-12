@@ -19,7 +19,7 @@ class MBService
 
         $curl = curl_init($apiUrl);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($curl, CURLOPT_USERAGENT, 'MyTracker/1.0 (yoanfayolle.yf@gmail.com)');
 
         $response = curl_exec($curl);

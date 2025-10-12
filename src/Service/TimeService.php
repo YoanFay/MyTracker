@@ -41,6 +41,19 @@ class TimeService
 
         return $minutes.'min'.$secondes;
     }
+
+    public function convertirMinuteSecondeToMilliseconde(string $time): string
+    {
+
+        $time = explode('min', $time);
+
+        $minutes = $time[0];
+        $secondes = $time[1]??0;
+
+        $secondes += $minutes*60;
+
+        return $secondes * 1000;
+    }
     
     public function convertirHeureMinute(?int $heures = 0, ?int $minutes = 0): float|int|null
     {

@@ -19,6 +19,7 @@ class FrenchDateExtension extends AbstractExtension
 // Reference: https://twig.symfony.com/doc/2.x/advanced.html#automatic-escaping
             new TwigFilter('dateF', [$this, 'frenchFormatDate']),
             new TwigFilter('dateFNoDay', [$this, 'frenchFormatDateNoDay']),
+            new TwigFilter('dateFNoDayWithHour', [$this, 'frenchFormatDateNoDayWithHour']),
         ];
     }
 
@@ -136,5 +137,36 @@ class FrenchDateExtension extends AbstractExtension
 
         // Affichage de la date
         return $numeroJour.$suffixe." ".$mois." ".$annee;
+    }
+
+
+    /**
+     * @throws Exception
+     */
+    public function frenchFormatDateNoDayWithHour(mixed $date): string
+    {
+
+        if (is_string($date)) {
+            $date = new DateTime($date);
+        }
+
+        // Numéro du jour avec suffixe (1er, 2e, etc.)
+        $numeroJour = $date->format('j');
+        $suffixe = ($numeroJour == 1) ?
+            'er' :
+            '';
+
+        // Mois
+        $moisEnFrancais = array(
+            'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet',
+            'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'
+        );
+        $mois = $moisEnFrancais[$date->format('n') - 1];
+
+        // Année
+        $annee = $date->format('Y');
+
+        // Affichage de la date
+        return $numeroJour.$suffixe." ".$mois." ".$annee.' - '.$date->format('h').':'.$date->format('i');
     }
 }

@@ -99,7 +99,7 @@ class MusicController extends AbstractController
     public function search(MusicRepository $musicRepository): Response
     {
 
-        $musicList = $musicRepository->findBy(['mbid' => null]);
+        $musicList = $musicRepository->findBy(['duration' => null]);
 
         return $this->render('music\search.html.twig', [
             'navLinkId' => 'music',
@@ -161,6 +161,30 @@ class MusicController extends AbstractController
 
             $music->setMbid($mbid);
             $music->setDuration($MBService->searchRecording($mbid)['recordings'][0]['length']);
+
+            $managerRegistry->getManager()->persist($music);
+            $managerRegistry->getManager()->flush();
+
+            return new Response(true);
+        } catch (Exception) {
+            return new Response(false);
+        }
+
+    }
+
+
+    #[Route('/search/mbid/register/manually', name: 'music_search_mbid_register_manually')]
+    public function registerManually(ManagerRegistry $managerRegistry, Request $request, MusicRepository $musicRepository, TimeService $timeService,): Response
+    {
+
+        $id = $request->request->get('id');
+        $time = $request->request->get('time');
+
+        $music = $musicRepository->find($id);
+
+        try {
+
+            $music->setDuration($timeService->convertirMinuteSecondeToMilliseconde($time));
 
             $managerRegistry->getManager()->persist($music);
             $managerRegistry->getManager()->flush();

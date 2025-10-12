@@ -16,6 +16,7 @@ class MsToHM extends AbstractExtension
 // parameter: ['is_safe' => ['html']]
 // Reference: https://twig.symfony.com/doc/2.x/advanced.html#automatic-escaping
             new TwigFilter('MsToHM', [$this, 'convertirMillisecondesEnHeureMinute']),
+            new TwigFilter('MsToMS', [$this, 'convertirMillisecondesEnMinutesSecondes']),
             new TwigFilter('SToHM', [$this, 'convertirSecondesEnHeureMinute']),
         ];
     }
@@ -37,6 +38,24 @@ class MsToHM extends AbstractExtension
         $formatHeureMinute = $heures."h".$minutes;
 
         return $formatHeureMinute;
+    }
+
+    public function convertirMillisecondesEnMinutesSecondes(int $millisecondes): string
+    {
+        $secondes = $millisecondes / 1000;
+        $minutes = floor($secondes / 60);
+
+        // Reste des minutes après la conversion en heures
+        $secondes %= 60;
+
+        if ($secondes === 0){
+            return $minutes.'s';
+        }elseif ($secondes < 10){
+            return $minutes.'min0'.$secondes;
+        }
+
+        return $minutes.'min'.$secondes;
+
     }
 
     public function convertirSecondesEnHeureMinute(int $secondes): string

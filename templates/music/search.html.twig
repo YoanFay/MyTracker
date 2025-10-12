@@ -13,6 +13,7 @@
                 <button id="searchButton-{{music.id}}" class="btn btn-primary ms-2" onclick="search({{music.id}})">Recherche</button>
                 <p class="m-0 mx-2" id="searchResult-{{music.id}}"></p>
                 <button id="registerButton-{{music.id}}" class="btn btn-primary ms-2 d-none" onclick="register({{music.id}})" data-id="">Enregistrer</button>
+                <button id="registerManuallyButton-{{music.id}}" class="btn btn-primary ms-2 d-none" onclick="registerManually({{music.id}})">Enregistrer manuellement</button>
                 <i id="resultTrue-{{music.id}}" class="material-icons ms-1 text-success d-none">check_circle</i>
                 <i id="resultFalse-{{music.id}}" class="material-icons ms-1 text-danger d-none">cancel</i>
                 <div id="load-{{music.id}}" class="spinner-border d-none" role="status">
@@ -45,15 +46,18 @@
                     if (data.result){
                         $("#searchResult-"+id).html(" /// " + data.result)
                         $("#registerButton-"+id).removeClass('d-none').attr('data-id', data.mbid)
+                        $("#registerManuallyButton-"+id).removeClass('d-none')
 
                     }else{
                         $("#searchResult-"+id).html(" /// Pas de résultat")
+                        $("#registerManuallyButton-"+id).removeClass('d-none')
                     }
                     $("#load-"+id).addClass("d-none")
 
                 }
             })
         }
+
         function register(id){
 
             $("#load-"+id).removeClass("d-none")
@@ -70,6 +74,41 @@
                 data: {
                     'id': id,
                     'mbid': mbid
+                },
+                success: function (data) {
+                    console.log(data)
+                    if(data){
+                        $('#resultTrue-'+id).removeClass('d-none')
+                    }else{
+                        $('#resultFalse-'+id).removeClass('d-none')
+                    }
+                    $("#load-"+id).addClass("d-none")
+                }
+            })
+        }
+
+        function registerManually(id){
+
+
+            let btn = $("#registerButton-"+id)
+
+            btn.addClass("d-none");
+
+            let time = prompt('Combien de temps dure la musique ?');
+
+            if(time){
+                $("#registerManuallyButton-"+id).addClass('d-none')
+                $("#load-"+id).removeClass("d-none")
+            }else{
+                return
+            }
+
+            $.ajax({
+                url: "{{ path('music_search_mbid_register_manually') }}",
+                method: "POST",
+                data: {
+                    'id': id,
+                    'time': time
                 },
                 success: function (data) {
                     console.log(data)
