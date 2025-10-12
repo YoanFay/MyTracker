@@ -66,7 +66,7 @@ class MovieShowRepository extends ServiceEntityRepository
 
         $param = $year.'-%';
 
-        if ($month == 0){
+        if ($month != 0){
             $param = $year.'-'.$month.'-%';
         }
 
