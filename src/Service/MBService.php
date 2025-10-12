@@ -19,8 +19,8 @@ class MBService
 
         $curl = curl_init($apiUrl);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($curl, CURLOPT_CAINFO, '/etc/ssl/certs/ca-certificates.crt');
         curl_setopt($curl, CURLOPT_USERAGENT, 'python-musicbrainz/0.7.3');
 
         $response = curl_exec($curl);
