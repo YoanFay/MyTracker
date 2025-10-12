@@ -29,7 +29,7 @@ class MusicListenRepository extends ServiceEntityRepository
     {
 
         return $this->createQueryBuilder('ml')
-            ->select("DATE_FORMAT(ml.listenAt, '%Y-%m') AS DATE")
+            ->select("DATE_FORMAT(ml.listenAt, '%Y-%m') AS DATE, SUM(m.duration) AS DURATION")
             ->leftJoin('ml.music', 'm')
             ->addGroupBy("DATE")
             ->getQuery()

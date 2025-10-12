@@ -79,21 +79,13 @@ class MusicController extends AbstractController
                 ];
             }
 
-            /*$listDate[$year][$month] += $date['DURATION'];
+            $listDate[$year][$month]['duration'] += $date['DURATION'];
 
-            $listDate[$year]['total'] += $date['DURATION'];*/
-
-            dump($listDate[$year][$month]);
-
-            $listDate[$year][$month]['duration'] += 2;
-
-            $listDate[$year]['total'] += 2;
+            $listDate[$year]['total'] += $date['DURATION'];
 
         }
 
         krsort($listDate);
-
-        dump($listDate);
 
         return $this->render('music\index.html.twig', [
             'list' => $listDate,
@@ -219,13 +211,11 @@ class MusicController extends AbstractController
 
         $musicsListen = $musicListenRepository->findByDate($year, $month);
 
-        dump($musicsListen);
-
         foreach ($musicsListen as $musicListen) {
 
             $dateKey = $musicListen->getListenAt()->format("Y-m-d");
             $music = $musicListen->getMusic();
-            $duration = $music->getDuration() ?? 2;
+            $duration = $music->getDuration();
 
             if (!array_key_exists($dateKey, $dataByDate)) {
                 $dataByDate[$dateKey] = [
