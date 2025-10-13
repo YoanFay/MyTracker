@@ -99,7 +99,7 @@ class MusicController extends AbstractController
     public function search(MusicRepository $musicRepository): Response
     {
 
-        $musicList = $musicRepository->findBy(['duration' => null]);
+        $musicList = $musicRepository->findBy(['duration' => null], ['name' => 'ASC']);
 
         return $this->render('music\search.html.twig', [
             'navLinkId' => 'music',

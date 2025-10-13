@@ -9,11 +9,11 @@
         {% for music in musicList %}
 
             <div class="d-flex flex-row align-items-center my-2">
-                <p class="m-0">{{ music.musicArtist.name }} - {{ music.name }}</p>
-                <button id="searchButton-{{music.id}}" class="btn btn-primary ms-2" onclick="search({{music.id}})">Recherche</button>
+                <p class="m-0">{{ music.name }} - {{ music.musicArtist.name }}</p>
+                {#<button id="searchButton-{{music.id}}" class="btn btn-primary ms-2" onclick="search({{music.id}})">Recherche</button>
                 <p class="m-0 mx-2" id="searchResult-{{music.id}}"></p>
-                <button id="registerButton-{{music.id}}" class="btn btn-primary ms-2 d-none" onclick="register({{music.id}})" data-id="">Enregistrer</button>
-                <button id="registerManuallyButton-{{music.id}}" class="btn btn-primary ms-2 d-none" onclick="registerManually({{music.id}})">Enregistrer manuellement</button>
+                <button id="registerButton-{{music.id}}" class="btn btn-primary ms-2 d-none" onclick="register({{music.id}})" data-id="">Enregistrer</button>#}
+                <button id="registerManuallyButton-{{music.id}}" class="btn btn-primary ms-2" onclick="registerManually({{music.id}})">Enregistrer manuellement</button>
                 <i id="resultTrue-{{music.id}}" class="material-icons ms-1 text-success d-none">check_circle</i>
                 <i id="resultFalse-{{music.id}}" class="material-icons ms-1 text-danger d-none">cancel</i>
                 <div id="load-{{music.id}}" class="spinner-border d-none" role="status">
@@ -30,7 +30,7 @@
 {% block javascript %}
 
     <script>
-        function search(id){
+        {#function search(id){
 
             $("#searchButton-"+id).addClass("d-none")
             $("#load-"+id).removeClass("d-none")
@@ -85,7 +85,7 @@
                     $("#load-"+id).addClass("d-none")
                 }
             })
-        }
+        }#}
 
         function registerManually(id){
 
