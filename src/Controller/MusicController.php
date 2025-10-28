@@ -2,13 +2,15 @@
 
 namespace App\Controller;
 
-use App\Repository\EpisodeShowRepository;
-use App\Repository\MovieShowRepository;
+use App\Form\MusicType;
+use App\Repository\MusicArtistRepository;
 use App\Repository\MusicListenRepository;
 use App\Repository\MusicRepository;
-use App\Repository\SerieTypeRepository;
+use App\Repository\MusicTagsRepository;
+use App\Service\CoverArchiveService;
 use App\Service\MBService;
 use App\Service\TimeService;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,73 +27,118 @@ class MusicController extends AbstractController
     public function index(MusicListenRepository $musicListenRepository): Response
     {
 
-        $listMonth = [
-            '01' => 'janvier',
-            '02' => 'fevrier',
-            '03' => 'mars',
-            '04' => 'avril',
-            '05' => 'mai',
-            '06' => 'juin',
-            '07' => 'juillet',
-            '08' => 'aout',
-            '09' => 'septembre',
-            '10' => 'octobre',
-            '11' => 'novembre',
-            '12' => 'decembre'
-        ];
-
-        $dates = $musicListenRepository->findMonth();
-
-        /** @var array<string, mixed> $listDate */
-        $listDate = [];
-
-        foreach ($dates as $date) {
-
-            $explode = explode('-', $date['DATE']);
-
-            $year = $explode[0];
-            $month = $listMonth[$explode[1]];
-            $idMonth = $explode[1];
-
-            if (!array_key_exists($year, $listDate)) {
-
-                $listDate[$year] = [
-                    'janvier' => [],
-                    'fevrier' => [],
-                    'mars' => [],
-                    'avril' => [],
-                    'mai' => [],
-                    'juin' => [],
-                    'juillet' => [],
-                    'aout' => [],
-                    'septembre' => [],
-                    'octobre' => [],
-                    'novembre' => [],
-                    'decembre' => [],
-                    'total' => 0,
-                ];
-            }
-
-            if ($listDate[$year][$month] === []) {
-                $listDate[$year][$month] = [
-                    'duration' => 0,
-                    'id' => $idMonth,
-                ];
-            }
-
-            $listDate[$year][$month]['duration'] += $date['DURATION'];
-
-            $listDate[$year]['total'] += $date['DURATION'];
-
-        }
-
-        krsort($listDate);
-
         return $this->render('music\index.html.twig', [
-            'list' => $listDate,
             'navLinkId' => 'music',
         ]);
 
+    }
+
+
+    #[Route('/list', name: 'music_list')]
+    public function list(MusicRepository $musicRepository, Request $request): Response
+    {
+
+        $text = $request->request->get('text');
+
+        $musics = $musicRepository->findByName($text);
+
+        return $this->render('music\list.html.twig', [
+            'musics' => $musics,
+            'navLinkId' => 'music',
+        ]);
+    }
+
+
+    #[Route('/tags', name: 'music_tags')]
+    public function tags(MusicListenRepository $musicListenRepository): Response
+    {
+
+        $tags = $musicListenRepository->getListenByTags();
+
+        $listTags = [
+            'saison' => [],
+            'type' => [],
+            'annee' => [],
+            'animeTag' => [],
+            'origin' => [],
+        ];
+
+        foreach ($tags as $key => $tag) {
+
+            if (is_numeric($tag['NAME'])) {
+                $listTags['annee'][] = $tag;
+                unset($tags[$key]);
+            } else if (in_array($tag['NAME'], ['Printemps', 'Été', 'Automne', 'Hiver'])) {
+                $listTags['saison'][] = $tag;
+                unset($tags[$key]);
+            } else if (in_array($tag['NAME'], ['Anime', 'Film', 'Série', 'Jeux'])) {
+                $listTags['type'][] = $tag;
+                unset($tags[$key]);
+            } else if (in_array($tag['NAME'], ['Opening', 'Insert', 'Ending', 'OST'])) {
+                $listTags['animeTag'][] = $tag;
+                unset($tags[$key]);
+            } else {
+                $listTags['origin'][] = $tag;
+                unset($tags[$key]);
+            }
+
+        }
+
+        return $this->render('music\musicTags.html.twig', [
+            'navLinkId' => 'music',
+            'listTags' => $listTags
+        ]);
+    }
+
+
+    /**
+     * @throws NonUniqueResultException
+     */
+    #[Route('/tags/details/{id}', name: 'music_tags_details')]
+    public function tagDetails(MusicTagsRepository $musicTagsRepository, MusicListenRepository $musicListenRepository, $id): Response
+    {
+
+        $tag = $musicTagsRepository->find($id);
+
+        $listen = $musicListenRepository->getListenByOneTag($tag)['LISTEN'];
+
+        return $this->render('music\musicTagDetails.html.twig', [
+            'navLinkId' => 'music',
+            'tag' => $tag,
+            'listen' => $listen
+        ]);
+    }
+
+
+    #[Route('/artist', name: 'music_artists')]
+    public function artists(MusicListenRepository $musicListenRepository): Response
+    {
+
+        $artists = $musicListenRepository->getListenByArtist();
+
+        return $this->render('music\musicArtists.html.twig', [
+            'navLinkId' => 'music',
+            'artists' => $artists
+        ]);
+    }
+
+
+    /**
+     * @throws NonUniqueResultException
+     */
+    #[Route('/artist/details/{id}', name: 'music_artists_details')]
+    public function artistDetails(MusicArtistRepository $musicArtistRepository, MusicListenRepository $musicListenRepository, $id): Response
+    {
+
+        $artist = $musicArtistRepository->find($id);
+
+        $listen = $musicListenRepository->getListenByOneArtist($artist)['LISTEN'];
+
+        return $this->render('music\musicArtistDetails.html.twig', [
+            'navLinkId' => 'music',
+            'artist' => $artist,
+            'listen' => $listen
+        ]);
     }
 
 
@@ -197,7 +244,7 @@ class MusicController extends AbstractController
     }
 
 
-    #[Route('/detail/{id}', name: 'music_detail')]
+    #[Route('/detail/{id}', name: 'music_details')]
     public function detail(MusicRepository $musicRepository, int $id): Response
     {
 
@@ -205,11 +252,13 @@ class MusicController extends AbstractController
 
         if (!$music) {
 
-            $this->addFlash('error', 'Musique non trouvé');
+            $this->addFlash('error', 'music non trouvé');
 
             return $this->redirectToRoute('music');
 
         }
+
+        $totalListen = count($music->getMusicListens()->getValues()) * $music->getDuration();
 
         $musicTags = $music->getMusicTags();
 
@@ -217,16 +266,136 @@ class MusicController extends AbstractController
             'controller_name' => 'MusicController',
             'music' => $music,
             'musicTags' => $musicTags,
+            'totalListen' => $totalListen,
             'navLinkId' => 'music',
         ]);
     }
 
 
     /**
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Psr\Cache\InvalidArgumentException
+     */
+    #[Route('/edit/{id}', name: 'music_edit')]
+    public function edit(ManagerRegistry $managerRegistry, CoverArchiveService $coverArchiveService, MusicRepository $musicRepository, Request $request, int $id): Response
+    {
+
+        $music = $musicRepository->findOneBy(['id' => $id]);
+
+        if (!$music) {
+
+            $this->addFlash('error', 'Musique non trouvée');
+
+            return $this->redirectToRoute('music');
+
+        }
+
+        $form = $this->createForm(MusicType::class, $music);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $check = $coverArchiveService->updateArtwork($music);
+
+            if (!$check) {
+                $music->setMbid(null);
+            }
+
+            $managerRegistry->getManager()->persist($music);
+            $managerRegistry->getManager()->flush();
+
+            return $this->redirectToRoute('music_details', ['id' => $id]);
+        }
+
+        return $this->render('music/edit.html.twig', [
+            'controller_name' => 'MusicController',
+            'form' => $form->createView(),
+            'music' => $music,
+            'navLinkId' => 'music_edit',
+        ]);
+    }
+
+
+    #[Route('/history', name: 'music_history')]
+    public function history(MusicListenRepository $musicListenRepository): Response
+    {
+
+        $listMonth = [
+            '01' => 'janvier',
+            '02' => 'fevrier',
+            '03' => 'mars',
+            '04' => 'avril',
+            '05' => 'mai',
+            '06' => 'juin',
+            '07' => 'juillet',
+            '08' => 'aout',
+            '09' => 'septembre',
+            '10' => 'octobre',
+            '11' => 'novembre',
+            '12' => 'decembre'
+        ];
+
+        $dates = $musicListenRepository->findMonth();
+
+        /** @var array<string, mixed> $listDate */
+        $listDate = [];
+
+        foreach ($dates as $date) {
+
+            $explode = explode('-', $date['DATE']);
+
+            $year = $explode[0];
+            $month = $listMonth[$explode[1]];
+            $idMonth = $explode[1];
+
+            if (!array_key_exists($year, $listDate)) {
+
+                $listDate[$year] = [
+                    'janvier' => [],
+                    'fevrier' => [],
+                    'mars' => [],
+                    'avril' => [],
+                    'mai' => [],
+                    'juin' => [],
+                    'juillet' => [],
+                    'aout' => [],
+                    'septembre' => [],
+                    'octobre' => [],
+                    'novembre' => [],
+                    'decembre' => [],
+                    'total' => 0,
+                ];
+            }
+
+            if ($listDate[$year][$month] === []) {
+                $listDate[$year][$month] = [
+                    'duration' => 0,
+                    'id' => $idMonth,
+                ];
+            }
+
+            $listDate[$year][$month]['duration'] += $date['DURATION'];
+
+            $listDate[$year]['total'] += $date['DURATION'];
+
+        }
+
+        krsort($listDate);
+
+        return $this->render('music\history.html.twig', [
+            'list' => $listDate,
+            'navLinkId' => 'music',
+        ]);
+
+    }
+
+
+    /**
      * @throws Exception
      */
-    #[Route('/{year}/{month}', name: 'music_date')]
-    public function historiqueDate(MusicListenRepository $musicListenRepository, string $year = '0', string $month = '0'): Response
+    #[Route('/history/{year}/{month}', name: 'music_date')]
+    public function historyDate(MusicListenRepository $musicListenRepository, string $year = '0', string $month = '0'): Response
     {
 
         $globalDuration = 0;

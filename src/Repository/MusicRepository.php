@@ -18,7 +18,23 @@ class MusicRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
+
         parent::__construct($registry, Music::class);
+    }
+
+
+    /**
+     * @return Music[] Returns an array of Music objects
+     */
+    public function findByName($name): array
+    {
+        $name = '%'.$name.'%';
+
+        return $this->createQueryBuilder('m')
+            ->andWhere('m.name LIKE :name')
+            ->setParameter('name', $name)
+            ->getQuery()
+            ->getResult();
     }
 
 //    /**

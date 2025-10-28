@@ -39,7 +39,6 @@ class GameController extends AbstractController
     #[Route('/', name: 'game', methods: ['GET'])]
     public function index(): Response
     {
-
         return $this->render('game/game/index.html.twig', [
             'navLinkId' => 'game'
         ]);
@@ -250,7 +249,7 @@ class GameController extends AbstractController
 
             // RELEASE DATE
 
-            $body = 'fields *;where game = '.$idGame.' & platform = '.$platformId.' & (status=6 | status = null) & (region=1 | region=8);';
+            $body = 'fields *;where game = '.$idGame.' & platform = '.$platformId.' & (status=6 | status = null) & (release_region=1 | release_region=8);';
 
             $dataReleaseDate = $IGDBService->getData('release_dates', $body)[0];
             $date = new DateTime();

@@ -1,37 +1,66 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Historique{% endblock %}
+{% block title %}Liste des musiques{% endblock %}
 
 {% block body %}
+    <h1 class="d-inline">Liste des musiques</h1>
 
-    <table class="table table-hover">
-        <thead class="thead-light">
-        <tr>
-            <th class="px-1" scope="col">Mois</th>
-            <th class="px-1" scope="col">Total</th>
-        </tr>
-        </thead>
+    <div id="searchDiv" class="mt-4 ms-2">
+        <label class="col-12">Recherche</label>
+        <div class="d-flex flex-row">
+            <input id="search" type="text" class="form-control me-2" onkeyup="search()">
+        </div>
+    </div>
 
-        <tbody>
-                {% for yearName, year in list %}
-            <tr class="table-secondary">
-                <th><a class="text-decoration-none text-black" href='{{path("music_date", {"year": yearName})}}'>{{ yearName }}</a></th>
-                <td>{{ year.total|MsToHM }}</td>
-            </tr>
-        </tbody>
-        <tbody>
-            <div>
-            {% for monthName, month in year %}
-            {% if 'total' not in monthName and month != [] %}
-            <tr>
-                <td><a class="text-decoration-none text-black" href='{{path("music_date", {"year": yearName, "month": month.id})}}'>{{ monthName|capitalize|replace({"Fevrier": "Février", "Aout": "Août", "Decembre": "Décembre"}) }}</a></td>
-                <td>{{ month.duration|MsToHM }}</td>
-            <tr>
-        {% endif %}
-        {% endfor %}
+
+    <div id="musicList" class="col-12 d-flex flex-row justify-content-between flex-wrap">
+
+    </div>
+    <div id="loadSpin" class="col-12 d-flex flex-row h-75">
+        <div class="card-body py-1 py-lg-0 h-100">
+            <div class="d-flex justify-content-center align-items-center h-100">
+                <div class="spinner-border" role="status">
+                    <span class="sr-only"></span>
+                </div>
             </div>
-        </tbody>
-        {% endfor %}
-    </table>
+        </div>
+    </div>
+{% endblock %}
 
+{% block javascript %}
+    <script>
+
+        $.ajax({
+            url: "{{ path('music_list') }}",
+            method: "POST",
+            success: function (data) {
+                $("#musicList").html(data);
+                $('#loadSpin').addClass('d-none');
+            }
+        })
+
+        function search() {
+
+            const text = $('#search').val();
+
+            console.log(text);
+
+            $.ajax({
+                url: "{{ path('music_list') }}",
+                method: "POST",
+                data: {
+                    'text': text,
+                },
+                success: function (data) {
+                    $("#musicList").html(data);
+                    $('#loadSpin').addClass('d-none');
+                }
+            })
+        }
+
+        function openDetail(href) {
+            window.location = href;
+        }
+
+    </script>
 {% endblock %}

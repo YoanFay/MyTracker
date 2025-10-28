@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\MusicListen;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -18,6 +19,7 @@ class MusicListenRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
+
         parent::__construct($registry, MusicListen::class);
     }
 
@@ -45,7 +47,7 @@ class MusicListenRepository extends ServiceEntityRepository
 
         $param = $year.'-%';
 
-        if ($month != 0){
+        if ($month != 0) {
             $param = $year.'-'.$month.'-%';
         }
 
@@ -54,6 +56,68 @@ class MusicListenRepository extends ServiceEntityRepository
             ->setParameter('date', $param)
             ->getQuery()
             ->getResult();
+    }
+
+
+    public function getListenByTags(): array
+    {
+
+        return $this->createQueryBuilder('ml')
+            ->select('mt.id AS ID, mt.name AS NAME, SUM(m.duration) AS LISTEN')
+            ->leftJoin('ml.music', 'm')
+            ->leftJoin('m.musicTags', 'mt')
+            ->groupBy('NAME')
+            ->orderBy('LISTEN', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+
+    public function getListenByArtist(): array
+    {
+
+        return $this->createQueryBuilder('ml')
+            ->select('ma.id AS ID, ma.name AS NAME, SUM(m.duration) AS LISTEN')
+            ->leftJoin('ml.music', 'm')
+            ->leftJoin('m.musicArtist', 'ma')
+            ->groupBy('NAME')
+            ->orderBy('NAME', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+
+    /**
+     * @throws NonUniqueResultException
+     */
+    public function getListenByOneTag($tag): array
+    {
+
+        return $this->createQueryBuilder('ml')
+            ->select('SUM(m.duration) AS LISTEN')
+            ->leftJoin('ml.music', 'm')
+            ->leftJoin('m.musicTags', 'mt')
+            ->andWhere('mt = :tag')
+            ->setParameter('tag', $tag)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+
+    /**
+     * @throws NonUniqueResultException
+     */
+    public function getListenByOneArtist($artist): array
+    {
+
+        return $this->createQueryBuilder('ml')
+            ->select('SUM(m.duration) AS LISTEN')
+            ->leftJoin('ml.music', 'm')
+            ->leftJoin('m.musicArtist', 'ma')
+            ->andWhere('ma = :artist')
+            ->setParameter('artist', $artist)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
 //    /**

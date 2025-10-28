@@ -42,19 +42,33 @@ class MsToHM extends AbstractExtension
 
     public function convertirMillisecondesEnMinutesSecondes(int $millisecondes): string
     {
+
+        $texteHeure = "";
         $secondes = $millisecondes / 1000;
         $minutes = floor($secondes / 60);
 
         // Reste des minutes après la conversion en heures
         $secondes %= 60;
 
-        if ($secondes === 0){
-            return $minutes.'s';
-        }elseif ($secondes < 10){
-            return $minutes.'min0'.$secondes;
+        if ($minutes >= 60){
+
+            $heures = floor($minutes / 60);
+            $minutes %= 60;;
+
         }
 
-        return $minutes.'min'.$secondes;
+        if (isset($heures)){
+
+            $texteHeure = $heures."h ";
+        }
+
+        if ($secondes === 0){
+            return $texteHeure.$minutes.'min';
+        }elseif ($secondes < 10){
+            return $texteHeure.$minutes.'min 0'.$secondes."s";
+        }
+
+        return $texteHeure.$minutes.'min '.$secondes."s";
 
     }
 

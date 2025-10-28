@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier une musique{% endblock %}
+
+{% block body %}
+
+    <div class="h-100 w-100 d-flex flex-column justify-content-center align-items-center">
+        <div class="card">
+            <div class="card-header">
+                Modifier une musique
+            </div>
+            <div class="card-body">
+                {{ form_start(form) }}
+                {{ form_end(form) }}
+                <div class="d-flex justify-content-between">
+                    <a class="btn btn-secondary mt-1" href="{{ path('music_details', {'id': music.id}) }}">Retour</a>
+                    <a target="_blank" class="btn btn-warning mt-1"
+                       href="https://musicbrainz.org/taglookup/index?tag-lookup.artist={{ music.musicArtist.name }}&tag-lookup.release={{ music.name }}">
+                        Rechercher
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

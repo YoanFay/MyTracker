@@ -31,8 +31,6 @@ class AniListService
             $name = $serie->getNameEng();
         }
 
-        dump($name);
-
         $variables = [
             "search" => mb_convert_kana($name, 'a', 'UTF-8')
         ];

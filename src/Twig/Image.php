@@ -5,6 +5,7 @@ namespace App\Twig;
 use App\Entity\Game;
 use App\Entity\Manga;
 use App\Entity\MangaTome;
+use App\Entity\Music;
 use App\Entity\Serie;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Twig\Extension\AbstractExtension;
@@ -32,6 +33,7 @@ class Image extends AbstractExtension
             new TwigFunction('infoImageManga', [$this, 'infoImageManga']),
             new TwigFunction('infoImageMangaTome', [$this, 'infoImageMangaTome']),
             new TwigFunction('infoGame', [$this, 'infoGame']),
+            new TwigFunction('infoImageMusic', [$this, 'infoImageMusic']),
         ];
     }
 
@@ -211,6 +213,38 @@ class Image extends AbstractExtension
             return [
                 'path' => $path,
                 'alt' => $game->getName()." poster"
+            ];
+
+        }
+
+        return [
+            'path' => "/image/visuel-a-venir.jpg",
+            'alt' => "Visuel à venir"
+        ];
+
+    }
+
+
+    /**
+     * @param Music  $music
+     * @param string $env
+     *
+     * @return array<string, string>
+     */
+    public function infoImageMusic(Music $music, string $env): array
+    {
+
+        $path = "/public/image/music/cover/".$music->getId().".jpeg";
+
+        if ($path && file_exists($this->kernel->getProjectDir().$path)) {
+
+            if ($env === "dev") {
+                $path = str_replace('public/', '', $path);
+            }
+
+            return [
+                'path' => $path,
+                'alt' => $music->getName()."by".$music->getMusicArtist()->getName()." cover"
             ];
 
         }

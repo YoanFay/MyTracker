@@ -9,10 +9,8 @@
 public/.htaccess
 /config/secrets/prod/prod.decrypt.private.php
 /public/bundles/
-/public/image/manga
-/public/image/serie
-/public/image/movie
-/public/image/game
+/public/image/*/*/*.jpeg
+/public/image/*/*/*/*.jpeg
 /var/
 /public/log/
 /vendor/

@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Épisodes{% endblock %}
+
+{% block body %}
+
+    <table class="table table-hover">
+        <thead class="thead-light">
+        <tr>
+            <th scope="col">Nom</th>
+            <th scope="col">Temps d'écoute</th>
+        </tr>
+        </thead>
+        <tbody>
+        <div>
+            {% for artist in artists %}
+                {% if artist.LISTEN != null %}
+                    <tr>
+                        <td>
+                            <a class="text-decoration-none text-black"
+                               href="{{ path('music_artists_details', {'id': artist.ID}) }}">{{ artist.NAME }}</a>
+                        </td>
+                        <td>{{ artist.LISTEN|MsToMS }}</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </div>
+        </tbody>
+    </table>
+
+{% endblock %}
+
+{% block javascript %}
+    <script>
+
+        function displayRow(id) {
+            console.log(id);
+            var row = $('#row' + id);
+
+            row.toggleClass('d-none');
+        }
+
+    </script>
+{% endblock %}

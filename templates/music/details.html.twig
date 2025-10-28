@@ -6,9 +6,38 @@
 
     <div class="d-flex flex-lg-row flex-column-reverse justify-content-between p-3">
         <div>
-            <h1 class="d-inline">{{ music.name }}</h1>
+            <h1 class="d-inline">
+                {{ music.name }}
+                {% if music.mbid == null %}
+                    <a class="d-inline text-decoration-none" href="{{ path('music_edit', {'id': music.id}) }}"
+                       data-bs-toggle="tooltip"
+                       data-bs-placement="bottom" data-bs-html="true"
+                       title="Modifier la série">
+                        <i class="material-icons text-warning">edit_note</i>
+                    </a>
+                {% endif %}
+            </h1>
             <br>
             <div class="d-flex flex-column flex-wrap">
+                <div class="m-2">
+                    <ul>
+                        <li>
+                            <strong>Durée : </strong>{% if music.duration %}{{ music.duration|MsToMS }}{% endif %}
+                        </li>
+                        <li>
+                            <strong>Temps d'écoute total
+                                : </strong>{% if totalListen %}{{ totalListen|MsToMS }}{% endif %}
+                        </li>
+                    </ul>
+                </div>
+                <div class="m-2">
+                    <strong>Tags : </strong>
+                    <ul>
+                        {% for tag in musicTags %}
+                            <li><a class="text-decoration-none text-black" href="{{path('music_tags_details', {'id': tag.id})}}">{{ tag.name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
                 <div class="m-2">
                     <ul>
                         <li>
@@ -23,29 +52,44 @@
                                 </ul>
                             {% endif %}
                         </li>
-                        <li>
-                            <strong>Durée : </strong>{%if music.duration%}{{ music.duration|MsToMS }}{%endif%}
-                        </li>
-                    </ul>
-                </div>
-                <div class="m-2">
-                    <strong>Tags : </strong>
-                    <ul>
-                        {% for tag in musicTags %}
-                            <li>{{ tag.name }}</li>
-                        {% endfor %}
                     </ul>
                 </div>
             </div>
             <a class="btn btn-primary" href="{{ path('music') }}">Retour</a>
         </div>
+        {% if music.mbid %}
+            {% set image = infoImageMusic(music, app.environment) %}
+            <img src="{{ image.path }}"
+                 alt="{{ image.alt }} poster" style="max-height: 500px" data-bs-toggle="modal"
+                 data-bs-target="#imageModal" class="cursor-click">
+        {% endif %}
     </div>
+
+    {% if music.mbid %}
+        <!-- Modal -->
+        <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="imageModalLabel">Image en Plein Écran</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-center" style="overflow: hidden;">
+                        <img src="{{ image.path }}" alt="{{ image.alt }}"
+                             style="max-height: calc(100vh - 50px); width: auto; max-width: 100%;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
 
 {% endblock %}
 
 {% block javascript %}
 
     <script>
+
         $(document).ready(function () {
             if ('ontouchstart' in document.documentElement) {
                 $('[data-toggle="tooltip"]').on('click', function () {

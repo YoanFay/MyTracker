@@ -8,7 +8,7 @@
         <thead class="thead-light">
         <tr>
             <th scope="col">Nom</th>
-            <th scope="col">Heure de visionnage</th>
+            <th scope="col">Heure d'écoute</th>
         </tr>
         </thead>
 
@@ -18,7 +18,7 @@
             <tr class="table-secondary">
                 <th colspan="4">
                     {{ dateKey|dateF }}
-                    - {{ data.totalDuration|MsToHM }} de visionnage
+                    - {{ data.totalDuration|MsToHM }} d'écoute
                 </th>
             </tr>
             </tbody>
@@ -28,7 +28,7 @@
                     <tr>
                         <td>
                                 <a class="text-decoration-none text-black"
-                                   href="{{ path('music_detail', {'id': show.id }) }}">{{ show.name }}</a>
+                                   href="{{ path('music_details', {'id': show.id }) }}">{{ show.name }}</a>
                         </td>
                         <td>{{ show.show|date("H\\hi") }}</td>
                     </tr>

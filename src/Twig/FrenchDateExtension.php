@@ -167,6 +167,6 @@ class FrenchDateExtension extends AbstractExtension
         $annee = $date->format('Y');
 
         // Affichage de la date
-        return $numeroJour.$suffixe." ".$mois." ".$annee.' - '.$date->format('h').':'.$date->format('i');
+        return $numeroJour.$suffixe." ".$mois." ".$annee.' - '.$date->format('H').':'.$date->format('i');
     }
 }
