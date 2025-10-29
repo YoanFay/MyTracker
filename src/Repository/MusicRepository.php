@@ -33,6 +33,7 @@ class MusicRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('m')
             ->andWhere('m.name LIKE :name')
             ->setParameter('name', $name)
+            ->orderBy('m.name', 'ASC')
             ->getQuery()
             ->getResult();
     }

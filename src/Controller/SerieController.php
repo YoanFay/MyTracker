@@ -92,7 +92,6 @@ class SerieController extends AbstractController
         }
 
         return $this->render('serie/details.html.twig', [
-            'controller_name' => 'SerieController',
             'serie' => $serie,
             'totalDuration' => $totalDuration['COUNT'],
             'countEpisode' => $countEpisode['COUNT'],
@@ -137,7 +136,6 @@ class SerieController extends AbstractController
         }
 
         return $this->render('serie/add.html.twig', [
-            'controller_name' => 'SerieController',
             'form' => $form->createView(),
             'navLinkId' => 'serie_add',
         ]);
@@ -175,7 +173,6 @@ class SerieController extends AbstractController
         }
 
         return $this->render('serie/edit.html.twig', [
-            'controller_name' => 'SerieController',
             'form' => $form->createView(),
             'serie' => $serie,
             'navLinkId' => 'serie_add',
@@ -246,7 +243,6 @@ class SerieController extends AbstractController
         }
 
         return $this->render('serie/editAnime.html.twig', [
-            'controller_name' => 'SerieController',
             'form' => $form->createView(),
             'serie' => $serie,
             'navLinkId' => 'serie_add',
@@ -273,7 +269,6 @@ class SerieController extends AbstractController
         $serieTab = $this->serieTab($series, $episodeRepository);
 
         return $this->render('serie/index.html.twig', [
-            'controller_name' => 'SerieController',
             'series' => $serieTab,
             'navLinkId' => 'serie_list',
         ]);
@@ -341,7 +336,6 @@ class SerieController extends AbstractController
         $serieTab = $this->serieTab($series, $episodeRepository);
 
         return $this->render('serie/index.html.twig', [
-            'controller_name' => 'SerieController',
             'series' => $serieTab,
             'navLinkId' => 'serie_list',
         ]);
@@ -393,7 +387,6 @@ class SerieController extends AbstractController
         });
 
         return $this->render('serie/index.html.twig', [
-            'controller_name' => 'SerieController',
             'id' => -2,
             'companyName' => $company->getName(),
             'series' => $serieTab,
@@ -467,7 +460,6 @@ class SerieController extends AbstractController
         });
 
         return $this->render('serie/list.html.twig', [
-            'controller_name' => 'SerieController',
             'series' => $serieTab,
             'navLinkId' => 'serie_list',
         ]);
@@ -488,7 +480,6 @@ class SerieController extends AbstractController
         };
 
         return $this->render('serie/index.html.twig', [
-            'controller_name' => 'SerieController',
             'id' => $id,
             'navLinkId' => 'serie_list',
         ]);

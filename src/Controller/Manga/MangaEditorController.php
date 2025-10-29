@@ -12,15 +12,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class MangaEditorController extends AbstractController
 {
-    #[Route('manga/editor', name: 'manga_editor')]
-    public function index(): Response
-    {
-        return $this->render('manga/manga_editor/index.html.twig', [
-            'controller_name' => 'MangaEditorController',
-            'navLinkId' => 'manga_editor',
-        ]);
-    }
-    
     #[Route('/manga/editor/add', name: 'manga_editor_add')]
     public function add(ManagerRegistry $managerRegistry, Request $request): Response
     {
@@ -39,7 +30,6 @@ class MangaEditorController extends AbstractController
         }
         return $this->render('manga/manga_editor/add.html.twig', [
             'form' => $form->createView(),
-            'controller_name' => 'MangaAuthorController',
             'navLinkId' => 'manga_editor',
         ]);
     }

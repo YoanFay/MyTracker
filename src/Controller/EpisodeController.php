@@ -91,7 +91,6 @@ class EpisodeController extends AbstractController
 
         return $this->render('episode/add.html.twig', [
             'id' => $id,
-            'controller_name' => 'EpisodeController',
             'form' => $form->createView(),
             'navLinkId' => 'episode_add',
         ]);

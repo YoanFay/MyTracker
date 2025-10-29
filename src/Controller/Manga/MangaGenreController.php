@@ -8,12 +8,5 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class MangaGenreController extends AbstractController
 {
-    #[Route('/manga/genre', name: 'manga_genre')]
-    public function index(): Response
-    {
-        return $this->render('manga/manga_genre/index.html.twig', [
-            'controller_name' => 'MangaGenreController',
-            'navLinkId' => 'manga_genre',
-        ]);
-    }
+
 }

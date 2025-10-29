@@ -85,7 +85,7 @@ class MusicController extends AbstractController
         }
 
         return $this->render('music\musicTags.html.twig', [
-            'navLinkId' => 'music',
+            'navLinkId' => 'music_tags',
             'listTags' => $listTags
         ]);
     }
@@ -103,7 +103,7 @@ class MusicController extends AbstractController
         $listen = $musicListenRepository->getListenByOneTag($tag)['LISTEN'];
 
         return $this->render('music\musicTagDetails.html.twig', [
-            'navLinkId' => 'music',
+            'navLinkId' => 'music_tags',
             'tag' => $tag,
             'listen' => $listen
         ]);
@@ -117,7 +117,7 @@ class MusicController extends AbstractController
         $artists = $musicListenRepository->getListenByArtist();
 
         return $this->render('music\musicArtists.html.twig', [
-            'navLinkId' => 'music',
+            'navLinkId' => 'music_artists',
             'artists' => $artists
         ]);
     }
@@ -135,7 +135,7 @@ class MusicController extends AbstractController
         $listen = $musicListenRepository->getListenByOneArtist($artist)['LISTEN'];
 
         return $this->render('music\musicArtistDetails.html.twig', [
-            'navLinkId' => 'music',
+            'navLinkId' => 'music_artists',
             'artist' => $artist,
             'listen' => $listen
         ]);
@@ -149,7 +149,20 @@ class MusicController extends AbstractController
         $musicList = $musicRepository->findBy(['duration' => null], ['name' => 'ASC']);
 
         return $this->render('music\search.html.twig', [
-            'navLinkId' => 'music',
+            'navLinkId' => 'music_search',
+            'musicList' => $musicList
+        ]);
+    }
+
+
+    #[Route('/search/cover', name: 'music_search_cover')]
+    public function searchCover(MusicRepository $musicRepository): Response
+    {
+
+        $musicList = $musicRepository->findBy(['mbid' => null], ['name' => 'ASC']);
+
+        return $this->render('music\searchCover.html.twig', [
+            'navLinkId' => 'music_search',
             'musicList' => $musicList
         ]);
     }
@@ -244,6 +257,36 @@ class MusicController extends AbstractController
     }
 
 
+    #[Route('/search/cover/register/manually', name: 'music_search_cover_register_manually')]
+    public function registerCoverManually(ManagerRegistry $managerRegistry, Request $request, MusicRepository $musicRepository, CoverArchiveService $coverArchiveService): Response
+    {
+
+        $id = $request->request->get('id');
+        $mbid = $request->request->get('mbid');
+
+        $music = $musicRepository->find($id);
+
+        try {
+
+            $music->setMbid($mbid);
+
+            $check = $coverArchiveService->updateArtwork($music);
+
+            if (!$check) {
+                $music->setMbid(null);
+            }
+
+            $managerRegistry->getManager()->persist($music);
+            $managerRegistry->getManager()->flush();
+
+            return new Response(true);
+        } catch (Exception) {
+            return new Response(false);
+        }
+
+    }
+
+
     #[Route('/detail/{id}', name: 'music_details')]
     public function detail(MusicRepository $musicRepository, int $id): Response
     {
@@ -263,7 +306,6 @@ class MusicController extends AbstractController
         $musicTags = $music->getMusicTags();
 
         return $this->render('music/details.html.twig', [
-            'controller_name' => 'MusicController',
             'music' => $music,
             'musicTags' => $musicTags,
             'totalListen' => $totalListen,
@@ -309,7 +351,6 @@ class MusicController extends AbstractController
         }
 
         return $this->render('music/edit.html.twig', [
-            'controller_name' => 'MusicController',
             'form' => $form->createView(),
             'music' => $music,
             'navLinkId' => 'music_edit',
@@ -385,7 +426,7 @@ class MusicController extends AbstractController
 
         return $this->render('music\history.html.twig', [
             'list' => $listDate,
-            'navLinkId' => 'music',
+            'navLinkId' => 'music_history',
         ]);
 
     }
@@ -469,7 +510,7 @@ class MusicController extends AbstractController
             'dataByDate' => $dataByDate,
             'globalDuration' => $globalDuration,
             'daysSinceStartOfYear' => $daysSinceStartOfYear,
-            'navLinkId' => 'episode',
+            'navLinkId' => 'music_date',
         ]);
     }
 }

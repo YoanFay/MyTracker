@@ -20,7 +20,6 @@ class GameTrackerController extends AbstractController
     public function index(): Response
     {
         return $this->render('game/game_tracker/index.html.twig', [
-            'controller_name' => 'GameTrackerController',
             'navLinkId' => 'game',
         ]);
     }
@@ -99,7 +98,6 @@ class GameTrackerController extends AbstractController
         }
 
         return $this->render('game/game_tracker/edit.html.twig', [
-            'controller_name' => 'GameTrackerController',
             'game' => $gameTracker->getGame(),
             'form' => $form->createView(),
             'navLinkId' => 'game',

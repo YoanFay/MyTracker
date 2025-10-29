@@ -12,15 +12,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class MangaAuthorController extends AbstractController
 {
-    #[Route('/manga/author', name: 'manga_author')]
-    public function index(): Response
-    {
-        return $this->render('manga/manga_author/index.html.twig', [
-            'controller_name' => 'MangaAuthorController',
-            'navLinkId' => 'manga_author',
-        ]);
-    }
-    
     #[Route('/manga/author/add', name: 'manga_author_add')]
     public function add(ManagerRegistry $managerRegistry, Request $request): Response
     {
@@ -39,7 +30,6 @@ class MangaAuthorController extends AbstractController
         }
         return $this->render('manga/manga_author/add.html.twig', [
             'form' => $form->createView(),
-            'controller_name' => 'MangaAuthorController',
             'navLinkId' => 'manga_author',
         ]);
     }

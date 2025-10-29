@@ -17,15 +17,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class MangaTomeController extends AbstractController
 {
-    #[Route('/manga/tome', name: 'manga_tome')]
-    public function index(): Response
-    {
-        return $this->render('manga/manga_tome/index.html.twig', [
-            'controller_name' => 'MangaTomeController',
-            'navLinkId' => 'manga_tome',
-        ]);
-    }
-
     #[Route('manga/tome/add/{id}', name: 'manga_tome_add')]
     public function add(ManagerRegistry $managerRegistry, Request $request, MangaRepository $mangaRepository, FileService $fileService, int $id = null): Response
     {
@@ -80,7 +71,6 @@ class MangaTomeController extends AbstractController
         return $this->render('manga/manga_tome/add.html.twig', [
             'form' => $form->createView(),
             'idManga' => $id,
-            'controller_name' => 'MangaController',
             'navLinkId' => 'manga_tome',
         ]);
     }
@@ -148,7 +138,6 @@ class MangaTomeController extends AbstractController
         return $this->render('manga/manga_tome/edit.html.twig', [
             'mangaTome' => $mangaTome,
             'form' => $form->createView(),
-            'controller_name' => 'MangaController',
             'navLinkId' => 'manga_tome',
         ]);
     }

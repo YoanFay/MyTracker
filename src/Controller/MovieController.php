@@ -69,7 +69,6 @@ class MovieController extends AbstractController
         });
 
         return $this->render('movie/list.html.twig', [
-            'controller_name' => 'MovieController',
             'movies' => $movieTab,
             'navLinkId' => 'movie',
         ]);
@@ -113,7 +112,6 @@ class MovieController extends AbstractController
         }
 
         return $this->render('movie/add.html.twig', [
-            'controller_name' => 'MovieController',
             'form' => $form->createView(),
             'navLinkId' => 'movie',
         ]);
@@ -136,7 +134,6 @@ class MovieController extends AbstractController
         $movieGenres = $movie->getMovieGenres();
 
         return $this->render('movie/details.html.twig', [
-            'controller_name' => 'MovieController',
             'movie' => $movie,
             'movieGenres' => $movieGenres,
             'navLinkId' => 'movie',
