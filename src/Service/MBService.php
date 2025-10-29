@@ -50,6 +50,14 @@ class MBService
 
     }
 
+    public function searchReleaseGroup($releaseID){
+
+        $query = "reid:".$releaseID;
+
+        return $this->callApi("release-group", $query);
+
+    }
+
 
 
 }
