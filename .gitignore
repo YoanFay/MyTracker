@@ -9,8 +9,7 @@
 public/.htaccess
 /config/secrets/prod/prod.decrypt.private.php
 /public/bundles/
-/public/image/*/*/*.jpeg
-/public/image/*/*/*/*.jpeg
+/public/image/*
 /var/
 /public/log/
 /vendor/
