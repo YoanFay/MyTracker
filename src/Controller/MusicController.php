@@ -7,6 +7,7 @@ use App\Repository\MusicArtistRepository;
 use App\Repository\MusicListenRepository;
 use App\Repository\MusicRepository;
 use App\Repository\MusicTagsRepository;
+use App\Repository\SerieRepository;
 use App\Service\CoverArchiveService;
 use App\Service\MBService;
 use App\Service\TimeService;
@@ -287,8 +288,11 @@ class MusicController extends AbstractController
     }
 
 
+    /**
+     * @throws NonUniqueResultException
+     */
     #[Route('/detail/{id}', name: 'music_details')]
-    public function detail(MusicRepository $musicRepository, int $id): Response
+    public function detail(MusicRepository $musicRepository, SerieRepository $serieRepository, int $id): Response
     {
 
         $music = $musicRepository->findOneBy(['id' => $id]);
@@ -305,10 +309,21 @@ class MusicController extends AbstractController
 
         $musicTags = $music->getMusicTags();
 
+        $ref = null;
+
+        foreach ($musicTags as $musicTag){
+            if(!is_numeric($musicTag->getName()) && $serie = $serieRepository->findLikeName($musicTag->getName())){
+                $ref = $serie;
+            }
+        }
+
+        dump($ref);
+
         return $this->render('music/details.html.twig', [
             'music' => $music,
             'musicTags' => $musicTags,
             'totalListen' => $totalListen,
+            'ref' => $ref,
             'navLinkId' => 'music',
         ]);
     }

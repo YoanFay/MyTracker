@@ -7,6 +7,7 @@ use App\Entity\Company;
 use App\Entity\Serie;
 use App\Entity\SerieType;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -418,6 +419,21 @@ class SerieRepository extends ServiceEntityRepository
         return $qb
             ->getQuery()
             ->getResult();
+    }
+
+
+    /**
+     * @throws NonUniqueResultException
+     */
+    public function findLikeName($name)
+    {
+
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.name LIKE :name')
+            ->setParameter('name', '%'.$name.'%')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
 

@@ -34,7 +34,12 @@
                     <strong>Tags : </strong>
                     <ul>
                         {% for tag in musicTags %}
-                            <li><a class="text-decoration-none text-black" href="{{path('music_tags_details', {'id': tag.id})}}">{{ tag.name }}</a></li>
+                            <li class="d-flex align-items-center">
+                                <a class="text-decoration-none text-black m-0" href="{{path('music_tags_details', {'id': tag.id})}}">{{ tag.name }}</a>
+                                {% if ref != null and (tag.name|lower  in ref.name|lower  or tag.name|lower  == ref.name|lower ) %}
+                                <a class="text-decoration-none text-black m-0 d-flex align-items-center" href="{{path('serie_detail', {'id': ref.id})}}"><i class="material-icons text-secondary ms-1">link</i></a>
+                                {% endif %}
+                            </li>
                         {% endfor %}
                     </ul>
                 </div>

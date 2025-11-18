@@ -19,7 +19,9 @@
                title="Modifier la série">
                 <i class="material-icons text-warning">edit_note</i>
             </a>
-            <h2>{{ countEpisode }} épisodes vus - {{ totalDuration|MsToHM }} de visionnage total</h2>
+            {% if countEpisode > 0 %}
+                <h2>{{ countEpisode }} épisodes vus - {{ totalDuration|MsToHM }} de visionnage total</h2>
+            {% endif %}
             {% if studios != [] %}
                 <h3>
                     Studio :
@@ -38,9 +40,9 @@
                 </h3>
             {% endif %}
             {% if serie.score != null %}
-            <h5>
-                Score AniList : {{ serie.score }}%
-            </h5>
+                <h5>
+                    Score AniList : {{ serie.score }}%
+                </h5>
             {% endif %}
             <br>
             <div class="d-flex flex-column flex-wrap">
@@ -71,7 +73,8 @@
                             </li>
                         {% elseif serie.status == "Upcoming" %}
                             <li>
-                                <strong>Date de sortie du prochain épisode : </strong> Nouvelle saison annoncé (Pas encore de date)
+                                <strong>Date de sortie du prochain épisode : </strong> Nouvelle saison annoncé (Pas
+                                encore de date)
                             </li>
                         {% endif %}
                     </ul>
