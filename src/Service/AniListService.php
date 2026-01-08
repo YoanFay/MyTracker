@@ -52,6 +52,7 @@ class AniListService
         $name = $serie->getLastSeasonName();
 
         $ok = true;
+        $try = 1;
 
         do {
 
@@ -103,6 +104,12 @@ class AniListService
                     $this->manager->flush();
 
                 }
+            } else {
+                $try++;
+
+                if ($try === 3) {
+                    return $serie->getNameEng() ?? $serie->getName();
+                }
             }
 
         } while ($ok);
@@ -113,8 +120,8 @@ class AniListService
 
 
     /**
-     * @param string $query
-     * @param array<string, mixed>  $variables
+     * @param string               $query
+     * @param array<string, mixed> $variables
      *
      * @return mixed|null
      */
