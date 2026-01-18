@@ -38,20 +38,16 @@ class UpdateEndedDateCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
 
-        $animes = $this->serieRepository->endedAnime();
-        dump("------------------------------------------------ updateEndedAnime ------------------------------------------------");
+        $date = new \DateTimeImmutable();
 
-        $len = count($animes) - 1;
-        $i = 0;
+        $date = $date->modify('-6 months');
+
+        $animes = $this->serieRepository->endedAnimeBeforeDate($date);
+        dump("------------------------------------------------ updateEndedAnime ------------------------------------------------");
 
         foreach ($animes as $anime) {
 
-
-            if ($i == $len - 1) {
-                $this->updateDateService->updateEndedAnime($anime, true);
-            }else{
-                $this->updateDateService->updateEndedAnime($anime);
-            }
+            $this->updateDateService->updateEndedAnime($anime);
             
         }
 

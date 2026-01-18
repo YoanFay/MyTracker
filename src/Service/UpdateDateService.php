@@ -6,7 +6,6 @@ use App\Entity\Serie;
 use App\Entity\SerieUpdate;
 use App\Repository\SerieUpdateRepository;
 use DateTime;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
@@ -26,10 +25,8 @@ class UpdateDateService
 
     private SerieUpdateRepository $serieUpdateRepository;
 
-    private EntityManager $entityManager;
 
-
-    public function __construct(ManagerRegistry $managerRegistry, AniListService $aniListService, TVDBService $TVDBService, SerieUpdateRepository $serieUpdateRepository, EntityManager $entityManager)
+    public function __construct(ManagerRegistry $managerRegistry, AniListService $aniListService, TVDBService $TVDBService, SerieUpdateRepository $serieUpdateRepository)
     {
 
         $this->manager = $managerRegistry->getManager();
@@ -37,7 +34,8 @@ class UpdateDateService
         $this->TVDBService = $TVDBService;
         $this->serieUpdateRepository = $serieUpdateRepository;
         $this->today = new DateTime();
-        $this->entityManager = $entityManager;
+
+
     }
 
 
@@ -254,7 +252,7 @@ class UpdateDateService
     }
 
 
-    public function updateEndedAnime(Serie $anime, $last = false): void
+    public function updateEndedAnime(Serie $anime): void
     {
 
         $query = 'query ($search: String) { Media (search: $search, type: ANIME) { status, relations{ edges{relationType}, nodes{title{english}} } }}';
@@ -268,8 +266,6 @@ class UpdateDateService
         }
 
         if ($anime->getStatus() !== $status) {
-
-            dump($anime->getStatus()." / ".$status);
 
             $serieUpdate = $this->serieUpdateRepository->serieDate($anime, $this->today->format('Y-m-d'));
 
@@ -287,19 +283,7 @@ class UpdateDateService
 
         }
         $this->manager->persist($anime);
-
-        $connection = $this->entityManager->getConnection();
-
-        try {
-            $connection->executeQuery($connection->getDatabasePlatform()->getDummySelectSQL());
-        } catch (\Exception $e) {
-            $connection->close();
-            $connection->connect();
-        }
-
-        if ($last){
-            $this->manager->flush();
-        }
+        $this->manager->flush();
 
     }
 
