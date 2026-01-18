@@ -267,6 +267,8 @@ class UpdateDateService
 
         if ($anime->getStatus() !== $status) {
 
+            dump($anime->getStatus()." / ".$status);
+
             $serieUpdate = $this->serieUpdateRepository->serieDate($anime, $this->today->format('Y-m-d'));
 
             if (!$serieUpdate) {
