@@ -6,6 +6,7 @@ use App\Entity\Serie;
 use App\Entity\SerieUpdate;
 use App\Repository\SerieUpdateRepository;
 use DateTime;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
@@ -25,8 +26,10 @@ class UpdateDateService
 
     private SerieUpdateRepository $serieUpdateRepository;
 
+    private EntityManager $entityManager;
 
-    public function __construct(ManagerRegistry $managerRegistry, AniListService $aniListService, TVDBService $TVDBService, SerieUpdateRepository $serieUpdateRepository)
+
+    public function __construct(ManagerRegistry $managerRegistry, AniListService $aniListService, TVDBService $TVDBService, SerieUpdateRepository $serieUpdateRepository, EntityManager $entityManager)
     {
 
         $this->manager = $managerRegistry->getManager();
@@ -34,8 +37,7 @@ class UpdateDateService
         $this->TVDBService = $TVDBService;
         $this->serieUpdateRepository = $serieUpdateRepository;
         $this->today = new DateTime();
-
-
+        $this->entityManager = $entityManager;
     }
 
 
@@ -285,6 +287,15 @@ class UpdateDateService
 
         }
         $this->manager->persist($anime);
+
+        $connection = $this->entityManager->getConnection();
+
+        try {
+            $connection->executeQuery($connection->getDatabasePlatform()->getDummySelectSQL());
+        } catch (\Exception $e) {
+            $connection->close();
+            $connection->connect();
+        }
 
         if ($last){
             $this->manager->flush();
