@@ -40,7 +40,16 @@ class UpdateEndedDateCommand extends Command
 
         $date = new \DateTimeImmutable();
 
-        $date = $date->modify('-6 months');
+        $date = $date->modify('-1 years');
+
+        $animes = $this->serieRepository->endedAnimeAfterDate($date);
+        dump("------------------------------------------------ updateEndedAnimeLastYear ------------------------------------------------");
+
+        foreach ($animes as $anime) {
+
+            $this->updateDateService->updateEndedAnime($anime);
+
+        }
 
         $animes = $this->serieRepository->endedAnimeBeforeDate($date);
         dump("------------------------------------------------ updateEndedAnime ------------------------------------------------");
@@ -48,7 +57,7 @@ class UpdateEndedDateCommand extends Command
         foreach ($animes as $anime) {
 
             $this->updateDateService->updateEndedAnime($anime);
-            
+
         }
 
         $series = $this->serieRepository->ended();

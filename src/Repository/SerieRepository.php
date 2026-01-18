@@ -256,7 +256,7 @@ class SerieRepository extends ServiceEntityRepository
     /**
      * @return Serie[] Returns an array of Serie objects
      */
-    public function endedAnimeBeforeDate($date): array
+    public function endedAnimeAfterDate($date): array
     {
 
         return $this->createQueryBuilder('s')
@@ -267,6 +267,26 @@ class SerieRepository extends ServiceEntityRepository
             ->setParameter('type', 'Anime')
             ->andWhere('s.tvdbId NOT IN (76703, 302218)')
             ->andWhere('s.lastAired >= :date')
+            ->setParameter('date', $date)
+            ->getQuery()
+            ->getResult();
+    }
+
+
+    /**
+     * @return Serie[] Returns an array of Serie objects
+     */
+    public function endedAnimeBeforeDate($date): array
+    {
+
+        return $this->createQueryBuilder('s')
+            ->leftJoin('s.serieType', 't')
+            ->andWhere('s.status = :status')
+            ->setParameter('status', "Ended")
+            ->andWhere('t.name = :type')
+            ->setParameter('type', 'Anime')
+            ->andWhere('s.tvdbId NOT IN (76703, 302218)')
+            ->andWhere('s.lastAired <= :date')
             ->setParameter('date', $date)
             ->getQuery()
             ->getResult();
