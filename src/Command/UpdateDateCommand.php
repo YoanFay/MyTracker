@@ -47,15 +47,6 @@ class UpdateDateCommand extends Command
             
         }
 
-        $animes = $this->serieRepository->endedAnime();
-        dump("------------------------------------------------ updateEndedAnime ------------------------------------------------");
-
-        foreach ($animes as $anime) {
-
-            $this->updateDateService->updateEndedAnime($anime);
-            
-        }
-
         $animes = $this->serieRepository->updateAiredAnime();
         dump("------------------------------------------------ updateAiredAnime ------------------------------------------------");
 
@@ -80,15 +71,6 @@ class UpdateDateCommand extends Command
         foreach ($series as $serie){
 
             $this->updateDateService->updateFirstAired($serie);
-
-        }
-
-        $series = $this->serieRepository->ended();
-        dump("------------------------------------------------ updateEnded ------------------------------------------------");
-
-        foreach ($series as $serie){
-
-            $this->updateDateService->updateEnded($serie);
 
         }
 
