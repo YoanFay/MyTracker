@@ -101,6 +101,7 @@ class AniListService
                     }
 
                     $this->manager->persist($serie);
+                    dump($try);
                     $this->manager->flush();
 
                 }
