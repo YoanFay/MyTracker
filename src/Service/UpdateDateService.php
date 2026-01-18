@@ -252,7 +252,7 @@ class UpdateDateService
     }
 
 
-    public function updateEndedAnime(Serie $anime): void
+    public function updateEndedAnime(Serie $anime, $last = false): void
     {
 
         $query = 'query ($search: String) { Media (search: $search, type: ANIME) { status, relations{ edges{relationType}, nodes{title{english}} } }}';
@@ -283,7 +283,10 @@ class UpdateDateService
 
         }
         $this->manager->persist($anime);
-        $this->manager->flush();
+
+        if ($last){
+            $this->manager->flush();
+        }
 
     }
 

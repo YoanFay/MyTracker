@@ -41,9 +41,17 @@ class UpdateEndedDateCommand extends Command
         $animes = $this->serieRepository->endedAnime();
         dump("------------------------------------------------ updateEndedAnime ------------------------------------------------");
 
+        $len = count($animes) - 1;
+        $i = 0;
+
         foreach ($animes as $anime) {
 
-            $this->updateDateService->updateEndedAnime($anime);
+
+            if ($i == $len - 1) {
+                $this->updateDateService->updateEndedAnime($anime, true);
+            }else{
+                $this->updateDateService->updateEndedAnime($anime);
+            }
             
         }
 
